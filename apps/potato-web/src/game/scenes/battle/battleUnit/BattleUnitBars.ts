@@ -64,7 +64,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
         width + borderWidth,
         height + borderWidth,
         borderColor,
-        0.75
+        0.75,
       );
 
       border.setStrokeStyle(borderWidth, borderStrokeColor, 1);
@@ -79,7 +79,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
       unit.sprite.y + yOffset + borderWidth / 2,
       width,
       height,
-      barColor
+      barColor,
     );
 
     bar.setOrigin(0);
@@ -107,7 +107,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
           blur: 0,
           stroke: true,
         },
-      }
+      },
     );
 
     text.setOrigin(0.5);
@@ -124,10 +124,10 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
     };
   }
 
-  onReceiveDamage(event: any) {
+  onReceiveDamage(value: number) {
     const damageTextColor = "#ff121d";
 
-    const damageReceived = event.payload.payload.value;
+    const damageReceived = value;
 
     let newHp = this.unit.stats.hp;
     let newShield = this.unit.stats.shield;
@@ -156,7 +156,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
       } else {
         const newShieldBarValue = Math.min(
           (newShield / this.unit.stats.maxHp) * BAR_WIDTH,
-          BAR_WIDTH
+          BAR_WIDTH,
         );
 
         this.unit.scene.tweens.add({
@@ -245,10 +245,10 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
     this.unit.stats = { ...this.unit.stats, hp: newHp, shield: newShield }; //todo better stat tracking
   }
 
-  onReceiveShield(event: any) {
+  onReceiveShield(value: number) {
     const shieldTextColor = "#155BC4";
 
-    const shieldReceived = event.payload.payload.value;
+    const shieldReceived = value;
 
     const newShield = this.unit.stats.shield + shieldReceived;
 
@@ -321,13 +321,10 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
     this.unit.stats = { ...this.unit.stats, shield: newShield }; //todo better stat tracking
   }
 
-  onReceiveHeal(event: any) {
+  onReceiveHeal(value: number) {
     const healTextColor = "#1BB623";
 
-    const healReceived = Math.min(
-      event.payload.payload.value,
-      this.unit.stats.maxHp - this.unit.stats.hp
-    );
+    const healReceived = Math.min(value, this.unit.stats.maxHp - this.unit.stats.hp);
 
     const newHp = Math.min(this.unit.stats.hp + healReceived, this.unit.stats.maxHp);
 

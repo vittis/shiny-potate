@@ -15,6 +15,7 @@ import { useSetupState } from "@/services/state/useSetupState";
 enum EVENT_TYPE {
   USE_ABILITY = "USE_ABILITY",
   TRIGGER_EFFECT = "TRIGGER_EFFECT",
+  TICK_EFFECT = "TICK_EFFECT",
   INSTANT_EFFECT = "INSTANT_EFFECT", // todo better event/subevent type organization
   FAINT = "FAINT",
   ATTACK = "ATTACK",
@@ -115,7 +116,7 @@ export class Battle extends Phaser.Scene {
             this.initializeUnits(this.firstStep);
           }
         }
-      }
+      },
     );
 
     useGameState.subscribe(
@@ -128,7 +129,7 @@ export class Battle extends Phaser.Scene {
             unit.onDeselected();
           }
         });
-      }
+      },
     );
 
     useSetupState.subscribe(
@@ -144,7 +145,7 @@ export class Battle extends Phaser.Scene {
           this.eventHistory = data.eventHistory;
           this.initializeUnits(this.firstStep);
         }
-      }
+      },
     );
 
     useGameState.subscribe(
@@ -172,7 +173,7 @@ export class Battle extends Phaser.Scene {
           return;
         }
         this.resumeTimeEvents();
-      }
+      },
     );
   }
 
@@ -231,7 +232,7 @@ export class Battle extends Phaser.Scene {
 
       if (event.type === "USE_ABILITY") {
         const useAbilityEventsOnThisStep = eventsOnThisStep.filter(
-          (e) => e.step === step && e.type === "USE_ABILITY"
+          (e) => e.step === step && e.type === "USE_ABILITY",
         );
         const allAbilitiesOfAllUnits = this.units.reduce((acc, unit) => {
           return [...acc, ...unit.abilitiesManager.abilities];
@@ -251,14 +252,14 @@ export class Battle extends Phaser.Scene {
           } else {
             // more than one ability used in the step
             const abilityUsed = allAbilitiesOfAllUnits.find(
-              (ability) => ability.id === event.payload.id
+              (ability) => ability.id === event.payload.id,
             ) as Ability;
             abilityUsed.hasUsed = true;
             unhighlightAbilities([abilityUsed], this);
             const allAbilitiesUsedIds = useAbilityEventsOnThisStep.map((e) => e.payload.id);
             const areAllAbilitiesUsed = allAbilitiesUsedIds.every((abilityId) => {
               const abilityUsed = allAbilitiesOfAllUnits.find(
-                (ability) => ability.id === abilityId
+                (ability) => ability.id === abilityId,
               ) as Ability;
               return abilityUsed.hasUsed;
             });
@@ -272,12 +273,12 @@ export class Battle extends Phaser.Scene {
         onStart = () => {
           if (useAbilityEventsOnThisStep.length === 1) {
             const abilityUsed = allAbilitiesOfAllUnits.find(
-              (ability) => ability.id === event.payload.id
+              (ability) => ability.id === event.payload.id,
             ) as Ability;
             highlightAbility(abilityUsed, this);
             unhighlightAbilities(
               allAbilitiesOfAllUnits.filter((a) => a.id !== abilityUsed.id),
-              this
+              this,
             );
 
             this.units.forEach((unit) => {
@@ -292,7 +293,7 @@ export class Battle extends Phaser.Scene {
 
             allAbilitiesUsedIds.forEach((abilityId) => {
               const abilityUsed = allAbilitiesOfAllUnits.find(
-                (ability) => ability.id === abilityId
+                (ability) => ability.id === abilityId,
               ) as Ability;
 
               if (!abilityUsed.hasUsed) {
@@ -310,6 +311,19 @@ export class Battle extends Phaser.Scene {
       }
 
       if (event.type === "TRIGGER_EFFECT") {
+        targets = [unit];
+
+        this.board.bringToTop(unit);
+
+        this.isPlayingEventAnimation = true;
+        this.pauseTimeEvents();
+
+        onEnd = () => {
+          onEndAnimation();
+        };
+      }
+
+      if (event.type === "TICK_EFFECT") {
         targets = [unit];
 
         this.board.bringToTop(unit);

@@ -174,6 +174,11 @@ function hasGameEnded(bm: BoardManager) {
   );
 }
 
+function reachTimeLimit(currentStep: number) {
+  const STEP_LIMIT = 2000;
+  return currentStep >= STEP_LIMIT;
+}
+
 export function runGame(bm: BoardManager) {
   let firstStep: any;
   const eventHistory: PossibleEvent[] = [];
@@ -208,7 +213,7 @@ export function runGame(bm: BoardManager) {
     eventHistory.push(...getAndExecuteDeathEvents(bm));
 
     currentStep++;
-  } while (!hasGameEnded(bm));
+  } while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
 
   return { totalSteps: currentStep - 1, eventHistory, firstStep };
 }

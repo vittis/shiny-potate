@@ -1,8 +1,16 @@
 import { VULNERABLE_LOSS_PER_HIT } from "../Ability/Ability";
+import { POSITION } from "../BoardManager";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
-import { INSTANT_EFFECT_TYPE, SUBEVENT_TYPE, SubEvent } from "./EventTypes";
+import {
+  EVENT_TYPE,
+  INSTANT_EFFECT_TYPE,
+  SUBEVENT_TYPE,
+  SubEvent,
+  TICK_EFFECT_TYPE,
+  TickEffectEvent,
+} from "./EventTypes";
 
 export function createStatusEffectSubEvent(
   unit: Unit,
@@ -111,4 +119,26 @@ export function createDamageSubEvent(
   });
 
   return subEvents as SubEvent[];
+}
+
+export function createTickEffectEvent(
+  unit: Unit,
+  effect: TICK_EFFECT_TYPE,
+  value: number
+) {
+  const tickEffectEvent = {
+    type: EVENT_TYPE.TICK_EFFECT,
+    actorId: unit.id,
+    step: unit.currentStep,
+    payload: {
+      type: effect,
+      targetId: unit.id,
+      payload: {
+        value,
+        decrement: 1,
+      },
+    },
+  };
+
+  return tickEffectEvent as TickEffectEvent;
 }
