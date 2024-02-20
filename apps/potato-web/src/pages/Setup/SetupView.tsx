@@ -35,7 +35,7 @@ const initialBoard = [
   },
 ];
 
-const initialBoard2 = [
+const initialBoardRight = [
   {
     id: "-0",
     unit: null,
@@ -175,29 +175,41 @@ export function SetupView() {
   const classes = data?.classes || [];
   const weapons = data?.weapons || [];
 
-  const [board, setBoard] = useState<{ id: string; unit: any }[]>(initialBoard);
+  const [boardLeft, setBoardLeft] = useState<{ id: string; unit: any }[]>(initialBoard);
 
-  const [board2, setBoard2] = useState<{ id: string; unit: any }[]>(initialBoard2);
+  const [boardRight, setBoardRight] = useState<{ id: string; unit: any }[]>(initialBoardRight);
 
   useEffect(() => {
     const board = JSON.parse(localStorage.getItem("board") || "[]");
-    const board2 = JSON.parse(localStorage.getItem("board2") || "[]");
+    const boardRight = JSON.parse(localStorage.getItem("boardRight") || "[]");
 
     if (board.length > 0) {
-      setBoard(board);
-      setBoard2(board2);
+      setBoardLeft(board);
+      setBoardRight(boardRight);
     }
   }, []);
 
   function handleDragEnd(event: DragEndEvent) {
     let targetBoard;
     let targetSetBoard;
-    if (event.over?.id.toString().startsWith("-")) {
-      targetBoard = board2;
-      targetSetBoard = setBoard2;
+
+    const fromBoardRight = !!boardRight.find((c) => c.unit?.id === event.active.id);
+    const fromBoardLeft = !!boardLeft.find((c) => c.unit?.id === event.active.id);
+
+    if (fromBoardRight) {
+      targetBoard = boardRight;
+      targetSetBoard = setBoardRight;
+    } else if (fromBoardLeft) {
+      targetBoard = boardLeft;
+      targetSetBoard = setBoardLeft;
     } else {
-      targetBoard = board;
-      targetSetBoard = setBoard;
+      if (event.over?.id.toString().startsWith("-")) {
+        targetBoard = boardRight;
+        targetSetBoard = setBoardRight;
+      } else {
+        targetBoard = boardLeft;
+        targetSetBoard = setBoardLeft;
+      }
     }
 
     const isFromBoard = !classes.find((unitClass) => unitClass.id === event.active.id);
@@ -246,7 +258,6 @@ export function SetupView() {
         return cell;
       });
     } else {
-      console.log("oi");
       newBoard = targetBoard.map((cell) => {
         if (cell?.unit?.id === event?.active?.id && cell.id !== event.over?.id) {
           return {
@@ -276,12 +287,12 @@ export function SetupView() {
   }
 
   function onClickReset() {
-    setBoard(initialBoard);
-    setBoard2(initialBoard2);
+    setBoardLeft(initialBoard);
+    setBoardRight(initialBoardRight);
   }
 
   function onClickStartGame() {
-    const team1finalUnits: UnitsDTO[] = board
+    const team1finalUnits: UnitsDTO[] = boardLeft
       .filter((cell) => !!cell.unit)
       .map((cell) => {
         return {
@@ -291,7 +302,7 @@ export function SetupView() {
         };
       });
 
-    const team2finalUnits: UnitsDTO[] = board2
+    const team2finalUnits: UnitsDTO[] = boardRight
       .filter((cell) => !!cell.unit)
       .map((cell) => {
         return {
@@ -301,8 +312,8 @@ export function SetupView() {
         };
       });
 
-    localStorage.setItem("board", JSON.stringify(board));
-    localStorage.setItem("board2", JSON.stringify(board2));
+    localStorage.setItem("board", JSON.stringify(boardLeft));
+    localStorage.setItem("boardRight", JSON.stringify(boardRight));
 
     setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
   }
@@ -338,7 +349,7 @@ export function SetupView() {
 
           <div className="flex items-center justify-center min-w-[500px] gap-20 mt-20">
             <div className="w-fit h-fit grid grid-cols-3 gap-5">
-              {board.map(({ id, unit }) => (
+              {boardLeft.map(({ id, unit }) => (
                 <React.Fragment key={id}>
                   {unit ? (
                     <Droppable id={id}>
@@ -353,7 +364,7 @@ export function SetupView() {
               ))}
             </div>
             <div className="w-fit h-fit grid grid-cols-3 gap-5">
-              {board2.map(({ id, unit }) => (
+              {boardRight.map(({ id, unit }) => (
                 <React.Fragment key={id}>
                   {unit ? (
                     <Droppable id={id}>
