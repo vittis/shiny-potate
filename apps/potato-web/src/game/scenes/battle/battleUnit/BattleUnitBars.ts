@@ -135,7 +135,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
 		if (newShield > 0) {
 			newShield -= damageReceived
 			if (newShield < 0) {
-				newHp += newShield
+				newHp = Math.max(newHp + newShield, 0)
 				newShield = 0
 			}
 		} else {
