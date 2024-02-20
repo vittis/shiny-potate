@@ -1,279 +1,272 @@
-import "dotenv/config";
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import { WebSocketServer, WebSocket } from "ws";
-import type { Server as HTTPSServer } from "node:http";
-import { connectRedis, redisClient, redisSub } from "./redis";
-import { logger } from "hono/logger";
-import { getCookie, setCookie, deleteCookie } from "hono/cookie";
-import { cors } from "hono/cors";
-import { prettyJSON } from "hono/pretty-json";
-import rooms, { Room, RoomRepository } from "./controllers/rooms/roomsRoutes";
-import gameRoutes from "./controllers/game/gameRoutes";
+import "dotenv/config"
+import { serve } from "@hono/node-server"
+import { Hono } from "hono"
+import { WebSocketServer, WebSocket } from "ws"
+import type { Server as HTTPSServer } from "node:http"
+import { connectRedis, redisClient, redisSub } from "./redis"
+import { logger } from "hono/logger"
+import { getCookie, setCookie, deleteCookie } from "hono/cookie"
+import { cors } from "hono/cors"
+import { prettyJSON } from "hono/pretty-json"
+import rooms, { Room, RoomRepository } from "./controllers/rooms/roomsRoutes"
+import gameRoutes from "./controllers/game/gameRoutes"
 
-import { uniqueNamesGenerator, starWars } from "unique-names-generator";
+import { uniqueNamesGenerator, starWars } from "unique-names-generator"
 
 export type Variables = {
-  session: any;
-};
+	session: any
+}
 
-const APPID = process.env.APPID;
-const PORT = process.env.PORT || 8080;
+const APPID = process.env.APPID
+const PORT = process.env.PORT || 8080
 
-const app = new Hono<{ Variables: Variables }>();
+const app = new Hono<{ Variables: Variables }>()
 
-app.use("*", prettyJSON()); // With options: prettyJSON({ space: 4 })
+app.use("*", prettyJSON()) // With options: prettyJSON({ space: 4 })
 
 app.use(
-  "*",
-  cors({
-    origin: process.env.FRONTEND_URL || "",
-    /* origin: "http://localhost:5173", */
-    credentials: true,
-  })
-);
+	"*",
+	cors({
+		origin: process.env.FRONTEND_URL || "",
+		/* origin: "http://localhost:5173", */
+		credentials: true,
+	}),
+)
 
-app.use("*", logger());
+app.use("*", logger())
 const wsConnections: {
-  socket: WebSocket;
-  userId?: string;
-  channels: string[];
-}[] = [];
+	socket: WebSocket
+	userId?: string
+	channels: string[]
+}[] = []
 
 // attach session data middleware
 app.use("/api/*", async (c, next) => {
-  const sId = getCookie(c, "sId");
+	const sId = getCookie(c, "sId")
 
-  if (!sId) {
-    return c.json({ error: "Unauthorized" }, 401);
-  }
+	if (!sId) {
+		return c.json({ error: "Unauthorized" }, 401)
+	}
 
-  // Validate the session ID against the Redis store
-  const sessionData = await redisClient.hGetAll(`session:${sId}`);
+	// Validate the session ID against the Redis store
+	const sessionData = await redisClient.hGetAll(`session:${sId}`)
 
-  if (Object.keys(sessionData).length === 0) {
-    deleteCookie(c, "sId");
-    return c.json({ error: "Invalid session ID" }, 401);
-  }
+	if (Object.keys(sessionData).length === 0) {
+		deleteCookie(c, "sId")
+		return c.json({ error: "Invalid session ID" }, 401)
+	}
 
-  // Attach session data to the request for later use
-  c.set("session", { id: sId, ...sessionData });
-  await next();
-});
+	// Attach session data to the request for later use
+	c.set("session", { id: sId, ...sessionData })
+	await next()
+})
 
-app.route("/", rooms);
-app.route("/game", gameRoutes);
+app.route("/", rooms)
+app.route("/game", gameRoutes)
 
-app.post("/login", async (c) => {
-  // You would typically validate user credentials here
-  let randomUserId = Math.floor(Math.random() * 1000);
-  const userData = {
-    name: uniqueNamesGenerator({
-      dictionaries: [starWars],
-    }),
-    userId: randomUserId,
-  };
+app.post("/login", async c => {
+	// You would typically validate user credentials here
+	let randomUserId = Math.floor(Math.random() * 1000)
+	const userData = {
+		name: uniqueNamesGenerator({
+			dictionaries: [starWars],
+		}),
+		userId: randomUserId,
+	}
 
-  const sId = getCookie(c, "sId");
+	const sId = getCookie(c, "sId")
 
-  if (sId) {
-    const sessionData = await redisClient.hGetAll(`session:${sId}`);
+	if (sId) {
+		const sessionData = await redisClient.hGetAll(`session:${sId}`)
 
-    if (Object.keys(sessionData).length > 0) {
-      return c.json({ message: "You are already logged in" }, 500);
-    }
-  }
+		if (Object.keys(sessionData).length > 0) {
+			return c.json({ message: "You are already logged in" }, 500)
+		}
+	}
 
-  // Create a session
-  const sessionId = Math.floor(Math.random() * 1000).toString();
-  redisClient.hSet(`session:${sessionId}`, userData);
+	// Create a session
+	const sessionId = Math.floor(Math.random() * 1000).toString()
+	redisClient.hSet(`session:${sessionId}`, userData)
 
-  // Set the session ID as a cookie
-  setCookie(c, "sId", sessionId, {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
-  });
+	// Set the session ID as a cookie
+	setCookie(c, "sId", sessionId, {
+		httpOnly: true,
+		sameSite: "None",
+		secure: true,
+	})
 
-  return c.json({ ok: true });
-});
+	return c.json({ ok: true })
+})
 
-app.post("/logout", async (c) => {
-  const sId = getCookie(c, "sId");
+app.post("/logout", async c => {
+	const sId = getCookie(c, "sId")
 
-  if (!sId) {
-    return c.json({ error: "Unauthorized" }, 401);
-  }
+	if (!sId) {
+		return c.json({ error: "Unauthorized" }, 401)
+	}
 
-  // Delete the session from Redis
-  await redisClient.del(`session:${sId}`);
+	// Delete the session from Redis
+	await redisClient.del(`session:${sId}`)
 
-  // Delete the session ID cookie
-  deleteCookie(c, "sId");
+	// Delete the session ID cookie
+	deleteCookie(c, "sId")
 
-  return c.json({ ok: true });
-});
+	return c.json({ ok: true })
+})
 
-app.get("/api/chat/:channel", async (c) => {
-  const channel = c.req.param("channel");
-  const allMessages = await redisClient.lRange(
-    `chat:${channel}:messages`,
-    0,
-    -1
-  );
+app.get("/api/chat/:channel", async c => {
+	const channel = c.req.param("channel")
+	const allMessages = await redisClient.lRange(`chat:${channel}:messages`, 0, -1)
 
-  return c.json({
-    data: allMessages.map((m) => JSON.parse(m)),
-  });
-});
+	return c.json({
+		data: allMessages.map(m => JSON.parse(m)),
+	})
+})
 
-app.post("/api/chat/:channel/:message", async (c) => {
-  const channel = c.req.param("channel");
-  const msg = c.req.param("message");
-  const finalMsg = `${c.get("session").name}: ${msg}`;
+app.post("/api/chat/:channel/:message", async c => {
+	const channel = c.req.param("channel")
+	const msg = c.req.param("message")
+	const finalMsg = `${c.get("session").name}: ${msg}`
 
-  const session = c.get("session");
+	const session = c.get("session")
 
-  redisClient.rPush(
-    `chat:${channel}:messages`,
-    JSON.stringify({
-      message: finalMsg,
-      timestamp: Date.now(),
-    })
-  );
+	redisClient.rPush(
+		`chat:${channel}:messages`,
+		JSON.stringify({
+			message: finalMsg,
+			timestamp: Date.now(),
+		}),
+	)
 
-  await redisClient.publish(
-    "live-chat",
-    JSON.stringify({ message: finalMsg, channel })
-  );
+	await redisClient.publish("live-chat", JSON.stringify({ message: finalMsg, channel }))
 
-  return c.json({
-    message: `published successfully by ${session.name} ${APPID}`,
-  });
-});
+	return c.json({
+		message: `published successfully by ${session.name} ${APPID}`,
+	})
+})
 
-app.get("/api/me/profile", async (c) => {
-  const session = c.get("session");
+app.get("/api/me/profile", async c => {
+	const session = c.get("session")
 
-  return c.json({
-    data: session,
-  });
-});
+	return c.json({
+		data: session,
+	})
+})
 
-app.get("/api/me/rooms", async (c) => {
-  const session = c.get("session");
+app.get("/api/me/rooms", async c => {
+	const session = c.get("session")
 
-  const rooms = await redisClient.sMembers(`user_rooms:${session.userId}`);
+	const rooms = await redisClient.sMembers(`user_rooms:${session.userId}`)
 
-  return c.json({
-    rooms,
-  });
-});
+	return c.json({
+		rooms,
+	})
+})
 
 const connectAll = async () => {
-  await connectRedis();
+	await connectRedis()
 
-  /* try {
+	/* try {
     await RoomRepository.createIndex();
   } catch (error) {
     console.log(error);
   } */
 
-  await redisSub.subscribe("live-chat", (message) => {
-    const parsedMessage = JSON.parse(message);
-    console.log("live-chat new: ", parsedMessage);
+	await redisSub.subscribe("live-chat", message => {
+		const parsedMessage = JSON.parse(message)
+		console.log("live-chat new: ", parsedMessage)
 
-    wsConnections.forEach((c) => {
-      if (!c.channels.includes(parsedMessage.channel)) return;
-      c.socket.send(JSON.stringify(parsedMessage));
-    });
-  });
+		wsConnections.forEach(c => {
+			if (!c.channels.includes(parsedMessage.channel)) return
+			c.socket.send(JSON.stringify(parsedMessage))
+		})
+	})
 
-  await redisSub.subscribe("lobby:update-room", (message) => {
-    const room: Room = JSON.parse(message)?.room;
-    if (!room) {
-      console.log("no room to update");
-      return;
-    }
+	await redisSub.subscribe("lobby:update-room", message => {
+		const room: Room = JSON.parse(message)?.room
+		if (!room) {
+			console.log("no room to update")
+			return
+		}
 
-    wsConnections.forEach((c) => {
-      if (c.channels.includes("lobby")) {
-        c.socket.send(
-          JSON.stringify({
-            type: "room_updated",
-            room,
-          })
-        );
-      }
-    });
-  });
+		wsConnections.forEach(c => {
+			if (c.channels.includes("lobby")) {
+				c.socket.send(
+					JSON.stringify({
+						type: "room_updated",
+						room,
+					}),
+				)
+			}
+		})
+	})
 
-  await redisSub.subscribe("lobby:create-room", (message) => {
-    const room: Room = JSON.parse(message)?.room;
-    if (!room) {
-      console.log("no room to create");
-      return;
-    }
+	await redisSub.subscribe("lobby:create-room", message => {
+		const room: Room = JSON.parse(message)?.room
+		if (!room) {
+			console.log("no room to create")
+			return
+		}
 
-    wsConnections.forEach((c) => {
-      if (c.channels.includes("lobby")) {
-        c.socket.send(
-          JSON.stringify({
-            type: "room_created",
-            room,
-          })
-        );
-      }
-    });
-  });
+		wsConnections.forEach(c => {
+			if (c.channels.includes("lobby")) {
+				c.socket.send(
+					JSON.stringify({
+						type: "room_created",
+						room,
+					}),
+				)
+			}
+		})
+	})
 
-  await redisSub.subscribe("lobby:remove-room", (message) => {
-    const roomId: string = JSON.parse(message)?.roomId;
-    if (!roomId) {
-      console.log("no room to remove");
-      return;
-    }
+	await redisSub.subscribe("lobby:remove-room", message => {
+		const roomId: string = JSON.parse(message)?.roomId
+		if (!roomId) {
+			console.log("no room to remove")
+			return
+		}
 
-    wsConnections.forEach((c) => {
-      if (c.channels.includes("lobby")) {
-        c.socket.send(
-          JSON.stringify({
-            type: "room_removed",
-            roomId: roomId,
-          })
-        );
-      }
-    });
-  });
+		wsConnections.forEach(c => {
+			if (c.channels.includes("lobby")) {
+				c.socket.send(
+					JSON.stringify({
+						type: "room_removed",
+						roomId: roomId,
+					}),
+				)
+			}
+		})
+	})
 
-  await redisSub.subscribe("user:update-rooms", (message) => {
-    const parsedMessage = JSON.parse(message);
-    const userId: string = parsedMessage?.userId;
-    const roomId: string = parsedMessage?.roomId;
-    const type: string = parsedMessage?.type;
+	await redisSub.subscribe("user:update-rooms", message => {
+		const parsedMessage = JSON.parse(message)
+		const userId: string = parsedMessage?.userId
+		const roomId: string = parsedMessage?.roomId
+		const type: string = parsedMessage?.type
 
-    if (!roomId || !type) {
-      console.log("no room to update");
-      return;
-    }
+		if (!roomId || !type) {
+			console.log("no room to update")
+			return
+		}
 
-    wsConnections.forEach((c) => {
-      if (c.channels.includes("user") && userId === c.userId) {
-        c.socket.send(
-          JSON.stringify({
-            type,
-            roomId,
-          })
-        );
-      }
-    });
-  });
-};
-const server = serve({ fetch: app.fetch, port: Number(PORT) }, (info) => {
-  console.log(
-    `${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`
-  );
-});
+		wsConnections.forEach(c => {
+			if (c.channels.includes("user") && userId === c.userId) {
+				c.socket.send(
+					JSON.stringify({
+						type,
+						roomId,
+					}),
+				)
+			}
+		})
+	})
+}
+const server = serve({ fetch: app.fetch, port: Number(PORT) }, info => {
+	console.log(
+		`${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`,
+	)
+})
 /* connectAll().then(() => {
   const server = serve({ fetch: app.fetch, port: Number(PORT) }, (info) => {
     console.log(

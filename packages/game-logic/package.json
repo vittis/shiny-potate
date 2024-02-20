@@ -1,26 +1,26 @@
 {
-  "name": "game-logic",
-  "version": "1.0.0",
-  "description": "",
-  "sideEffects": false,
-  "exports": {
-    ".": "./game/index.ts"
-  },
-  "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:watch": "vitest watch"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "nanoid": "5.0.5",
-    "typescript": "latest",
-    "zod": "3.22.4"
-  },
-  "devDependencies": {
-    "@types/node": "20.11.19",
-    "vitest": "^1.3.0"
-  }
+	"name": "game-logic",
+	"version": "1.0.0",
+	"description": "",
+	"sideEffects": false,
+	"exports": {
+		".": "./game/index.ts"
+	},
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"test": "vitest run",
+		"test:watch": "vitest watch"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"nanoid": "5.0.5",
+		"typescript": "latest",
+		"zod": "3.22.4"
+	},
+	"devDependencies": {
+		"@types/node": "20.11.19",
+		"vitest": "^1.3.0"
+	}
 }

@@ -1,221 +1,172 @@
-import { BoardManager, OWNER, POSITION } from "./BoardManager";
-import { Unit } from "./Unit/Unit";
-import { Equipment } from "./Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "./Equipment/EquipmentTypes";
-import {
-  getAndExecuteDeathEvents,
-  sortAndExecuteEvents,
-} from "./Event/EventUtils";
-import { Class } from "./Class/Class";
-import { Classes, Weapons } from "./data";
-import { PossibleEvent } from "./Event/EventTypes";
-import { TRIGGER } from "./Trigger/TriggerTypes";
+import { BoardManager, OWNER, POSITION } from "./BoardManager"
+import { Unit } from "./Unit/Unit"
+import { Equipment } from "./Equipment/Equipment"
+import { EQUIPMENT_SLOT } from "./Equipment/EquipmentTypes"
+import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils"
+import { Class } from "./Class/Class"
+import { Classes, Weapons } from "./data"
+import { PossibleEvent } from "./Event/EventTypes"
+import { TRIGGER } from "./Trigger/TriggerTypes"
 
 export interface UnitsDTO {
-  equipments: string[];
-  position: POSITION;
-  unitClass: string;
+	equipments: string[]
+	position: POSITION
+	unitClass: string
 }
 
 export class Game {
-  boardManager: BoardManager;
+	boardManager: BoardManager
 
-  constructor({ skipConstructor = false } = {}) {
-    this.boardManager = new BoardManager();
+	constructor({ skipConstructor = false } = {}) {
+		this.boardManager = new BoardManager()
 
-    if (skipConstructor) {
-      return;
-    }
+		if (skipConstructor) {
+			return
+		}
 
-    const unit1 = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.TOP_FRONT,
-      this.boardManager
-    );
-    unit1.setClass(new Class(Classes.Paladin));
-    unit1.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+		const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, this.boardManager)
+		unit1.setClass(new Class(Classes.Paladin))
+		unit1.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND)
 
-    const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager);
-    unit2.setClass(new Class(Classes.Blacksmith));
+		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager)
+		unit2.setClass(new Class(Classes.Blacksmith))
 
-    unit2.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
+		unit2.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
 
-    const unit3 = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.TOP_BACK,
-      this.boardManager
-    );
-    unit3.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-    unit3.setClass(new Class(Classes.Ranger));
+		const unit3 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager)
+		unit3.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND)
+		unit3.setClass(new Class(Classes.Ranger))
 
-    const unit4 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager);
-    unit4.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+		const unit4 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager)
+		unit4.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND)
 
-    const unit5 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, this.boardManager);
-    unit5.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
+		const unit5 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, this.boardManager)
+		unit5.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
 
-    const unit6 = new Unit(
-      OWNER.TEAM_TWO,
-      POSITION.BOT_FRONT,
-      this.boardManager
-    );
-    unit6.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
+		const unit6 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_FRONT, this.boardManager)
+		unit6.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
 
-    const unit7 = new Unit(
-      OWNER.TEAM_TWO,
-      POSITION.TOP_FRONT,
-      this.boardManager
-    );
-    unit7.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND);
-    unit7.setClass(new Class(Classes.Warrior));
+		const unit7 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager)
+		unit7.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND)
+		unit7.setClass(new Class(Classes.Warrior))
 
-    const unit8 = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.BOT_FRONT,
-      this.boardManager
-    );
-    unit8.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-    unit8.setClass(new Class(Classes.Warrior));
+		const unit8 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_FRONT, this.boardManager)
+		unit8.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND)
+		unit8.setClass(new Class(Classes.Warrior))
 
-    const unit9 = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.BOT_BACK,
-      this.boardManager
-    );
-    unit9.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-    unit9.setClass(new Class(Classes.Rogue));
+		const unit9 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_BACK, this.boardManager)
+		unit9.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
+		unit9.setClass(new Class(Classes.Rogue))
 
-    const unit10 = new Unit(
-      OWNER.TEAM_TWO,
-      POSITION.BOT_MID,
-      this.boardManager
-    );
-    unit10.equip(new Equipment(Weapons.Wand), EQUIPMENT_SLOT.MAIN_HAND);
-    unit10.setClass(new Class(Classes.Warlock));
+		const unit10 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, this.boardManager)
+		unit10.equip(new Equipment(Weapons.Wand), EQUIPMENT_SLOT.MAIN_HAND)
+		unit10.setClass(new Class(Classes.Warlock))
 
-    /* this.boardManager.addToBoard(unit1);
+		/* this.boardManager.addToBoard(unit1);
     this.boardManager.addToBoard(unit2);
     this.boardManager.addToBoard(unit9);
     this.boardManager.addToBoard(unit10);
     this.boardManager.addToBoard(unit3);
     this.boardManager.addToBoard(unit7); */
-    /* this.boardManager.addToBoard(unit4);
+		/* this.boardManager.addToBoard(unit4);
     this.boardManager.addToBoard(unit5);
     this.boardManager.addToBoard(unit6);
     this.boardManager.addToBoard(unit8); */
 
-    const unitA = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.TOP_FRONT,
-      this.boardManager
-    );
-    unitA.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-    unitA.setClass(new Class(Classes.Ranger));
+		const unitA = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, this.boardManager)
+		unitA.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND)
+		unitA.setClass(new Class(Classes.Ranger))
 
-    const unitB = new Unit(
-      OWNER.TEAM_TWO,
-      POSITION.TOP_FRONT,
-      this.boardManager
-    );
-    unitB.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-    unitB.setClass(new Class(Classes.Blacksmith));
+		const unitB = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager)
+		unitB.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
+		unitB.setClass(new Class(Classes.Blacksmith))
 
-    const unitC = new Unit(
-      OWNER.TEAM_TWO,
-      POSITION.TOP_BACK,
-      this.boardManager
-    );
-    unitC.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-    unitC.setClass(new Class(Classes.Warrior));
+		const unitC = new Unit(OWNER.TEAM_TWO, POSITION.TOP_BACK, this.boardManager)
+		unitC.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND)
+		unitC.setClass(new Class(Classes.Warrior))
 
-    const unitD = new Unit(
-      OWNER.TEAM_ONE,
-      POSITION.TOP_BACK,
-      this.boardManager
-    );
-    unitD.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-    unitD.setClass(new Class(Classes.Warrior));
+		const unitD = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager)
+		unitD.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND)
+		unitD.setClass(new Class(Classes.Warrior))
 
-    this.boardManager.addToBoard(unitA);
-    this.boardManager.addToBoard(unitB);
-    /* this.boardManager.addToBoard(unitC);
+		this.boardManager.addToBoard(unitA)
+		this.boardManager.addToBoard(unitB)
+		/* this.boardManager.addToBoard(unitC);
     this.boardManager.addToBoard(unitD); */
-  }
+	}
 
-  setTeam(team: OWNER, units: UnitsDTO[]) {
-    units.forEach((unitDTO) => {
-      console.log(unitDTO.position);
-      const unit = new Unit(team, unitDTO.position, this.boardManager);
-      unit.setClass(
-        new Class(Classes[unitDTO.unitClass as keyof typeof Classes])
-      );
-      unitDTO.equipments.forEach((equipmentName) => {
-        unit.equip(
-          new Equipment(Weapons[equipmentName as keyof typeof Weapons]),
-          EQUIPMENT_SLOT.MAIN_HAND
-        );
-      });
+	setTeam(team: OWNER, units: UnitsDTO[]) {
+		units.forEach(unitDTO => {
+			console.log(unitDTO.position)
+			const unit = new Unit(team, unitDTO.position, this.boardManager)
+			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]))
+			unitDTO.equipments.forEach(equipmentName => {
+				unit.equip(
+					new Equipment(Weapons[equipmentName as keyof typeof Weapons]),
+					EQUIPMENT_SLOT.MAIN_HAND,
+				)
+			})
 
-      this.boardManager.addToBoard(unit);
-    });
-  }
+			this.boardManager.addToBoard(unit)
+		})
+	}
 
-  startGame() {
-    const { totalSteps, eventHistory, firstStep } = runGame(this.boardManager);
+	startGame() {
+		const { totalSteps, eventHistory, firstStep } = runGame(this.boardManager)
 
-    return { totalSteps, eventHistory, firstStep };
-  }
+		return { totalSteps, eventHistory, firstStep }
+	}
 }
 
 function hasGameEnded(bm: BoardManager) {
-  return (
-    bm.getAllUnitsOfOwner(OWNER.TEAM_ONE).every((unit) => unit.isDead) ||
-    bm.getAllUnitsOfOwner(OWNER.TEAM_TWO).every((unit) => unit.isDead)
-  );
+	return (
+		bm.getAllUnitsOfOwner(OWNER.TEAM_ONE).every(unit => unit.isDead) ||
+		bm.getAllUnitsOfOwner(OWNER.TEAM_TWO).every(unit => unit.isDead)
+	)
 }
 
 function reachTimeLimit(currentStep: number) {
-  const STEP_LIMIT = 2000;
-  return currentStep >= STEP_LIMIT;
+	const STEP_LIMIT = 2000
+	return currentStep >= STEP_LIMIT
 }
 
 export function runGame(bm: BoardManager) {
-  let firstStep: any;
-  const eventHistory: PossibleEvent[] = [];
+	let firstStep: any
+	const eventHistory: PossibleEvent[] = []
 
-  const serializedUnits = bm.getAllUnits().map((unit) => unit.serialize());
-  firstStep = { units: serializedUnits };
+	const serializedUnits = bm.getAllUnits().map(unit => unit.serialize())
+	firstStep = { units: serializedUnits }
 
-  let currentStep = 1;
+	let currentStep = 1
 
-  const battleStartEvents: PossibleEvent[] = [];
-  bm.getAllUnits().forEach((unit) => {
-    unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
-    battleStartEvents.push(...unit.serializeEvents());
-  });
-  const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents);
-  orderedEvents.forEach((event) => {
-    eventHistory.push(event);
-  });
+	const battleStartEvents: PossibleEvent[] = []
+	bm.getAllUnits().forEach(unit => {
+		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm)
+		battleStartEvents.push(...unit.serializeEvents())
+	})
+	const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents)
+	orderedEvents.forEach(event => {
+		eventHistory.push(event)
+	})
 
-  do {
-    bm.getAllAliveUnits().forEach((unit) => {
-      unit.step(currentStep);
-    });
+	do {
+		bm.getAllAliveUnits().forEach(unit => {
+			unit.step(currentStep)
+		})
 
-    const stepEvents: PossibleEvent[] = [];
-    bm.getAllUnits().forEach((unit) => {
-      stepEvents.push(...unit.serializeEvents());
-    });
-    const orderedEvents = sortAndExecuteEvents(bm, stepEvents);
-    eventHistory.push(...orderedEvents);
+		const stepEvents: PossibleEvent[] = []
+		bm.getAllUnits().forEach(unit => {
+			stepEvents.push(...unit.serializeEvents())
+		})
+		const orderedEvents = sortAndExecuteEvents(bm, stepEvents)
+		eventHistory.push(...orderedEvents)
 
-    eventHistory.push(...getAndExecuteDeathEvents(bm));
+		eventHistory.push(...getAndExecuteDeathEvents(bm))
 
-    currentStep++;
-  } while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
+		currentStep++
+	} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep))
 
-  return { totalSteps: currentStep - 1, eventHistory, firstStep };
+	return { totalSteps: currentStep - 1, eventHistory, firstStep }
 }
 
 /* 

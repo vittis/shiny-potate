@@ -1,19 +1,19 @@
-import { EquippedItem } from "../Equipment/EquipmentManager";
-import { Class } from "./Class";
-import { ClassNode } from "./ClassTypes";
+import { EquippedItem } from "../Equipment/EquipmentManager"
+import { Class } from "./Class"
+import { ClassNode } from "./ClassTypes"
 
 export class ClassManager {
-  class!: Class;
-  activeNodes: ClassNode[] = [];
+	class!: Class
+	activeNodes: ClassNode[] = []
 
-  constructor() {}
+	constructor() {}
 
-  setClass(unitClass: Class) {
-    this.class = unitClass;
-  }
+	setClass(unitClass: Class) {
+		this.class = unitClass
+	}
 
-  getClassAbilities() {
-    // check activenodes as well
-    return this.class.getClassBaseAbilities();
-  }
+	getClassAbilities() {
+		// check activenodes as well
+		return this.class.getClassBaseAbilities()
+	}
 }
