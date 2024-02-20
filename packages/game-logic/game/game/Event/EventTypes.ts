@@ -5,6 +5,7 @@ export enum EVENT_TYPE {
   USE_ABILITY = "USE_ABILITY",
   FAINT = "FAINT",
   TRIGGER_EFFECT = "TRIGGER_EFFECT",
+  TICK_EFFECT = "TICK_EFFECT",
 }
 
 export enum SUBEVENT_TYPE {
@@ -19,7 +20,16 @@ export enum INSTANT_EFFECT_TYPE {
   STATUS_EFFECT = "STATUS_EFFECT",
 }
 
-export type PossibleEvent = UseAbilityEvent | FaintEvent | TriggerEffectEvent;
+export enum TICK_EFFECT_TYPE {
+  REGEN = "REGEN",
+  POISON = "POISON",
+}
+
+export type PossibleEvent =
+  | UseAbilityEvent
+  | FaintEvent
+  | TriggerEffectEvent
+  | TickEffectEvent;
 
 interface Event<T extends EVENT_TYPE> {
   type: T;
@@ -28,6 +38,10 @@ interface Event<T extends EVENT_TYPE> {
 }
 
 export interface FaintEvent extends Event<EVENT_TYPE.FAINT> {}
+
+export interface TickEffectEvent extends Event<EVENT_TYPE.TICK_EFFECT> {
+  payload: TickEffectEventPayload;
+}
 
 export interface UseAbilityEvent extends Event<EVENT_TYPE.USE_ABILITY> {
   payload: UseAbilityEventPayload;
@@ -38,6 +52,15 @@ export interface UseAbilityEventPayload {
   name: string;
   targetsId: string[];
   subEvents: SubEvent[];
+}
+
+export interface TickEffectEventPayload {
+  type: TICK_EFFECT_TYPE;
+  targetId: string;
+  payload: {
+    value: number;
+    decrement: number;
+  };
 }
 
 export interface SubEvent {

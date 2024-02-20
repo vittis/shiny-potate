@@ -39,7 +39,7 @@ type Board = [
     Unit | undefined,
     Unit | undefined,
     Unit | undefined,
-    Unit | undefined
+    Unit | undefined,
   ],
   [
     Unit | undefined,
@@ -47,8 +47,8 @@ type Board = [
     Unit | undefined,
     Unit | undefined,
     Unit | undefined,
-    Unit | undefined
-  ]
+    Unit | undefined,
+  ],
 ];
 
 // return unit if it not died

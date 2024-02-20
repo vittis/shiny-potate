@@ -14,6 +14,8 @@ import {
   PossibleEvent,
   SubEvent,
   SUBEVENT_TYPE,
+  TICK_EFFECT_TYPE,
+  TickEffectEvent,
   TriggerEffectEvent,
   UseAbilityEvent,
 } from "../Event/EventTypes";
@@ -24,6 +26,7 @@ import { StatusEffectManager } from "../StatusEffect/StatusEffectManager";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TriggerManager } from "../Trigger/TriggerManager";
 import { TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
+import { createTickEffectEvent } from "../Event/EventFactory";
 
 // use for better perfomance
 /* export enum EVENT_TYPE {
@@ -211,6 +214,8 @@ export class Unit {
       }
     });
 
+    this.statusEffectManager.tickEffectStep(this);
+
     // add step logic
   }
 
@@ -255,6 +260,28 @@ export class Unit {
     }
     if (event.type === EVENT_TYPE.TRIGGER_EFFECT) {
       this.applySubEvents((event as TriggerEffectEvent).subEvents);
+    }
+    if (event.type === EVENT_TYPE.TICK_EFFECT) {
+      this.applyTickEffectEvents(event as TickEffectEvent);
+    }
+  }
+
+  applyTickEffectEvents(tickEffect: TickEffectEvent) {
+    if (tickEffect.payload.type === TICK_EFFECT_TYPE.POISON) {
+      const target = this.bm.getUnitById(tickEffect.payload.targetId);
+      target.receiveDamage(tickEffect.payload.payload.value);
+      this.statusEffectManager.removeStacks(
+        STATUS_EFFECT.POISON,
+        tickEffect.payload.payload.decrement
+      );
+    }
+    if (tickEffect.payload.type === TICK_EFFECT_TYPE.REGEN) {
+      const target = this.bm.getUnitById(tickEffect.payload.targetId);
+      target.receiveHeal(tickEffect.payload.payload.value);
+      this.statusEffectManager.removeStacks(
+        STATUS_EFFECT.REGEN,
+        tickEffect.payload.payload.decrement
+      );
     }
   }
 

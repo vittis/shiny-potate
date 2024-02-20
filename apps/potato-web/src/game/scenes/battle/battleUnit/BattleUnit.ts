@@ -131,8 +131,8 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
       const onImpactPoint = () => {
         const receiveDamageEvents =
-          (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE"
+          (event.subEvents?.filter(
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE",
           ) as StepEvent[]) || [];
 
         receiveDamageEvents &&
@@ -142,7 +142,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply damage on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`
+                `Trying to apply damage on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
               );
             }
 
@@ -150,8 +150,8 @@ export class BattleUnit extends Phaser.GameObjects.Container {
           });
 
         const statusEffectEvents =
-          (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT"
+          (event.subEvents?.filter(
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT",
           ) as StepEvent[]) || [];
 
         statusEffectEvents &&
@@ -161,15 +161,15 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply status effect on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`
+                `Trying to apply status effect on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: statusEffectSubEvent });
           });
 
         const shieldEvents =
-          (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "SHIELD"
+          (event.subEvents?.filter(
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "SHIELD",
           ) as StepEvent[]) || [];
 
         shieldEvents &&
@@ -179,15 +179,15 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply shield on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`
+                `Trying to apply shield on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: shieldSubEvent });
           });
 
         const healEvents =
-          (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "HEAL"
+          (event.subEvents?.filter(
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "HEAL",
           ) as StepEvent[]) || [];
 
         healEvents &&
@@ -197,7 +197,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply heal on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`
+                `Trying to apply heal on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: healEvent });
@@ -224,7 +224,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
     if (event.type === "USE_ABILITY") {
       const abilityUsed = this.abilitiesManager.abilities.find(
-        (ability) => ability.id === event.payload.id
+        (ability) => ability.id === event.payload.id,
       ) as Ability;
 
       if (targets === undefined || targets?.length === 0) {
@@ -243,7 +243,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
       const onImpactPoint = () => {
         const receiveDamageEvents =
           (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE"
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE",
           ) as StepEvent[]) || [];
 
         receiveDamageEvents &&
@@ -253,7 +253,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply damage on USE_ABILITY: Couldn't find target with id: ${targetId}`
+                `Trying to apply damage on USE_ABILITY: Couldn't find target with id: ${targetId}`,
               );
             }
 
@@ -262,7 +262,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
         const statusEffectEvents =
           (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT"
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT",
           ) as StepEvent[]) || [];
 
         statusEffectEvents &&
@@ -272,7 +272,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply status effect on USE_ABILITY: Couldn't find target with id: ${targetId}`
+                `Trying to apply status effect on USE_ABILITY: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: statusEffectSubEvent });
@@ -280,7 +280,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
         const shieldEvents =
           (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "SHIELD"
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "SHIELD",
           ) as StepEvent[]) || [];
 
         shieldEvents &&
@@ -290,7 +290,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply shield on USE_ABILITY: Couldn't find target with id: ${targetId}`
+                `Trying to apply shield on USE_ABILITY: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: shieldSubEvent });
@@ -298,7 +298,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
         const healEvents =
           (event.payload?.subEvents?.filter(
-            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "HEAL"
+            (e) => e.type === "INSTANT_EFFECT" && e.payload.type === "HEAL",
           ) as StepEvent[]) || [];
 
         healEvents &&
@@ -308,7 +308,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
             const target = allUnits?.find((unit) => unit.id === targetId);
             if (!target) {
               throw Error(
-                `Trying to apply heal on USE_ABILITY: Couldn't find target with id: ${targetId}`
+                `Trying to apply heal on USE_ABILITY: Couldn't find target with id: ${targetId}`,
               );
             }
             target.playEvent({ event: healEvent });
@@ -331,7 +331,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
     }
 
     if (event.type === "INSTANT_EFFECT" && event.payload.type === "DAMAGE") {
-      this.barsManager.onReceiveDamage(event);
+      this.barsManager.onReceiveDamage(event.payload.payload.value);
     }
 
     if (event.type === "INSTANT_EFFECT" && event.payload.type === "STATUS_EFFECT") {
@@ -351,11 +351,24 @@ export class BattleUnit extends Phaser.GameObjects.Container {
     }
 
     if (event.type === "INSTANT_EFFECT" && event.payload.type === "SHIELD") {
-      this.barsManager.onReceiveShield(event);
+      this.barsManager.onReceiveShield(event.payload.payload.value);
     }
 
     if (event.type === "INSTANT_EFFECT" && event.payload.type === "HEAL") {
-      this.barsManager.onReceiveHeal(event);
+      this.barsManager.onReceiveHeal(event.payload.payload.value);
+    }
+
+    if (event.type === "TICK_EFFECT") {
+      const { payload } = event;
+      if (payload.type === "POISON") this.barsManager.onReceiveDamage(payload.payload.value);
+      if (payload.type === "REGEN") this.barsManager.onReceiveHeal(payload.payload.value);
+
+      this.statusEffectsManager.removeStatusEffect({
+        name: payload.type,
+        quantity: payload.payload.decrement,
+      });
+
+      if (onEnd) onEnd();
     }
   }
 
