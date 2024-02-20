@@ -1,4 +1,4 @@
-import { redisClient } from "../redis"
+import { redisClient } from "../../redis"
 import { RoomRepository } from "./roomsRoutes"
 
 async function removeUserFromRoom(userId: string, roomId: string) {

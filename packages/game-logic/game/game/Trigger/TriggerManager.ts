@@ -21,7 +21,7 @@ import {
 	TRIGGER_EFFECT_TYPE,
 } from "./TriggerTypes"
 
-interface ActiveTriggerEffect {
+export interface ActiveTriggerEffect {
 	effect: PossibleTriggerEffect
 	sourceId: string
 }

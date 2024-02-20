@@ -31,7 +31,7 @@ export enum BOARD_POSITION {
 	ISOLATED = "ISOLATED",
 }
 
-interface EffectCondition<T extends EFFECT_CONDITION_TYPE> {
+export interface EffectCondition<T extends EFFECT_CONDITION_TYPE> {
 	type: T
 	payload: TriggerConditionPayloadMap[T]
 }
