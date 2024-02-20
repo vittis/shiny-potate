@@ -276,8 +276,7 @@ export class Unit {
 			newShield -= finalDamage
 			if (newShield < 0) {
 				// If the armor is now depleted, apply any remaining damage to the unit's HP
-				newHp += newShield
-				newHp += newShield
+				newHp = Math.max(newHp + newShield, 0)
 				newShield = 0
 			}
 		} else {
@@ -292,13 +291,13 @@ export class Unit {
 	receiveShield(shieldAmount: number) {
 		const newShield = this.stats.shield + shieldAmount
 
-		this.stats.shield = newShield
+		this.stats = { ...this.stats, shield: newShield }
 	}
 
 	receiveHeal(healAmount: number) {
 		const newHp = Math.min(this.stats.hp + healAmount, this.stats.maxHp)
 
-		this.stats.hp = newHp
+		this.stats = { ...this.stats, hp: newHp }
 	}
 
 	onDeath() {

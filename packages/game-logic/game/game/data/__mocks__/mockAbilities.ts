@@ -161,4 +161,25 @@ export const MockAbilities = {
 			},
 		],
 	},
+	DecayStrike: {
+		name: "Decay Strike",
+		type: "SPELL",
+		tags: [],
+		target: "STANDARD",
+		cooldown: 30,
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: [
+					{
+						name: "POISON",
+						quantity: 5,
+					},
+				],
+			},
+		],
+	},
 }

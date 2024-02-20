@@ -3,11 +3,12 @@ import { TICK_EFFECT_TYPE } from "../Event/EventTypes"
 import { Unit } from "../Unit/Unit"
 import { ActiveStatusEffect, STATUS_EFFECT } from "./StatusEffectTypes"
 
+export const TICK_COOLDOWN = 20
+
 export class StatusEffectManager {
 	private _activeStatusEffects = [] as ActiveStatusEffect[]
 	poisonTickProgress = 0
 	regenTickProgress = 0
-	tickCooldown = 20 // TODO: move to config
 
 	constructor() {}
 
@@ -41,6 +42,8 @@ export class StatusEffectManager {
 			if (effect.name === name) {
 				const finalQuantity = Math.max(0, effect.quantity - quantity)
 				if (finalQuantity === 0) {
+					if (effect.name === STATUS_EFFECT.POISON) this.poisonTickProgress = 0
+					else if (effect.name === STATUS_EFFECT.REGEN) this.regenTickProgress = 0
 					return acc
 				}
 				return [
@@ -61,6 +64,9 @@ export class StatusEffectManager {
 			return
 		}
 
+		if (name === STATUS_EFFECT.POISON) this.poisonTickProgress = 0
+		else if (name === STATUS_EFFECT.REGEN) this.regenTickProgress = 0
+
 		this._activeStatusEffects.splice(index, 1)
 	}
 
@@ -74,9 +80,9 @@ export class StatusEffectManager {
 
 	canTick(name: STATUS_EFFECT) {
 		if (name === STATUS_EFFECT.POISON) {
-			return this.poisonTickProgress >= this.tickCooldown
+			return this.poisonTickProgress >= TICK_COOLDOWN
 		} else if (name === STATUS_EFFECT.REGEN) {
-			return this.regenTickProgress >= this.tickCooldown
+			return this.regenTickProgress >= TICK_COOLDOWN
 		}
 	}
 
@@ -88,7 +94,8 @@ export class StatusEffectManager {
 				this.tickStep(statusEffect)
 
 				if (this.canTick(statusEffect)) {
-					this.poisonTickProgress = 0
+					if (statusEffect === STATUS_EFFECT.POISON) this.poisonTickProgress = 0
+					else if (statusEffect === STATUS_EFFECT.REGEN) this.regenTickProgress = 0
 
 					const value =
 						this.activeStatusEffects.find(effect => effect.name === statusEffect)?.quantity || 0

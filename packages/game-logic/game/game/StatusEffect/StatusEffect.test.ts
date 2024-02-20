@@ -1,12 +1,12 @@
 import { BoardManager, OWNER, POSITION } from "../BoardManager"
 import { Equipment } from "../Equipment/Equipment"
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes"
+import { EVENT_TYPE, TickEffectEvent } from "../Event/EventTypes"
 import { sortAndExecuteEvents } from "../Event/EventUtils"
-import { TRIGGER } from "../Trigger/TriggerTypes"
 import { Unit } from "../Unit/Unit"
 import { useAbility } from "../_tests_/testsUtils"
 import { Weapons } from "../data"
-import { StatusEffectManager } from "./StatusEffectManager"
+import { StatusEffectManager, TICK_COOLDOWN } from "./StatusEffectManager"
 import { STATUS_EFFECT } from "./StatusEffectTypes"
 
 describe("StatusEffect", () => {
@@ -144,37 +144,6 @@ describe("StatusEffect", () => {
 
 			expect(unit2.stats.damageReductionModifier).toBe(-15)
 		})
-
-		// todo this mechanic might not exist anymore
-		test.skip("should decrease VULNERABLE stacks when hit", () => {
-			const bm = new BoardManager()
-			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm)
-			unit1.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND)
-			bm.addToBoard(unit1)
-
-			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm)
-			bm.addToBoard(unit2)
-
-			useAbility(unit1)
-			sortAndExecuteEvents(bm, unit1.serializeEvents())
-
-			expect(unit2.statusEffects).toEqual([
-				{
-					name: STATUS_EFFECT.VULNERABLE,
-					quantity: 15,
-				},
-			])
-
-			useAbility(unit1)
-			sortAndExecuteEvents(bm, unit1.serializeEvents())
-
-			expect(unit2.statusEffects).toEqual([
-				{
-					name: STATUS_EFFECT.VULNERABLE,
-					quantity: 25, // 15 + 15 - 5
-				},
-			])
-		})
 	})
 
 	describe("ATTACK_POWER (Axe)", () => {
@@ -199,44 +168,124 @@ describe("StatusEffect", () => {
 		})
 	})
 
-	describe("VULNERABLE (Axe)", () => {
-		// todo this mechanic might not exist anymore
-		test.skip("should remove all VULNERABLE when hit", () => {
+	describe("TICK_EFFECT event", () => {
+		test("should create POISON tick effect events and lose HP", () => {
 			const bm = new BoardManager()
-			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm)
-			unit1.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND)
-			bm.addToBoard(unit1)
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm)
+			bm.addToBoard(unit)
 
-			unit1.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit1, bm)
-			sortAndExecuteEvents(bm, unit1.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp)
 
-			expect(unit1.statusEffects).toContainEqual({
-				name: STATUS_EFFECT.VULNERABLE,
+			unit.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.POISON,
 				quantity: 10,
 			})
 
-			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm)
-			unit2.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND)
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
 
-			bm.addToBoard(unit2)
-
-			// attacks
-			useAbility(unit2)
-			sortAndExecuteEvents(bm, unit2.serializeEvents())
-			expect(unit1.statusEffects).toContainEqual({
-				name: STATUS_EFFECT.VULNERABLE,
-				quantity: 5,
+			expect(unit.stepEvents[0]).toStrictEqual({
+				actorId: unit.id,
+				payload: {
+					payload: {
+						decrement: 1,
+						value: 10,
+					},
+					targetId: unit.id,
+					type: STATUS_EFFECT.POISON,
+				},
+				step: TICK_COOLDOWN - 1,
+				type: EVENT_TYPE.TICK_EFFECT,
 			})
 
-			// attacks again
-			useAbility(unit2)
-			sortAndExecuteEvents(bm, unit2.serializeEvents())
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10)
 
-			expect(unit1.statusEffects).toHaveLength(1)
-			expect(unit1.statusEffects).not.toContainEqual({
-				name: STATUS_EFFECT.VULNERABLE,
-				quantity: 0,
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9)
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9)
+
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8)
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9 - 8)
+		})
+
+		test("should create REGEN tick effect events and heal HP", () => {
+			const bm = new BoardManager()
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm)
+			bm.addToBoard(unit)
+
+			unit.receiveDamage(20)
+
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20)
+
+			unit.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.REGEN,
+				quantity: 10,
 			})
+
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+
+			expect(unit.stepEvents[0]).toStrictEqual({
+				actorId: unit.id,
+				payload: {
+					payload: {
+						decrement: 1,
+						value: 10,
+					},
+					targetId: unit.id,
+					type: STATUS_EFFECT.REGEN,
+				},
+				step: TICK_COOLDOWN - 1,
+				type: EVENT_TYPE.TICK_EFFECT,
+			})
+
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10)
+
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9)
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10 + 9)
+
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8)
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp)
+
+			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i)
+			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(7)
+			sortAndExecuteEvents(bm, unit.serializeEvents())
+			expect(unit.stats.hp).toBe(unit.stats.maxHp)
+		})
+
+		test("removing POISON or REGEN should reset tick progress", () => {
+			const bm = new BoardManager()
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm)
+			bm.addToBoard(unit)
+
+			unit.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.POISON,
+				quantity: 10,
+			})
+			unit.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.REGEN,
+				quantity: 10,
+			})
+
+			for (let i = 0; i < 3; i++) unit.step(i)
+
+			expect(unit.statusEffectManager.poisonTickProgress).toBe(3)
+			expect(unit.statusEffectManager.regenTickProgress).toBe(3)
+
+			unit.statusEffectManager.removeAllStacks(STATUS_EFFECT.POISON)
+			expect(unit.statusEffectManager.poisonTickProgress).toBe(0)
+
+			unit.statusEffectManager.removeStacks(STATUS_EFFECT.REGEN, 5)
+			expect(unit.statusEffectManager.regenTickProgress).toBe(3)
+			unit.statusEffectManager.removeStacks(STATUS_EFFECT.REGEN, 5)
+			expect(unit.statusEffectManager.regenTickProgress).toBe(0)
 		})
 	})
 })
