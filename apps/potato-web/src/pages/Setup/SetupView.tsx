@@ -180,7 +180,7 @@ export function SetupView() {
   const [boardRight, setBoardRight] = useState<{ id: string; unit: any }[]>(initialBoardRight);
 
   useEffect(() => {
-    const board = JSON.parse(localStorage.getItem("board") || "[]");
+    const board = JSON.parse(localStorage.getItem("boardLeft") || "[]");
     const boardRight = JSON.parse(localStorage.getItem("boardRight") || "[]");
 
     if (board.length > 0) {
@@ -312,7 +312,7 @@ export function SetupView() {
         };
       });
 
-    localStorage.setItem("board", JSON.stringify(boardLeft));
+    localStorage.setItem("boardLeft", JSON.stringify(boardLeft));
     localStorage.setItem("boardRight", JSON.stringify(boardRight));
 
     setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
