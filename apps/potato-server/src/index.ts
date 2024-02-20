@@ -269,8 +269,12 @@ const connectAll = async () => {
     });
   });
 };
-
-connectAll().then(() => {
+const server = serve({ fetch: app.fetch, port: Number(PORT) }, (info) => {
+  console.log(
+    `${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`
+  );
+});
+/* connectAll().then(() => {
   const server = serve({ fetch: app.fetch, port: Number(PORT) }, (info) => {
     console.log(
       `${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`
@@ -316,12 +320,12 @@ connectAll().then(() => {
         .hSet("online_users_data", userId, JSON.stringify({ id: userId, name }))
         .exec();
 
-      /* ws.send(
-        JSON.stringify({
-          type: "online_users",
-          data: await redisClient.hGetAll("online_users_data"),
-        })
-      ); */
+      //ws.send(
+      //JSON.stringify({
+      //type: "online_users",
+      //data: await redisClient.hGetAll("online_users_data"),
+      // })
+      //);
     }
 
     ws.on("error", console.error);
@@ -402,6 +406,6 @@ connectAll().then(() => {
       }
     });
   });
-});
+}); */
 
 // todo extract members from room to: room_members:roomId -> centralized hash with all members. Update: not worth because of /rooms

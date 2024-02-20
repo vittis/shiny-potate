@@ -23,9 +23,6 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.4.4
-      game-logic:
-        specifier: workspace:*
-        version: link:../../packages/game-logic
       hono:
         specifier: ^3.11.8
         version: 3.12.12
