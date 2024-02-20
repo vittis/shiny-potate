@@ -62,7 +62,7 @@ app.use("/api/*", async (c, next) => {
 });
 
 app.route("/", rooms);
-app.route("/", gameRoutes);
+app.route("/game", gameRoutes);
 
 app.post("/login", async (c) => {
   // You would typically validate user credentials here

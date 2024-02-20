@@ -66,7 +66,7 @@ export async function setupTeams(data) {
   /* const { data: response, error } = await supabase.functions.invoke("setup-teams", { body: data });
   return response; */
   try {
-    const response = await fetch("http://localhost:8080/setup-teams", {
+    const response = await fetch("http://localhost:8080/game/setup-teams", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,6 +74,7 @@ export async function setupTeams(data) {
       body: JSON.stringify(data),
     });
 
+    console.log("response", response);
     const result = await response.json();
     return result;
   } catch (error) {

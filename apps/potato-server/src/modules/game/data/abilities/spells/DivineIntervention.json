@@ -1,8 +1,0 @@
-{
-  "name": "Divine Intervention",
-  "type": "SPELL",
-  "tags": [],
-  "target": "STANDARD",
-  "cooldown": 40000,
-  "effects": []
-}

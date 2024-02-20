@@ -8,7 +8,9 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "types": ["node", "jest"],
+    "lib": ["es2021"]
   },
   "exclude": ["node_modules"]
 }
