@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "strict": true,
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
     "lib": ["es2021"]
   },
   "exclude": ["node_modules"]
