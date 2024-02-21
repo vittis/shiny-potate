@@ -264,7 +264,7 @@ const connectAll = async () => {
 }
 const server = serve({ fetch: app.fetch, port: Number(PORT) }, info => {
 	console.log(
-		`${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`,
+		`AppId: ${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`,
 	)
 })
 /* connectAll().then(() => {

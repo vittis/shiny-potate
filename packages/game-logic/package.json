@@ -8,6 +8,7 @@
 	"files": [
 		"dist/**"
 	],
+	"sideEffects": false,
 	"scripts": {
 		"build": "tsup game/index.ts --format cjs,esm --dts",
 		"dev": "tsup game/index.ts --format cjs,esm --dts --watch",
