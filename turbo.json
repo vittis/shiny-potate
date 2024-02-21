@@ -22,6 +22,10 @@
       "cache": false,
       "persistent": true
     },
+    "start": {
+      "cache": false,
+      "persistent": true
+    },
     "test": {},
     "test:watch": {
       "cache": false,
