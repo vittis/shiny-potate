@@ -7,6 +7,7 @@ import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import { supabase } from "@/services/supabase/supabase"
 import { Loader2 } from "lucide-react"
+import { api } from "@/services/api/http"
 
 const initialBoard = [
 	{
@@ -61,25 +62,22 @@ const initialBoardRight = [
 		unit: null,
 	},
 ]
-
+async function joinRoom(id) {
+	const res = await api.post(
+		`/api/rooms/${id}/join`,
+		{},
+		{
+			withCredentials: true,
+		},
+	)
+	return res.data
+}
 export async function setupTeams(data) {
-	/* const { data: response, error } = await supabase.functions.invoke("setup-teams", { body: data });
-  return response; */
-	try {
-		const response = await fetch("http://localhost:8080/game/setup-teams", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		})
+	const response = await api.post("/game/setup-teams", data, {
+		withCredentials: true,
+	})
 
-		console.log("response", response)
-		const result = await response.json()
-		return result
-	} catch (error) {
-		console.error("Error:", error)
-	}
+	return response.data
 }
 
 export interface UnitsDTO {
