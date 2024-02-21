@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { supabase } from "@/services/supabase/supabase"
 import { Github } from "lucide-react"
+import { useLocation } from "react-router-dom"
 
 const FormSchema = z.object({
 	/* username: z.string().min(4, { message: "Name must be at least 4 characters" }).max(16, {
@@ -38,6 +39,7 @@ interface LoginUserDrawer {}
 
 const LoginUserDrawer = ({}: LoginUserDrawer) => {
 	const [isOpen, setIsOpen] = useState(false)
+	const { pathname } = useLocation()
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -51,12 +53,18 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 	async function signInWithGithub() {
 		await supabase.auth.signInWithOAuth({
 			provider: "github",
+			options: {
+				redirectTo: `${window.origin}${pathname}`,
+			},
 		})
 	}
 
 	async function signInWithGoogle() {
 		await supabase.auth.signInWithOAuth({
 			provider: "google",
+			options: {
+				redirectTo: `${window.origin}${pathname}`,
+			},
 		})
 	}
 

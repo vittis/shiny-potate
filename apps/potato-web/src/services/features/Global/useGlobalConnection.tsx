@@ -3,19 +3,21 @@ import { useUserStore } from "../User/useUserStore"
 import useWebSocket from "react-use-websocket"
 import { SOCKET_URL } from "@/services/api/websocket"
 import { queryClient } from "@/services/api/queryClient"
+import { useSupabaseUserStore } from "../User/useSupabaseUserStore"
 
 const useGlobalConnection = () => {
-	const userData = useUserStore(state => state.userData)
+	const user = useSupabaseUserStore(state => state.user)
+	const username = user?.user_metadata?.username
 
 	const searchParams = useMemo(() => {
-		if (!userData?.userId) return null
+		if (!user?.id) return null
 
-		const params = new URLSearchParams({ userId: userData.userId, name: userData.name })
+		const params = new URLSearchParams({ userId: user.id, name: username })
 		params.append("channels", "global")
 		params.append("channels", "user")
 
 		return params.toString() // userId=id&channels=global&channels=user
-	}, [userData])
+	}, [user])
 
 	const { readyState } = useWebSocket(
 		`${SOCKET_URL}/?${searchParams}`,

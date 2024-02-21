@@ -1,10 +1,10 @@
 import useWebSocket from "react-use-websocket"
 import { useMemo } from "react"
-import { useUserStore } from "@/services/features/User/useUserStore"
 import { SOCKET_URL } from "@/services/api/websocket"
 import { queryClient } from "@/services/api/queryClient"
 import { useQuery } from "@tanstack/react-query"
 import { api } from "@/services/api/http"
+import { useSupabaseUserStore } from "../User/useSupabaseUserStore"
 
 async function fetchChatMessages(channel: string) {
 	const { data } = await api.get(`/api/chat/${channel}`, {
@@ -15,23 +15,24 @@ async function fetchChatMessages(channel: string) {
 
 // todo adjust to allow many channels properly
 const useChatMessages = ({ channel }: { channel: string }) => {
-	const userData = useUserStore(state => state.userData)
+	const user = useSupabaseUserStore(state => state.user)
+	const username = user?.user_metadata?.username
 
 	const searchParams = useMemo(() => {
-		if (!userData?.userId) return null
+		if (!user?.id) return null
 
-		const params = new URLSearchParams({ userId: userData.userId })
+		const params = new URLSearchParams({ userId: user?.id })
 		params.append("channels", "chat")
 		params.append("channels", channel)
-		params.append("name", userData.name)
+		params.append("name", username)
 
 		return params.toString()
-	}, [userData, channel])
+	}, [user, channel])
 
 	const { data: messagesData, isLoading: messagesLoading } = useQuery<{ data: any[] }>({
 		queryKey: ["chat", channel],
 		queryFn: () => fetchChatMessages(channel),
-		enabled: userData.name !== "",
+		enabled: username !== "",
 	})
 
 	const { sendMessage: sendChatMessage } = useWebSocket(
@@ -60,7 +61,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 				}
 			},
 		},
-		userData.userId !== "",
+		user?.id !== undefined,
 	)
 
 	const messages = useMemo(() => {

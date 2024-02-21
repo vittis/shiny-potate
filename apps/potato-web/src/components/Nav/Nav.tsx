@@ -3,7 +3,6 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { Button } from "../ui/button"
 import { ThemeModeToggle } from "../ThemeModeToggle/ThemeModeToggle"
 import { useAuth } from "@/services/features/User/useAuth"
-import { useUserStore } from "@/services/features/User/useUserStore"
 import { useGlobalConnection } from "@/services/features/Global/useGlobalConnection"
 import { ReadyState } from "react-use-websocket"
 import { WifiIcon, WifiOffIcon } from "lucide-react"
@@ -12,7 +11,7 @@ import { RegisterUserDrawer } from "../User/RegisterUserDrawer"
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
 import { supabase } from "@/services/supabase/supabase"
 import { LoginUserDrawer } from "../User/LoginUserDrawer"
-import { Link, matchPath, useLocation, useResolvedPath } from "react-router-dom"
+import { Link, matchPath, useLocation } from "react-router-dom"
 
 const navItems = [
 	{
@@ -48,6 +47,7 @@ const navItems = [
 ]
 
 export function Nav() {
+	const { login, logout } = useAuth()
 	const user = useSupabaseUserStore(state => state.user)
 
 	const { readyState } = useGlobalConnection()
@@ -101,16 +101,23 @@ export function Nav() {
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
 			<div className="grow flex justify-end gap-4 items-center">
+				<Button onClick={() => login()} variant="outline">
+					login legacy
+				</Button>
+				<Button onClick={() => logout()} variant="outline">
+					logout legacy
+				</Button>
+
 				{user ? (
 					<>
 						<div className="text-muted-foreground">
 							Logged as{" "}
 							<span className="text-primary mr-2">
-								{user.user_metadata.username
-									? user.user_metadata.username
-									: user.user_metadata.preferred_username
-										? user.user_metadata.name
-										: user.email}
+								{user?.user_metadata?.username
+									? user?.user_metadata?.username
+									: user?.user_metadata?.preferred_username
+										? user?.user_metadata?.name
+										: user?.email}
 							</span>
 						</div>
 						<Button onClick={() => supaBaselogout()} variant="outline">
