@@ -1,28 +1,52 @@
 [
-	{
-		"name": "ATTACK_DAMAGE",
-		"tiers": [5, 10, 15, 20, 25],
-		"tags": [
-			{
-				"name": "WEAPON",
-				"weight": 2
-			}
-		]
-	},
-	{
-		"name": "ATTACK_COOLDOWN",
-		"tiers": [5, 10, 15, 20, 25]
-	},
-	{
-		"name": "SPELL_DAMAGE",
-		"tiers": [5, 10, 15, 20, 25]
-	},
-	{
-		"name": "SPELL_COOLDOWN",
-		"tiers": [5, 10, 15, 20, 25]
-	},
-	{
-		"name": "DAMAGE_REDUCTION",
-		"tiers": [5, 10, 15, 20, 25]
-	}
+  {
+    "name": "ATTACK_DAMAGE",
+    "tiers": [
+      5,
+      10,
+      15,
+      20,
+      25
+    ]
+  },
+  {
+    "name": "ATTACK_COOLDOWN",
+    "tiers": [
+      5,
+      10,
+      15,
+      20,
+      25
+    ]
+  },
+  {
+    "name": "SPELL_DAMAGE",
+    "tiers": [
+      5,
+      10,
+      15,
+      20,
+      25
+    ]
+  },
+  {
+    "name": "SPELL_COOLDOWN",
+    "tiers": [
+      5,
+      10,
+      15,
+      20,
+      25
+    ]
+  },
+  {
+    "name": "DAMAGE_REDUCTION",
+    "tiers": [
+      5,
+      10,
+      15,
+      20,
+      25
+    ]
+  }
 ]
