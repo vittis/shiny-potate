@@ -141,10 +141,7 @@ app.get("/api/chat/:channel", async c => {
 app.post("/api/chat/:channel/:message", async c => {
 	const channel = c.req.param("channel")
 	const msg = c.req.param("message")
-	const user = c.get("jwtPayload")
-
 	const finalMsg = `${c.get("session").name}: ${msg}`
-	console.log("finalMsg: ", finalMsg)
 
 	const session = c.get("session")
 
@@ -298,7 +295,7 @@ connectAll().then(() => {
 		console.log("connecting into: ", req.url)
 
 		const urlParams = new URLSearchParams(req.url?.replace("/", "") || "")
-		console.log(urlParams)
+
 		const userId = urlParams.get("userId")
 		const name = urlParams.get("name")
 
