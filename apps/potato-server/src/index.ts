@@ -10,7 +10,7 @@ import { cors } from "hono/cors"
 import { prettyJSON } from "hono/pretty-json"
 import rooms, { Room, RoomRepository } from "./controllers/rooms/roomsRoutes"
 import gameRoutes from "./controllers/game/gameRoutes"
-
+import { jwt, verify } from "hono/jwt"
 import { uniqueNamesGenerator, starWars } from "unique-names-generator"
 
 export type Variables = {
@@ -38,11 +38,17 @@ const wsConnections: {
 	socket: WebSocket
 	userId?: string
 	channels: string[]
+	name?: string
 }[] = []
 
 // attach session data middleware
-app.use("/api/*", async (c, next) => {
-	const sId = getCookie(c, "sId")
+app.use(
+	"/api/*",
+	jwt({
+		secret: process.env.JWT_SECRET,
+	}),
+	async (c, next) => {
+		/* const sId = getCookie(c, "sId")
 
 	if (!sId) {
 		return c.json({ error: "Unauthorized" }, 401)
@@ -57,9 +63,18 @@ app.use("/api/*", async (c, next) => {
 	}
 
 	// Attach session data to the request for later use
-	c.set("session", { id: sId, ...sessionData })
-	await next()
-})
+	c.set("session", { id: sId, ...sessionData }) */
+		const authHeader = c.req.headers.get("Authorization")
+		const validadedToken = await verify(authHeader?.replace("Bearer ", ""), process.env.JWT_SECRET)
+		if (validadedToken) {
+			c.set("jwtPayload", validadedToken)
+		} else {
+			return c.json({ error: "Unauthorized" }, 401)
+		}
+
+		await next()
+	},
+)
 
 app.route("/", rooms)
 app.route("/game", gameRoutes)
@@ -126,7 +141,10 @@ app.get("/api/chat/:channel", async c => {
 app.post("/api/chat/:channel/:message", async c => {
 	const channel = c.req.param("channel")
 	const msg = c.req.param("message")
+	const user = c.get("jwtPayload")
+
 	const finalMsg = `${c.get("session").name}: ${msg}`
+	console.log("finalMsg: ", finalMsg)
 
 	const session = c.get("session")
 
@@ -280,7 +298,10 @@ connectAll().then(() => {
 		console.log("connecting into: ", req.url)
 
 		const urlParams = new URLSearchParams(req.url?.replace("/", "") || "")
+		console.log(urlParams)
 		const userId = urlParams.get("userId")
+		const name = urlParams.get("name")
+
 		if (!userId) {
 			console.log("userId not provided, closing connection")
 			ws.close()
@@ -295,11 +316,13 @@ connectAll().then(() => {
 			socket: ws,
 			userId,
 			channels,
+			name,
 		})
 
 		const isGlobal = channels.includes("global")
 
-		const name = urlParams.get("name")
+		/* 		const name = urlParams.get("name") */
+
 		if (isGlobal) {
 			if (!name) {
 				console.log("name not provided in Global, closing connection")
@@ -322,7 +345,6 @@ connectAll().then(() => {
 		}
 
 		ws.on("error", console.error)
-
 		ws.on("message", data => {
 			if (channels.includes("chat") && channels.includes("lobby")) {
 				const msg = data?.toString()

@@ -16,12 +16,12 @@ async function fetchChatMessages(channel: string) {
 // todo adjust to allow many channels properly
 const useChatMessages = ({ channel }: { channel: string }) => {
 	const user = useSupabaseUserStore(state => state.user)
-	const username = user?.user_metadata?.username
+	const username = user?.user_metadata?.user_name
 
 	const searchParams = useMemo(() => {
 		if (!user?.id) return null
 
-		const params = new URLSearchParams({ userId: user?.id })
+		const params = new URLSearchParams({ userId: user?.id, name: username })
 		params.append("channels", "chat")
 		params.append("channels", channel)
 		params.append("name", username)

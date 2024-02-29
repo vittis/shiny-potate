@@ -5,20 +5,20 @@ export const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 })
 
-/* api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("User-Token");
+api.interceptors.request.use(
+	config => {
+		const token = localStorage.getItem("sb-olxyngtemwtptqqqskna-auth-token")
+		const accessToken = JSON.parse(token || "{}")
+		if (token) {
+			config.headers["Authorization"] = `Bearer ${accessToken.access_token}`
+		}
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-); */
+		return config
+	},
+	error => {
+		return Promise.reject(error)
+	},
+)
 
 api.interceptors.response.use(
 	function (response) {
