@@ -4,6 +4,16 @@ export const MockPerks = {
 	FocusedMind: {
 		name: "Focused Mind",
 		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 2,
+			},
+			{
+				name: "MAGICAL",
+				weight: 5,
+			},
+		],
 		tiers: [
 			{
 				name: "FOCUS",

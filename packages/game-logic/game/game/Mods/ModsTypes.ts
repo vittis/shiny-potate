@@ -54,4 +54,13 @@ export type PossibleMods = Array<
 	| Mod<MOD_TYPE.GRANT_PERK>
 	| Mod<MOD_TYPE.GRANT_BASE_STAT>
 	| Mod<MOD_TYPE.GRANT_ABILITY_MODIFIER>
->;
+>
+
+export interface ShopItemMod {
+	mod:
+		| Mod<MOD_TYPE.GRANT_ABILITY>
+		| Mod<MOD_TYPE.GRANT_PERK>
+		| Mod<MOD_TYPE.GRANT_BASE_STAT>
+		| Mod<MOD_TYPE.GRANT_ABILITY_MODIFIER>
+	weight: number
+}
