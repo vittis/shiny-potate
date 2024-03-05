@@ -77,9 +77,15 @@ export const TriggerEffectsSchema = z.array(
 	z.union([StatusTriggerEffect, DamageTriggerEffect, ShieldTriggerEffect, HealTriggerEffect]),
 );
 
+const PerkTagSchema = z.object({
+	name: z.nativeEnum(EQUIPMENT_TAG),
+	weight: z.number(),
+});
+
 export const PerkDataSchema = z.object({
 	name: z.string(),
 	type: z.nativeEnum(PERK_TYPE),
 	tiers: z.array(PerkTierScaleSchema),
 	effects: TriggerEffectsSchema,
+	tags: z.array(PerkTagSchema).optional(),
 }) satisfies z.ZodType<PerkData>;
