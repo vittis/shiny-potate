@@ -80,7 +80,7 @@ export const TriggerEffectsSchema = z.array(
 const PerkTagSchema = z.object({
 	name: z.nativeEnum(EQUIPMENT_TAG),
 	weight: z.number(),
-})
+});
 
 export const PerkDataSchema = z.object({
 	name: z.string(),
@@ -88,4 +88,4 @@ export const PerkDataSchema = z.object({
 	tiers: z.array(PerkTierScaleSchema),
 	effects: TriggerEffectsSchema,
 	tags: z.array(PerkTagSchema).optional(),
-}) satisfies z.ZodType<PerkData>
+}) satisfies z.ZodType<PerkData>;
