@@ -2,8 +2,8 @@ import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserSt
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
 import { Button } from "@/components/ui/button";
 import { useArenaMutation } from "@/services/features/Arena/useArenaMutation";
-import { SetupView } from "@/pages/Setup/SetupView";
 import { format } from "date-fns";
+import { ShopView } from "@/pages/Setup/ShopView";
 
 const ArenaView = () => {
 	const user = useSupabaseUserStore(state => state.user);
@@ -47,7 +47,7 @@ const ArenaView = () => {
 								</div>
 								<div> Started At: {format(game.created_at, "MM/dd/yy")} </div>
 							</div>
-							<SetupView />
+							<ShopView />
 							<Button onClick={onClickWin}> Win Game</Button>
 						</div>
 					)}

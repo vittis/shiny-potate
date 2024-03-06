@@ -24,6 +24,7 @@ import LobbyView from "./pages/Play/Views/Lobby/LobbyView";
 import { GameView } from "./pages/Game/GameView";
 import ArenaView from "./pages/Play/Views/Arena/ArenaView";
 import { ShopView } from "./pages/Setup/ShopView";
+import ArenaView from "./pages/Play/Views/Arena/ArenaView";
 /* import { Game } from "game-logic";
 
 Game.prototype. */
@@ -72,6 +73,8 @@ const router = createBrowserRouter([
 					{ path: "rooms", element: <LobbyView /> },
 					{ path: "arena", element: <ArenaView /> },
 					{ path: "sandbox", element: <ShopView /> },
+					{ path: "sandbox", element: <SetupView /> },
+					{ path: "arena", element: <ArenaView /> },
 				],
 			},
 			{
