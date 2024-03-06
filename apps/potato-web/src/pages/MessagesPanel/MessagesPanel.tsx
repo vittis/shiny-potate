@@ -10,7 +10,6 @@ import { useEffect, useRef } from "react";
 import { ChatBubble } from "./ChatBubble";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useChatMessages } from "@/services/features/Messages/useChatMessages";
-import { useUserStore } from "@/services/features/User/useUserStore";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 

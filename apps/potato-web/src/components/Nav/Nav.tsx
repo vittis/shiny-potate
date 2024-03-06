@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 import { ThemeModeToggle } from "../ThemeModeToggle/ThemeModeToggle";
-import { useAuth } from "@/services/features/User/useAuth";
 import { useGlobalConnection } from "@/services/features/Global/useGlobalConnection";
 import { ReadyState } from "react-use-websocket";
 import { WifiIcon, WifiOffIcon } from "lucide-react";
@@ -47,8 +46,14 @@ const navItems = [
 ];
 
 export function Nav() {
-	const { login, logout } = useAuth();
 	const user = useSupabaseUserStore(state => state.user);
+	const username =
+		user?.user_metadata?.user_name ||
+		user?.user_metadata?.username ||
+		user?.user_metadata?.name ||
+		user?.user_metadata?.preferred_username ||
+		user?.user_metadata?.name ||
+		user?.email;
 
 	const { readyState } = useGlobalConnection();
 
@@ -101,24 +106,10 @@ export function Nav() {
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
 			<div className="grow flex justify-end gap-4 items-center">
-				<Button onClick={() => login()} variant="outline">
-					login legacy
-				</Button>
-				<Button onClick={() => logout()} variant="outline">
-					logout legacy
-				</Button>
-
 				{user ? (
 					<>
 						<div className="text-muted-foreground">
-							Logged as{" "}
-							<span className="text-primary mr-2">
-								{user?.user_metadata?.username
-									? user?.user_metadata?.username
-									: user?.user_metadata?.preferred_username
-										? user?.user_metadata?.name
-										: user?.email}
-							</span>
+							Logged as <span className="text-primary mr-2">{username}</span>
 						</div>
 						<Button onClick={() => supaBaselogout()} variant="outline">
 							Logout

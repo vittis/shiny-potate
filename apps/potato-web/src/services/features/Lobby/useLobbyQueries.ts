@@ -23,8 +23,6 @@ interface LobbyData {
 }
 
 const useLobbyQueries = (): LobbyData => {
-	useLobbyRealtime();
-
 	const isLoggedIn = useUserStore(state => state.isLoggedIn);
 
 	const {

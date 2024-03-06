@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { api } from "../../api/http";
 import { toast } from "react-toastify";
 import { supabase } from "@/services/supabase/supabase";
 import { queryClient } from "@/services/api/queryClient";

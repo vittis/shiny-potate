@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useUserStore } from "../User/useUserStore";
 import useWebSocket from "react-use-websocket";
 import { SOCKET_URL } from "@/services/api/websocket";
 import { queryClient } from "@/services/api/queryClient";
@@ -7,7 +6,8 @@ import { useSupabaseUserStore } from "../User/useSupabaseUserStore";
 
 const useGlobalConnection = () => {
 	const user = useSupabaseUserStore(state => state.user);
-	const username = user?.user_metadata?.username;
+	const username =
+		user?.user_metadata?.user_name || user?.user_metadata?.username || user?.user_metadata?.name; // todo unify this
 
 	const searchParams = useMemo(() => {
 		if (!user?.id) return null;
