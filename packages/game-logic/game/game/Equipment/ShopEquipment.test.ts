@@ -1,3 +1,5 @@
+import { MOD_TYPE } from "../Mods/ModsTypes";
+import { STAT } from "../Stats/StatsTypes";
 import { Weapons } from "../data";
 import { ShopEquipment } from "./ShopEquipment";
 
@@ -18,7 +20,7 @@ describe("ShopEquipment", () => {
 		});
 
 		it("should return all applicableMods correctly", () => {
-			const equip = new ShopEquipment(Weapons.Shortbow, 7);
+			const equip = new ShopEquipment(Weapons.Shortbow, 5);
 			const mods = equip.applicableMods;
 
 			expect(mods.length).toBe(5);
@@ -29,7 +31,7 @@ describe("ShopEquipment", () => {
 		});
 	});
 
-	describe("rollMods", () => {
+	describe("rollTieredMods", () => {
 		it("should roll unique mods with the correct tier limit and only one at item tier", () => {
 			function hasDuplicateMod(rolledMods: any[]) {
 				const nameSet = new Set();
@@ -40,9 +42,9 @@ describe("ShopEquipment", () => {
 				return false;
 			}
 
-			for (let tier = 1; tier < 8; tier++) {
+			for (let tier = 1; tier < 6; tier++) {
 				const equip = new ShopEquipment(Weapons.Shortbow, tier);
-				const rolledMods = equip.rollMods();
+				const rolledMods = equip.rollTieredMods();
 
 				expect(hasDuplicateMod(rolledMods)).toBe(false);
 
@@ -50,6 +52,32 @@ describe("ShopEquipment", () => {
 				expect(totalModTiers).toBe(tier * 2 - 1);
 
 				expect(rolledMods[0].tier).toBe(tier);
+			}
+		});
+	});
+
+	describe("rolledMods", () => {
+		it("should roll valid PossibleMods", () => {
+			for (let tier = 1; tier < 6; tier++) {
+				const equip = new ShopEquipment(Weapons.Shortbow, tier);
+
+				equip.rolledMods.forEach(mod => {
+					expect([MOD_TYPE.GRANT_PERK, MOD_TYPE.GRANT_BASE_STAT]).toContain(mod.type);
+
+					if (mod.type == MOD_TYPE.GRANT_PERK) {
+						expect(mod.payload.name).toBeTypeOf("string");
+						expect(mod.payload.tier).toBeTypeOf("number");
+					} else if (mod.type == MOD_TYPE.GRANT_BASE_STAT) {
+						expect([
+							STAT.ATTACK_COOLDOWN,
+							STAT.ATTACK_DAMAGE,
+							STAT.DAMAGE_REDUCTION,
+							STAT.SPELL_COOLDOWN,
+							STAT.SPELL_DAMAGE,
+						]).toContain(mod.payload.stat);
+						expect(mod.payload.value).toBeTypeOf("number");
+					}
+				});
 			}
 		});
 	});

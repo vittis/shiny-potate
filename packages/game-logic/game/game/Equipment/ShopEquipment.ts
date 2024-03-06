@@ -8,9 +8,11 @@ import {
 	ShopItemStatMod,
 	ShopItemMod,
 	ShopItemTieredMod,
+	Mod,
 } from "../Mods/ModsTypes";
 import { Perks } from "../data";
 import Stats from "../../data/mods/stats.json";
+import { STAT } from "../Stats/StatsTypes";
 
 const MOD_LIMIT = 4;
 
@@ -19,7 +21,7 @@ export class ShopEquipment {
 	data: EquipmentData;
 
 	tier: number;
-	rolledMods!: PossibleMods;
+	rolledMods: PossibleMods;
 
 	applicableMods: ShopItemMod[] = [];
 
@@ -35,6 +37,7 @@ export class ShopEquipment {
 		this.tier = tier;
 
 		this.applicableMods = [...this.getAllApplicablePerkMods(), ...this.getAllApplicableStatMods()];
+		this.rolledMods = this.generateRolledMods(this.rollTieredMods());
 	}
 
 	getAllApplicablePerkMods(): ShopItemPerkMod[] {
@@ -115,7 +118,7 @@ export class ShopEquipment {
 		return applicableMods;
 	}
 
-	rollMods(): ShopItemTieredMod[] {
+	rollTieredMods(): ShopItemTieredMod[] {
 		let rolledMods: ShopItemTieredMod[] = [];
 		let remainingMods = this.applicableMods;
 		let remainingTiers = this.tier * 2 - 1;
@@ -160,7 +163,51 @@ export class ShopEquipment {
 			}
 		}
 
-		// TODO improve return to remove below
-		return remainingMods[0];
+		throw Error("rollRandomMod: No mod selected, this should never happen");
+	}
+
+	generateRolledMods(rolledTieredMods: ShopItemTieredMod[]): PossibleMods {
+		let rolledMods: PossibleMods = [];
+
+		rolledMods = rolledTieredMods.map(tieredMod => {
+			let convertedMod: Mod<MOD_TYPE.GRANT_PERK> | Mod<MOD_TYPE.GRANT_BASE_STAT>;
+
+			if (tieredMod.mod.type === MOD_TYPE.GRANT_PERK) {
+				convertedMod = {
+					type: MOD_TYPE.GRANT_PERK,
+					payload: {
+						name: tieredMod.mod.payload.name,
+						tier: tieredMod.tier,
+					},
+				} as Mod<MOD_TYPE.GRANT_PERK>;
+			} else {
+				convertedMod = {
+					type: MOD_TYPE.GRANT_BASE_STAT,
+					payload: {
+						stat: tieredMod.mod.payload.name,
+						value: this.getStatModValueFromTier(tieredMod.mod.payload.name, tieredMod.tier),
+					},
+				} as Mod<MOD_TYPE.GRANT_BASE_STAT>;
+			}
+
+			return convertedMod;
+		});
+
+		return rolledMods;
+	}
+
+	getStatModValueFromTier(modStat: STAT, modTier: number): number {
+		const statsData = EquipmentStatsDataArraySchema.parse(Stats) as EquipmentStatsData[];
+
+		const stat = statsData.find(stat => stat.name === modStat);
+		if (!stat) throw Error("getStatModValueFromTier: No stat found");
+
+		const modValue = stat.tiers[modTier - 1];
+		if (!modValue)
+			throw Error(
+				"getStatModValueFromTier: No value found for tier " + modTier + " on stat " + modStat,
+			);
+
+		return modValue;
 	}
 }
