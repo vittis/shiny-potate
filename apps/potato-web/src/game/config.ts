@@ -1,4 +1,4 @@
-import Phaser from "phaser"
+import Phaser from "phaser";
 
 export const PHASER_CONFIG = {
 	type: Phaser.AUTO,
@@ -32,4 +32,4 @@ export const PHASER_CONFIG = {
       // autoCenter: Phaser.Scale.CENTER_BOTH,
       // expandParent: false,
    }, */
-} as Phaser.Types.Core.GameConfig
+} as Phaser.Types.Core.GameConfig;

@@ -1,7 +1,7 @@
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query"
-import { AxiosError } from "axios"
-import { AlertCircleIcon, AlertTriangle } from "lucide-react"
-import { toast } from "react-toastify"
+import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { AlertCircleIcon, AlertTriangle } from "lucide-react";
+import { toast } from "react-toastify";
 
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
 					error?.response?.data?.message || error?.response?.data?.error || error?.message
 				}`,
 				{ icon: AlertTriangle },
-			)
+			);
 		},
 	}),
 	mutationCache: new MutationCache({
@@ -28,7 +28,7 @@ const queryClient = new QueryClient({
 				{
 					icon: () => <AlertCircleIcon className="w-6 text-red-500" />,
 				},
-			)
+			);
 		},
 	}),
 	defaultOptions: {
@@ -39,6 +39,6 @@ const queryClient = new QueryClient({
 			retry: false,
 		},
 	},
-})
+});
 
-export { queryClient }
+export { queryClient };

@@ -1,28 +1,28 @@
-import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable"
-import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
-import { useState } from "react"
-import { PlaySideNavItems } from "./PlaySideNavItems"
-import { AlertCircle, DoorClosed, FlaskConical, Swords, Trophy, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/services/features/User/useAuth"
-import { useUserStore } from "@/services/features/User/useUserStore"
-import { matchPath, useLocation } from "react-router-dom"
+import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { PlaySideNavItems } from "./PlaySideNavItems";
+import { AlertCircle, DoorClosed, FlaskConical, Swords, Trophy, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/services/features/User/useAuth";
+import { useUserStore } from "@/services/features/User/useUserStore";
+import { matchPath, useLocation } from "react-router-dom";
 
 interface PlaySideNavProps {
-	defaultCollapsed: boolean
-	defaultSize: number
-	navCollapsedSize: number
+	defaultCollapsed: boolean;
+	defaultSize: number;
+	navCollapsedSize: number;
 }
 
 const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySideNavProps) => {
-	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed)
+	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
-	const userData = useUserStore(state => state.userData)
+	const userData = useUserStore(state => state.userData);
 
-	const { login, loginIsPending } = useAuth()
+	const { login, loginIsPending } = useAuth();
 
-	const { pathname } = useLocation()
+	const { pathname } = useLocation();
 
 	return (
 		<>
@@ -33,10 +33,10 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 				minSize={11}
 				maxSize={18}
 				onExpand={() => {
-					setIsCollapsed(false)
+					setIsCollapsed(false);
 				}}
 				onCollapse={() => {
-					setIsCollapsed(true)
+					setIsCollapsed(true);
 				}}
 				className={cn(isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out")}
 			>
@@ -147,7 +147,7 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 		</>
-	)
-}
+	);
+};
 
-export { PlaySideNav }
+export { PlaySideNav };

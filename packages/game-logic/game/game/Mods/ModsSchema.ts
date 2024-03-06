@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 import {
 	GrantAbilityModifierPayload,
 	GrantAbilityPayload,
@@ -6,10 +6,10 @@ import {
 	GrantPerkPayload,
 	MOD_TYPE,
 	PossibleMods,
-} from "./ModsTypes"
-import { STAT } from "../Stats/StatsTypes"
-import { ABILITY_TARGET, AbilityModifier } from "../Class/ClassTypes"
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes"
+} from "./ModsTypes";
+import { STAT } from "../Stats/StatsTypes";
+import { ABILITY_TARGET, AbilityModifier } from "../Class/ClassTypes";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 
 // todo better type
 const AbilityModifierSchema = z.object({
@@ -49,21 +49,21 @@ const AbilityModifierSchema = z.object({
 			}),
 		)
 		.optional(),
-}) satisfies z.ZodType<AbilityModifier>
+}) satisfies z.ZodType<AbilityModifier>;
 
 const GrantAbilityPayloadSchema = z.object({
 	name: z.string(),
-}) satisfies z.ZodType<GrantAbilityPayload>
+}) satisfies z.ZodType<GrantAbilityPayload>;
 
 const GrantPerkPayloadSchema = z.object({
 	name: z.string(),
 	tier: z.optional(z.number()),
-}) satisfies z.ZodType<GrantPerkPayload>
+}) satisfies z.ZodType<GrantPerkPayload>;
 
 const GrantBaseStatPayloadSchema = z.object({
 	stat: z.nativeEnum(STAT),
 	value: z.number(),
-}) satisfies z.ZodType<GrantBaseStatPayload>
+}) satisfies z.ZodType<GrantBaseStatPayload>;
 
 const GrantAbilityModifierPayload = z.union([
 	z.object({
@@ -75,7 +75,7 @@ const GrantAbilityModifierPayload = z.union([
 		nodeName: z.string(),
 		unique: z.boolean(),
 	}),
-]) satisfies z.ZodType<GrantAbilityModifierPayload>
+]) satisfies z.ZodType<GrantAbilityModifierPayload>;
 
 export const PossibleModsSchema = z.array(
 	z.union([
@@ -96,4 +96,4 @@ export const PossibleModsSchema = z.array(
 			payload: GrantAbilityModifierPayload,
 		}),
 	]),
-) satisfies z.ZodType<PossibleMods>
+) satisfies z.ZodType<PossibleMods>;

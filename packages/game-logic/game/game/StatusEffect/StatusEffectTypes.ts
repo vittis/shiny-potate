@@ -14,6 +14,6 @@ export enum STATUS_EFFECT {
 }
 
 export interface ActiveStatusEffect {
-	name: STATUS_EFFECT
-	quantity: number
+	name: STATUS_EFFECT;
+	quantity: number;
 }

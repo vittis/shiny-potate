@@ -9,7 +9,7 @@
 	"proseWrap": "always",
 	"quoteProps": "as-needed",
 	"requirePragma": false,
-	"semi": false,
+	"semi": true,
 	"tabWidth": 2,
 	"trailingComma": "all",
 	"useTabs": true

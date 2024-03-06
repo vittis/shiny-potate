@@ -1,8 +1,8 @@
-import { VULNERABLE_LOSS_PER_HIT } from "../Ability/Ability"
-import { POSITION } from "../BoardManager"
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes"
-import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes"
-import { Unit } from "../Unit/Unit"
+import { VULNERABLE_LOSS_PER_HIT } from "../Ability/Ability";
+import { POSITION } from "../BoardManager";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
+import { Unit } from "../Unit/Unit";
 import {
 	EVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
@@ -10,19 +10,19 @@ import {
 	SubEvent,
 	TICK_EFFECT_TYPE,
 	TickEffectEvent,
-} from "./EventTypes"
+} from "./EventTypes";
 
 export function createStatusEffectSubEvent(
 	unit: Unit,
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target)
+	const targets = unit.bm.getTarget(unit, effect.target);
 
 	const subEvents = targets.map(target => {
 		const payloadStatusEffects = effect.payload.map(statusEffect => ({
 			name: statusEffect.name,
 			quantity: statusEffect.quantity,
-		}))
+		}));
 
 		return {
 			type: SUBEVENT_TYPE.INSTANT_EFFECT,
@@ -31,14 +31,14 @@ export function createStatusEffectSubEvent(
 				targetId: target.id,
 				payload: [...payloadStatusEffects],
 			},
-		} as SubEvent
-	})
+		} as SubEvent;
+	});
 
-	return subEvents
+	return subEvents;
 }
 
 export function createHealSubEvent(unit: Unit, effect: TriggerEffect<TRIGGER_EFFECT_TYPE.HEAL>) {
-	const targets = unit.bm.getTarget(unit, effect.target)
+	const targets = unit.bm.getTarget(unit, effect.target);
 
 	const subEvents = targets.map(target => {
 		return {
@@ -50,17 +50,17 @@ export function createHealSubEvent(unit: Unit, effect: TriggerEffect<TRIGGER_EFF
 					value: effect.payload.value,
 				},
 			},
-		} as SubEvent
-	})
+		} as SubEvent;
+	});
 
-	return subEvents as SubEvent[]
+	return subEvents as SubEvent[];
 }
 
 export function createShieldSubEvent(
 	unit: Unit,
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.SHIELD>,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target)
+	const targets = unit.bm.getTarget(unit, effect.target);
 
 	const subEvents = targets.map(target => {
 		return {
@@ -72,10 +72,10 @@ export function createShieldSubEvent(
 					value: effect.payload.value,
 				},
 			},
-		} as SubEvent
-	})
+		} as SubEvent;
+	});
 
-	return subEvents as SubEvent[]
+	return subEvents as SubEvent[];
 }
 
 export function createDamageSubEvent(
@@ -83,22 +83,22 @@ export function createDamageSubEvent(
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>,
 	damageModifier = 0,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target)
+	const targets = unit.bm.getTarget(unit, effect.target);
 
 	const subEvents = targets.map(target => {
 		const targetVulnerableModifier =
 			target.statusEffects.filter(effect => effect.name === STATUS_EFFECT.VULNERABLE)[0]
-				?.quantity || 0
+				?.quantity || 0;
 
 		const targetDamageReductionModifier =
-			target.stats.damageReductionModifier + targetVulnerableModifier
+			target.stats.damageReductionModifier + targetVulnerableModifier;
 
-		const finalModifier = damageModifier - targetDamageReductionModifier
+		const finalModifier = damageModifier - targetDamageReductionModifier;
 
 		const finalDamage = Math.max(
 			0,
 			Math.round(effect.payload.value + (effect.payload.value * finalModifier) / 100),
-		)
+		);
 
 		return {
 			type: SUBEVENT_TYPE.INSTANT_EFFECT,
@@ -109,10 +109,10 @@ export function createDamageSubEvent(
 					value: finalDamage,
 				},
 			},
-		} as SubEvent
-	})
+		} as SubEvent;
+	});
 
-	return subEvents as SubEvent[]
+	return subEvents as SubEvent[];
 }
 
 export function createTickEffectEvent(unit: Unit, effect: TICK_EFFECT_TYPE, value: number) {
@@ -128,7 +128,7 @@ export function createTickEffectEvent(unit: Unit, effect: TICK_EFFECT_TYPE, valu
 				decrement: 1,
 			},
 		},
-	}
+	};
 
-	return tickEffectEvent as TickEffectEvent
+	return tickEffectEvent as TickEffectEvent;
 }

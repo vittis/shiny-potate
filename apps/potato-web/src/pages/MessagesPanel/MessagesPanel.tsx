@@ -1,18 +1,18 @@
-import { Input } from "@/components/ui/input"
-import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable"
-import { ScrollBar } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
-import { Settings } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useEffect, useRef } from "react"
-import { ChatBubble } from "./ChatBubble"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { useChatMessages } from "@/services/features/Messages/useChatMessages"
-import { useUserStore } from "@/services/features/User/useUserStore"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
+import { Input } from "@/components/ui/input";
+import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
+import { ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+import { ChatBubble } from "./ChatBubble";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useChatMessages } from "@/services/features/Messages/useChatMessages";
+import { useUserStore } from "@/services/features/User/useUserStore";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 const mockChatNavItems = [
 	{
@@ -36,35 +36,35 @@ const mockChatNavItems = [
   {
     name: "Settings",
   }, */
-]
+];
 
 type Inputs = {
-	message: string
-}
+	message: string;
+};
 
 interface MessagesPanelProps {
-	defaultSize: number
+	defaultSize: number;
 }
 
 const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
-	const user = useSupabaseUserStore(state => state.user)
+	const user = useSupabaseUserStore(state => state.user);
 
-	const { sendChatMessage, messages } = useChatMessages({ channel: "lobby" })
+	const { sendChatMessage, messages } = useChatMessages({ channel: "lobby" });
 
-	const chatBoxRef = useRef<HTMLDivElement>(null)
+	const chatBoxRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (chatBoxRef.current) {
-			chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
+			chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
 		}
-	}, [chatBoxRef.current, messages])
+	}, [chatBoxRef.current, messages]);
 
-	const { register, handleSubmit, reset } = useForm<Inputs>({ defaultValues: { message: "" } })
+	const { register, handleSubmit, reset } = useForm<Inputs>({ defaultValues: { message: "" } });
 
 	const onSubmit: SubmitHandler<Inputs> = data => {
-		sendChatMessage(data.message)
-		reset()
-	}
+		sendChatMessage(data.message);
+		reset();
+	};
 
 	return (
 		<>
@@ -134,7 +134,7 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 				</div>
 			</ResizablePanel>
 		</>
-	)
-}
+	);
+};
 
-export default MessagesPanel
+export default MessagesPanel;

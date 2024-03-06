@@ -1,13 +1,13 @@
-import React, { useState } from "react"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CollapsibleHeaderProps {
-	children: React.ReactNode
-	defaultIsOpen?: boolean
-	header: React.ReactNode
-	rightElement?: React.ReactNode
+	children: React.ReactNode;
+	defaultIsOpen?: boolean;
+	header: React.ReactNode;
+	rightElement?: React.ReactNode;
 }
 
 const CollapsibleHeader = ({
@@ -16,13 +16,13 @@ const CollapsibleHeader = ({
 	defaultIsOpen = false,
 	rightElement,
 }: CollapsibleHeaderProps) => {
-	const [isOpen, setIsOpen] = useState(defaultIsOpen)
+	const [isOpen, setIsOpen] = useState(defaultIsOpen);
 
 	const icon = !isOpen ? (
 		<ChevronsUpDownIcon className="h-4 w-4" />
 	) : (
 		<ChevronsDownUpIcon className="h-4 w-4" />
-	)
+	);
 
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -44,7 +44,7 @@ const CollapsibleHeader = ({
 			</div>
 			<CollapsibleContent className="CollapsibleContent">{children}</CollapsibleContent>
 		</Collapsible>
-	)
-}
+	);
+};
 
-export { CollapsibleHeader }
+export { CollapsibleHeader };

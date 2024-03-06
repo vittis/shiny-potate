@@ -1,11 +1,11 @@
-import { create } from "zustand"
-import { subscribeWithSelector } from "zustand/middleware"
+import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 interface SetupState {
-	isTeamValid: boolean
-	shouldStartGame: boolean
-	onClickReady: () => void
-	onStartGame: () => void
+	isTeamValid: boolean;
+	shouldStartGame: boolean;
+	onClickReady: () => void;
+	onStartGame: () => void;
 }
 
 const useSetupState = create<SetupState>()(
@@ -15,6 +15,6 @@ const useSetupState = create<SetupState>()(
 		onClickReady: () => set({ isTeamValid: true }),
 		onStartGame: () => set({ shouldStartGame: true }),
 	})),
-)
+);
 
-export { useSetupState }
+export { useSetupState };

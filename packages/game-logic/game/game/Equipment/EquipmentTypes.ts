@@ -1,5 +1,5 @@
-import { PossibleMods } from "../Mods/ModsTypes"
-import { PossibleTriggerEffect } from "../Trigger/TriggerTypes"
+import { PossibleMods } from "../Mods/ModsTypes";
+import { PossibleTriggerEffect } from "../Trigger/TriggerTypes";
 
 export enum EQUIPMENT_SLOT {
 	MAIN_HAND = "MAIN_HAND",
@@ -16,9 +16,9 @@ export enum EQUIPMENT_TAG {
 
 // this represents the JSON of the equipment
 export interface EquipmentData {
-	name: string
-	tags: EQUIPMENT_TAG[]
-	slots: EQUIPMENT_SLOT[]
-	mods: PossibleMods
-	effects: PossibleTriggerEffect[]
+	name: string;
+	tags: EQUIPMENT_TAG[];
+	slots: EQUIPMENT_SLOT[];
+	mods: PossibleMods;
+	effects: PossibleTriggerEffect[];
 }

@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 import {
 	CircleIcon,
 	ClockIcon,
@@ -13,32 +13,32 @@ import {
 	PlusIcon,
 	SwordsIcon,
 	UsersIcon,
-} from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { LobbyRoomUserRow } from "./LobbyRoomUserRow"
-import { useLobbyMutations } from "@/services/features/Lobby/useLobbyMutations"
-import { useUserStore } from "@/services/features/User/useUserStore"
-import { toast } from "react-toastify"
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { LobbyRoomUserRow } from "./LobbyRoomUserRow";
+import { useLobbyMutations } from "@/services/features/Lobby/useLobbyMutations";
+import { useUserStore } from "@/services/features/User/useUserStore";
+import { toast } from "react-toastify";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 interface LobbyRoomMember {
-	id: string
-	name: string
-	isCreator: boolean
-	avatar?: string
+	id: string;
+	name: string;
+	isCreator: boolean;
+	avatar?: string;
 }
 
 interface LobbyRoomProps {
-	id: string
-	name: string
-	description?: string
-	members: LobbyRoomMember[]
-	maxMembers: number
-	lastUpdated: string // todo date
-	type?: "Duel" | "Free for All" | "Custom"
-	isInAnyRoom?: boolean
-	listIsLoading?: boolean
+	id: string;
+	name: string;
+	description?: string;
+	members: LobbyRoomMember[];
+	maxMembers: number;
+	lastUpdated: string; // todo date
+	type?: "Duel" | "Free for All" | "Custom";
+	isInAnyRoom?: boolean;
+	listIsLoading?: boolean;
 }
 
 const LobbyRoom = ({
@@ -51,17 +51,17 @@ const LobbyRoom = ({
 	isInAnyRoom,
 	listIsLoading,
 }: LobbyRoomProps) => {
-	const { joinRoom, leaveRoom, isLoading: mutationIsLoading } = useLobbyMutations()
-	const supaUser = useSupabaseUserStore(state => state.user)
+	const { joinRoom, leaveRoom, isLoading: mutationIsLoading } = useLobbyMutations();
+	const supaUser = useSupabaseUserStore(state => state.user);
 
-	const you = members.find(member => member.id === supaUser?.id)
+	const you = members.find(member => member.id === supaUser?.id);
 
-	const isInRoom = !!you
-	const isFull = members.length === maxMembers
-	const shouldShowJoinButton = !isFull && !isInAnyRoom
-	const hasMoreThan3Members = members.length >= 3
-	const type = maxMembers > 2 ? "Free for All" : "Duel"
-	const canStart = members.length >= 2 && you?.isCreator
+	const isInRoom = !!you;
+	const isFull = members.length === maxMembers;
+	const shouldShowJoinButton = !isFull && !isInAnyRoom;
+	const hasMoreThan3Members = members.length >= 3;
+	const type = maxMembers > 2 ? "Free for All" : "Duel";
+	const canStart = members.length >= 2 && you?.isCreator;
 
 	const icon =
 		type === "Duel" ? (
@@ -70,26 +70,26 @@ const LobbyRoom = ({
 			<UsersIcon className="mr-1 h-3 w-3 dark:fill-yellow-400 dark:text-yellow-400" />
 		) : (
 			<FlaskConical className="mr-1 h-3 w-3 dark:fill-black-800 dark:text-yellow-400" />
-		)
+		);
 
 	async function onClickJoin() {
-		await joinRoom({ userId: supaUser.id, roomId: id })
+		await joinRoom({ userId: supaUser.id, roomId: id });
 	}
 	async function onClickLeave() {
-		console.log("??")
-		await leaveRoom({ userId: supaUser.id, roomId: id })
+		console.log("??");
+		await leaveRoom({ userId: supaUser.id, roomId: id });
 	}
 
 	const orderedMembers = members.sort((a, b) => {
-		if (a.isCreator) return -1 // Creator comes first
-		if (a.id === supaUser?.id && !b.isCreator) return -1 // You come second
-		if (b.isCreator) return 1 // Creator comes first
-		if (b.id === supaUser?.id) return 1 // You come second
-		return 0 // Keep the rest in the same order
-	})
+		if (a.isCreator) return -1; // Creator comes first
+		if (a.id === supaUser?.id && !b.isCreator) return -1; // You come second
+		if (b.isCreator) return 1; // Creator comes first
+		if (b.id === supaUser?.id) return 1; // You come second
+		return 0; // Keep the rest in the same order
+	});
 
 	function onClickStart() {
-		toast.warning("This feature is not implemented yet")
+		toast.warning("This feature is not implemented yet");
 	}
 
 	const JoinButton = () => (
@@ -107,7 +107,7 @@ const LobbyRoom = ({
 				<PlusIcon className="w-4" />
 			)}
 		</Button>
-	)
+	);
 
 	return (
 		<Card
@@ -238,7 +238,7 @@ const LobbyRoom = ({
 				</div>
 			</CardContent>
 		</Card>
-	)
-}
+	);
+};
 
-export { LobbyRoom }
+export { LobbyRoom };

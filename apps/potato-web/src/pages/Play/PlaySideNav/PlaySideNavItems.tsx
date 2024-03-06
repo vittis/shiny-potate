@@ -1,20 +1,20 @@
-import { LucideIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { Link } from "react-router-dom"
+import { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Link } from "react-router-dom";
 
 interface PlaySideNavProps {
-	isCollapsed: boolean
+	isCollapsed: boolean;
 	links: {
-		title: string
-		label?: string
-		icon: LucideIcon
-		variant: "default" | "ghost"
-		selected?: boolean
-		props?: ButtonProps
-		path: string
-	}[]
+		title: string;
+		label?: string;
+		icon: LucideIcon;
+		variant: "default" | "ghost";
+		selected?: boolean;
+		props?: ButtonProps;
+		path: string;
+	}[];
 }
 
 function PlaySideNavItems({ links, isCollapsed }: PlaySideNavProps) {
@@ -79,7 +79,7 @@ function PlaySideNavItems({ links, isCollapsed }: PlaySideNavProps) {
 				)}
 			</nav>
 		</div>
-	)
+	);
 }
 
-export { PlaySideNavItems }
+export { PlaySideNavItems };

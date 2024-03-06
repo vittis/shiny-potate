@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -6,10 +6,10 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/dialog"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+} from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import {
 	Form,
 	FormControl,
@@ -17,12 +17,12 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
-import { supabase } from "@/services/supabase/supabase"
-import { Github } from "lucide-react"
-import { useLocation } from "react-router-dom"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { supabase } from "@/services/supabase/supabase";
+import { Github } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const FormSchema = z.object({
 	/* username: z.string().min(4, { message: "Name must be at least 4 characters" }).max(16, {
@@ -33,13 +33,13 @@ const FormSchema = z.object({
 		.string()
 		.min(1, { message: "This field has to be filled." })
 		.email("This is not a valid email."),
-})
+});
 
 interface LoginUserDrawer {}
 
 const LoginUserDrawer = ({}: LoginUserDrawer) => {
-	const [isOpen, setIsOpen] = useState(false)
-	const { pathname } = useLocation()
+	const [isOpen, setIsOpen] = useState(false);
+	const { pathname } = useLocation();
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -48,7 +48,7 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 			password: "",
 			email: "",
 		},
-	})
+	});
 
 	async function signInWithGithub() {
 		await supabase.auth.signInWithOAuth({
@@ -56,7 +56,7 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 			options: {
 				redirectTo: `${window.origin}${pathname}`,
 			},
-		})
+		});
 	}
 
 	async function signInWithGoogle() {
@@ -65,20 +65,20 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 			options: {
 				redirectTo: `${window.origin}${pathname}`,
 			},
-		})
+		});
 	}
 
 	async function onSubmit(formData: z.infer<typeof FormSchema>) {
 		let { data, error } = await supabase.auth.signInWithPassword({
 			email: formData.email,
 			password: formData.password,
-		})
+		});
 
 		if (error) {
-			throw error
+			throw error;
 		}
 
-		setIsOpen(false)
+		setIsOpen(false);
 		// todo toast
 	}
 
@@ -153,7 +153,7 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 				</Form>
 			</DialogContent>
 		</Dialog>
-	)
-}
+	);
+};
 
-export { LoginUserDrawer }
+export { LoginUserDrawer };

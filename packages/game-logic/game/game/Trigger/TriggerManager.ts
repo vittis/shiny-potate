@@ -1,64 +1,64 @@
-import { BoardManager } from "../BoardManager"
+import { BoardManager } from "../BoardManager";
 import {
 	createDamageSubEvent,
 	createHealSubEvent,
 	createShieldSubEvent,
 	createStatusEffectSubEvent,
-} from "../Event/EventFactory"
+} from "../Event/EventFactory";
 import {
 	EVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
 	SUBEVENT_TYPE,
 	SubEvent,
 	TriggerEffectEvent,
-} from "../Event/EventTypes"
-import { Unit } from "../Unit/Unit"
-import { isEquipmentConditionValid, isPositionConditionValid } from "./ConditionUtils"
+} from "../Event/EventTypes";
+import { Unit } from "../Unit/Unit";
+import { isEquipmentConditionValid, isPositionConditionValid } from "./ConditionUtils";
 import {
 	EFFECT_CONDITION_TYPE,
 	PossibleTriggerEffect,
 	TRIGGER,
 	TRIGGER_EFFECT_TYPE,
-} from "./TriggerTypes"
+} from "./TriggerTypes";
 
 export interface ActiveTriggerEffect {
-	effect: PossibleTriggerEffect
-	sourceId: string
+	effect: PossibleTriggerEffect;
+	sourceId: string;
 }
 
 export class TriggerManager {
-	triggerEffects: ActiveTriggerEffect[] = []
+	triggerEffects: ActiveTriggerEffect[] = [];
 
 	constructor() {}
 
 	addTriggerEffectsFromSource(effects: PossibleTriggerEffect[], sourceId: string) {
 		effects.forEach(effect => {
-			this.triggerEffects.push({ effect, sourceId })
-		})
+			this.triggerEffects.push({ effect, sourceId });
+		});
 	}
 
 	removeTriggerEffectsFromSource(sourceId: string) {
 		this.triggerEffects = this.triggerEffects.filter(
 			triggerEffect => triggerEffect.sourceId !== sourceId,
-		)
+		);
 	}
 
 	getAllEffectsForTrigger(trigger: TRIGGER) {
 		return this.triggerEffects.reduce((acc, activeEffect) => {
 			if (activeEffect.effect.trigger === trigger) {
-				acc.push(activeEffect)
+				acc.push(activeEffect);
 			}
-			return acc
-		}, [] as ActiveTriggerEffect[])
+			return acc;
+		}, [] as ActiveTriggerEffect[]);
 	}
 
 	onTrigger(trigger: TRIGGER, unit: Unit, bm: BoardManager) {
-		const triggerEffects = this.getAllEffectsForTrigger(trigger)
+		const triggerEffects = this.getAllEffectsForTrigger(trigger);
 
-		let subEvents: SubEvent[] = []
+		let subEvents: SubEvent[] = [];
 
 		triggerEffects.forEach(activeEffect => {
-			let canUseEffect = true
+			let canUseEffect = true;
 
 			if (activeEffect.effect.conditions.length > 0) {
 				activeEffect.effect.conditions.forEach(condition => {
@@ -68,7 +68,7 @@ export class TriggerManager {
 							unit,
 							condition.payload.target,
 							condition.payload.position,
-						)
+						);
 					} else if (condition.type === EFFECT_CONDITION_TYPE.EQUIPMENT) {
 						canUseEffect = isEquipmentConditionValid(
 							bm,
@@ -76,33 +76,33 @@ export class TriggerManager {
 							condition.payload.target,
 							condition.payload.slots,
 							condition.payload.tags,
-						)
+						);
 					}
-				})
+				});
 			}
 
 			if (!canUseEffect) {
-				return
+				return;
 			}
 
-			let newSubEvents: SubEvent[] = []
+			let newSubEvents: SubEvent[] = [];
 
 			if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
 				newSubEvents = createDamageSubEvent(
 					unit,
 					activeEffect.effect,
 					0, // TODO serase 0 ou pega modifier de attack ou spell
-				)
+				);
 			} else if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
-				newSubEvents = createHealSubEvent(unit, activeEffect.effect)
+				newSubEvents = createHealSubEvent(unit, activeEffect.effect);
 			} else if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
-				newSubEvents = createShieldSubEvent(unit, activeEffect.effect)
+				newSubEvents = createShieldSubEvent(unit, activeEffect.effect);
 			} else if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
-				newSubEvents = createStatusEffectSubEvent(unit, activeEffect.effect)
+				newSubEvents = createStatusEffectSubEvent(unit, activeEffect.effect);
 			}
 
-			subEvents = [...subEvents, ...newSubEvents]
-		})
+			subEvents = [...subEvents, ...newSubEvents];
+		});
 
 		if (subEvents.length > 0) {
 			const event: TriggerEffectEvent = {
@@ -111,9 +111,9 @@ export class TriggerManager {
 				type: EVENT_TYPE.TRIGGER_EFFECT,
 				trigger: trigger,
 				subEvents,
-			}
+			};
 
-			unit.stepEvents.push(event)
+			unit.stepEvents.push(event);
 		}
 	}
 }

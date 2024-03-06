@@ -1,16 +1,16 @@
-import { create } from "zustand"
-import { subscribeWithSelector } from "zustand/middleware"
+import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 interface GameState {
-	gameInstance: Phaser.Game | null
-	isGameHidden: boolean
-	isGamePaused: boolean
-	selectedEntity: any
-	setSelectedEntity: (entity: any) => void
-	setIsGamePaused: (isGameRunning: boolean) => void
-	setGameInstance: (gameInstance: Phaser.Game | null) => void
-	hideGame: () => void
-	showGame: () => void
+	gameInstance: Phaser.Game | null;
+	isGameHidden: boolean;
+	isGamePaused: boolean;
+	selectedEntity: any;
+	setSelectedEntity: (entity: any) => void;
+	setIsGamePaused: (isGameRunning: boolean) => void;
+	setGameInstance: (gameInstance: Phaser.Game | null) => void;
+	hideGame: () => void;
+	showGame: () => void;
 }
 
 const useGameState = create<GameState>()(
@@ -26,22 +26,22 @@ const useGameState = create<GameState>()(
 			set(({ gameInstance, isGameHidden }) => {
 				if (gameInstance) {
 					// state.gameInstance.destroy(true); // todo: fix battleunitsprite to make this work
-					gameInstance.canvas.classList.add("hidden")
-					return { isGameHidden: true }
+					gameInstance.canvas.classList.add("hidden");
+					return { isGameHidden: true };
 				}
 
-				return { isGameHidden }
+				return { isGameHidden };
 			}),
 		showGame: () =>
 			set(({ gameInstance, isGameHidden }) => {
 				if (gameInstance) {
-					gameInstance.canvas.classList.remove("hidden")
-					return { isGameHidden: false }
+					gameInstance.canvas.classList.remove("hidden");
+					return { isGameHidden: false };
 				}
 
-				return { isGameHidden }
+				return { isGameHidden };
 			}),
 	})),
-)
+);
 
-export { useGameState }
+export { useGameState };

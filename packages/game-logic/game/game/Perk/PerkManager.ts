@@ -1,36 +1,36 @@
-import { Class } from "../Class/Class"
-import { Equipment } from "../Equipment/Equipment"
-import { Perk } from "./Perk"
+import { Class } from "../Class/Class";
+import { Equipment } from "../Equipment/Equipment";
+import { Perk } from "./Perk";
 
 interface ActivePerk {
-	perk: Perk
-	sourceId: string
+	perk: Perk;
+	sourceId: string;
 }
 
 export class PerkManager {
-	private activePerks: ActivePerk[] = []
+	private activePerks: ActivePerk[] = [];
 
 	constructor() {}
 
 	get perks() {
-		return this.getPerks()
+		return this.getPerks();
 	}
 
 	removeAllPerks() {
-		this.activePerks = []
+		this.activePerks = [];
 	}
 
 	addPerksFromSource(perks: Perk[], sourceId: string) {
 		perks.forEach(perk => {
-			this.activePerks.push({ perk, sourceId })
-		})
+			this.activePerks.push({ perk, sourceId });
+		});
 	}
 
 	removePerksFromSource(sourceId: string) {
-		this.activePerks = this.activePerks.filter(perk => perk.sourceId !== sourceId)
+		this.activePerks = this.activePerks.filter(perk => perk.sourceId !== sourceId);
 	}
 
 	getPerks() {
-		return this.activePerks.map(perk => perk.perk)
+		return this.activePerks.map(perk => perk.perk);
 	}
 }

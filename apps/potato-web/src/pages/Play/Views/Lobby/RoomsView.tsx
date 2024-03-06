@@ -1,11 +1,11 @@
-import { CollapsibleHeader } from "@/components/CollapsibleHeader/CollapsibleHeader"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { useLobbyQueries } from "@/services/features/Lobby/useLobbyQueries"
-import { Loader2 } from "lucide-react"
-import { LobbyRoom } from "./LobbyRoom/LobbyRoom"
+import { CollapsibleHeader } from "@/components/CollapsibleHeader/CollapsibleHeader";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useLobbyQueries } from "@/services/features/Lobby/useLobbyQueries";
+import { Loader2 } from "lucide-react";
+import { LobbyRoom } from "./LobbyRoom/LobbyRoom";
 
 const RoomsView = () => {
-	const { userRoom, allRoomsExceptUserRoom, isLoading } = useLobbyQueries()
+	const { userRoom, allRoomsExceptUserRoom, isLoading } = useLobbyQueries();
 
 	return (
 		<ScrollArea className="h-full w-full px-4">
@@ -62,7 +62,7 @@ const RoomsView = () => {
 				</div>
 			</CollapsibleHeader>
 		</ScrollArea>
-	)
-}
+	);
+};
 
-export default RoomsView
+export default RoomsView;
