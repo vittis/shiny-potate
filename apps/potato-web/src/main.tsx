@@ -22,6 +22,7 @@ import RootLayout from "./pages/Root/RootLayout";
 import PlayLayout from "./pages/Play/PlayLayout";
 import LobbyView from "./pages/Play/Views/Lobby/LobbyView";
 import { GameView } from "./pages/Game/GameView";
+import ArenaView from "./pages/Play/Views/Arena/ArenaView";
 /* import { Game } from "game-logic";
 
 Game.prototype. */
@@ -69,6 +70,7 @@ const router = createBrowserRouter([
 					},
 					{ path: "rooms", element: <LobbyView /> },
 					{ path: "sandbox", element: <SetupView /> },
+					{ path: "arena", element: <ArenaView /> },
 				],
 			},
 			{
