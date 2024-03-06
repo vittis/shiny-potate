@@ -16,7 +16,8 @@ async function fetchChatMessages(channel: string) {
 // todo adjust to allow many channels properly
 const useChatMessages = ({ channel }: { channel: string }) => {
 	const user = useSupabaseUserStore(state => state.user);
-	const username = user?.user_metadata?.username;
+	const username =
+		user?.user_metadata?.user_name || user?.user_metadata?.username || user?.user_metadata?.name; // todo unify this
 
 	const searchParams = useMemo(() => {
 		if (!user?.id) return null;
@@ -32,7 +33,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 	const { data: messagesData, isLoading: messagesLoading } = useQuery<{ data: any[] }>({
 		queryKey: ["chat", channel],
 		queryFn: () => fetchChatMessages(channel),
-		enabled: username !== "",
+		enabled: !!username,
 	});
 
 	const { sendMessage: sendChatMessage } = useWebSocket(

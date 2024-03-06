@@ -8,8 +8,8 @@ import { logger } from "hono/logger";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
-import rooms, { Room, RoomRepository } from "./controllers/rooms/roomsRoutes";
 import gameRoutes from "./controllers/game/gameRoutes";
+import { jwt } from "hono/jwt";
 
 import { uniqueNamesGenerator, starWars } from "unique-names-generator";
 
@@ -40,28 +40,13 @@ const wsConnections: {
 	channels: string[];
 }[] = [];
 
-// attach session data middleware
-app.use("/api/*", async (c, next) => {
-	const sId = getCookie(c, "sId");
-
-	if (!sId) {
-		return c.json({ error: "Unauthorized" }, 401);
-	}
-
-	// Validate the session ID against the Redis store
-	const sessionData = await redisClient.hGetAll(`session:${sId}`);
-
-	if (Object.keys(sessionData).length === 0) {
-		deleteCookie(c, "sId");
-		return c.json({ error: "Invalid session ID" }, 401);
-	}
-
-	// Attach session data to the request for later use
-	c.set("session", { id: sId, ...sessionData });
-	await next();
+app.use("/api/*", (c, next) => {
+	const jwtMiddleware = jwt({
+		secret: process.env.JWT_SECRET ?? "",
+	});
+	return jwtMiddleware(c, next);
 });
 
-app.route("/", rooms);
 app.route("/game", gameRoutes);
 
 app.post("/login", async c => {
@@ -145,32 +130,8 @@ app.post("/api/chat/:channel/:message", async c => {
 	});
 });
 
-app.get("/api/me/profile", async c => {
-	const session = c.get("session");
-
-	return c.json({
-		data: session,
-	});
-});
-
-app.get("/api/me/rooms", async c => {
-	const session = c.get("session");
-
-	const rooms = await redisClient.sMembers(`user_rooms:${session.userId}`);
-
-	return c.json({
-		rooms,
-	});
-});
-
 const connectAll = async () => {
 	await connectRedis();
-
-	/* try {
-    await RoomRepository.createIndex();
-  } catch (error) {
-    console.log(error);
-  } */
 
 	await redisSub.subscribe("live-chat", message => {
 		const parsedMessage = JSON.parse(message);
@@ -181,92 +142,8 @@ const connectAll = async () => {
 			c.socket.send(JSON.stringify(parsedMessage));
 		});
 	});
-
-	await redisSub.subscribe("lobby:update-room", message => {
-		const room: Room = JSON.parse(message)?.room;
-		if (!room) {
-			console.log("no room to update");
-			return;
-		}
-
-		wsConnections.forEach(c => {
-			if (c.channels.includes("lobby")) {
-				c.socket.send(
-					JSON.stringify({
-						type: "room_updated",
-						room,
-					}),
-				);
-			}
-		});
-	});
-
-	await redisSub.subscribe("lobby:create-room", message => {
-		const room: Room = JSON.parse(message)?.room;
-		if (!room) {
-			console.log("no room to create");
-			return;
-		}
-
-		wsConnections.forEach(c => {
-			if (c.channels.includes("lobby")) {
-				c.socket.send(
-					JSON.stringify({
-						type: "room_created",
-						room,
-					}),
-				);
-			}
-		});
-	});
-
-	await redisSub.subscribe("lobby:remove-room", message => {
-		const roomId: string = JSON.parse(message)?.roomId;
-		if (!roomId) {
-			console.log("no room to remove");
-			return;
-		}
-
-		wsConnections.forEach(c => {
-			if (c.channels.includes("lobby")) {
-				c.socket.send(
-					JSON.stringify({
-						type: "room_removed",
-						roomId: roomId,
-					}),
-				);
-			}
-		});
-	});
-
-	await redisSub.subscribe("user:update-rooms", message => {
-		const parsedMessage = JSON.parse(message);
-		const userId: string = parsedMessage?.userId;
-		const roomId: string = parsedMessage?.roomId;
-		const type: string = parsedMessage?.type;
-
-		if (!roomId || !type) {
-			console.log("no room to update");
-			return;
-		}
-
-		wsConnections.forEach(c => {
-			if (c.channels.includes("user") && userId === c.userId) {
-				c.socket.send(
-					JSON.stringify({
-						type,
-						roomId,
-					}),
-				);
-			}
-		});
-	});
 };
-/* const server = serve({ fetch: app.fetch, port: Number(PORT) }, info => {
-	console.log(
-		`AppId: ${APPID} Listening on port ${info.port}  at ${info.address}: http://${info.address}:${info.port}. To access, check HAProxy config, probably http://${info.address}:8080`,
-	)
-}) */
+
 connectAll().then(() => {
 	const server = serve({ fetch: app.fetch, port: Number(PORT) }, info => {
 		console.log(
@@ -289,8 +166,6 @@ connectAll().then(() => {
 
 		const channels = urlParams.getAll("channels");
 
-		console.log("Channels:", channels);
-
 		wsConnections.push({
 			socket: ws,
 			userId,
@@ -312,13 +187,6 @@ connectAll().then(() => {
 				.sAdd("online_users", userId)
 				.hSet("online_users_data", userId, JSON.stringify({ id: userId, name }))
 				.exec();
-
-			//ws.send(
-			//JSON.stringify({
-			//type: "online_users",
-			//data: await redisClient.hGetAll("online_users_data"),
-			// })
-			//);
 		}
 
 		ws.on("error", console.error);
@@ -365,30 +233,7 @@ connectAll().then(() => {
 					redisClient.multi().sRem("online_users", userId).hDel("online_users_data", userId).exec();
 					return;
 				}
-				const roomId = userRooms[0];
-				await redisClient.sRem(`user_rooms:${userId}`, roomId);
-
-				const room = await RoomRepository.fetch(roomId);
-				if (!room || typeof room.members !== "string") return;
-
-				const roomMembers = JSON.parse(room.members);
-				const newMembers = roomMembers.filter((m: any) => m.id !== userId);
-
-				if (newMembers.length === 0) {
-					await RoomRepository.remove(roomId);
-					redisClient.publish("lobby:remove-room", JSON.stringify({ roomId: roomId }));
-					return;
-				}
-
-				room.creatorId = newMembers?.[0]?.id;
-				room.members = JSON.stringify(newMembers);
-
-				const updatedRoom = await RoomRepository.save(room);
-
-				redisClient.publish("lobby:update-room", JSON.stringify({ room: updatedRoom }));
 			}
 		});
 	});
 });
-
-// todo extract members from room to: room_members:roomId -> centralized hash with all members. Update: not worth because of /rooms

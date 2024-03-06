@@ -1,6 +1,5 @@
 import { CollapsibleHeader } from "@/components/CollapsibleHeader/CollapsibleHeader";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useLobbyQueries } from "@/services/features/Lobby/useLobbyQueries";
 import { Loader2 } from "lucide-react";
 import { LobbyRoom } from "./LobbyRoom/LobbyRoom";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +8,7 @@ import { useMemo } from "react";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 async function fetchSupaRooms() {
-	let { data: rooms, error } = await supabase.from("rooms").select(`
+	let { data: rooms } = await supabase.from("rooms").select(`
     id,
     name,
     description,

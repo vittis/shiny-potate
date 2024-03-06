@@ -1,17 +1,12 @@
 import { Input } from "@/components/ui/input";
-import { ResizablePanel } from "@/components/ui/resizable";
 import { Separator } from "@/components/ui/separator";
 import { Search } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreateRoomDrawer } from "./CreateRoomDrawer";
-import RoomsView from "./RoomsView";
-import { useUserStore } from "@/services/features/User/useUserStore";
 import SupaRoomsView from "./SupaRoomsView";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 const LobbyView = () => {
-	const isLoggedIn = useUserStore(state => state.isLoggedIn);
-
 	const user = useSupabaseUserStore(state => state.user);
 
 	return (
@@ -47,9 +42,8 @@ const LobbyView = () => {
 				</div>
 			</form>
 
-			{/* {isLoggedIn && <RoomsView />} */}
 			{user && <SupaRoomsView />}
-			{!isLoggedIn && <h1 className="px-4 mt-2 text-muted-foreground">Sign in to browse rooms</h1>}
+			{!user && <h1 className="px-4 mt-2 text-muted-foreground">Sign in to browse rooms</h1>}
 		</div>
 	);
 };
