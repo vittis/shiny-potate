@@ -18,7 +18,6 @@ import { formatDistanceToNow } from "date-fns";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { LobbyRoomUserRow } from "./LobbyRoomUserRow";
 import { useLobbyMutations } from "@/services/features/Lobby/useLobbyMutations";
-import { useUserStore } from "@/services/features/User/useUserStore";
 import { toast } from "react-toastify";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 

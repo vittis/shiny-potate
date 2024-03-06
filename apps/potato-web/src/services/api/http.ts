@@ -5,20 +5,22 @@ export const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 });
 
-/* api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("User-Token");
+api.interceptors.request.use(
+	config => {
+		const token = localStorage.getItem("sb-auth");
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
+		const parsedToken = JSON.parse(token || "{}");
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-); */
+		if (parsedToken?.access_token) {
+			config.headers["Authorization"] = `Bearer ${parsedToken.access_token}`;
+		}
+
+		return config;
+	},
+	error => {
+		return Promise.reject(error);
+	},
+);
 
 api.interceptors.response.use(
 	function (response) {

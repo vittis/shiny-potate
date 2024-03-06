@@ -5,9 +5,8 @@ import { useState } from "react";
 import { PlaySideNavItems } from "./PlaySideNavItems";
 import { AlertCircle, DoorClosed, FlaskConical, Swords, Trophy, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/services/features/User/useAuth";
-import { useUserStore } from "@/services/features/User/useUserStore";
 import { matchPath, useLocation } from "react-router-dom";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 interface PlaySideNavProps {
 	defaultCollapsed: boolean;
@@ -18,9 +17,14 @@ interface PlaySideNavProps {
 const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySideNavProps) => {
 	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
-	const userData = useUserStore(state => state.userData);
-
-	const { login, loginIsPending } = useAuth();
+	const user = useSupabaseUserStore(state => state.user);
+	const username =
+		user?.user_metadata?.user_name ||
+		user?.user_metadata?.username ||
+		user?.user_metadata?.name ||
+		user?.user_metadata?.preferred_username ||
+		user?.user_metadata?.name ||
+		user?.email;
 
 	const { pathname } = useLocation();
 
@@ -46,7 +50,7 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 						isCollapsed ? "h-[52px]" : "px-2",
 					)}
 				>
-					{userData.name ? (
+					{username ? (
 						<Button
 							variant="ghost"
 							className={cn(
@@ -55,21 +59,21 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 							)}
 						>
 							<div className="w-5 h-5 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground flex items-center justify-center text-xs">
-								{userData?.name[0]?.toUpperCase()}
+								{username?.[0]?.toUpperCase()}
 							</div>
 
 							{!isCollapsed && (
 								<div
 									className={`flex text-ellipsis overflow-hidden text-sm text-left items-baseline gap-1`}
 								>
-									{userData?.name} <span className="text-[10px] text-primary">In lobby</span>
+									{username} <span className="text-[10px] text-primary">In lobby</span>
 								</div>
 							)}
 						</Button>
 					) : (
-						<Button disabled={loginIsPending} variant="ghost" onClick={() => login()}>
-							Sign in
-						</Button>
+						<div className="text-xs text-muted-foreground text-center w-full">
+							You're not signed in
+						</div>
 					)}
 				</div>
 				<Separator />

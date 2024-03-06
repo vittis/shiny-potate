@@ -62,16 +62,7 @@ const initialBoardRight = [
 		unit: null,
 	},
 ];
-async function joinRoom(id) {
-	const res = await api.post(
-		`/api/rooms/${id}/join`,
-		{},
-		{
-			withCredentials: true,
-		},
-	);
-	return res.data;
-}
+
 export async function setupTeams(data) {
 	const response = await api.post("/game/setup-teams", data, {
 		withCredentials: true,
@@ -146,7 +137,7 @@ export function Droppable({ children, id }: any) {
 }
 
 export async function fetchSetupStuff() {
-	const { data, error } = await supabase.functions.invoke("all-stuff");
+	const { data } = await api.get("/game/all-stuff");
 	return data;
 }
 
