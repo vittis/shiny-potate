@@ -1,33 +1,33 @@
-import { useMemo } from "react"
-import { useGameState } from "./services/state/useGameState"
-import { useQuery } from "@tanstack/react-query"
-import { fetchBattleSetup } from "./game/scenes/battle/BattleScene"
-import { Button } from "./components/ui/button"
+import { useMemo } from "react";
+import { useGameState } from "./services/state/useGameState";
+import { useQuery } from "@tanstack/react-query";
+import { fetchBattleSetup } from "./game/scenes/battle/BattleScene";
+import { Button } from "./components/ui/button";
 
 function App() {
-	const { selectedEntity, isGamePaused, setSelectedEntity, setIsGamePaused } = useGameState()
+	const { selectedEntity, isGamePaused, setSelectedEntity, setIsGamePaused } = useGameState();
 
 	const { data } = useQuery({
 		queryKey: ["game/battle/setup"],
 		queryFn: fetchBattleSetup,
 		staleTime: Infinity,
-	})
+	});
 
-	const firstState = data?.firstStep
+	const firstState = data?.firstStep;
 
 	const teamOneUnits = useMemo<any[]>(() => {
-		if (!firstState) return []
-		return firstState?.units.filter(unit => unit.owner === 0)
-	}, [firstState])
+		if (!firstState) return [];
+		return firstState?.units.filter(unit => unit.owner === 0);
+	}, [firstState]);
 
 	const teamTwoUnits = useMemo<any[]>(() => {
-		if (!firstState) return []
-		return firstState?.units.filter(unit => unit.owner === 1)
-	}, [firstState])
+		if (!firstState) return [];
+		return firstState?.units.filter(unit => unit.owner === 1);
+	}, [firstState]);
 
 	const allUnits = useMemo<any[]>(() => {
-		return [...teamOneUnits, ...teamTwoUnits]
-	}, [teamOneUnits, teamTwoUnits])
+		return [...teamOneUnits, ...teamTwoUnits];
+	}, [teamOneUnits, teamTwoUnits]);
 
 	return (
 		<>
@@ -35,7 +35,7 @@ function App() {
 				<Button
 					variant="outline"
 					onClick={() => {
-						setIsGamePaused(!isGamePaused)
+						setIsGamePaused(!isGamePaused);
 					}}
 					className="w-[200px] h-12"
 				>
@@ -76,9 +76,9 @@ function App() {
 														// @todo add an ID
 														onClick={() => {
 															if (selectedEntity !== `${unit.owner}${unit.position}`) {
-																setSelectedEntity(`${unit.owner}${unit.position}`)
+																setSelectedEntity(`${unit.owner}${unit.position}`);
 															} else {
-																setSelectedEntity(null)
+																setSelectedEntity(null);
 															}
 														}}
 														tabIndex={0}
@@ -98,7 +98,7 @@ function App() {
 														<td>{unit.stats.spellDamageModifier}%</td>
 														<td>{unit.stats.damageReductionModifier}%</td>
 													</tr>
-												)
+												);
 											})}
 										</tbody>
 									</table>
@@ -109,7 +109,7 @@ function App() {
 				</div>
 			</div>
 		</>
-	)
+	);
 }
 
-export default App
+export default App;

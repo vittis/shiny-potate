@@ -8,12 +8,12 @@ export enum STAT {
 }
 
 export interface UnitStats {
-	hp: number
-	maxHp: number
-	shield: number
-	attackDamageModifier: number
-	attackCooldownModifier: number
-	spellDamageModifier: number
-	spellCooldownModifier: number
-	damageReductionModifier: number
+	hp: number;
+	maxHp: number;
+	shield: number;
+	attackDamageModifier: number;
+	attackCooldownModifier: number;
+	spellDamageModifier: number;
+	spellCooldownModifier: number;
+	damageReductionModifier: number;
 }

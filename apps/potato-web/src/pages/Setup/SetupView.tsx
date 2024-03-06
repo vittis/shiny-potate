@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { DndContext, DragEndEvent, useDraggable, useDroppable } from "@dnd-kit/core"
-import { cn } from "@/lib/utils"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { toast } from "react-toastify"
-import { useNavigate } from "react-router-dom"
-import { supabase } from "@/services/supabase/supabase"
-import { Loader2 } from "lucide-react"
-import { api } from "@/services/api/http"
+import React, { useEffect, useState } from "react";
+import { DndContext, DragEndEvent, useDraggable, useDroppable } from "@dnd-kit/core";
+import { cn } from "@/lib/utils";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/services/supabase/supabase";
+import { Loader2 } from "lucide-react";
+import { api } from "@/services/api/http";
 
 const initialBoard = [
 	{
@@ -34,7 +34,7 @@ const initialBoard = [
 		id: "3",
 		unit: null,
 	},
-]
+];
 
 const initialBoardRight = [
 	{
@@ -61,7 +61,7 @@ const initialBoardRight = [
 		id: "-5",
 		unit: null,
 	},
-]
+];
 async function joinRoom(id) {
 	const res = await api.post(
 		`/api/rooms/${id}/join`,
@@ -69,34 +69,34 @@ async function joinRoom(id) {
 		{
 			withCredentials: true,
 		},
-	)
-	return res.data
+	);
+	return res.data;
 }
 export async function setupTeams(data) {
 	const response = await api.post("/game/setup-teams", data, {
 		withCredentials: true,
-	})
+	});
 
-	return response.data
+	return response.data;
 }
 
 export interface UnitsDTO {
-	equipments: string[]
-	position: number
-	unitClass: string
+	equipments: string[];
+	position: number;
+	unitClass: string;
 }
 
 export function Draggable({ children, id, unit, isClass }: any) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id,
-	})
+	});
 	const style = transform
 		? {
 				transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
 			}
-		: undefined
+		: undefined;
 
-	const unitEquips = unit?.equipment || []
+	const unitEquips = unit?.equipment || [];
 
 	return (
 		<button
@@ -123,13 +123,13 @@ export function Draggable({ children, id, unit, isClass }: any) {
 				))}
 			</div>
 		</button>
-	)
+	);
 }
 
 export function Droppable({ children, id }: any) {
 	const { isOver, setNodeRef, active } = useDroppable({
 		id: id,
-	})
+	});
 
 	return (
 		<div
@@ -142,12 +142,12 @@ export function Droppable({ children, id }: any) {
 		>
 			{children}
 		</div>
-	)
+	);
 }
 
 export async function fetchSetupStuff() {
-	const { data, error } = await supabase.functions.invoke("all-stuff")
-	return data
+	const { data, error } = await supabase.functions.invoke("all-stuff");
+	return data;
 }
 
 /* 
@@ -155,117 +155,117 @@ export async function fetchSetupStuff() {
     5 4 3   3 4 5
 */
 export function SetupView() {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const { data, isFetching } = useQuery({
 		queryKey: ["setup-stuff"],
 		queryFn: fetchSetupStuff,
-	})
+	});
 
 	const { mutateAsync: setupTeamsMutation } = useMutation({
 		mutationFn: setupTeams,
 		mutationKey: ["setup-teams"],
 		onSuccess: data => {
-			localStorage.setItem("game", JSON.stringify(data))
-			toast.success("Game started!")
-			navigate("/game")
+			localStorage.setItem("game", JSON.stringify(data));
+			toast.success("Game started!");
+			navigate("/game");
 		},
-	})
+	});
 
-	const classes = data?.classes || []
-	const weapons = data?.weapons || []
+	const classes = data?.classes || [];
+	const weapons = data?.weapons || [];
 
-	const [boardLeft, setBoardLeft] = useState<{ id: string; unit: any }[]>(initialBoard)
+	const [boardLeft, setBoardLeft] = useState<{ id: string; unit: any }[]>(initialBoard);
 
-	const [boardRight, setBoardRight] = useState<{ id: string; unit: any }[]>(initialBoardRight)
+	const [boardRight, setBoardRight] = useState<{ id: string; unit: any }[]>(initialBoardRight);
 
 	useEffect(() => {
-		const board = JSON.parse(localStorage.getItem("boardLeft") || "[]")
-		const boardRight = JSON.parse(localStorage.getItem("boardRight") || "[]")
+		const board = JSON.parse(localStorage.getItem("boardLeft") || "[]");
+		const boardRight = JSON.parse(localStorage.getItem("boardRight") || "[]");
 
 		if (board.length > 0) {
-			setBoardLeft(board)
-			setBoardRight(boardRight)
+			setBoardLeft(board);
+			setBoardRight(boardRight);
 		}
-	}, [])
+	}, []);
 
 	function handleDragEnd(event: DragEndEvent) {
-		let targetBoard
-		let targetSetBoard
+		let targetBoard;
+		let targetSetBoard;
 
-		const fromBoardRight = !!boardRight.find(c => c.unit?.id === event.active.id)
-		const fromBoardLeft = !!boardLeft.find(c => c.unit?.id === event.active.id)
+		const fromBoardRight = !!boardRight.find(c => c.unit?.id === event.active.id);
+		const fromBoardLeft = !!boardLeft.find(c => c.unit?.id === event.active.id);
 
 		if (fromBoardRight) {
-			targetBoard = boardRight
-			targetSetBoard = setBoardRight
+			targetBoard = boardRight;
+			targetSetBoard = setBoardRight;
 		} else if (fromBoardLeft) {
-			targetBoard = boardLeft
-			targetSetBoard = setBoardLeft
+			targetBoard = boardLeft;
+			targetSetBoard = setBoardLeft;
 		} else {
 			if (event.over?.id.toString().startsWith("-")) {
-				targetBoard = boardRight
-				targetSetBoard = setBoardRight
+				targetBoard = boardRight;
+				targetSetBoard = setBoardRight;
 			} else {
-				targetBoard = boardLeft
-				targetSetBoard = setBoardLeft
+				targetBoard = boardLeft;
+				targetSetBoard = setBoardLeft;
 			}
 		}
 
-		const isFromBoard = !classes.find(unitClass => unitClass.id === event.active.id)
+		const isFromBoard = !classes.find(unitClass => unitClass.id === event.active.id);
 
-		const isEquipment = !!weapons.find(weapon => weapon.id === event.active.id)
+		const isEquipment = !!weapons.find(weapon => weapon.id === event.active.id);
 
 		if (isEquipment) {
-			const targetCell = targetBoard.find(cell => cell.id === event.over?.id)
-			const hasUnit = targetCell?.unit
+			const targetCell = targetBoard.find(cell => cell.id === event.over?.id);
+			const hasUnit = targetCell?.unit;
 
-			if (!hasUnit) return
+			if (!hasUnit) return;
 
-			const weaponName = weapons.find(weapon => weapon.id === event.active.id).name
+			const weaponName = weapons.find(weapon => weapon.id === event.active.id).name;
 
 			const newBoard = targetBoard.map(cell => {
 				if (cell.id === event.over?.id) {
-					const unitEquipment = cell?.unit?.equipment || []
+					const unitEquipment = cell?.unit?.equipment || [];
 					return {
 						...cell,
 						unit: {
 							...cell.unit,
 							equipment: [...unitEquipment, weaponName],
 						},
-					}
+					};
 				}
-				return cell
-			})
+				return cell;
+			});
 
-			targetSetBoard(newBoard)
+			targetSetBoard(newBoard);
 
-			return
+			return;
 		}
 
-		const name = classes.find(unitClass => unitClass.id === event.active.id)?.name
+		const name = classes.find(unitClass => unitClass.id === event.active.id)?.name;
 
-		let newBoard
+		let newBoard;
 		if (!isFromBoard) {
 			newBoard = targetBoard.map(cell => {
 				if (cell.id === event.over?.id) {
 					return {
 						...cell,
 						unit: { id: Math.floor(Math.random() * 100), name: name },
-					}
+					};
 				}
 
-				return cell
-			})
+				return cell;
+			});
 		} else {
 			newBoard = targetBoard.map(cell => {
 				if (cell?.unit?.id === event?.active?.id && cell.id !== event.over?.id) {
 					return {
 						...cell,
 						unit: null,
-					}
+					};
 				}
 
-				const unit = targetBoard.find(cell => cell?.unit?.id === event.active.id)?.unit
+				const unit = targetBoard.find(cell => cell?.unit?.id === event.active.id)?.unit;
 
 				if (cell.id === event.over?.id) {
 					return {
@@ -275,19 +275,19 @@ export function SetupView() {
 							name: unit?.name,
 							equipment: unit?.equipment,
 						},
-					}
+					};
 				}
 
-				return cell
-			})
+				return cell;
+			});
 		}
 
-		targetSetBoard(newBoard)
+		targetSetBoard(newBoard);
 	}
 
 	function onClickReset() {
-		setBoardLeft(initialBoard)
-		setBoardRight(initialBoardRight)
+		setBoardLeft(initialBoard);
+		setBoardRight(initialBoardRight);
 	}
 
 	function onClickStartGame() {
@@ -298,8 +298,8 @@ export function SetupView() {
 					equipments: cell.unit?.equipment,
 					position: parseInt(cell.id),
 					unitClass: cell.unit.name,
-				}
-			})
+				};
+			});
 
 		const team2finalUnits: UnitsDTO[] = boardRight
 			.filter(cell => !!cell.unit)
@@ -308,17 +308,17 @@ export function SetupView() {
 					equipments: cell.unit?.equipment,
 					position: parseInt(cell.id.toString().replace("-", "")),
 					unitClass: cell.unit.name,
-				}
-			})
+				};
+			});
 
-		localStorage.setItem("boardLeft", JSON.stringify(boardLeft))
-		localStorage.setItem("boardRight", JSON.stringify(boardRight))
+		localStorage.setItem("boardLeft", JSON.stringify(boardLeft));
+		localStorage.setItem("boardRight", JSON.stringify(boardRight));
 
-		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits })
+		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
 	}
 
 	if (isFetching) {
-		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />
+		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
 
 	return (
@@ -388,5 +388,5 @@ export function SetupView() {
 				</Button>
 			</div>
 		</>
-	)
+	);
 }

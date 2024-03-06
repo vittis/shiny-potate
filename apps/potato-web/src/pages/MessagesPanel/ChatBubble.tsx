@@ -1,6 +1,6 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { format } from "date-fns"
-import { formatDistanceToNow } from "date-fns"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 export const ChatBubble = ({ sender, message, isFromMe, timestamp }) => {
 	return (
@@ -26,5 +26,5 @@ export const ChatBubble = ({ sender, message, isFromMe, timestamp }) => {
 				<div className="chat-bubble">{message}</div>
 			</div>
 		</Tooltip>
-	)
-}
+	);
+};

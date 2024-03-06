@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -6,10 +6,10 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/dialog"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+} from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import {
 	Form,
 	FormControl,
@@ -17,12 +17,12 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
-import { useLobbyMutations } from "@/services/features/Lobby/useLobbyMutations"
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useLobbyMutations } from "@/services/features/Lobby/useLobbyMutations";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 const FormSchema = z.object({
 	userId: z.string().optional(),
@@ -39,15 +39,15 @@ const FormSchema = z.object({
 		.number()
 		.min(2, { message: "Capacity must be at least 2" })
 		.max(8, { message: "Capacity must not be higher than 8." }),
-})
+});
 
 interface CreateRoomDrawerProps {}
 
 const CreateRoomDrawer = ({}: CreateRoomDrawerProps) => {
-	const { createRoom, isLoading } = useLobbyMutations()
-	const supaUser = useSupabaseUserStore(state => state.user)
+	const { createRoom, isLoading } = useLobbyMutations();
+	const supaUser = useSupabaseUserStore(state => state.user);
 
-	const [isOpen, setIsOpen] = useState(false)
+	const [isOpen, setIsOpen] = useState(false);
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -56,13 +56,13 @@ const CreateRoomDrawer = ({}: CreateRoomDrawerProps) => {
 			description: "",
 			capacity: 2,
 		},
-	})
+	});
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		data.userId = supaUser?.id
+		data.userId = supaUser?.id;
 
-		await createRoom(data)
-		setIsOpen(false)
+		await createRoom(data);
+		setIsOpen(false);
 		// todo toast
 	}
 
@@ -136,7 +136,7 @@ const CreateRoomDrawer = ({}: CreateRoomDrawerProps) => {
 				</Form>
 			</DialogContent>
 		</Dialog>
-	)
-}
+	);
+};
 
-export { CreateRoomDrawer }
+export { CreateRoomDrawer };

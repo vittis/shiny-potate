@@ -1,12 +1,12 @@
-import { CollapsibleHeader } from "@/components/CollapsibleHeader/CollapsibleHeader"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { useLobbyQueries } from "@/services/features/Lobby/useLobbyQueries"
-import { Loader2 } from "lucide-react"
-import { LobbyRoom } from "./LobbyRoom/LobbyRoom"
-import { useQuery } from "@tanstack/react-query"
-import { supabase } from "@/services/supabase/supabase"
-import { useMemo } from "react"
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
+import { CollapsibleHeader } from "@/components/CollapsibleHeader/CollapsibleHeader";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useLobbyQueries } from "@/services/features/Lobby/useLobbyQueries";
+import { Loader2 } from "lucide-react";
+import { LobbyRoom } from "./LobbyRoom/LobbyRoom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/services/supabase/supabase";
+import { useMemo } from "react";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 async function fetchSupaRooms() {
 	let { data: rooms, error } = await supabase.from("rooms").select(`
@@ -23,34 +23,34 @@ async function fetchSupaRooms() {
         username
       )
     )
-  `)
+  `);
 
-	return rooms
+	return rooms;
 }
 
 async function fetchProfiles() {
 	let { data: rooms, error } = await supabase.from("profiles").select(`
     username
-  `)
+  `);
 
-	return rooms
+	return rooms;
 }
 
 const SupaRoomsView = () => {
-	const user = useSupabaseUserStore(state => state.user)
+	const user = useSupabaseUserStore(state => state.user);
 
 	const { data: rooms, isFetching } = useQuery<any>({
 		queryKey: ["supa", "rooms"],
 		queryFn: fetchSupaRooms,
-	})
+	});
 
 	const userRoom = useMemo(() => {
-		return rooms?.find(room => room.members.some(member => member.id === user?.id))
-	}, [rooms, user])
+		return rooms?.find(room => room.members.some(member => member.id === user?.id));
+	}, [rooms, user]);
 
 	const otherRooms = useMemo(() => {
-		return rooms?.filter(room => !room.members.some(member => member.id === user?.id))
-	}, [rooms, user])
+		return rooms?.filter(room => !room.members.some(member => member.id === user?.id));
+	}, [rooms, user]);
 
 	return (
 		<ScrollArea className="h-full w-full px-4">
@@ -102,7 +102,7 @@ const SupaRoomsView = () => {
 				</div>
 			</CollapsibleHeader>
 		</ScrollArea>
-	)
-}
+	);
+};
 
-export default SupaRoomsView
+export default SupaRoomsView;

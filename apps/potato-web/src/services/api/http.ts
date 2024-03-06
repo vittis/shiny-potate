@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from "axios";
 
 export const api = axios.create({
 	// baseURL: "http://localhost:8080",
 	baseURL: import.meta.env.VITE_API_URL,
-})
+});
 
 /* api.interceptors.request.use(
   (config) => {
@@ -22,7 +22,7 @@ export const api = axios.create({
 
 api.interceptors.response.use(
 	function (response) {
-		return response
+		return response;
 	},
 	function (error) {
 		/* console.log(error);
@@ -37,6 +37,6 @@ api.interceptors.response.use(
         "Something went wrong"
     ); */
 
-		return Promise.reject(error)
+		return Promise.reject(error);
 	},
-)
+);

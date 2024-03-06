@@ -1,21 +1,21 @@
-import { useQuery } from "@tanstack/react-query"
-import { api } from "../../api/http"
-import { useEffect } from "react"
-import { useUserStore } from "./useUserStore"
-import { toast } from "react-toastify"
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/http";
+import { useEffect } from "react";
+import { useUserStore } from "./useUserStore";
+import { toast } from "react-toastify";
 
 async function fetchProfile() {
 	const { data } = await api.get("/api/me/profile", {
 		withCredentials: true,
-	})
-	return data
+	});
+	return data;
 }
 
 const useFetchProfile = () => {
-	const setUserData = useUserStore(state => state.setUserData)
+	const setUserData = useUserStore(state => state.setUserData);
 
-	const removeUserData = useUserStore(state => state.removeUserData)
-	const userData = useUserStore(state => state.userData)
+	const removeUserData = useUserStore(state => state.removeUserData);
+	const userData = useUserStore(state => state.userData);
 
 	const {
 		data: profileData,
@@ -24,22 +24,22 @@ const useFetchProfile = () => {
 	} = useQuery({
 		queryKey: ["user", "profile"],
 		queryFn: fetchProfile,
-	})
+	});
 
 	useEffect(() => {
 		if (isSuccess) {
-			toast.success("Profile fetched successfully")
-			setUserData(profileData.data)
+			toast.success("Profile fetched successfully");
+			setUserData(profileData.data);
 		}
 		if (isError) {
 			if (!!userData.userId) {
-				removeUserData()
-				console.log("doin")
+				removeUserData();
+				console.log("doin");
 			}
 		}
-	}, [isSuccess, profileData, isError, removeUserData, setUserData])
+	}, [isSuccess, profileData, isError, removeUserData, setUserData]);
 
-	return null
-}
+	return null;
+};
 
-export { useFetchProfile }
+export { useFetchProfile };

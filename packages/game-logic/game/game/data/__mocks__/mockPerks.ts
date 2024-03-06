@@ -1,4 +1,4 @@
-import { PerkData } from "../../Perk/PerkTypes"
+import { PerkData } from "../../Perk/PerkTypes";
 
 export const MockPerks = {
 	FocusedMind: {
@@ -164,4 +164,4 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
-}
+};

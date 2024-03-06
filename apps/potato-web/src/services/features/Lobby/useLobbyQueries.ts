@@ -1,31 +1,31 @@
-import { useQuery } from "@tanstack/react-query"
-import { useEffect, useMemo } from "react"
-import { api } from "../../api/http"
-import { useUserStore } from "../User/useUserStore"
-import { useLobbyRealtime } from "./useLobbyRealtime"
-import { toast } from "react-toastify"
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
+import { api } from "../../api/http";
+import { useUserStore } from "../User/useUserStore";
+import { useLobbyRealtime } from "./useLobbyRealtime";
+import { toast } from "react-toastify";
 
 async function fetchLobbyRooms() {
-	const { data } = await api.get("/api/rooms", { withCredentials: true })
-	return data
+	const { data } = await api.get("/api/rooms", { withCredentials: true });
+	return data;
 }
 
 async function fetchUserRooms() {
-	const { data } = await api.get("/api/me/rooms", { withCredentials: true })
-	return data
+	const { data } = await api.get("/api/me/rooms", { withCredentials: true });
+	return data;
 }
 
 interface LobbyData {
-	allRooms: any[]
-	allRoomsExceptUserRoom: any[]
-	userRoom: any | undefined
-	isLoading: boolean
+	allRooms: any[];
+	allRoomsExceptUserRoom: any[];
+	userRoom: any | undefined;
+	isLoading: boolean;
 }
 
 const useLobbyQueries = (): LobbyData => {
-	useLobbyRealtime()
+	useLobbyRealtime();
 
-	const isLoggedIn = useUserStore(state => state.isLoggedIn)
+	const isLoggedIn = useUserStore(state => state.isLoggedIn);
 
 	const {
 		data: roomsData,
@@ -37,7 +37,7 @@ const useLobbyQueries = (): LobbyData => {
 		queryFn: fetchLobbyRooms,
 		enabled: isLoggedIn,
 		refetchInterval: 15000,
-	})
+	});
 
 	const {
 		data: userRoomsData,
@@ -50,7 +50,7 @@ const useLobbyQueries = (): LobbyData => {
 		queryFn: fetchUserRooms,
 		enabled: isLoggedIn,
 		refetchInterval: 15000,
-	})
+	});
 
 	const allRooms = useMemo(
 		() =>
@@ -59,28 +59,28 @@ const useLobbyQueries = (): LobbyData => {
 				members: room.members ? JSON.parse(room.members) : [],
 			})) || [],
 		[roomsData],
-	)
+	);
 
 	const userRoom = useMemo(
 		() => allRooms?.find(room => userRoomsData?.rooms.includes(room.id)),
 		[allRooms, userRoomsData],
-	)
+	);
 	const allRoomsExceptUserRoom = useMemo(
 		() => allRooms?.filter(room => room.id !== userRoom?.id) || [],
 		[allRooms, userRoom],
-	)
+	);
 	const isLoading = useMemo(
 		() => roomsIsLoading || userRoomsIsLoading || roomsIsRefetching || userRoomsIsRefetching,
 		[roomsIsLoading, userRoomsIsLoading, roomsIsRefetching, userRoomsIsRefetching],
-	)
+	);
 
 	useEffect(() => {
 		if ((userRoomsIsError || userRoomsIsError) && !isLoading) {
-			toast.error("Error fetching lobby rooms data")
+			toast.error("Error fetching lobby rooms data");
 		}
-	}, [roomsIsSuccess, userRoomsIsSuccess, isLoading])
+	}, [roomsIsSuccess, userRoomsIsSuccess, isLoading]);
 
-	return { allRooms, allRoomsExceptUserRoom, userRoom, isLoading }
-}
+	return { allRooms, allRoomsExceptUserRoom, userRoom, isLoading };
+};
 
-export { useLobbyQueries }
+export { useLobbyQueries };

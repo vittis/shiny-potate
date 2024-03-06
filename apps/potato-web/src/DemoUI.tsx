@@ -1,4 +1,4 @@
-import { CSSProperties } from "react"
+import { CSSProperties } from "react";
 
 export function DemoUI() {
 	return (
@@ -164,5 +164,5 @@ export function DemoUI() {
 				</ul>
 			</main>
 		</>
-	)
+	);
 }

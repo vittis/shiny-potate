@@ -1,6 +1,12 @@
 {
   "name": "Ranged Proficiency",
   "type": "TIER_SCALE",
+  "tags": [
+    {
+      "name": "RANGED",
+      "weight": 5
+    }
+  ],
   "tiers": [
     {
       "name": "FAST",

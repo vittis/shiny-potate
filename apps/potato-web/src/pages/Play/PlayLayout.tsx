@@ -1,24 +1,24 @@
-import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { useCallback } from "react"
-import { Navigate, Outlet } from "react-router-dom"
-import debounce from "lodash.debounce"
-import { PlaySideNav } from "./PlaySideNav/PlaySideNav"
-import MessagesPanel from "../MessagesPanel/MessagesPanel"
+import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { useCallback } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import debounce from "lodash.debounce";
+import { PlaySideNav } from "./PlaySideNav/PlaySideNav";
+import MessagesPanel from "../MessagesPanel/MessagesPanel";
 
 const PlayLayout = () => {
-	const layout = localStorage.getItem("react-resizable-panels:layout")
-	const collapsed = localStorage.getItem("react-resizable-panels:collapsed")
+	const layout = localStorage.getItem("react-resizable-panels:layout");
+	const collapsed = localStorage.getItem("react-resizable-panels:collapsed");
 
-	const defaultLayout = layout ? JSON.parse(layout) : undefined
-	const defaultCollapsed = collapsed ? JSON.parse(collapsed) : undefined
+	const defaultLayout = layout ? JSON.parse(layout) : undefined;
+	const defaultCollapsed = collapsed ? JSON.parse(collapsed) : undefined;
 
 	const debouncedSaveToLocalStorage = useCallback(
 		debounce(sizes => {
-			localStorage.setItem("react-resizable-panels:layout", JSON.stringify(sizes))
+			localStorage.setItem("react-resizable-panels:layout", JSON.stringify(sizes));
 		}, 300),
 		[],
-	)
+	);
 
 	return (
 		<div className="main-panel grow overflow-hidden rounded-[0.5rem] border bg-background shadow-md md:shadow-xl">
@@ -26,7 +26,7 @@ const PlayLayout = () => {
 				<ResizablePanelGroup
 					direction="horizontal"
 					onLayout={(sizes: number[]) => {
-						debouncedSaveToLocalStorage(sizes)
+						debouncedSaveToLocalStorage(sizes);
 					}}
 					className="h-full items-stretch"
 				>
@@ -44,7 +44,7 @@ const PlayLayout = () => {
 				</ResizablePanelGroup>
 			</TooltipProvider>
 		</div>
-	)
-}
+	);
+};
 
-export default PlayLayout
+export default PlayLayout;

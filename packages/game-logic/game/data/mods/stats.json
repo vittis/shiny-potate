@@ -6,23 +6,67 @@
 			{
 				"name": "WEAPON",
 				"weight": 2
+			},
+			{
+				"name": "PHYSICAL",
+				"weight": 5
 			}
 		]
 	},
 	{
 		"name": "ATTACK_COOLDOWN",
-		"tiers": [5, 10, 15, 20, 25]
+		"tiers": [5, 10, 15, 20, 25],
+		"tags": [
+			{
+				"name": "WEAPON",
+				"weight": 2
+			},
+			{
+				"name": "PHYSICAL",
+				"weight": 5
+			}
+		]
 	},
 	{
 		"name": "SPELL_DAMAGE",
-		"tiers": [5, 10, 15, 20, 25]
+		"tiers": [5, 10, 15, 20, 25],
+		"tags": [
+			{
+				"name": "WEAPON",
+				"weight": 2
+			},
+			{
+				"name": "MAGICAL",
+				"weight": 5
+			}
+		]
 	},
 	{
 		"name": "SPELL_COOLDOWN",
-		"tiers": [5, 10, 15, 20, 25]
+		"tiers": [5, 10, 15, 20, 25],
+		"tags": [
+			{
+				"name": "WEAPON",
+				"weight": 2
+			},
+			{
+				"name": "MAGICAL",
+				"weight": 5
+			}
+		]
 	},
 	{
 		"name": "DAMAGE_REDUCTION",
-		"tiers": [5, 10, 15, 20, 25]
+		"tiers": [5, 10, 15, 20, 25],
+		"tags": [
+			{
+				"name": "TRINKET",
+				"weight": 2
+			},
+			{
+				"name": "SHIELD",
+				"weight": 5
+			}
+		]
 	}
 ]

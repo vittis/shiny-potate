@@ -1,17 +1,17 @@
-import { cn } from "@/lib/utils"
-import { ScrollArea, ScrollBar } from "../ui/scroll-area"
-import { Button } from "../ui/button"
-import { ThemeModeToggle } from "../ThemeModeToggle/ThemeModeToggle"
-import { useAuth } from "@/services/features/User/useAuth"
-import { useGlobalConnection } from "@/services/features/Global/useGlobalConnection"
-import { ReadyState } from "react-use-websocket"
-import { WifiIcon, WifiOffIcon } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
-import { RegisterUserDrawer } from "../User/RegisterUserDrawer"
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore"
-import { supabase } from "@/services/supabase/supabase"
-import { LoginUserDrawer } from "../User/LoginUserDrawer"
-import { Link, matchPath, useLocation } from "react-router-dom"
+import { cn } from "@/lib/utils";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Button } from "../ui/button";
+import { ThemeModeToggle } from "../ThemeModeToggle/ThemeModeToggle";
+import { useAuth } from "@/services/features/User/useAuth";
+import { useGlobalConnection } from "@/services/features/Global/useGlobalConnection";
+import { ReadyState } from "react-use-websocket";
+import { WifiIcon, WifiOffIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { RegisterUserDrawer } from "../User/RegisterUserDrawer";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
+import { supabase } from "@/services/supabase/supabase";
+import { LoginUserDrawer } from "../User/LoginUserDrawer";
+import { Link, matchPath, useLocation } from "react-router-dom";
 
 const navItems = [
 	{
@@ -44,15 +44,15 @@ const navItems = [
 		name: "Settings",
 		disabled: true,
 	},
-]
+];
 
 export function Nav() {
-	const { login, logout } = useAuth()
-	const user = useSupabaseUserStore(state => state.user)
+	const { login, logout } = useAuth();
+	const user = useSupabaseUserStore(state => state.user);
 
-	const { readyState } = useGlobalConnection()
+	const { readyState } = useGlobalConnection();
 
-	const { pathname } = useLocation()
+	const { pathname } = useLocation();
 
 	const connectionStatus = {
 		[ReadyState.CONNECTING]: "Connecting",
@@ -60,18 +60,18 @@ export function Nav() {
 		[ReadyState.CLOSING]: "Closing",
 		[ReadyState.CLOSED]: "Closed",
 		[ReadyState.UNINSTANTIATED]: "Uninstantiated",
-	}[readyState]
+	}[readyState];
 
-	const notConnected = readyState !== ReadyState.OPEN
-	const Icon = notConnected ? WifiOffIcon : WifiIcon
+	const notConnected = readyState !== ReadyState.OPEN;
+	const Icon = notConnected ? WifiOffIcon : WifiIcon;
 
 	const supaBaselogout = async () => {
-		let { error } = await supabase.auth.signOut()
+		let { error } = await supabase.auth.signOut();
 
 		if (error) {
-			throw error
+			throw error;
 		}
-	}
+	};
 
 	return (
 		<div className="relative flex z-20">
@@ -148,5 +148,5 @@ export function Nav() {
 				<ThemeModeToggle />
 			</div>
 		</div>
-	)
+	);
 }

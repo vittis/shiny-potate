@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { Crown, User } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Crown, User } from "lucide-react";
 
 interface LobbyRoomUserRow {
-	name: string
-	avatar?: string
-	isCreator: boolean
-	isYou?: boolean
+	name: string;
+	avatar?: string;
+	isCreator: boolean;
+	isYou?: boolean;
 }
 
 export const LobbyRoomUserRow = ({
@@ -14,12 +14,12 @@ export const LobbyRoomUserRow = ({
 	avatar = "",
 	isYou = false,
 }: LobbyRoomUserRow) => {
-	const maxW = isCreator ? "max-w-[78px]" : "max-w-[95px]"
+	const maxW = isCreator ? "max-w-[78px]" : "max-w-[95px]";
 	const textColor = isYou
 		? "text-green-300"
 		: isCreator
 			? "dark:text-yellow-300 text-primary"
-			: "dark:text-stone-300"
+			: "dark:text-stone-300";
 
 	return (
 		<Button
@@ -52,5 +52,5 @@ export const LobbyRoomUserRow = ({
 				)}
 			</div>
 		</Button>
-	)
-}
+	);
+};

@@ -1,6 +1,6 @@
-import { PossibleMods } from "../Mods/ModsTypes"
-import { STAT } from "../Stats/StatsTypes"
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes"
+import { PossibleMods } from "../Mods/ModsTypes";
+import { STAT } from "../Stats/StatsTypes";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 
 export enum ABILITY_TARGET {
 	STANDARD = "STANDARD",
@@ -13,45 +13,45 @@ export enum ABILITY_TARGET {
 // todo better type for this
 export interface AbilityModifier {
 	trigger?: {
-		name: string
-		remove?: boolean
-	}[]
+		name: string;
+		remove?: boolean;
+	}[];
 	target?: {
-		name: string
-		remove?: boolean
-	}[]
+		name: string;
+		remove?: boolean;
+	}[];
 	status_effect?: {
-		name: STATUS_EFFECT
-		target: ABILITY_TARGET
-		value: number
-		remove?: boolean
-	}[]
+		name: STATUS_EFFECT;
+		target: ABILITY_TARGET;
+		value: number;
+		remove?: boolean;
+	}[];
 	stats?: {
-		name: STAT
-		target: ABILITY_TARGET
-		value: number
-		remove?: boolean
-	}[]
+		name: STAT;
+		target: ABILITY_TARGET;
+		value: number;
+		remove?: boolean;
+	}[];
 }
 
 export interface ClassNode {
-	mods: PossibleMods
-	description: string
+	mods: PossibleMods;
+	description: string;
 }
 
 export interface TalentNode extends ClassNode {
-	tier: number
-	req: number
+	tier: number;
+	req: number;
 }
 
 // this represents the JSON of the class
 export interface ClassData {
-	name: string
-	hp: number
-	base: ClassNode[]
-	utility: ClassNode[]
+	name: string;
+	hp: number;
+	base: ClassNode[];
+	utility: ClassNode[];
 	tree: {
-		name: string
-		talents: TalentNode[]
-	}[]
+		name: string;
+		talents: TalentNode[];
+	}[];
 }

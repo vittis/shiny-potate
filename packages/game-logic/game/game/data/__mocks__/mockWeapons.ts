@@ -1,4 +1,4 @@
-import { EquipmentData } from "../../Equipment/EquipmentTypes"
+import { EquipmentData } from "../../Equipment/EquipmentTypes";
 
 export const MockWeapons = {
 	Shortbow: {
@@ -157,4 +157,4 @@ export const MockWeapons = {
 		],
 		effects: [],
 	} as EquipmentData,
-}
+};
