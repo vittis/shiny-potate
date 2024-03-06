@@ -5,11 +5,13 @@ import {
 	GrantBaseStatPayload,
 	GrantPerkPayload,
 	MOD_TYPE,
+	ModTag,
 	PossibleMods,
 } from "./ModsTypes";
 import { STAT } from "../Stats/StatsTypes";
 import { ABILITY_TARGET, AbilityModifier } from "../Class/ClassTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 
 // todo better type
 const AbilityModifierSchema = z.object({
@@ -97,3 +99,8 @@ export const PossibleModsSchema = z.array(
 		}),
 	]),
 ) satisfies z.ZodType<PossibleMods>;
+
+export const ModTagSchema = z.object({
+	name: z.nativeEnum(EQUIPMENT_TAG),
+	weight: z.number(),
+}) satisfies z.ZodType<ModTag>;

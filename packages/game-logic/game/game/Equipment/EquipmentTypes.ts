@@ -1,4 +1,5 @@
-import { PossibleMods } from "../Mods/ModsTypes";
+import { ModTag, PossibleMods } from "../Mods/ModsTypes";
+import { STAT } from "../Stats/StatsTypes";
 import { PossibleTriggerEffect } from "../Trigger/TriggerTypes";
 
 export enum EQUIPMENT_SLOT {
@@ -13,6 +14,8 @@ export enum EQUIPMENT_TAG {
 	PHYSICAL = "PHYSICAL",
 	MAGICAL = "MAGICAL",
 	RANGED = "RANGED",
+	TRINKET = "TRINKET",
+	SHIELD = "SHIELD",
 }
 
 // this represents the JSON of the equipment
@@ -22,4 +25,10 @@ export interface EquipmentData {
 	slots: EQUIPMENT_SLOT[];
 	mods: PossibleMods;
 	effects: PossibleTriggerEffect[];
+}
+
+export interface EquipmentStatsData {
+	name: STAT;
+	tiers: number[];
+	tags: ModTag[];
 }

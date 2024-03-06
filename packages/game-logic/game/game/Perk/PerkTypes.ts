@@ -1,4 +1,5 @@
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
+import { ModTag } from "../Mods/ModsTypes";
 import { PossibleTriggerEffect, TriggerEffect } from "../Trigger/TriggerTypes";
 
 export enum PERK_TYPE {
@@ -11,15 +12,10 @@ export interface PerkTierScale {
 	values: number[];
 }
 
-export interface PerkTag {
-	name: EQUIPMENT_TAG;
-	weight: number;
-}
-
 export interface PerkData {
 	name: string;
 	type: PERK_TYPE;
 	tiers: PerkTierScale[];
 	effects: PossibleTriggerEffect[];
-	tags?: PerkTag[];
+	tags?: ModTag[];
 }
