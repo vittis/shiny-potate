@@ -1,6 +1,12 @@
 {
   "name": "Desperate Will",
   "type": "TIER_SCALE",
+  "tags": [
+    {
+      "name": "MAGICAL",
+      "weight": 1
+    }
+  ],
   "tiers": [
     {
       "name": "ATTACK_POWER",

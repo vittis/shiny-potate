@@ -1,6 +1,12 @@
 {
   "name": "Last Words",
   "type": "TIER_SCALE",
+  "tags": [
+    {
+      "name": "MAGICAL",
+      "weight": 1
+    }
+  ],
   "tiers": [
     {
       "name": "STURDY",
