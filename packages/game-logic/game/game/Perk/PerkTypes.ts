@@ -1,3 +1,4 @@
+import { ModTag } from "../Mods/ModsTypes";
 import { PossibleTriggerEffect, TriggerEffect } from "../Trigger/TriggerTypes";
 
 export enum PERK_TYPE {
@@ -15,4 +16,5 @@ export interface PerkData {
 	type: PERK_TYPE;
 	tiers: PerkTierScale[];
 	effects: PossibleTriggerEffect[];
+	tags?: ModTag[];
 }

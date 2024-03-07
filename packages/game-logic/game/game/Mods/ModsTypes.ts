@@ -1,4 +1,5 @@
 import { AbilityModifier } from "../Class/ClassTypes";
+import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { STAT } from "../Stats/StatsTypes";
 
 export enum MOD_TYPE {
@@ -55,3 +56,29 @@ export type PossibleMods = Array<
 	| Mod<MOD_TYPE.GRANT_BASE_STAT>
 	| Mod<MOD_TYPE.GRANT_ABILITY_MODIFIER>
 >;
+
+export interface ModTag {
+	name: EQUIPMENT_TAG;
+	weight: number;
+}
+
+export type ShopItemMod = ShopItemPerkMod | ShopItemStatMod;
+
+export interface ShopItemPerkMod {
+	mod: Mod<MOD_TYPE.GRANT_PERK>;
+	weight: number;
+}
+
+export interface ShopItemStatMod {
+	mod: {
+		type: MOD_TYPE.GRANT_BASE_STAT;
+		payload: {
+			name: STAT;
+		};
+	};
+	weight: number;
+}
+
+export type ShopItemTieredMod = ShopItemMod & {
+	tier: number;
+};

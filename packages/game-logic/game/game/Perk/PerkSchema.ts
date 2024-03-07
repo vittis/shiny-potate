@@ -9,6 +9,7 @@ import {
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { EQUIPMENT_SLOT, EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
+import { ModTagSchema } from "../Mods/ModsSchema";
 
 const PositionEffectCondition = z.object({
 	type: z.literal(EFFECT_CONDITION_TYPE.POSITION),
@@ -82,4 +83,5 @@ export const PerkDataSchema = z.object({
 	type: z.nativeEnum(PERK_TYPE),
 	tiers: z.array(PerkTierScaleSchema),
 	effects: TriggerEffectsSchema,
+	tags: z.array(ModTagSchema).optional(),
 }) satisfies z.ZodType<PerkData>;
