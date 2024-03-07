@@ -109,13 +109,15 @@ describe("Equipment", () => {
 		it("should unequip MAIN_HAND / OFF_HAND if unequipping TWO_HANDS and vice versa", () => {
 			const equipManager = new EquipmentManager();
 
-			const equipMainHand = new Equipment(Weapons.Shortbow);
+			const equipOneHand = new Equipment(Weapons.Sword);
 			const equipTwoHands = new Equipment(Weapons.Longbow);
 
-			equipManager.equip(equipMainHand, EQUIPMENT_SLOT.MAIN_HAND);
+			equipManager.equip(equipOneHand, EQUIPMENT_SLOT.MAIN_HAND);
+			equipManager.equip(equipOneHand, EQUIPMENT_SLOT.OFF_HAND);
 
 			expect(equipManager.unequip(EQUIPMENT_SLOT.TWO_HANDS)).toStrictEqual([
-				{ equip: equipMainHand, slot: EQUIPMENT_SLOT.MAIN_HAND },
+				{ equip: equipOneHand, slot: EQUIPMENT_SLOT.MAIN_HAND },
+				{ equip: equipOneHand, slot: EQUIPMENT_SLOT.OFF_HAND },
 			]);
 
 			equipManager.equip(equipTwoHands, EQUIPMENT_SLOT.TWO_HANDS);

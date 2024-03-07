@@ -81,6 +81,14 @@ export const MockWeapons = {
 				},
 				tier: "implicit",
 			},
+			{
+				type: "GRANT_BASE_STAT",
+				payload: {
+					stat: "ATTACK_DAMAGE",
+					value: 5,
+				},
+				tier: "implicit",
+			},
 		],
 		effects: [],
 	} as EquipmentData,
@@ -165,6 +173,14 @@ export const MockWeapons = {
 				},
 				tier: "implicit",
 			},
+			{
+				type: "GRANT_BASE_STAT",
+				payload: {
+					stat: "SPELL_DAMAGE",
+					value: 5,
+				},
+				tier: "implicit",
+			},
 		],
 		effects: [],
 	} as EquipmentData,
@@ -173,7 +189,7 @@ export const MockWeapons = {
 		tags: ["WEAPON", "PHYSICAL", "RANGED"],
 		slots: ["TWO_HANDS"],
 		mods: [
-			{
+			/* {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Long Shot",
@@ -187,7 +203,7 @@ export const MockWeapons = {
 					tier: 1,
 				},
 				tier: "implicit",
-			},
+			}, */
 		],
 		effects: [],
 	} as EquipmentData,

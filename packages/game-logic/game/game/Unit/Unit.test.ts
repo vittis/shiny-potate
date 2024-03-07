@@ -3,14 +3,13 @@ import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { sortAndExecuteEvents } from "../Event/EventUtils";
-import { runGame } from "../Game";
+import { MOD_TYPE } from "../Mods/ModsTypes";
 import { Weapons, Classes } from "../data";
-import classes from "../data/classes";
 import { Unit } from "./Unit";
 
 describe("Unit", () => {
 	describe("Equipment", () => {
-		test("should equip", () => {
+		it("should equip", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
@@ -22,10 +21,7 @@ describe("Unit", () => {
 			expect(unit.equips[0].equip.data).toEqual(Weapons.Shortbow);
 		});
 
-		// todo add this
-		// test("check if equip is on valid slot", () => {});
-
-		test("should equip in different slots", () => {
+		it("should equip in different slots", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -36,19 +32,7 @@ describe("Unit", () => {
 			expect(unit.equips).toHaveLength(2);
 		});
 
-		test("should not be able to equip in same slot", () => {
-			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
-
-			try {
-				unit.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-				unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-			} catch (e: any) {
-				expect(e.message).toBeDefined();
-				expect(unit.equips).toHaveLength(1);
-			}
-		});
-
-		test("should unequip then equip", () => {
+		it("should unequip then equip", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -60,17 +44,51 @@ describe("Unit", () => {
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
 			expect(unit.equips).toHaveLength(1);
 		});
+
+		it("if equipping on occupied slot, should unequip old equip and equip new one", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const equip1 = new Equipment(Weapons.ShortSpear);
+			const equip2 = new Equipment(Weapons.Sword);
+
+			unit.equip(equip1, EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.equips).toHaveLength(1);
+			expect(unit.equips[0].equip).toStrictEqual(equip1);
+
+			unit.equip(equip2, EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.equips).toHaveLength(1);
+			expect(unit.equips[0].equip).toStrictEqual(equip2);
+		});
+
+		it("should unequip MAIN_HAND and OFF_HAND weapons when equipping TWO_HANDS weapon", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const equipMainHand = new Equipment(Weapons.ShortSpear);
+			const equipOffHand = new Equipment(Weapons.Sword);
+			const equipTwoHands = new Equipment(Weapons.Longbow);
+
+			unit.equip(equipMainHand, EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(equipOffHand, EQUIPMENT_SLOT.OFF_HAND);
+			expect(unit.equips).toHaveLength(2);
+			expect(unit.equips[0].slot).toStrictEqual(EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.equips[1].slot).toStrictEqual(EQUIPMENT_SLOT.OFF_HAND);
+
+			unit.equip(equipTwoHands, EQUIPMENT_SLOT.TWO_HANDS);
+			expect(unit.equips).toHaveLength(1);
+			expect(unit.equips[0].slot).toStrictEqual(EQUIPMENT_SLOT.TWO_HANDS);
+		});
 	});
 
 	describe("Abilities", () => {
-		test("class should give ability", () => {
+		it("class should give ability", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.setClass(new Class(Classes.Ranger));
 
 			expect(unit.abilities).toHaveLength(1);
 		});
-		test("equipping a weapon should give an ability", () => {
+
+		it("equipping a weapon should give an ability", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -79,7 +97,17 @@ describe("Unit", () => {
 			expect(unit.abilities).toHaveLength(1);
 		});
 
-		test("equipping two weapons should give two abilities", () => {
+		it("unequipping a weapon should remove its ability", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			expect(unit.abilities).toHaveLength(0);
+
+			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.abilities).toHaveLength(1);
+		});
+
+		it("equipping two weapons should give two abilities", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -88,7 +116,7 @@ describe("Unit", () => {
 			expect(unit.abilities).toHaveLength(2);
 		});
 
-		test("throws error when invalid target", () => {
+		it("throws error when invalid target", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 
@@ -108,7 +136,7 @@ describe("Unit", () => {
 			expect(true).toBe(false);
 		});
 
-		test("uses Short Spear ability: Thrust", () => {
+		it("uses Short Spear ability: Thrust", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
@@ -130,7 +158,7 @@ describe("Unit", () => {
 			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
 		});
 
-		test("uses Sword ability: Slash", () => {
+		it("uses Sword ability: Slash", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
@@ -154,22 +182,61 @@ describe("Unit", () => {
 	});
 
 	describe("Stats", () => {
-		test("equipping weapon grants stats", () => {
+		it("equipping weapon grants stats", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
 			expect(unit.statsFromMods.attackDamageModifier).toBe(10);
 		});
 
-		// todo rewrite
-		test.skip("equipping two items should accumulate stat", () => {
-			const bm = new BoardManager();
-			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+		it("unequipping weapon removes stats", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
-			expect(unit.stats.damageReductionModifier).toBe(10);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
+
+			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(10);
+
+			unit.unequip(EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
 		});
 
-		test("class should grant stats", () => {
+		it("if equipping new weapon on occupied slot, should remove stats from old weapon and add stats from new one", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
+			expect(unit.statsFromMods.spellDamageModifier).toBe(0);
+
+			const equip1 = new Equipment(Weapons.ShortSpear);
+			const equip2 = new Equipment(Weapons.Wand);
+
+			unit.equip(equip1, EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.statsFromMods.attackDamageModifier).toBe(10);
+			expect(unit.statsFromMods.spellDamageModifier).toBe(0);
+
+			unit.equip(equip2, EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
+			expect(unit.statsFromMods.spellDamageModifier).toBe(5);
+		});
+
+		it("equipping two items should accumulate stat", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
+
+			const equip1 = new Equipment(Weapons.ShortSpear);
+			const equip2 = new Equipment(Weapons.Sword);
+
+			unit.equip(equip1, EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(10);
+
+			unit.equip(equip2, EQUIPMENT_SLOT.OFF_HAND);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(10 + 5);
+		});
+
+		it("class should grant stats", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.setClass(new Class(Classes.Ranger));
@@ -179,7 +246,7 @@ describe("Unit", () => {
 	});
 
 	describe("Perks", () => {
-		test("equipping a weapon should give a perk", () => {
+		it("equipping a weapon should give a perk", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -187,7 +254,7 @@ describe("Unit", () => {
 			expect(unit.perks).toHaveLength(1);
 		});
 
-		test("unequipping a weapon should remove its perk", () => {
+		it("unequipping a weapon should remove its perk", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -197,6 +264,31 @@ describe("Unit", () => {
 			unit.unequip(EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.perks).toHaveLength(0);
+		});
+
+		it("if equipping new weapon on occupied slot, should remove perks from old weapon and add perks from new one", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			expect(unit.perks).toStrictEqual([]);
+
+			const equip1 = new Equipment(Weapons.ShortSpear);
+			const equip2 = new Equipment(Weapons.Sword);
+
+			unit.equip(equip1, EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.perks.map(perk => ({ name: perk.data.name, tier: perk.tier }))).toStrictEqual(
+				equip1.data.mods
+					.filter(mod => mod.type === MOD_TYPE.GRANT_PERK)
+					.map(perkMod => perkMod.payload),
+			);
+
+			unit.equip(equip2, EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.perks.map(perk => ({ name: perk.data.name, tier: perk.tier }))).toStrictEqual(
+				equip2.data.mods
+					.filter(mod => mod.type === MOD_TYPE.GRANT_PERK)
+					.map(perkMod => perkMod.payload),
+			);
 		});
 	});
 });
