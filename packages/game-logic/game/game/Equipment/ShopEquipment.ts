@@ -214,7 +214,7 @@ export class ShopEquipment {
 		return modValue;
 	}
 
-	generateEquipmentData(): ShopEquipmentData {
+	generateShopEquipmentData(): ShopEquipmentData {
 		return {
 			...this.data,
 			tier: this.tier,
