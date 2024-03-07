@@ -16,7 +16,7 @@ export class Equipment {
 	constructor(data: EquipmentData) {
 		if (!data) {
 			throw Error(
-				"Equipment data is undefined. If running from test make sure it's defined in mock files",
+				"Equipment: Equipment data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
 		const parsedData = EquipmentDataSchema.parse(data);
