@@ -48,6 +48,7 @@ export type ModPayloadMap = {
 export interface Mod<T extends MOD_TYPE> {
 	type: T;
 	payload: ModPayloadMap[T];
+	tier?: number | "implicit";
 }
 
 export type PossibleMods = Array<

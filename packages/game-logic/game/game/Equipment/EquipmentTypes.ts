@@ -27,6 +27,10 @@ export interface EquipmentData {
 	effects: PossibleTriggerEffect[];
 }
 
+export interface ShopEquipmentData extends EquipmentData {
+	tier: number;
+}
+
 export interface EquipmentStatsData {
 	name: STAT;
 	tiers: number[];

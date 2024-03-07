@@ -7,14 +7,16 @@
 			"type": "GRANT_ABILITY",
 			"payload": {
 				"name": "Bastion Bond"
-			}
+			},
+			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_PERK",
 			"payload": {
 				"name": "Desperate Will",
 				"tier": 1
-			}
+			},
+			"tier": "implicit"
 		}
 	],
 	"effects": []

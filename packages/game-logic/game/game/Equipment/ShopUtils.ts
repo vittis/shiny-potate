@@ -1,9 +1,9 @@
 import { Weapons } from "../data";
-import { EquipmentData } from "./EquipmentTypes";
+import { ShopEquipmentData } from "./EquipmentTypes";
 import { ShopEquipment } from "./ShopEquipment";
 
 export function generateWeaponsFromTier(tier: number) {
-	const weapons: EquipmentData[] = [];
+	const weapons: ShopEquipmentData[] = [];
 
 	Object.keys(Weapons).forEach(key => {
 		let weapon = new ShopEquipment((Weapons as any)[key], tier).generateEquipmentData();

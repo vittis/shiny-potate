@@ -327,7 +327,7 @@ export function SetupView({ tier }) {
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons.map(weapon => (
 								<Draggable key={weapon.id} id={weapon.id}>
-									{weapon.data.name} - {weapon.data.mods.length}
+									{weapon.data.name} - T{weapon.data.tier}
 								</Draggable>
 							))}
 						</div>
