@@ -1,0 +1,275 @@
+{
+  "main": {
+    "id": "617e285283eb1582",
+    "type": "split",
+    "children": [
+      {
+        "id": "3eb4462b328023dd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4ed6c17977ae7a91",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Classes/Warrior.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "fc87edc06de59b40",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Itemization/Mods.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "991bbf49fdcdb9e3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Perks/Ranged Proficiency.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1086b81d4ab6141a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Perks/Venomous Strikes.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "2e97861b1474383d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Equipment/Weapons/Bows/Shortbow.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "276fb7418015db03",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Stats/Attack Cooldown.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c304a6f7079c0706",
+    "type": "split",
+    "children": [
+      {
+        "id": "d18e161fcf05b5ff",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bd58c1e5e264bc1d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8e8203f52004cb82",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          },
+          {
+            "id": "30c0a40169427c00",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 232.5
+  },
+  "right": {
+    "id": "ba61b95ec8759fc4",
+    "type": "split",
+    "children": [
+      {
+        "id": "661cd6e254fb9e63",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "65edb15874c90963",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Itemization/Mods.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": true,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "4264c5c9a2b49032",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Itemization/Mods.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "81a2702423d97968",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Itemization/Mods.md"
+              }
+            }
+          },
+          {
+            "id": "2f5971c5865c5754",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "dbdd2b11eb473bc9",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
+          },
+          {
+            "id": "415b046f8b25a628",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
+    }
+  },
+  "active": "fc87edc06de59b40",
+  "lastOpenFiles": [
+    "Perks/Ranged Proficiency.md",
+    "Itemization/Mods.md",
+    "Perks/Focused Mind.md",
+    "Perks/Last Words.md",
+    "Perks/Iron Heart.md",
+    "Perks/Fallen Guardian.md",
+    "Perks/Desperate Will.md",
+    "Perks/Vitality Boost.md",
+    "Perks/Venomous Strikes.md",
+    "Classes/Warrior.md",
+    "Classes/Warlock.md",
+    "Classes/Rogue.md",
+    "Classes/Ranger.md",
+    "Classes/Blacksmith.md",
+    "Classes/Paladin.md",
+    "Perks/Summoner_s Farewell.md",
+    "Perks/Open Field Tactics.md",
+    "Equipment/Weapons/Bows/Longbow.md",
+    "Equipment/Weapons/Dagger/Venomous Dagger.md",
+    "Equipment/Weapons/Dagger/Bone Dagger.md",
+    "Equipment/Weapons/Bows/Shortbow.md",
+    "Stats/Attack Cooldown.md",
+    "Equipment/Weapons/Bows/Serpent Bow.md",
+    "Untitled",
+    "Abilities/Spells/Decay Strike.md",
+    "Status Effects/POISON.md",
+    "Status Effects/REGEN.md",
+    "Itemization",
+    "Equipment/Trinkets",
+    "Equipment/Weapons/Dagger",
+    "Equipment/Weapons/Bows",
+    "Abilities",
+    "Equipment/Weapons/Spears",
+    "Equipment/Weapons/Swords",
+    "Equipment/Armor",
+    "Equipment",
+    "Untitled.canvas",
+    "Untitled 1.canvas"
+  ]
+}
