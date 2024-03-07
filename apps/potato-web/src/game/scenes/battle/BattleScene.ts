@@ -10,6 +10,9 @@ import {
 	unhighlightAbilities,
 } from "./battleUnit/BattleUnitAbilities";
 import { useSetupState } from "@/services/state/useSetupState";
+import { api } from "@/services/api/http";
+
+const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
 // todo: reuse from server
 enum EVENT_TYPE {
@@ -48,6 +51,14 @@ export async function fetchBattleSetup() {
 	return data;
 }
 
+export async function fetchVanillaBattleSetup() {
+	console.log("vanilla");
+
+	const response = await api.get("/game/setup-teams-vanilla");
+
+	return response.data;
+}
+
 export const GAME_LOOP_SPEED = 20;
 
 export class Battle extends Phaser.Scene {
@@ -65,6 +76,8 @@ export class Battle extends Phaser.Scene {
 
 	constructor() {
 		super("BattleScene");
+
+		console.log("aaaaa", isVanillaBattleSetup);
 	}
 
 	preload() {
@@ -92,7 +105,7 @@ export class Battle extends Phaser.Scene {
 		queryClient
 			.fetchQuery({
 				queryKey: ["game/battle/setup"],
-				queryFn: fetchBattleSetup,
+				queryFn: isVanillaBattleSetup === "true" ? fetchVanillaBattleSetup : fetchBattleSetup,
 				staleTime: Infinity,
 			})
 			.then(data => {

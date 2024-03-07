@@ -21,6 +21,18 @@ app.post("/setup-teams", async c => {
 	});
 });
 
+app.get("/setup-teams-vanilla", async c => {
+	const game = new Game();
+
+	const { totalSteps, eventHistory, firstStep } = game.startGame();
+
+	return c.json({
+		firstStep,
+		totalSteps,
+		eventHistory,
+	});
+});
+
 app.get("/roll-shop/:tier", async c => {
 	const tier = c.req.param("tier") || "0";
 
