@@ -122,6 +122,8 @@ export class Unit {
 	}
 
 	equip(equip: Equipment, slot: EQUIPMENT_SLOT) {
+		if (this.equipmentManager.isSlotOccupied(slot)) this.unequip(slot);
+
 		this.equipmentManager.equip(equip, slot);
 
 		this.abilityManager.addAbilitiesFromSource(equip.getGrantedAbilities(), equip.id);
@@ -140,10 +142,15 @@ export class Unit {
 	}
 
 	unequip(slot: EQUIPMENT_SLOT) {
-		const equippedItem = this.equipmentManager.unequip(slot);
-		this.abilityManager.removeAbilitiesFromSource(equippedItem.equip.id);
-		this.statsManager.removeMods(equippedItem.equip.getStatsMods());
-		this.perkManager.removePerksFromSource(equippedItem.equip.id);
+		const unequippedItems = this.equipmentManager.unequip(slot);
+
+		unequippedItems.forEach(unequippedItem => {
+			this.abilityManager.removeAbilitiesFromSource(unequippedItem.equip.id);
+			this.statsManager.removeMods(unequippedItem.equip.getStatsMods());
+			this.perkManager.removePerksFromSource(unequippedItem.equip.id);
+		});
+
+		// Put items on storage
 	}
 
 	setClass(unitClass: Class) {

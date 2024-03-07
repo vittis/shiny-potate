@@ -5,7 +5,9 @@ import { PossibleTriggerEffect } from "../Trigger/TriggerTypes";
 export enum EQUIPMENT_SLOT {
 	MAIN_HAND = "MAIN_HAND",
 	OFF_HAND = "OFF_HAND",
+	TWO_HANDS = "TWO_HANDS",
 	TRINKET = "TRINKET",
+	TRINKET_2 = "TRINKET_2", // TODO create another enum to not include this on equipment json, only on EquipmentManager ?
 }
 
 export enum EQUIPMENT_TAG {
