@@ -7,21 +7,24 @@
 			"type": "GRANT_ABILITY",
 			"payload": {
 				"name": "Thrust"
-			}
+			},
+			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_PERK",
 			"payload": {
 				"name": "Focused Mind",
 				"tier": 1
-			}
+			},
+			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_BASE_STAT",
 			"payload": {
 				"stat": "ATTACK_DAMAGE",
 				"value": 5
-			}
+			},
+			"tier": "implicit"
 		}
 	],
 	"effects": []

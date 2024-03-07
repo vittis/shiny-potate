@@ -84,18 +84,22 @@ export const PossibleModsSchema = z.array(
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_ABILITY),
 			payload: GrantAbilityPayloadSchema,
+			tier: z.union([z.number(), z.literal("implicit")]),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_PERK),
 			payload: GrantPerkPayloadSchema,
+			tier: z.union([z.number(), z.literal("implicit")]),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_BASE_STAT),
 			payload: GrantBaseStatPayloadSchema,
+			tier: z.union([z.number(), z.literal("implicit")]),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_ABILITY_MODIFIER),
 			payload: GrantAbilityModifierPayload,
+			tier: z.union([z.number(), z.literal("implicit")]),
 		}),
 	]),
 ) satisfies z.ZodType<PossibleMods>;

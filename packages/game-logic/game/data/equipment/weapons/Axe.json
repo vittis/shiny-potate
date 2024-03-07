@@ -7,13 +7,15 @@
 			"type": "GRANT_ABILITY",
 			"payload": {
 				"name": "Stab"
-			}
+			},
+			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
 				"name": "Reinforce Allies"
-			}
+			},
+			"tier": "implicit"
 		}
 	],
 	"effects": []

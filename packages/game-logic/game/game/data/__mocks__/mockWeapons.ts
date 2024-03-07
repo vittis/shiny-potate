@@ -11,6 +11,7 @@ export const MockWeapons = {
 				payload: {
 					name: "Disarming Shot",
 				},
+				tier: "implicit",
 			},
 			/* {
         type: "GRANT_PERK",
@@ -31,6 +32,7 @@ export const MockWeapons = {
 				payload: {
 					name: "Thrust",
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_BASE_STAT",
@@ -38,6 +40,7 @@ export const MockWeapons = {
 					stat: "ATTACK_DAMAGE",
 					value: 10,
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_PERK",
@@ -45,6 +48,7 @@ export const MockWeapons = {
 					name: "Focused Mind",
 					tier: 1,
 				},
+				tier: "implicit",
 			},
 		],
 		effects: [],
@@ -59,6 +63,7 @@ export const MockWeapons = {
 				payload: {
 					name: "Slash",
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_PERK",
@@ -66,6 +71,7 @@ export const MockWeapons = {
 					name: "Desperate Will",
 					tier: 1,
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_PERK",
@@ -73,6 +79,7 @@ export const MockWeapons = {
 					name: "Berserk",
 					tier: 1,
 				},
+				tier: "implicit",
 			},
 		],
 		effects: [],
@@ -87,6 +94,7 @@ export const MockWeapons = {
 				payload: {
 					name: "Empowering Strike",
 				},
+				tier: "implicit",
 			},
 		],
 		effects: [
@@ -139,6 +147,7 @@ export const MockWeapons = {
 				payload: {
 					name: "Empowering Strike",
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_PERK",
@@ -146,6 +155,7 @@ export const MockWeapons = {
 					name: "Focused Mind",
 					tier: 1,
 				},
+				tier: "implicit",
 			},
 			{
 				type: "GRANT_PERK",
@@ -153,6 +163,7 @@ export const MockWeapons = {
 					name: "Last Words",
 					tier: 3,
 				},
+				tier: "implicit",
 			},
 		],
 		effects: [],

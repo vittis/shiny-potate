@@ -7,14 +7,16 @@
 			"type": "GRANT_ABILITY",
 			"payload": {
 				"name": "Slash"
-			}
+			},
+			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_PERK",
 			"payload": {
 				"name": "Berserk",
 				"tier": 1
-			}
+			},
+			"tier": "implicit"
 		}
 	],
 	"effects": []

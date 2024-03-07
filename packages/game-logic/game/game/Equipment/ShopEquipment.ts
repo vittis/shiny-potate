@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { EquipmentDataSchema, EquipmentStatsDataArraySchema } from "./EquipmentSchema";
-import { EquipmentData, EquipmentStatsData } from "./EquipmentTypes";
+import { EquipmentData, EquipmentStatsData, ShopEquipmentData } from "./EquipmentTypes";
 import {
 	MOD_TYPE,
 	PossibleMods,
@@ -180,6 +180,7 @@ export class ShopEquipment {
 						name: tieredMod.mod.payload.name,
 						tier: tieredMod.tier,
 					},
+					tier: tieredMod.tier,
 				} as Mod<MOD_TYPE.GRANT_PERK>;
 			} else {
 				convertedMod = {
@@ -188,6 +189,7 @@ export class ShopEquipment {
 						stat: tieredMod.mod.payload.name,
 						value: this.getStatModValueFromTier(tieredMod.mod.payload.name, tieredMod.tier),
 					},
+					tier: tieredMod.tier,
 				} as Mod<MOD_TYPE.GRANT_BASE_STAT>;
 			}
 
@@ -212,9 +214,10 @@ export class ShopEquipment {
 		return modValue;
 	}
 
-	generateEquipmentData(): EquipmentData {
+	generateEquipmentData(): ShopEquipmentData {
 		return {
 			...this.data,
+			tier: this.tier,
 			mods: [...this.data.mods, ...this.rolledMods],
 		};
 	}
