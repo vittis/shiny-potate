@@ -1,8 +1,10 @@
+import { Game } from "../../dist";
 import { BoardManager, OWNER, POSITION } from "./BoardManager";
-import { Class } from "./Class/Class";
 import { Equipment } from "./Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "./Equipment/EquipmentTypes";
-import { runGame } from "./Game";
+import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
+import { ShopEquipment } from "./Equipment/ShopEquipment";
+import { generateEquipmentData } from "./Equipment/ShopUtils";
+import { UnitsDTO, runGame } from "./Game";
 import { Unit } from "./Unit/Unit";
 import { Weapons } from "./data";
 
@@ -116,6 +118,58 @@ describe("Run Game", () => {
 			expect(
 				eventHistory.filter(e => e.type === "TRIGGER_EFFECT" && e.trigger === "SELF_FAINT"),
 			).toHaveLength(1);
+		});
+	});
+
+	describe("setTeam", () => {
+		it("should generate teams correctly", () => {
+			const game = new Game({ skipConstructor: true });
+
+			const equip1: ShopEquipmentData = new ShopEquipment(
+				Weapons.Sword,
+				5,
+			).generateShopEquipmentData();
+
+			const unit1: UnitsDTO = {
+				equipments: [equip1],
+				position: POSITION.TOP_FRONT,
+				unitClass: "Rogue",
+			};
+
+			const team1: UnitsDTO[] = [unit1];
+
+			game.setTeam(OWNER.TEAM_ONE, team1);
+
+			const equip2: ShopEquipmentData = new ShopEquipment(
+				Weapons.Shortbow,
+				5,
+			).generateShopEquipmentData();
+
+			const unit2: UnitsDTO = {
+				equipments: [equip2],
+				position: POSITION.TOP_FRONT,
+				unitClass: "Ranger",
+			};
+
+			const team2: UnitsDTO[] = [unit2];
+
+			game.setTeam(OWNER.TEAM_TWO, team2);
+
+			const boardUnit1 = game.boardManager.getAllAliveUnitsOfOwner(OWNER.TEAM_ONE)[0];
+			const boardUnit2 = game.boardManager.getAllAliveUnitsOfOwner(OWNER.TEAM_TWO)[0];
+
+			expect(boardUnit1.equipment[0].equip.data).toStrictEqual(generateEquipmentData(equip1));
+			expect(boardUnit2.equipment[0].equip.data).toStrictEqual(generateEquipmentData(equip2));
+
+			expect(boardUnit1.position).toStrictEqual(unit1.position);
+			expect(boardUnit2.position).toStrictEqual(unit2.position);
+
+			expect(boardUnit1.toString()).toStrictEqual(
+				`${OWNER.TEAM_ONE}${unit1.position} ${unit1.unitClass}`,
+			);
+			expect(boardUnit2.toString()).toStrictEqual(
+				`${OWNER.TEAM_TWO}${unit2.position} ${unit2.unitClass}`,
+			);
 		});
 	});
 });

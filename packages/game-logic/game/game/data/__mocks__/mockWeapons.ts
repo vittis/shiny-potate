@@ -55,7 +55,7 @@ export const MockWeapons = {
 	} as EquipmentData,
 	Sword: {
 		name: "Sword",
-		tags: [],
+		tags: ["WEAPON", "PHYSICAL"],
 		slots: ["MAIN_HAND", "OFF_HAND"],
 		mods: [
 			{

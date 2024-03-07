@@ -1,15 +1,16 @@
 import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Unit } from "./Unit/Unit";
 import { Equipment } from "./Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "./Equipment/EquipmentTypes";
+import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
 import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Weapons } from "./data";
 import { PossibleEvent } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
+import { generateEquipmentData } from "./Equipment/ShopUtils";
 
 export interface UnitsDTO {
-	equipments: string[];
+	equipments: ShopEquipmentData[];
 	position: POSITION;
 	unitClass: string;
 }
@@ -99,12 +100,9 @@ export class Game {
 		units.forEach(unitDTO => {
 			const unit = new Unit(team, unitDTO.position, this.boardManager);
 			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]));
-			unitDTO.equipments.forEach(equipmentName => {
-				const equipmentNameWithoutSpaces = equipmentName.replace(/\s/g, "");
-				unit.equip(
-					new Equipment(Weapons[equipmentNameWithoutSpaces as keyof typeof Weapons]),
-					EQUIPMENT_SLOT.MAIN_HAND,
-				);
+			unitDTO.equipments.forEach(equipment => {
+				const equipmentData = generateEquipmentData(equipment);
+				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
 			});
 
 			this.boardManager.addToBoard(unit);

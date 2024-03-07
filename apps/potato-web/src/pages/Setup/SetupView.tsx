@@ -73,7 +73,7 @@ export async function setupTeams(data) {
 }
 
 export interface UnitsDTO {
-	equipments: string[];
+	equipments: any[]; // ShopEquipmentData
 	position: number;
 	unitClass: string;
 }
@@ -109,8 +109,11 @@ export function Draggable({ children, id, unit, isClass }: any) {
 			{children}
 			<div className="absolute top-0 right-0">
 				{unitEquips.map(equip => (
-					<div className="border border-yellow-700 border-dashed rounded p-0.5 text-xs" key={equip}>
-						{equip}
+					<div
+						className="border border-yellow-700 border-dashed rounded p-0.5 text-xs"
+						key={equip.name}
+					>
+						{equip.name}
 					</div>
 				))}
 			</div>
@@ -208,7 +211,7 @@ export function SetupView({ tier }) {
 
 			if (!hasUnit) return;
 
-			const weaponName = weapons.find(weapon => weapon.id === event.active.id).data.name;
+			const weapon = weapons.find(weapon => weapon.id === event.active.id).data;
 
 			const newBoard = targetBoard.map(cell => {
 				if (cell.id === event.over?.id) {
@@ -217,7 +220,7 @@ export function SetupView({ tier }) {
 						...cell,
 						unit: {
 							...cell.unit,
-							equipment: [...unitEquipment, weaponName],
+							equipment: [...unitEquipment, weapon],
 						},
 					};
 				}
