@@ -14,10 +14,14 @@ export class EquipmentManager {
 	constructor() {}
 
 	equip(equip: Equipment, slot: EQUIPMENT_SLOT) {
-		const isSlotOccupied = this.equips.find(e => e.slot === slot);
-		if (isSlotOccupied) {
-			throw Error("ALREADY EQUIPPED THIS SLOT MAN: " + slot + equip.data.name);
+		if (!this.canEquipOnSlot(equip, slot)) {
+			throw Error("EquipmentManager: CANT EQUIP ON THIS SLOT MAN: " + slot + " " + equip.data.name);
+		} else if (this.isSlotOccupied(slot)) {
+			throw Error(
+				"EquipmentManager: ALREADY EQUIPPED THIS SLOT MAN: " + slot + " " + equip.data.name,
+			);
 		}
+
 		const item = {
 			slot,
 			equip,
@@ -27,14 +31,41 @@ export class EquipmentManager {
 		return item;
 	}
 
-	unequip(slot: EQUIPMENT_SLOT): EquippedItem {
-		const equippedItem = this.equips.find(e => e.slot === slot);
-		if (!equippedItem) {
-			throw Error("NO EQUIP IN THIS SLOT MAN");
+	unequip(slot: EQUIPMENT_SLOT): EquippedItem[] {
+		let unequipSlots = [slot];
+
+		if (slot == EQUIPMENT_SLOT.TWO_HANDS) {
+			unequipSlots = [slot, EQUIPMENT_SLOT.MAIN_HAND, EQUIPMENT_SLOT.OFF_HAND];
+		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || EQUIPMENT_SLOT.OFF_HAND) {
+			unequipSlots = [slot, EQUIPMENT_SLOT.TWO_HANDS];
 		}
 
-		this.equips = this.equips.filter(e => e.slot !== slot);
+		const unequippedItems = this.equips.filter(e => unequipSlots.includes(e.slot));
+		if (unequippedItems.length == 0) {
+			throw Error("EquipmentManager: NO EQUIP IN THIS SLOT MAN " + slot);
+		}
 
-		return equippedItem;
+		this.equips = this.equips.filter(e => !unequipSlots.includes(e.slot));
+
+		return unequippedItems;
+	}
+
+	isSlotOccupied(slot: EQUIPMENT_SLOT): boolean {
+		if (slot == EQUIPMENT_SLOT.TWO_HANDS) {
+			return !!this.equips.find(e =>
+				[slot, EQUIPMENT_SLOT.MAIN_HAND, EQUIPMENT_SLOT.OFF_HAND].includes(e.slot),
+			);
+		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || EQUIPMENT_SLOT.OFF_HAND) {
+			return !!this.equips.find(e => [slot, EQUIPMENT_SLOT.TWO_HANDS].includes(e.slot));
+		}
+
+		return !!this.equips.find(e => e.slot === slot);
+	}
+
+	canEquipOnSlot(equip: Equipment, equipSlot: EQUIPMENT_SLOT): boolean {
+		let slot = equipSlot;
+		if (slot === EQUIPMENT_SLOT.TRINKET_2) slot = EQUIPMENT_SLOT.TRINKET;
+
+		return equip.data.slots.includes(slot);
 	}
 }

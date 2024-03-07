@@ -168,4 +168,27 @@ export const MockWeapons = {
 		],
 		effects: [],
 	} as EquipmentData,
+	Longbow: {
+		name: "Longbow",
+		tags: ["WEAPON", "PHYSICAL", "RANGED"],
+		slots: ["TWO_HANDS"],
+		mods: [
+			{
+				type: "GRANT_ABILITY",
+				payload: {
+					name: "Long Shot",
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_PERK",
+				payload: {
+					name: "Open Field Tactics",
+					tier: 1,
+				},
+				tier: "implicit",
+			},
+		],
+		effects: [],
+	} as EquipmentData,
 };
