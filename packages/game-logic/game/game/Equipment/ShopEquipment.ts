@@ -28,7 +28,7 @@ export class ShopEquipment {
 	constructor(data: EquipmentData, tier: number) {
 		if (!data) {
 			throw Error(
-				"Equipment data is undefined. If running from test make sure it's defined in mock files",
+				"ShopEquipment: Equipment data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
 		const parsedData = EquipmentDataSchema.parse(data);
@@ -163,6 +163,7 @@ export class ShopEquipment {
 			}
 		}
 
+		return remainingMods[0];
 		throw Error("rollRandomMod: No mod selected, this should never happen");
 	}
 
@@ -209,5 +210,12 @@ export class ShopEquipment {
 			);
 
 		return modValue;
+	}
+
+	generateEquipmentData(): EquipmentData {
+		return {
+			...this.data,
+			mods: [...this.data.mods, ...this.rolledMods],
+		};
 	}
 }

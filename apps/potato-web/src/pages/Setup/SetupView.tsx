@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/services/supabase/supabase";
 import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
+import { fetchRollShop } from "./ShopView";
 
 const initialBoard = [
 	{
@@ -136,20 +137,15 @@ export function Droppable({ children, id }: any) {
 	);
 }
 
-export async function fetchSetupStuff() {
-	const { data } = await api.get("/game/all-stuff");
-	return data;
-}
-
 /* 
     2 1 0   0 1 2
     5 4 3   3 4 5
 */
-export function SetupView() {
+export function SetupView({ tier }) {
 	const navigate = useNavigate();
 	const { data, isFetching } = useQuery({
-		queryKey: ["setup-stuff"],
-		queryFn: fetchSetupStuff,
+		queryKey: ["roll-shop", tier],
+		queryFn: () => fetchRollShop({ tier }),
 	});
 
 	const { mutateAsync: setupTeamsMutation } = useMutation({
@@ -212,7 +208,7 @@ export function SetupView() {
 
 			if (!hasUnit) return;
 
-			const weaponName = weapons.find(weapon => weapon.id === event.active.id).name;
+			const weaponName = weapons.find(weapon => weapon.id === event.active.id).data.name;
 
 			const newBoard = targetBoard.map(cell => {
 				if (cell.id === event.over?.id) {
@@ -331,7 +327,7 @@ export function SetupView() {
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons.map(weapon => (
 								<Draggable key={weapon.id} id={weapon.id}>
-									{weapon.name}
+									{weapon.data.name} - {weapon.data.mods.length}
 								</Draggable>
 							))}
 						</div>

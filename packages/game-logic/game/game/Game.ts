@@ -97,12 +97,12 @@ export class Game {
 
 	setTeam(team: OWNER, units: UnitsDTO[]) {
 		units.forEach(unitDTO => {
-			console.log(unitDTO.position);
 			const unit = new Unit(team, unitDTO.position, this.boardManager);
 			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]));
 			unitDTO.equipments.forEach(equipmentName => {
+				const equipmentNameWithoutSpaces = equipmentName.replace(/\s/g, "");
 				unit.equip(
-					new Equipment(Weapons[equipmentName as keyof typeof Weapons]),
+					new Equipment(Weapons[equipmentNameWithoutSpaces as keyof typeof Weapons]),
 					EQUIPMENT_SLOT.MAIN_HAND,
 				);
 			});
