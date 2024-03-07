@@ -91,8 +91,8 @@ export class Game {
 
 		this.boardManager.addToBoard(unitA);
 		this.boardManager.addToBoard(unitB);
-		/* this.boardManager.addToBoard(unitC);
-    this.boardManager.addToBoard(unitD); */
+		this.boardManager.addToBoard(unitC);
+		this.boardManager.addToBoard(unitD);
 	}
 
 	setTeam(team: OWNER, units: UnitsDTO[]) {

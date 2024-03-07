@@ -1,15 +1,17 @@
 import { useMemo } from "react";
 import { useGameState } from "./services/state/useGameState";
 import { useQuery } from "@tanstack/react-query";
-import { fetchBattleSetup } from "./game/scenes/battle/BattleScene";
+import { fetchBattleSetup, fetchVanillaBattleSetup } from "./game/scenes/battle/BattleScene";
 import { Button } from "./components/ui/button";
+
+const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
 function App() {
 	const { selectedEntity, isGamePaused, setSelectedEntity, setIsGamePaused } = useGameState();
 
 	const { data } = useQuery({
 		queryKey: ["game/battle/setup"],
-		queryFn: fetchBattleSetup,
+		queryFn: isVanillaBattleSetup === "true" ? fetchVanillaBattleSetup : fetchBattleSetup,
 		staleTime: Infinity,
 	});
 
