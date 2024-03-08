@@ -322,17 +322,17 @@ export const MockClasses = {
 										status_effect: [
 											{
 												name: "ATTACK_POWER",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 10,
 											},
 											{
 												name: "SPELL_POTENCY",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 10,
 											},
 											{
 												name: "FAST",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 10,
 											},
 										],
@@ -355,7 +355,7 @@ export const MockClasses = {
 										status_effect: [
 											{
 												name: "MULTISTRIKE",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 1,
 											},
 										],
@@ -379,9 +379,8 @@ export const MockClasses = {
 								payload: {
 									name: "Reinforce Allies",
 									modifiers: {
-										status_effect: [
+										shield: [
 											{
-												name: "SHIELD",
 												target: "ADJACENT_ALLIES",
 												value: 15,
 											},
@@ -404,12 +403,13 @@ export const MockClasses = {
 										status_effect: [
 											{
 												name: "STURDY",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 10,
 											},
+										],
+										shield: [
 											{
-												name: "SHIELD",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 20,
 											},
 										],
@@ -431,12 +431,12 @@ export const MockClasses = {
 										status_effect: [
 											{
 												name: "TAUNT",
-												target: "FRONT_UNIT",
+												target: "FRONT_ALLY",
 												value: 2,
 											},
 											{
-												name: "THORNS",
-												target: "FRONT_UNIT",
+												name: "THORN",
+												target: "FRONT_ALLY",
 												value: 25,
 											},
 										],

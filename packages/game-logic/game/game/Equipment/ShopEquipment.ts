@@ -163,7 +163,6 @@ export class ShopEquipment {
 			}
 		}
 
-		return remainingMods[0];
 		throw Error("rollRandomMod: No mod selected, this should never happen");
 	}
 
@@ -196,7 +195,7 @@ export class ShopEquipment {
 			return convertedMod;
 		});
 
-		return rolledMods;
+		return this.sortModsByTier(rolledMods);
 	}
 
 	getStatModValueFromTier(modStat: STAT, modTier: number): number {
@@ -212,6 +211,26 @@ export class ShopEquipment {
 			);
 
 		return modValue;
+	}
+
+	sortModsByTier(mods: PossibleMods): PossibleMods {
+		return mods.sort((a, b) => {
+			// Elements with no tier parameter should come first
+			if (!("tier" in a)) return -1;
+			if (!("tier" in b)) return 1;
+
+			// Elements with tier = "implicit" should come next
+			if (a.tier === "implicit" && b.tier !== "implicit") return -1;
+			if (a.tier !== "implicit" && b.tier === "implicit") return 1;
+
+			// Elements with tier as a number should be sorted in descending order
+			if (!isNaN(Number(a.tier)) && !isNaN(Number(b.tier))) {
+				return Number(b.tier) - Number(a.tier);
+			}
+
+			// All other cases maintain their order
+			return 0;
+		});
 	}
 
 	generateShopEquipmentData(): ShopEquipmentData {

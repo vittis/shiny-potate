@@ -58,7 +58,12 @@ export class Game {
 			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]));
 			unitDTO.equipments.forEach(equipment => {
 				const equipmentData = generateEquipmentData(equipment);
-				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+
+				if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
+				} else {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+				}
 			});
 
 			this.boardManager.addToBoard(unit);
