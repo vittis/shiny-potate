@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api/http";
 import { toast } from "react-toastify";
-import { PopoverView } from "./PopoverView";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -40,8 +39,7 @@ export function ShopView() {
 
 	return (
 		<>
-			<PopoverView />
-			{/* <div className="w-full flex gap-4 p-4 items-center justify-center flex-wrap">
+			<div className="w-full flex gap-4 p-4 items-center justify-center flex-wrap">
 				<div className="flex mb-1 font-semibold">Tier: </div>
 
 				<Select value={selectTier} onValueChange={setSelectTier}>
@@ -61,8 +59,7 @@ export function ShopView() {
 					Roll Shop
 				</Button>
 			</div>
-
-			<SetupView tier={tier} /> */}
+			<SetupView tier={tier} />
 		</>
 	);
 }
