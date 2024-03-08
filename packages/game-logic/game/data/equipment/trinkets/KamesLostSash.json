@@ -1,12 +1,12 @@
 {
-	"name": "Longbow",
-	"tags": ["WEAPON", "PHYSICAL", "RANGED"],
-	"slots": ["TWO_HANDS"],
+	"name": "Kame's Lost Sash",
+	"tags": ["TRINKET"],
+	"slots": ["TRINKET"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Long Shot"
+				"name": "Ki Focus"
 			},
 			"tier": "implicit"
 		},
@@ -14,7 +14,7 @@
 			"type": "GRANT_BASE_STAT",
 			"payload": {
 				"stat": "ATTACK_DAMAGE",
-				"value": 15
+				"value": 5
 			},
 			"tier": "implicit"
 		}

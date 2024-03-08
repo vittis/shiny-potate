@@ -1,0 +1,16 @@
+{
+	"name": "Brains in a Jar",
+	"tags": ["TRINKET", "MAGICAL"],
+	"slots": ["TRINKET"],
+	"mods": [
+		{
+			"type": "GRANT_PERK",
+			"payload": {
+				"name": "Focused Mind",
+				"tier": 1
+			},
+			"tier": "implicit"
+		}
+	],
+	"effects": []
+}

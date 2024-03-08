@@ -1,0 +1,16 @@
+{
+	"name": "Training Armbands",
+	"tags": ["TRINKET", "RANGED", "PHYSICAL"],
+	"slots": ["TRINKET"],
+	"mods": [
+		{
+			"type": "GRANT_BASE_STAT",
+			"payload": {
+				"stat": "ATTACK_DAMAGE",
+				"value": 15
+			},
+			"tier": "implicit"
+		}
+	],
+	"effects": []
+}

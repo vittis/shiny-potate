@@ -1,0 +1,24 @@
+{
+	"name": "Sage's Brand New Hat",
+	"tags": ["TRINKET", "MAGICAL"],
+	"slots": ["TRINKET"],
+	"mods": [
+		{
+			"type": "GRANT_BASE_STAT",
+			"payload": {
+				"stat": "SPELL_DAMAGE",
+				"value": 10
+			},
+			"tier": "implicit"
+		},
+		{
+			"type": "GRANT_BASE_STAT",
+			"payload": {
+				"stat": "SPELL_COOLDOWN",
+				"value": 10
+			},
+			"tier": "implicit"
+		}
+	],
+	"effects": []
+}

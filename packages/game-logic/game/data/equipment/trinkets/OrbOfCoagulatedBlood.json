@@ -1,12 +1,13 @@
 {
-	"name": "Longbow",
-	"tags": ["WEAPON", "PHYSICAL", "RANGED"],
-	"slots": ["TWO_HANDS"],
+	"name": "Orb of Coagulated Blood",
+	"tags": ["TRINKET", "DEFENSE", "MAGICAL"],
+	"slots": ["TRINKET"],
 	"mods": [
 		{
-			"type": "GRANT_ABILITY",
+			"type": "GRANT_PERK",
 			"payload": {
-				"name": "Long Shot"
+				"name": "Vitality Boost",
+				"tier": 1
 			},
 			"tier": "implicit"
 		},
@@ -14,7 +15,7 @@
 			"type": "GRANT_BASE_STAT",
 			"payload": {
 				"stat": "ATTACK_DAMAGE",
-				"value": 15
+				"value": 7
 			},
 			"tier": "implicit"
 		}

@@ -207,4 +207,35 @@ export const MockWeapons = {
 		],
 		effects: [],
 	} as EquipmentData,
+	Dagger: {
+		name: "Dagger",
+		tags: ["WEAPON", "PHYSICAL"],
+		slots: ["MAIN_HAND", "OFF_HAND"],
+		mods: [
+			{
+				type: "GRANT_ABILITY",
+				payload: {
+					name: "Stab",
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_BASE_STAT",
+				payload: {
+					stat: "ATTACK_COOLDOWN",
+					value: 15,
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_BASE_STAT",
+				payload: {
+					stat: "ATTACK_DAMAGE",
+					value: 15,
+				},
+				tier: "implicit",
+			},
+		],
+		effects: [],
+	} as EquipmentData,
 };

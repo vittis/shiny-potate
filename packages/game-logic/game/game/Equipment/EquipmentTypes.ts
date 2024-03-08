@@ -12,12 +12,12 @@ export enum EQUIPMENT_SLOT {
 
 export enum EQUIPMENT_TAG {
 	WEAPON = "WEAPON",
-	TWO_HANDED = "TWO_HANDED",
 	PHYSICAL = "PHYSICAL",
 	MAGICAL = "MAGICAL",
 	RANGED = "RANGED",
 	TRINKET = "TRINKET",
 	SHIELD = "SHIELD",
+	DEFENSE = "DEFENSE",
 }
 
 // this represents the JSON of the equipment

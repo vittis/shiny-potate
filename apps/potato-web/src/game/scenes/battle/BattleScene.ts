@@ -52,8 +52,6 @@ export async function fetchBattleSetup() {
 }
 
 export async function fetchVanillaBattleSetup() {
-	console.log("vanilla");
-
 	const response = await api.get("/game/setup-teams-vanilla");
 
 	return response.data;
@@ -76,8 +74,6 @@ export class Battle extends Phaser.Scene {
 
 	constructor() {
 		super("BattleScene");
-
-		console.log("aaaaa", isVanillaBattleSetup);
 	}
 
 	preload() {

@@ -1,0 +1,24 @@
+{
+	"name": "Scout's Eye",
+	"tags": ["TRINKET", "RANGED", "PHYSICAL"],
+	"slots": ["TRINKET"],
+	"mods": [
+		{
+			"type": "GRANT_PERK",
+			"payload": {
+				"name": "Open Field Tactics",
+				"tier": 1
+			},
+			"tier": "implicit"
+		},
+		{
+			"type": "GRANT_BASE_STAT",
+			"payload": {
+				"stat": "ATTACK_COOLDOWN",
+				"value": 10
+			},
+			"tier": "implicit"
+		}
+	],
+	"effects": []
+}
