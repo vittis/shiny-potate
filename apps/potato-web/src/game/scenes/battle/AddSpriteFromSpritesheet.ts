@@ -110,7 +110,7 @@ export function addEquipWeaponSprite(scene: Phaser.Scene, x: number, y: number, 
 	else if (keyword === "sickle") sprite.setFrame(12);
 	else if (keyword === "pitchfork") sprite.setFrame(13);
 	else if (keyword === "axe") sprite.setFrame(15);
-	else if (keyword === "shortbow") sprite.setFrame(16);
+	else if (keyword === "shortbow" || keyword === "longbow") sprite.setFrame(16);
 	else if (keyword === "dagger") sprite.setFrame(17);
 	else if (keyword === "club") sprite.setFrame(18);
 	else throw Error(`addEquipWeaponSprite: ${keyword} not found`);

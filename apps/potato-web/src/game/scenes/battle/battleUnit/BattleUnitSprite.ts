@@ -139,7 +139,9 @@ export class BattleUnitSprite extends Phaser.GameObjects.Container {
 
 	getEquips(dataUnit) {
 		return {
-			weapon: dataUnit.equipment.find(equip => equip.slot === "MAIN_HAND").equip.data.name,
+			weapon: dataUnit.equipment.find(
+				equip => equip.slot === "MAIN_HAND" || equip.slot === "TWO_HANDS",
+			).equip?.data?.name,
 			offhand: dataUnit.equipment.find(equip => equip.slot === "OFF_HAND")?.equip?.data?.name,
 		};
 	}

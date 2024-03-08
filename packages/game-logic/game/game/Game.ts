@@ -4,10 +4,11 @@ import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
 import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
-import { Classes, Weapons } from "./data";
+import { Classes, Trinkets, Weapons } from "./data";
 import { PossibleEvent } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 import { generateEquipmentData } from "./Equipment/ShopUtils";
+import { ShopEquipment } from "./Equipment/ShopEquipment";
 
 export interface UnitsDTO {
 	equipments: ShopEquipmentData[];
@@ -25,75 +26,30 @@ export class Game {
 			return;
 		}
 
-		const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, this.boardManager);
-		unit1.setClass(new Class(Classes.Paladin));
-		unit1.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+		const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager);
+		unit1.equip(
+			new Equipment(new ShopEquipment(Weapons.Longbow, 5).generateShopEquipmentData()),
+			EQUIPMENT_SLOT.TWO_HANDS,
+		);
+		unit1.equip(new Equipment(Trinkets.ScoutsEye), EQUIPMENT_SLOT.TRINKET);
+		unit1.equip(new Equipment(Trinkets.KamesLostSash), EQUIPMENT_SLOT.TRINKET_2);
+		unit1.setClass(new Class(Classes.Ranger));
 
-		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager);
-		unit2.setClass(new Class(Classes.Blacksmith));
+		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
+		unit2.equip(
+			new Equipment(new ShopEquipment(Weapons.Dagger, 3).generateShopEquipmentData()),
+			EQUIPMENT_SLOT.MAIN_HAND,
+		);
+		unit2.equip(
+			new Equipment(new ShopEquipment(Weapons.Dagger, 3).generateShopEquipmentData()),
+			EQUIPMENT_SLOT.OFF_HAND,
+		);
+		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET);
+		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET_2);
+		unit2.setClass(new Class(Classes.Rogue));
 
-		unit2.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-
-		const unit3 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager);
-		unit3.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-		unit3.setClass(new Class(Classes.Ranger));
-
-		const unit4 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_MID, this.boardManager);
-		unit4.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-
-		const unit5 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, this.boardManager);
-		unit5.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-
-		const unit6 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_FRONT, this.boardManager);
-		unit6.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-
-		const unit7 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
-		unit7.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND);
-		unit7.setClass(new Class(Classes.Warrior));
-
-		const unit8 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_FRONT, this.boardManager);
-		unit8.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-		unit8.setClass(new Class(Classes.Warrior));
-
-		const unit9 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_BACK, this.boardManager);
-		unit9.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-		unit9.setClass(new Class(Classes.Rogue));
-
-		const unit10 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, this.boardManager);
-		unit10.equip(new Equipment(Weapons.Wand), EQUIPMENT_SLOT.MAIN_HAND);
-		unit10.setClass(new Class(Classes.Warlock));
-
-		/* this.boardManager.addToBoard(unit1);
-    this.boardManager.addToBoard(unit2);
-    this.boardManager.addToBoard(unit9);
-    this.boardManager.addToBoard(unit10);
-    this.boardManager.addToBoard(unit3);
-    this.boardManager.addToBoard(unit7); */
-		/* this.boardManager.addToBoard(unit4);
-    this.boardManager.addToBoard(unit5);
-    this.boardManager.addToBoard(unit6);
-    this.boardManager.addToBoard(unit8); */
-
-		const unitA = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, this.boardManager);
-		unitA.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
-		unitA.setClass(new Class(Classes.Ranger));
-
-		const unitB = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
-		unitB.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
-		unitB.setClass(new Class(Classes.Blacksmith));
-
-		const unitC = new Unit(OWNER.TEAM_TWO, POSITION.TOP_BACK, this.boardManager);
-		unitC.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-		unitC.setClass(new Class(Classes.Warrior));
-
-		const unitD = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager);
-		unitD.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-		unitD.setClass(new Class(Classes.Warrior));
-
-		this.boardManager.addToBoard(unitA);
-		this.boardManager.addToBoard(unitB);
-		this.boardManager.addToBoard(unitC);
-		this.boardManager.addToBoard(unitD);
+		this.boardManager.addToBoard(unit1);
+		this.boardManager.addToBoard(unit2);
 	}
 
 	setTeam(team: OWNER, units: UnitsDTO[]) {

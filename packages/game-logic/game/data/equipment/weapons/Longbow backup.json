@@ -11,10 +11,10 @@
 			"tier": "implicit"
 		},
 		{
-			"type": "GRANT_BASE_STAT",
+			"type": "GRANT_PERK",
 			"payload": {
-				"stat": "ATTACK_DAMAGE",
-				"value": 15
+				"name": "Open Field Tactics",
+				"tier": 1
 			},
 			"tier": "implicit"
 		}

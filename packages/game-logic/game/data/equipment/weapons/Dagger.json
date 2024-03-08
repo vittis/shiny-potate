@@ -1,20 +1,20 @@
 {
-	"name": "Longbow",
-	"tags": ["WEAPON", "PHYSICAL", "RANGED"],
-	"slots": ["TWO_HANDS"],
+	"name": "Dagger",
+	"tags": ["WEAPON", "PHYSICAL"],
+	"slots": ["MAIN_HAND", "OFF_HAND"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Long Shot"
+				"name": "Stab"
 			},
 			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_BASE_STAT",
 			"payload": {
-				"stat": "ATTACK_DAMAGE",
-				"value": 15
+				"stat": "ATTACK_COOLDOWN",
+				"value": 5
 			},
 			"tier": "implicit"
 		}

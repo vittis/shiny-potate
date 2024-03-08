@@ -36,7 +36,7 @@ export class EquipmentManager {
 
 		if (slot == EQUIPMENT_SLOT.TWO_HANDS) {
 			unequipSlots = [slot, EQUIPMENT_SLOT.MAIN_HAND, EQUIPMENT_SLOT.OFF_HAND];
-		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || EQUIPMENT_SLOT.OFF_HAND) {
+		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || slot == EQUIPMENT_SLOT.OFF_HAND) {
 			unequipSlots = [slot, EQUIPMENT_SLOT.TWO_HANDS];
 		}
 
@@ -55,7 +55,7 @@ export class EquipmentManager {
 			return !!this.equips.find(e =>
 				[slot, EQUIPMENT_SLOT.MAIN_HAND, EQUIPMENT_SLOT.OFF_HAND].includes(e.slot),
 			);
-		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || EQUIPMENT_SLOT.OFF_HAND) {
+		} else if (slot == EQUIPMENT_SLOT.MAIN_HAND || slot === EQUIPMENT_SLOT.OFF_HAND) {
 			return !!this.equips.find(e => [slot, EQUIPMENT_SLOT.TWO_HANDS].includes(e.slot));
 		}
 
