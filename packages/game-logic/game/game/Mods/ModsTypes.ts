@@ -1,3 +1,4 @@
+import { ABILITY_CATEGORY } from "../Ability/AbilityTypes";
 import { AbilityModifier } from "../Class/ClassTypes";
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { STAT } from "../Stats/StatsTypes";
@@ -11,6 +12,7 @@ export enum MOD_TYPE {
 
 export interface GrantAbilityPayload {
 	name: string;
+	type: ABILITY_CATEGORY;
 }
 
 export interface GrantPerkPayload {

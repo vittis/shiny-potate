@@ -13,6 +13,7 @@ import { AbilityModifier } from "../Class/ClassTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
+import { ABILITY_CATEGORY } from "../Ability/AbilityTypes";
 
 // todo better type
 const AbilityModifierSchema = z.object({
@@ -74,6 +75,7 @@ const AbilityModifierSchema = z.object({
 
 const GrantAbilityPayloadSchema = z.object({
 	name: z.string(),
+	type: z.nativeEnum(ABILITY_CATEGORY),
 }) satisfies z.ZodType<GrantAbilityPayload>;
 
 const GrantPerkPayloadSchema = z.object({

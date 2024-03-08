@@ -1,12 +1,19 @@
 {
 	"name": "Sword",
-	"tags": ["WEAPON", "PHYSICAL"],
-	"slots": ["MAIN_HAND", "OFF_HAND"],
+	"tags": [
+		"WEAPON",
+		"PHYSICAL"
+	],
+	"slots": [
+		"MAIN_HAND",
+		"OFF_HAND"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Slash"
+				"name": "Slash",
+				"type": "ATTACK"
 			},
 			"tier": "implicit"
 		},

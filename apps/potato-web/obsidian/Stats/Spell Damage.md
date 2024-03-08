@@ -1,7 +1,9 @@
 ---
-tags: base_stat
+tags: game mechanic, stat
 ---
 
-Increase or decrease base damage of all active [[Spell|Spells]]
+# Spell Damage
 
-Obtained through the [[SPELL POTENCY]] status effect
+Modifies the damage of all [Spells](Mechanics/Spell.md).
+
+Modified by the [SPELL POTENCY](Status%20Effects/SPELL%20POTENCY.md) Status Effect.

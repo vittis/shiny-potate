@@ -1,12 +1,19 @@
 {
 	"name": "Wand",
-	"tags": ["WEAPON", "MAGICAL", "RANGED"],
-	"slots": ["MAIN_HAND"],
+	"tags": [
+		"WEAPON",
+		"MAGICAL",
+		"RANGED"
+	],
+	"slots": [
+		"MAIN_HAND"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Bastion Bond"
+				"name": "Bastion Bond",
+				"type": "SPELL"
 			},
 			"tier": "implicit"
 		},

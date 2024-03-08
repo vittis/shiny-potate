@@ -1,7 +1,9 @@
 ---
-tags: base_stat
+tags: game mechanic, stat
 ---
 
-Increase damage of all [[Attack|Attacks]]
+# Attack Damage
 
-Obtained through the [[ATTACK POWER]] status effect
+Modifies the damage of all [Attacks](Mechanics/Attack.md).
+
+Affected by the [ATTACK POWER](Status%20Effects/ATTACK%20POWER.md) Status Effect.

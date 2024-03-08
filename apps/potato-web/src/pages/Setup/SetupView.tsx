@@ -107,16 +107,18 @@ export function Draggable({ children, id, unit, isClass }: any) {
 			)}
 		>
 			{children}
-			<div className="absolute top-0 right-0">
-				{unitEquips.map(equip => (
-					<div
-						className="border border-yellow-700 border-dashed rounded p-0.5 text-xs"
-						key={equip.name}
-					>
-						{equip.name}
-					</div>
-				))}
-			</div>
+			{unitEquips.length > 0 && (
+				<div className="absolute top-0 right-0">
+					{unitEquips.map(equip => (
+						<div
+							key={equip.name}
+							className="border border-yellow-700 border-dashed rounded p-0.5 text-xs"
+						>
+							{equip.name}
+						</div>
+					))}
+				</div>
+			)}
 		</button>
 	);
 }
@@ -149,6 +151,7 @@ export function SetupView({ tier }) {
 	const { data, isFetching } = useQuery({
 		queryKey: ["roll-shop", tier],
 		queryFn: () => fetchRollShop({ tier }),
+		staleTime: Infinity,
 	});
 
 	const { mutateAsync: setupTeamsMutation } = useMutation({
@@ -328,11 +331,17 @@ export function SetupView({ tier }) {
 						</div>
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
+							{/* <MarkdownTooltip sourcePath="Equipment/Weapons/Bows/Shortbow">
+								<div>shiba</div>
+							</MarkdownTooltip> */}
 							{weapons.map(weapon => (
-								<MarkdownTooltip sourcePath="Abilities/Attacks/Slash">
+								<MarkdownTooltip
+									key={weapon.id}
+									sourcePath="Equipment/Weapons/Bows/Shortbow"
+									weapon={weapon}
+								>
 									<div>
-										{/* {console.log(weapon)} */}
-										<Draggable key={weapon.id} id={weapon.id}>
+										<Draggable id={weapon.id}>
 											{weapon.data.name} - T{weapon.data.tier}
 										</Draggable>
 									</div>

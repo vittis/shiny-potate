@@ -1,12 +1,19 @@
 {
 	"name": "Dagger",
-	"tags": ["WEAPON", "PHYSICAL"],
-	"slots": ["MAIN_HAND", "OFF_HAND"],
+	"tags": [
+		"WEAPON",
+		"PHYSICAL"
+	],
+	"slots": [
+		"MAIN_HAND",
+		"OFF_HAND"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Stab"
+				"name": "Stab",
+				"type": "ATTACK"
 			},
 			"tier": "implicit"
 		},

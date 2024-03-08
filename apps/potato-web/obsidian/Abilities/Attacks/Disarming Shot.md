@@ -1,16 +1,18 @@
 ---
 tags: ability, attack
 type: damage, debuff
-source: weapon, [[Shortbow]]
 ---
 
-Obtained by equipping [[Shortbow]]
+# Disarming Shot
 
-Base Damage: 40
-Cooldown: 10s
+A precise shot that weakens your target's defenses, leaving them vulnerable to further attacks.
 
-Apply 5 [[VULNERABLE]] on target
+---
 
-Target: [[STANDARD]]
+- Base Damage: `60`
+- Cooldown: `6s`
+- Apply `5` [VULNERABLE](Status%20Effects/VULNERABLE.md) on target
 
-See also: [[Attack]]
+Target: [STANDARD](Targets/STANDARD.md)
+
+See also: [Attack](Mechanics/Attack.md)

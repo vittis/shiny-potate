@@ -3,10 +3,15 @@ tags: ability, attack
 type: damage
 source: weapon, [[Spear]]
 ---
+# Thrust
 
-Base Damage: 40
-Cooldown: 4s
+Swiftly drive the spear forward, aiming to pierce through defenses.
 
-Target: [[STANDARD]]
+---
 
-See also: [[Attack]]
+- Base Damage: `40`
+- Cooldown: `4s`
+
+Target: [STANDARD](Targets/STANDARD.md)
+
+See also: [Attack](Mechanics/Attack.md)

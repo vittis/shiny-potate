@@ -1,19 +1,26 @@
 {
 	"name": "Axe",
-	"tags": ["WEAPON", "PHYSICAL"],
-	"slots": ["MAIN_HAND"],
+	"tags": [
+		"WEAPON",
+		"PHYSICAL"
+	],
+	"slots": [
+		"MAIN_HAND"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Stab"
+				"name": "Stab",
+				"type": "ATTACK"
 			},
 			"tier": "implicit"
 		},
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Reinforce Allies"
+				"name": "Reinforce Allies",
+				"type": "SPELL"
 			},
 			"tier": "implicit"
 		}
