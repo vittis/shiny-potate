@@ -145,52 +145,6 @@ describe("Ability", () => {
 					},
 				});
 			});
-
-			// todo this mechanic might not exist anymore
-			it.skip("should generate VULNERABLE loss subEvent when hit and has VULNERABLE", () => {
-				const { unit1, unit2 } = setupBoard();
-				unit2.statusEffectManager.applyStatusEffect({
-					name: STATUS_EFFECT.VULNERABLE,
-					quantity: 10,
-				});
-
-				const ability = new Ability(Abilities.DisarmingShot);
-				const event = ability.use(unit1);
-
-				expect(event.payload.subEvents).toHaveLength(3); // VULNERABLE loss, DAMAGE, VULNERABLE
-
-				expect(event.payload.subEvents[0]).toEqual({
-					type: "INSTANT_EFFECT",
-					payload: {
-						type: "STATUS_EFFECT",
-						targetId: unit2.id,
-						payload: [{ name: "VULNERABLE", quantity: -VULNERABLE_LOSS_PER_HIT }],
-					},
-				});
-			});
-
-			// todo this mechanic might not exist anymore
-			it.skip("should generate correct VULNERABLE loss if unit has less than VULNERABLE_LOSS_PER_HIT", () => {
-				const { unit1, unit2 } = setupBoard();
-				unit2.statusEffectManager.applyStatusEffect({
-					name: STATUS_EFFECT.VULNERABLE,
-					quantity: 2,
-				});
-
-				const ability = new Ability(Abilities.DisarmingShot);
-				const event = ability.use(unit1);
-
-				expect(event.payload.subEvents).toHaveLength(3); // VULNERABLE loss, DAMAGE, VULNERABLE
-
-				expect(event.payload.subEvents[0]).toEqual({
-					type: "INSTANT_EFFECT",
-					payload: {
-						type: "STATUS_EFFECT",
-						targetId: unit2.id,
-						payload: [{ name: "VULNERABLE", quantity: -2 }],
-					},
-				});
-			});
 		});
 
 		describe("Empowering Strike (Apply ATTACK_POWER on SELF on hit)", () => {

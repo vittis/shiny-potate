@@ -1,32 +1,30 @@
 {
-  "name": "Disarming Shot",
-  "type": "ATTACK",
-  "tags": [
-    "WEAPON_ABILITY"
-  ],
-  "target": "HIT_TARGET",
-  "cooldown": 100,
-  "effects": [
-    {
-      "type": "DAMAGE",
-      "trigger": "ON_HIT",
-      "target": "HIT_TARGET",
-      "conditions": [],
-      "payload": {
-        "value": 40
-      }
-    },
-    {
-      "type": "STATUS_EFFECT",
-      "trigger": "ON_HIT",
-      "target": "HIT_TARGET",
-      "conditions": [],
-      "payload": [
-        {
-          "name": "VULNERABLE",
-          "quantity": 5
-        }
-      ]
-    }
-  ]
+	"name": "Disarming Shot",
+	"type": "ATTACK",
+	"tags": ["WEAPON_ABILITY"],
+	"target": "STANDARD",
+	"cooldown": 100,
+	"effects": [
+		{
+			"type": "DAMAGE",
+			"trigger": "ON_HIT",
+			"target": "STANDARD",
+			"conditions": [],
+			"payload": {
+				"value": 40
+			}
+		},
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "ON_HIT",
+			"target": "STANDARD",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "VULNERABLE",
+					"quantity": 5
+				}
+			]
+		}
+	]
 }
