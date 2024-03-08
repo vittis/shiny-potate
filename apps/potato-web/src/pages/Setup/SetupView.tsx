@@ -5,10 +5,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/services/supabase/supabase";
 import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
+import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 
 const initialBoard = [
 	{
@@ -329,9 +329,14 @@ export function SetupView({ tier }) {
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons.map(weapon => (
-								<Draggable key={weapon.id} id={weapon.id}>
-									{weapon.data.name} - T{weapon.data.tier}
-								</Draggable>
+								<MarkdownTooltip sourcePath="Abilities/Attacks/Slash">
+									<div>
+										{/* {console.log(weapon)} */}
+										<Draggable key={weapon.id} id={weapon.id}>
+											{weapon.data.name} - T{weapon.data.tier}
+										</Draggable>
+									</div>
+								</MarkdownTooltip>
 							))}
 						</div>
 					</div>
