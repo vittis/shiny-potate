@@ -1,6 +1,8 @@
 ---
-tags: game_mechanic
+tags: game mechanic
 ---
+
+# Perk
 
 Perks can grant raw stats bonuses, like [[Vitality Boost]].
 

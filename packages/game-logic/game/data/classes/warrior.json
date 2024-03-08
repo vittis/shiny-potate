@@ -14,7 +14,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Ki Focus"
+                "name": "Ki Focus",
+                "type": "SPELL"
               }
             }
           ],
@@ -60,7 +61,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Balanced Strike"
+                "name": "Balanced Strike",
+                "type": "ATTACK"
               }
             }
           ],

@@ -4,10 +4,15 @@ type: buff
 source: class, [[Blacksmith]]
 ---
 
-Give adjacent allies 20 [[SHIELD]] 
+# Reinforce Allies
 
-Base cooldown: X
+Empower adjacent allies with a protective shield, enhancing their defense with resilience.
 
-Target: [[ADJACENT ALLIES]]
+---
 
-See also: [[Spell]]
+- Give adjacent allies *20* [Shield](Stats/Shield.md)
+- Cooldown: `8s`
+
+Target: [ADJACENT ALLIES](Targets/ADJACENT%20ALLIES.md)
+
+See also: [Spell](Mechanics/Spell.md)

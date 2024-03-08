@@ -1,14 +1,17 @@
 ---
-tags:
-  - ability
-  - attack
-type: damage
-source: weapon
+tags: ability, attack
+type: damage, debuff
 ---
 
-Base Damage: 15
-Cooldown: 2s
+# Stab
 
-Target: [[STANDARD]]
+Swiftly drive your weapon forward with precision, delivering a piercing blow to your target.
 
-See also: [[Attack]]
+---
+
+- Base Damage: `15`
+- Cooldown: `2s`
+
+Target: [STANDARD](Targets/STANDARD.md)
+
+See also: [Attack](Mechanics/Attack.md)

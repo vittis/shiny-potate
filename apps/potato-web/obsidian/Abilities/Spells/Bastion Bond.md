@@ -3,10 +3,16 @@ tags: ability, spell
 type: buff
 source: class, [[Blacksmith]]
 ---
-Heal 30 and apply 5 [[REGEN]]
 
-Base cooldown: 10s
+# Bastion Bond
 
-Target: [[LOWEST HEALTH ALLY]]
+Forge a resilient bond, granting healing and regeneration to a wounded ally.
 
-See also: [[Spell]]
+---
+
+- Heal `30` and apply *5* [REGEN](Status%20Effects/REGEN.md)
+- Cooldown: `10s`
+
+Target: [LOWEST HEALTH ALLY](Targets/LOWEST%20HEALTH%20ALLY.md)
+
+See also: [Spell](Mechanics/Spell.md)

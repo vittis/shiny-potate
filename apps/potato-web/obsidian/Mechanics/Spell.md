@@ -2,6 +2,8 @@
 tags: game_mechanic
 ---
 
+# Spell
+
 Similar to [[Attack]], a Spell is an active ability which has a cooldown. The cooldown is affected by [[Spell Cooldown]].
 
 All active abilities have independent cooldowns.

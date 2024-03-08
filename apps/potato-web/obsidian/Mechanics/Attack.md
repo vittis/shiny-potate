@@ -2,6 +2,8 @@
 tags: game_mechanic
 ---
 
+# Attack
+
 Attacks can be obtained through various sources, like [[Weapon]], [[Class]], [[Race]], [[Talent]]
 and [[Perk]].
 

@@ -1,11 +1,18 @@
 {
 	"name": "Short Spear",
-	"tags": ["WEAPON", "PHYSICAL"],
-	"slots": ["MAIN_HAND"],
+	"tags": [
+		"WEAPON",
+		"PHYSICAL",
+		"MAGICAL"
+	],
+	"slots": [
+		"MAIN_HAND"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
+				"type": "ATTACK",
 				"name": "Thrust"
 			},
 			"tier": "implicit"

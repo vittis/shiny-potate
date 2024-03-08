@@ -1,13 +1,13 @@
-type MarkdownWithYamlFrontmatter<T> = {
+type MarkdownWithYamlFrontmatter = {
 	metadata?: {
-		[K in keyof T]?: string;
+		tags?: string[];
 	};
 	content?: string;
 };
 
 export const parseMarkdownWithYamlFrontmatter = <T extends Record<string, string>>(
 	markdown: string,
-): MarkdownWithYamlFrontmatter<T> => {
+): MarkdownWithYamlFrontmatter => {
 	const metaRegExp = new RegExp(/^---[\n\r](((?!---).|[\n\r])*)[\n\r]---$/m);
 
 	// "rawYamlHeader" is the full matching string, including the --- and ---
@@ -29,5 +29,15 @@ export const parseMarkdownWithYamlFrontmatter = <T extends Record<string, string
 		}),
 	) as Record<keyof T, string>;
 
-	return { content: markdown.replace(rawYamlHeader, "").trim(), metadata: frontmatter };
+	const parsedFrontMatter = {
+		...frontmatter,
+		tags:
+			frontmatter?.tags
+				?.split(",")
+				?.map(t => t.trim().charAt(0).toUpperCase() + t.trim().slice(1)) || [],
+	};
+
+	const parsedContent = markdown.replace(rawYamlHeader, "").trim();
+
+	return { content: parsedContent, metadata: parsedFrontMatter };
 };

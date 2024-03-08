@@ -1,7 +1,9 @@
 ---
-tags: base_stat
+tags: game mechanic, stat
 ---
 
-Decrease cooldown of all active [[Spell|Spells]]
+# Spell Cooldown Recovery
 
-Obtained through the [[FOCUS]] status effect
+Modifies the damage of all [Spells](Mechanics/Spell.md).
+
+Affected by the [FOCUS](Status%20Effects/FOCUS.md) and [SLOW](Status%20Effects/SLOW.md) Status Effects.

@@ -1,12 +1,19 @@
 {
 	"name": "Longbow",
-	"tags": ["WEAPON", "PHYSICAL", "RANGED"],
-	"slots": ["TWO_HANDS"],
+	"tags": [
+		"WEAPON",
+		"PHYSICAL",
+		"RANGED"
+	],
+	"slots": [
+		"TWO_HANDS"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Long Shot"
+				"name": "Long Shot",
+				"type": "ATTACK"
 			},
 			"tier": "implicit"
 		},

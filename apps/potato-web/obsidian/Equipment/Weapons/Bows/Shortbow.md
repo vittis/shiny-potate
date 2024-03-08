@@ -1,8 +1,9 @@
 ---
-tags:
-  - weapon
-  - 2h
+tags: weapon, physical
 ---
 
-* Gain attack: [[Disarming Shot]]
-* -15% [[Attack Cooldown]] and -15% [[Spell Cooldown]]
+# Shortbow
+
+- Gain attack: [Disarming Shot](Abilities/Attacks/Disarming%20Shot.md)
+- *+15%* increased [Attack Interval Recovery](Stats/Attack%20Cooldown.md) 
+- *+15%* increased [Spell Interval Recovery](Stats/Spell%20Cooldown.md)

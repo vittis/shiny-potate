@@ -1,7 +1,9 @@
 ---
-tags: base_stat
+tags: game mechanic, stat
 ---
 
-Decrease cooldown of all active [[Attack|Attacks]]
+# Attack Cooldown Recovery
 
-Obtained through the [[FAST]] status effect
+Modifies the cooldown of all active [Attacks](Mechanics/Attack.md)
+
+Affected by the [FAST](Status%20Effects/FAST.md) and [SLOW](Status%20Effects/SLOW.md) Status Effects.
