@@ -22,9 +22,10 @@ export function ShopView() {
 	const [tier, setTier] = useState("0");
 	const [selectTier, setSelectTier] = useState("0");
 
-	const { isSuccess: isSuccessRollShop } = useQuery({
+	const { isSuccess: isSuccessRollShop, refetch } = useQuery({
 		queryKey: ["roll-shop", tier],
 		queryFn: () => fetchRollShop({ tier }),
+		staleTime: Infinity,
 	});
 
 	useEffect(() => {
@@ -34,7 +35,11 @@ export function ShopView() {
 	}, [isSuccessRollShop]);
 
 	function onClickRollShop() {
-		setTier(selectTier);
+		if (tier !== selectTier) {
+			setTier(selectTier);
+		} else {
+			refetch();
+		}
 	}
 
 	return (
@@ -59,7 +64,6 @@ export function ShopView() {
 					Roll Shop
 				</Button>
 			</div>
-
 			<SetupView tier={tier} />
 		</>
 	);

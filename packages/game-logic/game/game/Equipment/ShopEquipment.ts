@@ -31,6 +31,7 @@ export class ShopEquipment {
 				"ShopEquipment: Equipment data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
+		console.log(data.name);
 		const parsedData = EquipmentDataSchema.parse(data);
 		this.data = parsedData;
 		this.id = nanoid(8);

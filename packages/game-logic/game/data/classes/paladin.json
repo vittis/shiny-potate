@@ -7,7 +7,8 @@
         {
           "type": "GRANT_ABILITY",
           "payload": {
-            "name": "Blessed Beacon"
+            "name": "Blessed Beacon",
+            "type": "SPELL"
           }
         }
       ],
@@ -93,6 +94,7 @@
               "type": "GRANT_ABILITY",
               "payload": {
                 "name": "Break Will",
+                "type": "SPELL",
                 "tier": 1
               }
             }
@@ -124,7 +126,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Bastion Bond"
+                "name": "Bastion Bond",
+                "type": "SPELL"
               }
             }
           ],
@@ -186,7 +189,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Divine Intervention"
+                "name": "Divine Intervention",
+                "type": "SPELL"
               }
             }
           ],
