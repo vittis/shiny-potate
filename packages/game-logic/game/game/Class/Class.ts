@@ -11,10 +11,8 @@ export class Class {
 	data: ClassData;
 
 	constructor(data: ClassData) {
-		// todo fix blacksmith and uncomment this
-		/* const parsedData = ClassDataSchema.parse(data);
-    this.data = parsedData; */
-		this.data = data;
+		const parsedData = ClassDataSchema.parse(data);
+		this.data = parsedData;
 	}
 
 	getBaseHp() {

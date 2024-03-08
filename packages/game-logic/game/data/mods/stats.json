@@ -8,6 +8,10 @@
 				"weight": 2
 			},
 			{
+				"name": "TRINKET",
+				"weight": 2
+			},
+			{
 				"name": "PHYSICAL",
 				"weight": 5
 			}
@@ -19,6 +23,10 @@
 		"tags": [
 			{
 				"name": "WEAPON",
+				"weight": 2
+			},
+			{
+				"name": "TRINKET",
 				"weight": 2
 			},
 			{
@@ -36,6 +44,10 @@
 				"weight": 2
 			},
 			{
+				"name": "TRINKET",
+				"weight": 2
+			},
+			{
 				"name": "MAGICAL",
 				"weight": 5
 			}
@@ -47,6 +59,10 @@
 		"tags": [
 			{
 				"name": "WEAPON",
+				"weight": 2
+			},
+			{
+				"name": "TRINKET",
 				"weight": 2
 			},
 			{
@@ -64,8 +80,12 @@
 				"weight": 2
 			},
 			{
-				"name": "SHIELD",
+				"name": "DEFENSE",
 				"weight": 5
+			},
+			{
+				"name": "SHIELD",
+				"weight": 10
 			}
 		]
 	}

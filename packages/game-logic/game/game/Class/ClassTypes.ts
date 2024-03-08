@@ -1,16 +1,9 @@
 import { PossibleMods } from "../Mods/ModsTypes";
 import { STAT } from "../Stats/StatsTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 
-export enum ABILITY_TARGET {
-	STANDARD = "STANDARD",
-	FURTHEST = "FURTHEST",
-	ADJACENT_UNITS = "ADJACENT_UNITS",
-	FRONT_UNIT = "FRONT_UNIT",
-	SELF = "SELF",
-}
-
-// todo better type for this
+// TODO better type and logic for this
 export interface AbilityModifier {
 	trigger?: {
 		name: string;
@@ -22,13 +15,23 @@ export interface AbilityModifier {
 	}[];
 	status_effect?: {
 		name: STATUS_EFFECT;
-		target: ABILITY_TARGET;
+		target: TARGET_TYPE;
 		value: number;
 		remove?: boolean;
 	}[];
 	stats?: {
 		name: STAT;
-		target: ABILITY_TARGET;
+		target: TARGET_TYPE;
+		value: number;
+		remove?: boolean;
+	}[];
+	heal?: {
+		target: TARGET_TYPE;
+		value: number;
+		remove?: boolean;
+	}[];
+	shield?: {
+		target: TARGET_TYPE;
 		value: number;
 		remove?: boolean;
 	}[];
