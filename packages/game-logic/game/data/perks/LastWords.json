@@ -1,36 +1,30 @@
 {
-  "name": "Last Words",
-  "type": "TIER_SCALE",
-  "tags": [
-    {
-      "name": "MAGICAL",
-      "weight": 1
-    }
-  ],
-  "tiers": [
-    {
-      "name": "STURDY",
-      "values": [
-        80,
-        25,
-        30,
-        35,
-        45
-      ]
-    }
-  ],
-  "effects": [
-    {
-      "type": "STATUS_EFFECT",
-      "trigger": "SELF_FAINT",
-      "target": "ALL_ALLIES",
-      "conditions": [],
-      "payload": [
-        {
-          "name": "STURDY",
-          "quantity": "DYNAMIC"
-        }
-      ]
-    }
-  ]
+	"name": "Last Words",
+	"type": "TIER_SCALE",
+	"tags": [
+		{
+			"name": "MAGICAL",
+			"weight": 1
+		}
+	],
+	"tiers": [
+		{
+			"name": "STURDY",
+			"values": [20, 25, 30, 35, 45]
+		}
+	],
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "SELF_FAINT",
+			"target": "ALL_ALLIES",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "STURDY",
+					"quantity": "DYNAMIC"
+				}
+			]
+		}
+	]
 }

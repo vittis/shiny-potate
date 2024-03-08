@@ -9,9 +9,10 @@ import {
 	PossibleMods,
 } from "./ModsTypes";
 import { STAT } from "../Stats/StatsTypes";
-import { ABILITY_TARGET, AbilityModifier } from "../Class/ClassTypes";
+import { AbilityModifier } from "../Class/ClassTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 
 // todo better type
 const AbilityModifierSchema = z.object({
@@ -35,7 +36,7 @@ const AbilityModifierSchema = z.object({
 		.array(
 			z.object({
 				name: z.nativeEnum(STATUS_EFFECT),
-				target: z.nativeEnum(ABILITY_TARGET),
+				target: z.nativeEnum(TARGET_TYPE),
 				value: z.number(),
 				remove: z.boolean().optional(),
 			}),
@@ -45,7 +46,25 @@ const AbilityModifierSchema = z.object({
 		.array(
 			z.object({
 				name: z.nativeEnum(STAT),
-				target: z.nativeEnum(ABILITY_TARGET),
+				target: z.nativeEnum(TARGET_TYPE),
+				value: z.number(),
+				remove: z.boolean().optional(),
+			}),
+		)
+		.optional(),
+	heal: z
+		.array(
+			z.object({
+				target: z.nativeEnum(TARGET_TYPE),
+				value: z.number(),
+				remove: z.boolean().optional(),
+			}),
+		)
+		.optional(),
+	shield: z
+		.array(
+			z.object({
+				target: z.nativeEnum(TARGET_TYPE),
 				value: z.number(),
 				remove: z.boolean().optional(),
 			}),
@@ -84,22 +103,22 @@ export const PossibleModsSchema = z.array(
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_ABILITY),
 			payload: GrantAbilityPayloadSchema,
-			tier: z.union([z.number(), z.literal("implicit")]),
+			tier: z.union([z.number(), z.literal("implicit")]).optional(),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_PERK),
 			payload: GrantPerkPayloadSchema,
-			tier: z.union([z.number(), z.literal("implicit")]),
+			tier: z.union([z.number(), z.literal("implicit")]).optional(),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_BASE_STAT),
 			payload: GrantBaseStatPayloadSchema,
-			tier: z.union([z.number(), z.literal("implicit")]),
+			tier: z.union([z.number(), z.literal("implicit")]).optional(),
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_ABILITY_MODIFIER),
 			payload: GrantAbilityModifierPayload,
-			tier: z.union([z.number(), z.literal("implicit")]),
+			tier: z.union([z.number(), z.literal("implicit")]).optional(),
 		}),
 	]),
 ) satisfies z.ZodType<PossibleMods>;
