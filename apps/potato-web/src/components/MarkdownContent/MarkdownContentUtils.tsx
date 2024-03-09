@@ -15,7 +15,6 @@ export async function importMarkdownFile(filePath: string) {
 }
 
 // todo get from game-logic
-
 export function modToMarkdown(mod: any) {
 	let finalString = "";
 	if (mod.type === "GRANT_BASE_STAT") {

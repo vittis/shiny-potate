@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MarkdownContent } from "../MarkdownContent/MarkdownContent";
+import { EquipmentMarkdownContent } from "../MarkdownContent/EquipmentMarkdownContent";
 
 interface MarkdownTooltipProps {
 	children: React.ReactNode;
-	sourcePath: string;
 	onOpenChange?: (open: boolean) => void;
+	equip?: any;
 }
 
-const MarkdownTooltip = ({ children, sourcePath, onOpenChange }: MarkdownTooltipProps) => {
+const EquipmentTooltip = ({ children, equip, onOpenChange }: MarkdownTooltipProps) => {
 	const [open, setOpen] = useState(false);
 
 	function finalOnOpenChange(open: boolean) {
@@ -26,11 +26,11 @@ const MarkdownTooltip = ({ children, sourcePath, onOpenChange }: MarkdownTooltip
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
 				<TooltipContent className="p-0 max-w-[550px]">
-					<MarkdownContent sourcePath={sourcePath} parentTooltipSetOpen={setOpen} />
+					<EquipmentMarkdownContent parentTooltipSetOpen={setOpen} equip={equip} />
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);
 };
 
-export { MarkdownTooltip };
+export { EquipmentTooltip };
