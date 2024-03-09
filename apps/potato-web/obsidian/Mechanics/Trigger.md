@@ -1,11 +1,9 @@
 ---
-tags: game_mechanic
+tags: game mechanic
 ---
 
-Specify conditions for triggering effects during battle.
+# Trigger
 
-# List of Triggers
-```dataview
-LIST
-FROM #trigger 
-```
+A condition for triggering effects during battle.
+
+Example: [BATTLE START](Triggers/BATTLE%20START.md)

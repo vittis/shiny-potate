@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { Variables } from "../../index";
-import { Game, Classes, generateWeaponsFromTier } from "game-logic";
+import { Game, Classes, generateWeaponsFromTier, generateRandomWeapons } from "game-logic";
 import { nanoid } from "nanoid";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -34,14 +34,19 @@ app.get("/setup-teams-vanilla", async c => {
 });
 
 app.get("/roll-shop/:tier", async c => {
-	const tier = c.req.param("tier") || "0";
+	const tier = parseInt(c.req.param("tier") || "0");
 
 	const classes: string[] = [];
 	Object.keys(Classes).forEach(key => {
 		classes.push(key);
 	});
 
-	const weapons = generateWeaponsFromTier(parseInt(tier));
+	let weapons = [];
+	if (tier === -1) {
+		weapons = generateRandomWeapons({ quantityPerWeapon: 3 });
+	} else {
+		weapons = generateWeaponsFromTier(tier, { quantityPerWeapon: 1 });
+	}
 
 	const data = {
 		classes: classes.map(c => ({ id: nanoid(4), name: c })),

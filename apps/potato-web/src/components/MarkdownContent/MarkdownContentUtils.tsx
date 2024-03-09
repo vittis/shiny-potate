@@ -56,7 +56,7 @@ export function modToMarkdown(mod: any) {
 
 		let path = `Perks/${transformedName}.md`;
 
-		finalString = `- Grants ${mod.payload.tier} [${mod.payload.name}](${path})`;
+		finalString = `- *+${mod.payload.tier}* [${mod.payload.name}](${path})`;
 	}
 	finalString += ` **(${mod?.tier === "implicit" ? "" : "T"}${mod?.tier})**`;
 

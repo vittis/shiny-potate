@@ -1,7 +1,11 @@
 ---
-tags: status_effect
+tags: status effect
 ---
 
-See: [[Status Effect]]
+# Attack Power
 
-Increase 1 [[Attack Damage]] per stack and remove 1 on [[Attack]] used
+*+1%* [Attack Damage](Stats/Attack%20Damage.md) per stack and remove 1 stack on [Attack](Mechanics/Attack.md) used
+
+---
+
+See also: [Status Effect](Mechanics/Status%20Effect.md)

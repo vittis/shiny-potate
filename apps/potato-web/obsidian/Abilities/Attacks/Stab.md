@@ -11,7 +11,8 @@ Swiftly drive your weapon forward with precision, delivering a piercing blow to 
 
 - Base Damage: `15`
 - Cooldown: `2s`
+- Target: [STANDARD](Targets/STANDARD.md)
 
-Target: [STANDARD](Targets/STANDARD.md)
+---
 
 See also: [Attack](Mechanics/Attack.md)
