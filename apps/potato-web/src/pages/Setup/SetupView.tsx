@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
-import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
-import { tierColorMap } from "@/components/MarkdownContent/MarkdownContent";
+import { EquipmentTooltip } from "@/components/MarkdownTooltip/EquipmentMarkdownTooltip";
+import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 
 const initialBoard = [
 	{
@@ -110,9 +110,9 @@ export function Draggable({ children, id, unit, isClass }: any) {
 			{children}
 			{unitEquips.length > 0 && (
 				<div className="absolute top-0 right-0">
-					{unitEquips.map(equip => (
+					{unitEquips.map((equip, index) => (
 						<div
-							key={equip.name}
+							key={index}
 							className="border border-yellow-700 border-dashed rounded p-0.5 text-xs"
 						>
 							{equip.name}
@@ -332,15 +332,8 @@ export function SetupView({ tier }) {
 						</div>
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
-							{/* <MarkdownTooltip sourcePath="Equipment/Weapons/Bows/Shortbow">
-								<div>shiba</div>
-							</MarkdownTooltip> */}
 							{weapons.map(weapon => (
-								<MarkdownTooltip
-									key={weapon.id}
-									sourcePath="Equipment/Weapons/Bows/Shortbow" // todo refactor to not be required
-									weapon={weapon}
-								>
+								<EquipmentTooltip key={weapon.id} equip={weapon}>
 									<div className="font-mono">
 										<Draggable id={weapon.id}>
 											{weapon.data.name}{" "}
@@ -349,7 +342,7 @@ export function SetupView({ tier }) {
 											</span>
 										</Draggable>
 									</div>
-								</MarkdownTooltip>
+								</EquipmentTooltip>
 							))}
 						</div>
 					</div>
@@ -360,7 +353,7 @@ export function SetupView({ tier }) {
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable key={unit.id} id={unit.id} unit={unit} isClass>
+											<Draggable id={unit.id} unit={unit} isClass>
 												{unit.name}
 											</Draggable>
 										</Droppable>
@@ -375,7 +368,7 @@ export function SetupView({ tier }) {
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable key={unit.id} id={unit.id} unit={unit} isClass>
+											<Draggable id={unit.id} unit={unit} isClass>
 												{unit.name}
 											</Draggable>
 										</Droppable>
