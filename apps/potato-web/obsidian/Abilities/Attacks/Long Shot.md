@@ -1,14 +1,18 @@
 ---
 tags: ability, attack
 type: damage
-source: weapon, [[Longbow]]
+source: weapon, [Longbow](Equipment/Weapons/Bows/Longbow.md)
+---
+# Long Shot
+
+Unleash a precise deadly arrow, dealing damage to your target with expert marksmanship.
+
 ---
 
-Obtained by equipping [[Longbow]]
+- Base Damage: `60`
+- Cooldown: `5s`
+- Target: [STANDARD](Targets/STANDARD.md)
 
-Base damage: 40
-Base cooldown: 5s
+---
 
-Target: [[STANDARD]]
-
-See also: [[Attack]]
+See also: [Attack](Mechanics/Attack.md)

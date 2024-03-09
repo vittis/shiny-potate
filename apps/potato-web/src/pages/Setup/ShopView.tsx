@@ -19,8 +19,8 @@ export async function fetchRollShop(data) {
 }
 
 export function ShopView() {
-	const [tier, setTier] = useState("0");
-	const [selectTier, setSelectTier] = useState("0");
+	const [tier, setTier] = useState("-1");
+	const [selectTier, setSelectTier] = useState("-1");
 
 	const { isSuccess: isSuccessRollShop, refetch } = useQuery({
 		queryKey: ["roll-shop", tier],
@@ -48,13 +48,13 @@ export function ShopView() {
 				<div className="flex mb-1 font-semibold">Tier: </div>
 
 				<Select value={selectTier} onValueChange={setSelectTier}>
-					<SelectTrigger className="w-[60px]">
+					<SelectTrigger className="w-max">
 						<SelectValue placeholder="Item Tier" />
 					</SelectTrigger>
 					<SelectContent>
-						{Array.from(Array(6)).map((_, index) => (
-							<SelectItem key={index.toString()} value={index.toString()}>
-								{index.toString()}
+						{Array.from(Array(7)).map((_, index) => (
+							<SelectItem key={index.toString()} value={(index - 1).toString()}>
+								{index === 0 ? "Random" : (index - 1).toString()}
 							</SelectItem>
 						))}
 					</SelectContent>

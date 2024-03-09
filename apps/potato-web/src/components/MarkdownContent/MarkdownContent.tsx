@@ -7,6 +7,16 @@ import { MarkdownTooltip } from "../MarkdownTooltip/MarkdownTooltip";
 import { Separator } from "../ui/separator";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import remarkGfm from "remark-gfm";
+
+export const tierColorMap = {
+	"0": "text-gray-400",
+	"1": "text-green-400",
+	"2": "text-blue-400",
+	"3": "text-purple-400",
+	"4": "text-yellow-400",
+	"5": "text-red-400",
+};
 
 interface MarkdownContentProps {
 	sourcePath: string;
@@ -54,9 +64,13 @@ const MarkdownContent = ({ sourcePath, parentTooltipSetOpen, weapon }: MarkdownC
 	return (
 		<div className="bg-pattern-gradient p-3">
 			<ReactMarkdown
+				remarkPlugins={[remarkGfm]}
 				className="flex flex-col gap-2.5"
 				children={content}
 				components={{
+					table: ({ children }) => <table className="w-fit">{children}</table>,
+					td: ({ children }) => <td className="text-left">{children}</td>,
+					th: ({ children }) => <th className="text-left min-w-[50px]">{children}</th>,
 					code: ({ children }) => (
 						<code className="font-mono text-lg text-amber-300">{children}</code>
 					),
@@ -66,12 +80,18 @@ const MarkdownContent = ({ sourcePath, parentTooltipSetOpen, weapon }: MarkdownC
 					hr: () => <Separator />,
 					ul: ({ children }) => <ul className="flex flex-col gap-0.5">{children}</ul>,
 					em: ({ children }) => <span className="font-mono text-green-300">{children}</span>,
+					h2: ({ children }) => <div className="text-2xl leading-10">{children}</div>,
 					h1: ({ children }) => (
 						<div className={cn("flex flex-col" /* , !weapon && "mb-3" */)}>
 							<div className="text-3xl font-mono leading-6">
 								{children}
 								{weapon?.data?.tier >= 0 && (
-									<span className="text-[12px] font-semibold font-mono text-indigo-300 ml-2">
+									<span
+										className={cn(
+											"text-[12px] font-semibold font-mono ml-2",
+											tierColorMap[weapon?.data?.tier],
+										)}
+									>
 										T{weapon?.data?.tier}
 									</span>
 								)}

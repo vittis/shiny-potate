@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MarkdownContent } from "../MarkdownContent/MarkdownContent";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface MarkdownTooltipProps {
 	children: React.ReactNode;
@@ -28,7 +27,7 @@ const MarkdownTooltip = ({ children, sourcePath, onOpenChange, weapon }: Markdow
 		<TooltipProvider delayDuration={400}>
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent className="p-0">
+				<TooltipContent className="p-0 max-w-[550px]">
 					<MarkdownContent sourcePath={sourcePath} parentTooltipSetOpen={setOpen} weapon={weapon} />
 				</TooltipContent>
 			</Tooltip>

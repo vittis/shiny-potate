@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
+import { tierColorMap } from "@/components/MarkdownContent/MarkdownContent";
 
 const initialBoard = [
 	{
@@ -337,12 +338,15 @@ export function SetupView({ tier }) {
 							{weapons.map(weapon => (
 								<MarkdownTooltip
 									key={weapon.id}
-									sourcePath="Equipment/Weapons/Bows/Shortbow"
+									sourcePath="Equipment/Weapons/Bows/Shortbow" // todo refactor to not be required
 									weapon={weapon}
 								>
-									<div>
+									<div className="font-mono">
 										<Draggable id={weapon.id}>
-											{weapon.data.name} - T{weapon.data.tier}
+											{weapon.data.name}{" "}
+											<span className={cn("text-xs", tierColorMap[weapon.data.tier])}>
+												T{weapon.data.tier}
+											</span>
 										</Draggable>
 									</div>
 								</MarkdownTooltip>
