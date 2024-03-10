@@ -88,7 +88,7 @@ export interface UnitsDTO {
 	unitClass: string;
 }
 
-export function Draggable({ children, id, unit, isClass }: any) {
+export function Draggable({ children, id, unit, isClass, weaponTier }: any) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id,
 	});
@@ -99,22 +99,8 @@ export function Draggable({ children, id, unit, isClass }: any) {
 		: undefined;
 
 	const unitEquips = unit?.equipment || [];
-
-	const finalListeners = {
-		...listeners,
-		onPointerDown: e => {
-			if (listeners?.onPointerDown) {
-				listeners.onPointerDown(e);
-			}
-			console.log("pointer down");
-		},
-		onPointerUp: e => {
-			if (listeners?.onPointerUp) {
-				listeners.onPointerUp(e);
-			}
-			console.log("pointer up", isDragging);
-		},
-	};
+	console.log(weaponTier);
+	const isWeapon = !isClass && !unit;
 
 	return (
 		<button
@@ -130,6 +116,7 @@ export function Draggable({ children, id, unit, isClass }: any) {
 				!isClass &&
 					!unit &&
 					"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
+				isWeapon && tierColorMap[weaponTier],
 			)}
 		>
 			{children}
@@ -138,7 +125,10 @@ export function Draggable({ children, id, unit, isClass }: any) {
 					{unitEquips.map((equip, index) => (
 						<div
 							key={index}
-							className="border border-yellow-700 border-dashed rounded p-0.5 text-xs"
+							className={cn(
+								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+								tierColorMap[equip.tier],
+							)}
 						>
 							{equip.name}
 						</div>
@@ -348,7 +338,7 @@ export function SetupView({ tier }) {
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
-
+	console.log(boardLeft);
 	return (
 		<>
 			<DndContext
@@ -375,7 +365,7 @@ export function SetupView({ tier }) {
 									content={<EquipmentMarkdownContent equip={weapon} />}
 								>
 									<div className="font-mono">
-										<Draggable id={weapon.id}>
+										<Draggable id={weapon.id} weaponTier={weapon.data.tier}>
 											{weapon.data.name}{" "}
 											<span className={cn("text-xs", tierColorMap[weapon.data.tier])}>
 												T{weapon.data.tier}
