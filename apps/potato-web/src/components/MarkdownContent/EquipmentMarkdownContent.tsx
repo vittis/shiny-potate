@@ -3,11 +3,11 @@ import { modToMarkdown } from "./MarkdownContentUtils";
 import { MarkdownWrapper } from "./MarkdownWrapper";
 
 interface MarkdownContentProps {
-	parentTooltipSetOpen?: (open: boolean) => void;
+	onOpenSubTooltip?: () => void;
 	equip?: any;
 }
 
-const EquipmentMarkdownContent = ({ parentTooltipSetOpen, equip }: MarkdownContentProps) => {
+const EquipmentMarkdownContent = ({ onOpenSubTooltip, equip }: MarkdownContentProps) => {
 	const [content, setContent] = useState<string | undefined>();
 
 	useEffect(() => {
@@ -32,7 +32,7 @@ const EquipmentMarkdownContent = ({ parentTooltipSetOpen, equip }: MarkdownConte
 			content={content}
 			tier={equip?.data?.tier}
 			tags={equip?.data?.tags}
-			parentTooltipSetOpen={parentTooltipSetOpen}
+			onOpenSubTooltip={onOpenSubTooltip}
 		/>
 	);
 };
