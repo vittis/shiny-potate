@@ -332,7 +332,7 @@ export function SetupView({ tier }) {
 						</div>
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
-							{weapons.map(weapon => (
+							{weapons?.map(weapon => (
 								<EquipmentTooltip key={weapon.id} equip={weapon}>
 									<div className="font-mono">
 										<Draggable id={weapon.id}>

@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api/http";
 import { toast } from "react-toastify";
+import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
+import { TooltipActivationRadioGroup } from "@/components/MarkdownTooltip/TooltipActivationRadioGroup";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -43,7 +45,7 @@ export function ShopView() {
 	}
 
 	return (
-		<>
+		<div className="relative">
 			<div className="w-full flex gap-4 p-4 items-center justify-center flex-wrap">
 				<div className="flex mb-1 font-semibold">Tier: </div>
 
@@ -64,7 +66,18 @@ export function ShopView() {
 					Roll Shop
 				</Button>
 			</div>
+
+			<div className="absolute top-4 right-4">
+				<TooltipActivationRadioGroup />
+			</div>
+
+			<div className="flex flex-col items-center gap-4">
+				<MarkdownTooltip sourcePath="Triggers/BATTLE START">
+					<div className="w-fit bg-green-300">oi kkkkkkk</div>
+				</MarkdownTooltip>
+			</div>
+
 			<SetupView tier={tier} />
-		</>
+		</div>
 	);
 }
