@@ -1,36 +1,22 @@
-import { useState } from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MarkdownContent } from "../MarkdownContent/MarkdownContent";
+import React from "react";
+import { useTooltipStore } from "./useTooltipStore";
+import { ContentChainableTooltip } from "./ContentChainableTooltip";
+import { ContentPopover } from "./ContentPopover";
 
-interface MarkdownTooltipProps {
-	children: React.ReactNode;
-	sourcePath: string;
-	onOpenChange?: (open: boolean) => void;
+export interface MarkdownTooltipProps {
+	children: React.ReactElement;
+	onOpenSubTooltip?: () => void;
+	content: React.ReactElement;
 }
 
-const MarkdownTooltip = ({ children, sourcePath, onOpenChange }: MarkdownTooltipProps) => {
-	const [open, setOpen] = useState(false);
+const MarkdownTooltip = (props: MarkdownTooltipProps) => {
+	const tooltipMode = useTooltipStore(state => state.tooltipMode);
 
-	function finalOnOpenChange(open: boolean) {
-		if (!onOpenChange) {
-			setOpen(open);
-			return;
-		}
-
-		onOpenChange(open);
-		setOpen(open);
+	if (tooltipMode === "click") {
+		return <ContentPopover {...props} />;
 	}
 
-	return (
-		<TooltipProvider delayDuration={400}>
-			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
-				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent className="p-0 max-w-[550px]">
-					<MarkdownContent sourcePath={sourcePath} parentTooltipSetOpen={setOpen} />
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
-	);
+	return <ContentChainableTooltip {...props} />;
 };
 
 export { MarkdownTooltip };

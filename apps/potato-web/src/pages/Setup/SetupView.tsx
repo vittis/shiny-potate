@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DndContext, DragEndEvent, useDraggable, useDroppable } from "@dnd-kit/core";
+import {
+	DndContext,
+	DragEndEvent,
+	MouseSensor,
+	useDraggable,
+	useDroppable,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -8,8 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
-import { EquipmentTooltip } from "@/components/MarkdownTooltip/EquipmentMarkdownTooltip";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
+import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
+import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 
 const initialBoard = [
 	{
@@ -91,6 +100,22 @@ export function Draggable({ children, id, unit, isClass }: any) {
 
 	const unitEquips = unit?.equipment || [];
 
+	const finalListeners = {
+		...listeners,
+		onPointerDown: e => {
+			if (listeners?.onPointerDown) {
+				listeners.onPointerDown(e);
+			}
+			console.log("pointer down");
+		},
+		onPointerUp: e => {
+			if (listeners?.onPointerUp) {
+				listeners.onPointerUp(e);
+			}
+			console.log("pointer up", isDragging);
+		},
+	};
+
 	return (
 		<button
 			/* data-unit-id={unitId} */
@@ -125,7 +150,7 @@ export function Draggable({ children, id, unit, isClass }: any) {
 }
 
 export function Droppable({ children, id }: any) {
-	const { isOver, setNodeRef, active } = useDroppable({
+	const { isOver, setNodeRef } = useDroppable({
 		id: id,
 	});
 
@@ -311,6 +336,15 @@ export function SetupView({ tier }) {
 		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
 	}
 
+	const mouseSensor = useSensor(MouseSensor, {
+		// Require the mouse to move by 10 pixels before activating
+		activationConstraint: {
+			distance: 1,
+		},
+	});
+
+	const sensors = useSensors(mouseSensor);
+
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
@@ -318,8 +352,11 @@ export function SetupView({ tier }) {
 	return (
 		<>
 			<DndContext
-				// sensors={sensors}
+				sensors={sensors}
 				onDragEnd={handleDragEnd}
+				/* onDragStart={() => console.log("drag start")}
+				onDragCancel={() => console.log("drag cancel")}
+				onDragMove={() => console.log("drag move")} */
 			>
 				<div className="flex p-6 gap-6 flex-col">
 					<div className="grow flex flex-col">
@@ -332,8 +369,11 @@ export function SetupView({ tier }) {
 						</div>
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
-							{weapons.map(weapon => (
-								<EquipmentTooltip key={weapon.id} equip={weapon}>
+							{weapons?.map(weapon => (
+								<MarkdownTooltip
+									key={weapon.id}
+									content={<EquipmentMarkdownContent equip={weapon} />}
+								>
 									<div className="font-mono">
 										<Draggable id={weapon.id}>
 											{weapon.data.name}{" "}
@@ -342,7 +382,7 @@ export function SetupView({ tier }) {
 											</span>
 										</Draggable>
 									</div>
-								</EquipmentTooltip>
+								</MarkdownTooltip>
 							))}
 						</div>
 					</div>

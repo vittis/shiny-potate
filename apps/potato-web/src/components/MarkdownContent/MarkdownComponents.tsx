@@ -4,6 +4,7 @@ import { MarkdownTooltip } from "../MarkdownTooltip/MarkdownTooltip";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Components } from "react-markdown";
+import { MarkdownContent } from "./MarkdownContent";
 
 export const tierColorMap = {
 	"0": "text-gray-400",
@@ -31,18 +32,18 @@ const markdownComponents: Partial<Components> = {
 interface MarkdownAnchorProps {
 	children?: React.ReactNode;
 	href?: string;
-	parentTooltipSetOpen?: (open: boolean) => void;
+	onOpenSubTooltip?: () => void;
 }
 
-const MarkdownAnchor = ({ children, href, parentTooltipSetOpen }: MarkdownAnchorProps) => {
+const MarkdownAnchor = ({ children, href, onOpenSubTooltip }: MarkdownAnchorProps) => {
 	const formattedPath = href?.replace(".md", "")?.replace("%20", " ") ?? "";
 
 	return (
 		<MarkdownTooltip
-			sourcePath={formattedPath}
-			onOpenChange={() => {
-				if (parentTooltipSetOpen) {
-					parentTooltipSetOpen(true);
+			content={<MarkdownContent sourcePath={formattedPath} />}
+			onOpenSubTooltip={() => {
+				if (onOpenSubTooltip) {
+					onOpenSubTooltip();
 				}
 			}}
 		>

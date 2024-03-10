@@ -7,10 +7,10 @@ interface MarkdownWrapperProps {
 	content?: string;
 	tier?: number;
 	tags?: string[];
-	parentTooltipSetOpen?: (open: boolean) => void;
+	onOpenSubTooltip?: () => void;
 }
 
-const MarkdownWrapper = ({ content, tier, tags, parentTooltipSetOpen }: MarkdownWrapperProps) => {
+const MarkdownWrapper = ({ content, tier, tags, onOpenSubTooltip }: MarkdownWrapperProps) => {
 	if (!content) {
 		return <Loader2 className="animate-spin mx-auto w-80 my-20" />;
 	}
@@ -23,7 +23,7 @@ const MarkdownWrapper = ({ content, tier, tags, parentTooltipSetOpen }: Markdown
 				components={{
 					...markdownComponents,
 					h1: props => <MarkdownH1 {...props} tier={tier} tags={tags} />,
-					a: props => <MarkdownAnchor {...props} parentTooltipSetOpen={parentTooltipSetOpen} />,
+					a: props => <MarkdownAnchor {...props} onOpenSubTooltip={onOpenSubTooltip} />,
 				}}
 			/>
 		</div>

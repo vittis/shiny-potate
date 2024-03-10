@@ -4,10 +4,10 @@ import { MarkdownWrapper } from "./MarkdownWrapper";
 
 interface MarkdownContentProps {
 	sourcePath: string;
-	parentTooltipSetOpen?: (open: boolean) => void;
+	onOpenSubTooltip?: () => void;
 }
 
-const MarkdownContent = ({ sourcePath, parentTooltipSetOpen }: MarkdownContentProps) => {
+const MarkdownContent = ({ sourcePath, onOpenSubTooltip }: MarkdownContentProps) => {
 	const [content, setContent] = useState<string | undefined>();
 	const [metadata, setMetadata] = useState<{ tags?: string[] }>();
 
@@ -25,11 +25,7 @@ const MarkdownContent = ({ sourcePath, parentTooltipSetOpen }: MarkdownContentPr
 	}, []);
 
 	return (
-		<MarkdownWrapper
-			content={content}
-			tags={metadata?.tags}
-			parentTooltipSetOpen={parentTooltipSetOpen}
-		/>
+		<MarkdownWrapper content={content} tags={metadata?.tags} onOpenSubTooltip={onOpenSubTooltip} />
 	);
 };
 
