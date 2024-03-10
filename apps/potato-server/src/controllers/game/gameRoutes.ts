@@ -7,18 +7,24 @@ const app = new Hono<{ Variables: Variables }>();
 
 app.post("/setup-teams", async c => {
 	const { team1, team2 } = await c.req.json();
-	const game = new Game({ skipConstructor: true });
 
-	game.setTeam(0, team1);
-	game.setTeam(1, team2);
+	try {
+		const game = new Game({ skipConstructor: true });
 
-	const { totalSteps, eventHistory, firstStep } = game.startGame();
+		game.setTeam(0, team1);
+		game.setTeam(1, team2);
 
-	return c.json({
-		firstStep,
-		totalSteps,
-		eventHistory,
-	});
+		const { totalSteps, eventHistory, firstStep } = game.startGame();
+
+		return c.json({
+			firstStep,
+			totalSteps,
+			eventHistory,
+		});
+	} catch (e: TypeError | any) {
+		console.log(e);
+		return c.json({ error: e?.message }, 500);
+	}
 });
 
 app.get("/setup-teams-vanilla", async c => {
@@ -41,19 +47,24 @@ app.get("/roll-shop/:tier", async c => {
 		classes.push(key);
 	});
 
-	let weapons = [];
-	if (tier === -1) {
-		weapons = generateRandomWeapons({ quantityPerWeapon: 3 });
-	} else {
-		weapons = generateWeaponsFromTier(tier, { quantityPerWeapon: 1 });
+	try {
+		let weapons = [];
+		if (tier === -1) {
+			weapons = generateRandomWeapons({ quantityPerWeapon: 3 });
+		} else {
+			weapons = generateWeaponsFromTier(tier, { quantityPerWeapon: 1 });
+		}
+
+		const data = {
+			classes: classes.map(c => ({ id: nanoid(4), name: c })),
+			weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
+		};
+
+		return c.json(data);
+	} catch (e: TypeError | any) {
+		console.log(e);
+		return c.json({ error: e?.message }, 500);
 	}
-
-	const data = {
-		classes: classes.map(c => ({ id: nanoid(4), name: c })),
-		weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
-	};
-
-	return c.json(data);
 });
 
 export default app;

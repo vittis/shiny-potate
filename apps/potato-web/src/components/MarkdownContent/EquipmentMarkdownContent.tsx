@@ -4,7 +4,7 @@ import { MarkdownWrapper } from "./MarkdownWrapper";
 
 interface MarkdownContentProps {
 	onOpenSubTooltip?: () => void;
-	equip?: any;
+	equip: any;
 }
 
 const EquipmentMarkdownContent = ({ onOpenSubTooltip, equip }: MarkdownContentProps) => {
@@ -24,8 +24,10 @@ const EquipmentMarkdownContent = ({ onOpenSubTooltip, equip }: MarkdownContentPr
 
 			setContent(contentFromEquip);
 		}
-		parseEquipToMarkdown();
-	}, []);
+		if (equip) {
+			parseEquipToMarkdown();
+		}
+	}, [equip]);
 
 	return (
 		<MarkdownWrapper

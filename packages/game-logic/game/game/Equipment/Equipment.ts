@@ -19,9 +19,13 @@ export class Equipment {
 				"Equipment: Equipment data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
-		const parsedData = EquipmentDataSchema.parse(data);
-		this.data = parsedData;
-		this.id = nanoid(8);
+		try {
+			const parsedData = EquipmentDataSchema.parse(data);
+			this.data = parsedData;
+			this.id = nanoid(8);
+		} catch (e: any) {
+			throw Error(`Equipment: ${data.name} data is invalid. ${e?.message}`);
+		}
 	}
 
 	getGrantedAbilities(): Ability[] {
