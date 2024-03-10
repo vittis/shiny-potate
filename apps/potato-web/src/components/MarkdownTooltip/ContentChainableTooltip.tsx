@@ -3,21 +3,33 @@ import { MarkdownTooltipProps } from "./MarkdownTooltip";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useTooltipStore } from "./useTooltipStore";
 import { cn } from "@/lib/utils";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 
 export const TOOLTIP_CONTENT_CLASSNAME = "p-0 w-max max-w-[550px]";
 
-const ContentChainableTooltip = ({ children, onOpenSubTooltip, content }: MarkdownTooltipProps) => {
+const ContentChainableTooltip = ({
+	children,
+	onOpenSubTooltip,
+	content,
+	onOpenCallback,
+}: MarkdownTooltipProps) => {
 	const [open, setOpen] = useState(false);
 	const hoverDelay = useTooltipStore(state => state.hoverDelay);
 
 	function finalOnOpenChange(open: boolean) {
 		if (!onOpenSubTooltip) {
 			setOpen(open);
+			if (onOpenCallback) {
+				onOpenCallback(open);
+			}
 			return;
 		}
 
 		onOpenSubTooltip();
 		setOpen(open);
+		if (onOpenCallback) {
+			onOpenCallback(open);
+		}
 	}
 
 	const contentProps = { onOpenSubTooltip: () => setOpen(true) };
@@ -27,7 +39,17 @@ const ContentChainableTooltip = ({ children, onOpenSubTooltip, content }: Markdo
 		<TooltipProvider delayDuration={hoverDelay}>
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent className={cn(TOOLTIP_CONTENT_CLASSNAME)}>{contentElement}</TooltipContent>
+				{!onOpenSubTooltip ? (
+					<TooltipPortal>
+						<TooltipContent className={cn(TOOLTIP_CONTENT_CLASSNAME)}>
+							{contentElement}
+						</TooltipContent>
+					</TooltipPortal>
+				) : (
+					<TooltipContent className={cn(TOOLTIP_CONTENT_CLASSNAME)}>
+						{contentElement}
+					</TooltipContent>
+				)}
 			</Tooltip>
 		</TooltipProvider>
 	);
