@@ -89,6 +89,8 @@ export interface UnitsDTO {
 }
 
 export function Draggable({ children, id, unit, isClass, weaponTier, removeEquipment }: any) {
+	const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id,
 	});
@@ -101,13 +103,15 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 	const unitEquips = unit?.equipment || [];
 	const isWeapon = !isClass && !unit;
 
+	const finalListeners = isTooltipOpen ? {} : listeners;
+	const finalAttributes = isTooltipOpen ? {} : attributes;
+
 	return (
 		<button
-			/* data-unit-id={unitId} */
 			ref={setNodeRef}
 			style={style}
-			{...listeners}
-			{...attributes}
+			{...finalListeners}
+			{...finalAttributes}
 			className={cn(
 				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors",
 				isDragging && "z-30",
@@ -122,37 +126,37 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 			{unitEquips.length > 0 && (
 				<div className="absolute top-0 right-0">
 					{unitEquips.map(equip => (
-						<div key={equip.id} className="text-left">
-							<MarkdownTooltip
-								content={
-									<div className="bg-pattern-gradient relative">
-										<EquipmentMarkdownContent equip={equip} />
-										<Button
-											className="absolute top-1 right-1 text-red-400"
-											variant="ghost"
-											size="icon"
-											onClick={() => {
-												removeEquipment(equip.id);
-											}}
-										>
-											<X size={24} />
-										</Button>
-									</div>
-								}
-							>
-								<div
-									className={cn(
-										"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-										tierColorMap[equip.data.tier],
-									)}
-								>
-									{equip.data.name}{" "}
-									<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
-										T{equip.data.tier}
-									</span>
+						<MarkdownTooltip
+							onOpenCallback={setIsTooltipOpen}
+							key={equip.id}
+							content={
+								<div className="bg-pattern-gradient relative">
+									<EquipmentMarkdownContent equip={equip} />
+									<Button
+										className="absolute top-1 right-1 text-red-400"
+										variant="ghost"
+										size="icon"
+										onClick={() => {
+											removeEquipment(equip.id);
+										}}
+									>
+										<X size={24} />
+									</Button>
 								</div>
-							</MarkdownTooltip>
-						</div>
+							}
+						>
+							<div
+								className={cn(
+									"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+									tierColorMap[equip.data.tier],
+								)}
+							>
+								{equip.data.name}{" "}
+								<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
+									T{equip.data.tier}
+								</span>
+							</div>
+						</MarkdownTooltip>
 					))}
 				</div>
 			)}
