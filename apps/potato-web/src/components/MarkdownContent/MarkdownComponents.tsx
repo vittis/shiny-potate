@@ -4,6 +4,7 @@ import { MarkdownTooltip } from "../MarkdownTooltip/MarkdownTooltip";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Components } from "react-markdown";
+import { MarkdownContent } from "./MarkdownContent";
 
 export const tierColorMap = {
 	"0": "text-gray-400",
@@ -39,7 +40,7 @@ const MarkdownAnchor = ({ children, href, onOpenSubTooltip }: MarkdownAnchorProp
 
 	return (
 		<MarkdownTooltip
-			sourcePath={formattedPath}
+			content={<MarkdownContent sourcePath={formattedPath} />}
 			onOpenSubTooltip={() => {
 				if (onOpenSubTooltip) {
 					onOpenSubTooltip();

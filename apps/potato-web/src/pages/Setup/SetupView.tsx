@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
-import { EquipmentTooltip } from "@/components/MarkdownTooltip/EquipmentMarkdownTooltip";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
+import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
+import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 
 const initialBoard = [
 	{
@@ -125,7 +126,7 @@ export function Draggable({ children, id, unit, isClass }: any) {
 }
 
 export function Droppable({ children, id }: any) {
-	const { isOver, setNodeRef, active } = useDroppable({
+	const { isOver, setNodeRef } = useDroppable({
 		id: id,
 	});
 
@@ -333,7 +334,7 @@ export function SetupView({ tier }) {
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons?.map(weapon => (
-								<EquipmentTooltip key={weapon.id} equip={weapon}>
+								<MarkdownTooltip content={<EquipmentMarkdownContent equip={weapon} />}>
 									<div className="font-mono">
 										<Draggable id={weapon.id}>
 											{weapon.data.name}{" "}
@@ -342,7 +343,7 @@ export function SetupView({ tier }) {
 											</span>
 										</Draggable>
 									</div>
-								</EquipmentTooltip>
+								</MarkdownTooltip>
 							))}
 						</div>
 					</div>

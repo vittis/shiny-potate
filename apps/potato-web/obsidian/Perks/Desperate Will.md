@@ -9,9 +9,7 @@ Enhance your abilities when an ally faints, tapping into your resolve to overcom
 
 ---
 
-- [ALLY FAINT](Triggers/ALLY%20FAINT.md): Gain _X_
-  [ATTACK POWER](Status%20Effects/ATTACK%20POWER.md) and _X_
-  [SPELL POTENCY](Status%20Effects/SPELL%20POTENCY.md)
+- [ALLY FAINT](Triggers/ALLY%20FAINT.md): Gain _X_ [ATTACK POWER](Status%20Effects/ATTACK%20POWER.md) and _X_ [SPELL POTENCY](Status%20Effects/SPELL%20POTENCY.md)
 
 | Tier | Effect                                                                                                             |
 | ---- | ------------------------------------------------------------------------------------------------------------------ |
