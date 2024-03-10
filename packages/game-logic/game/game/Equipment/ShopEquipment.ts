@@ -31,14 +31,20 @@ export class ShopEquipment {
 				"ShopEquipment: Equipment data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
-		console.log(data.name);
-		const parsedData = EquipmentDataSchema.parse(data);
-		this.data = parsedData;
-		this.id = nanoid(8);
-		this.tier = tier;
+		try {
+			const parsedData = EquipmentDataSchema.parse(data);
+			this.data = parsedData;
+			this.id = nanoid(8);
+			this.tier = tier;
 
-		this.applicableMods = [...this.getAllApplicablePerkMods(), ...this.getAllApplicableStatMods()];
-		this.rolledMods = this.generateRolledMods(this.rollTieredMods());
+			this.applicableMods = [
+				...this.getAllApplicablePerkMods(),
+				...this.getAllApplicableStatMods(),
+			];
+			this.rolledMods = this.generateRolledMods(this.rollTieredMods());
+		} catch (e: any) {
+			throw Error(`Equipment: ${data.name} data is invalid. ${e?.message}`);
+		}
 	}
 
 	getAllApplicablePerkMods(): ShopItemPerkMod[] {

@@ -13,7 +13,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { api } from "@/services/api/http";
 import { fetchRollShop } from "./ShopView";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
@@ -88,7 +88,7 @@ export interface UnitsDTO {
 	unitClass: string;
 }
 
-export function Draggable({ children, id, unit, isClass, weaponTier }: any) {
+export function Draggable({ children, id, unit, isClass, weaponTier, removeEquipment }: any) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id,
 	});
@@ -99,7 +99,6 @@ export function Draggable({ children, id, unit, isClass, weaponTier }: any) {
 		: undefined;
 
 	const unitEquips = unit?.equipment || [];
-	console.log(weaponTier);
 	const isWeapon = !isClass && !unit;
 
 	return (
@@ -122,15 +121,37 @@ export function Draggable({ children, id, unit, isClass, weaponTier }: any) {
 			{children}
 			{unitEquips.length > 0 && (
 				<div className="absolute top-0 right-0">
-					{unitEquips.map((equip, index) => (
-						<div
-							key={index}
-							className={cn(
-								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-								tierColorMap[equip.tier],
-							)}
-						>
-							{equip.name}
+					{unitEquips.map(equip => (
+						<div key={equip.id} className="text-left">
+							<MarkdownTooltip
+								content={
+									<div className="bg-pattern-gradient relative">
+										<EquipmentMarkdownContent equip={equip} />
+										<Button
+											className="absolute top-1 right-1 text-red-400"
+											variant="ghost"
+											size="icon"
+											onClick={() => {
+												removeEquipment(equip.id);
+											}}
+										>
+											<X size={24} />
+										</Button>
+									</div>
+								}
+							>
+								<div
+									className={cn(
+										"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+										tierColorMap[equip.data.tier],
+									)}
+								>
+									{equip.data.name}{" "}
+									<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
+										T{equip.data.tier}
+									</span>
+								</div>
+							</MarkdownTooltip>
 						</div>
 					))}
 				</div>
@@ -170,7 +191,7 @@ export function SetupView({ tier }) {
 		staleTime: Infinity,
 	});
 
-	const { mutateAsync: setupTeamsMutation } = useMutation({
+	const { mutateAsync: setupTeamsMutation, isPending } = useMutation({
 		mutationFn: setupTeams,
 		mutationKey: ["setup-teams"],
 		onSuccess: data => {
@@ -230,7 +251,7 @@ export function SetupView({ tier }) {
 
 			if (!hasUnit) return;
 
-			const weapon = weapons.find(weapon => weapon.id === event.active.id).data;
+			const weapon = weapons.find(weapon => weapon.id === event.active.id);
 
 			const newBoard = targetBoard.map(cell => {
 				if (cell.id === event.over?.id) {
@@ -338,7 +359,6 @@ export function SetupView({ tier }) {
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
-	console.log(boardLeft);
 	return (
 		<>
 			<DndContext
@@ -377,13 +397,35 @@ export function SetupView({ tier }) {
 						</div>
 					</div>
 
-					<div className="flex items-center justify-center min-w-[500px] gap-20 mt-20">
+					<div className="flex items-center justify-center min-w-[500px] gap-20 mt-10">
 						<div className="w-fit h-fit grid grid-cols-3 gap-5">
 							{boardLeft.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable id={unit.id} unit={unit} isClass>
+											<Draggable
+												id={unit.id}
+												unit={unit}
+												isClass
+												removeEquipment={(id: string) => {
+													const newBoard = boardLeft.map(cell => {
+														if (unit.id === cell?.unit?.id) {
+															const newUnit = cell.unit;
+															newUnit.equipment = newUnit.equipment.filter(
+																equip => equip.id !== id,
+															);
+
+															return {
+																...cell,
+																unit: newUnit,
+															};
+														}
+														return cell;
+													});
+
+													setBoardLeft(newBoard);
+												}}
+											>
 												{unit.name}
 											</Draggable>
 										</Droppable>
@@ -398,7 +440,29 @@ export function SetupView({ tier }) {
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable id={unit.id} unit={unit} isClass>
+											<Draggable
+												id={unit.id}
+												unit={unit}
+												isClass
+												removeEquipment={(id: string) => {
+													const newBoard = boardRight.map(cell => {
+														if (unit.id === cell?.unit?.id) {
+															const newUnit = cell.unit;
+															newUnit.equipment = newUnit.equipment.filter(
+																equip => equip.id !== id,
+															);
+
+															return {
+																...cell,
+																unit: newUnit,
+															};
+														}
+														return cell;
+													});
+
+													setBoardRight(newBoard);
+												}}
+											>
 												{unit.name}
 											</Draggable>
 										</Droppable>
@@ -412,8 +476,10 @@ export function SetupView({ tier }) {
 				</div>
 			</DndContext>
 
-			<div className="mt-10 mx-auto w-fit flex flex-col gap-4">
-				<Button onClick={onClickStartGame}>Start game</Button>
+			<div className="mt-2 mx-auto w-fit flex flex-col gap-4">
+				<Button onClick={onClickStartGame} disabled={isPending}>
+					Start game {isPending && <Loader2 className="animate-spin ml-1 w-[15px]" />}
+				</Button>
 				<Button variant="ghost" onClick={onClickReset}>
 					Reset
 				</Button>

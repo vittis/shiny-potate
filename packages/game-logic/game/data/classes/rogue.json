@@ -79,7 +79,7 @@
               "type": "GRANT_ABILITY",
               "payload": {
                 "name": "Decay Strike",
-                "TYPE": "SPELL"
+                "type": "SPELL"
               }
             }
           ],
@@ -134,7 +134,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Careful Preparation"
+                "name": "Careful Preparation",
+                "type": "ATTACK"
               }
             }
           ],
@@ -147,7 +148,8 @@
             {
               "type": "GRANT_ABILITY",
               "payload": {
-                "name": "Opening Gambit"
+                "name": "Opening Gambit",
+                "type": "ATTACK"
               }
             }
           ],

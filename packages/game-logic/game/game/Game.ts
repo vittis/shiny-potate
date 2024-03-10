@@ -11,7 +11,7 @@ import { generateEquipmentData } from "./Equipment/ShopUtils";
 import { ShopEquipment } from "./Equipment/ShopEquipment";
 
 export interface UnitsDTO {
-	equipments: ShopEquipmentData[];
+	equipments: { id: string; data: ShopEquipmentData }[];
 	position: POSITION;
 	unitClass: string;
 }
@@ -56,8 +56,8 @@ export class Game {
 		units.forEach(unitDTO => {
 			const unit = new Unit(team, unitDTO.position, this.boardManager);
 			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]));
-			unitDTO.equipments.forEach(equipment => {
-				const equipmentData = generateEquipmentData(equipment);
+			unitDTO.equipments.forEach(shopEquip => {
+				const equipmentData = generateEquipmentData(shopEquip.data);
 
 				if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
 					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);

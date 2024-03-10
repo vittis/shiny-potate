@@ -11,8 +11,12 @@ export class Class {
 	data: ClassData;
 
 	constructor(data: ClassData) {
-		const parsedData = ClassDataSchema.parse(data);
-		this.data = parsedData;
+		try {
+			const parsedData = ClassDataSchema.parse(data);
+			this.data = parsedData;
+		} catch (e: any) {
+			throw Error(`Class: ${data.name} data is invalid. ${e?.message}`);
+		}
 	}
 
 	getBaseHp() {

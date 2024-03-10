@@ -79,13 +79,13 @@ export function createAttackAnimation({
 		},
 		tweens: [
 			// pulinho
-			{
+			/* {
 				targets: unit.sprite,
 				y: unit.sprite.y - 38,
 				duration: 125 * animationSpeed,
 				yoyo: true,
 				ease: Phaser.Math.Easing.Bounce.InOut,
-			},
+			}, */
 			// corridinha indo
 			{
 				delay: 50 * animationSpeed,
