@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DndContext, DragEndEvent, useDraggable, useDroppable } from "@dnd-kit/core";
+import {
+	DndContext,
+	DragEndEvent,
+	MouseSensor,
+	useDraggable,
+	useDroppable,
+	useSensor,
+	useSensors,
+} from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -91,6 +99,22 @@ export function Draggable({ children, id, unit, isClass }: any) {
 		: undefined;
 
 	const unitEquips = unit?.equipment || [];
+
+	const finalListeners = {
+		...listeners,
+		onPointerDown: e => {
+			if (listeners?.onPointerDown) {
+				listeners.onPointerDown(e);
+			}
+			console.log("pointer down");
+		},
+		onPointerUp: e => {
+			if (listeners?.onPointerUp) {
+				listeners.onPointerUp(e);
+			}
+			console.log("pointer up", isDragging);
+		},
+	};
 
 	return (
 		<button
@@ -312,6 +336,15 @@ export function SetupView({ tier }) {
 		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
 	}
 
+	const mouseSensor = useSensor(MouseSensor, {
+		// Require the mouse to move by 10 pixels before activating
+		activationConstraint: {
+			distance: 1,
+		},
+	});
+
+	const sensors = useSensors(mouseSensor);
+
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
@@ -319,8 +352,11 @@ export function SetupView({ tier }) {
 	return (
 		<>
 			<DndContext
-				// sensors={sensors}
+				sensors={sensors}
 				onDragEnd={handleDragEnd}
+				/* onDragStart={() => console.log("drag start")}
+				onDragCancel={() => console.log("drag cancel")}
+				onDragMove={() => console.log("drag move")} */
 			>
 				<div className="flex p-6 gap-6 flex-col">
 					<div className="grow flex flex-col">
@@ -334,7 +370,10 @@ export function SetupView({ tier }) {
 
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons?.map(weapon => (
-								<MarkdownTooltip content={<EquipmentMarkdownContent equip={weapon} />}>
+								<MarkdownTooltip
+									key={weapon.id}
+									content={<EquipmentMarkdownContent equip={weapon} />}
+								>
 									<div className="font-mono">
 										<Draggable id={weapon.id}>
 											{weapon.data.name}{" "}

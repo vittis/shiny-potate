@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api/http";
 import { toast } from "react-toastify";
-import { TooltipActivationRadioGroup } from "@/components/MarkdownTooltip/TooltipActivationRadioGroup";
+import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -67,7 +67,7 @@ export function ShopView() {
 			</div>
 
 			<div className="absolute top-4 right-4">
-				<TooltipActivationRadioGroup />
+				<TooltipSettigs />
 			</div>
 
 			{/* for testing stuff, ok to remove */}
