@@ -1,23 +1,25 @@
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MarkdownContent } from "../MarkdownContent/MarkdownContent";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useTooltipStore } from "./useTooltipStore";
 
 interface MarkdownTooltipProps {
 	children: React.ReactNode;
 	sourcePath: string;
-	onOpenChange?: (open: boolean) => void;
+	onOpenSubTooltip?: () => void;
 }
 
-const MarkdownTooltip = ({ children, sourcePath, onOpenChange }: MarkdownTooltipProps) => {
+const InnerMarkdownTooltip = ({ children, sourcePath, onOpenSubTooltip }: MarkdownTooltipProps) => {
 	const [open, setOpen] = useState(false);
 
 	function finalOnOpenChange(open: boolean) {
-		if (!onOpenChange) {
+		if (!onOpenSubTooltip) {
 			setOpen(open);
 			return;
 		}
 
-		onOpenChange(open);
+		onOpenSubTooltip();
 		setOpen(open);
 	}
 
@@ -26,11 +28,32 @@ const MarkdownTooltip = ({ children, sourcePath, onOpenChange }: MarkdownTooltip
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
 				<TooltipContent className="p-0 max-w-[550px]">
-					<MarkdownContent sourcePath={sourcePath} parentTooltipSetOpen={setOpen} />
+					<MarkdownContent sourcePath={sourcePath} onOpenSubTooltip={() => setOpen(true)} />
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);
+};
+
+const MarkdownPopover = ({ children, sourcePath }: MarkdownTooltipProps) => {
+	return (
+		<Popover>
+			<PopoverTrigger asChild>{children}</PopoverTrigger>
+			<PopoverContent className="p-0 max-w-[550px]">
+				<MarkdownContent sourcePath={sourcePath} />
+			</PopoverContent>
+		</Popover>
+	);
+};
+
+const MarkdownTooltip = (props: MarkdownTooltipProps) => {
+	const tooltipMode = useTooltipStore(state => state.tooltipMode);
+
+	if (tooltipMode === "click") {
+		return <MarkdownPopover {...props} />;
+	}
+
+	return <InnerMarkdownTooltip {...props} />;
 };
 
 export { MarkdownTooltip };
