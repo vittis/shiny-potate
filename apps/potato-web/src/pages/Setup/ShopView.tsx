@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api/http";
 import { toast } from "react-toastify";
-import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { TooltipActivationRadioGroup } from "@/components/MarkdownTooltip/TooltipActivationRadioGroup";
 
 export async function fetchRollShop(data) {
@@ -71,11 +70,12 @@ export function ShopView() {
 				<TooltipActivationRadioGroup />
 			</div>
 
-			<div className="flex flex-col items-center gap-4">
-				<MarkdownTooltip sourcePath="Triggers/BATTLE START">
+			{/* for testing stuff, ok to remove */}
+			{/* <div className="flex flex-col items-center gap-4">
+				<MarkdownTooltip content={<MarkdownContent sourcePath="Triggers/BATTLE START" />}>
 					<div className="w-fit bg-green-300">oi kkkkkkk</div>
 				</MarkdownTooltip>
-			</div>
+			</div> */}
 
 			<SetupView tier={tier} />
 		</div>
