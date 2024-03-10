@@ -27,7 +27,7 @@ const InnerMarkdownTooltip = ({ children, sourcePath, onOpenSubTooltip }: Markdo
 		<TooltipProvider delayDuration={400}>
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
-				<TooltipContent className="p-0 max-w-[550px]">
+				<TooltipContent className="p-0 w-max max-w-[550px]">
 					<MarkdownContent sourcePath={sourcePath} onOpenSubTooltip={() => setOpen(true)} />
 				</TooltipContent>
 			</Tooltip>
@@ -39,7 +39,7 @@ const MarkdownPopover = ({ children, sourcePath }: MarkdownTooltipProps) => {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>{children}</PopoverTrigger>
-			<PopoverContent className="p-0 max-w-[550px]">
+			<PopoverContent className="p-0 w-max max-w-[550px]">
 				<MarkdownContent sourcePath={sourcePath} />
 			</PopoverContent>
 		</Popover>
