@@ -5,7 +5,7 @@ import { useTooltipStore } from "./useTooltipStore";
 import { cn } from "@/lib/utils";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 
-export const TOOLTIP_CONTENT_CLASSNAME = "p-0 w-max max-w-[550px]";
+export const TOOLTIP_CONTENT_CLASSNAME = "p-0 w-max max-w-[750px]";
 
 const ContentChainableTooltip = ({
 	children,
@@ -38,7 +38,7 @@ const ContentChainableTooltip = ({
 	return (
 		<TooltipProvider delayDuration={hoverDelay}>
 			<Tooltip open={open} onOpenChange={finalOnOpenChange}>
-				<TooltipTrigger asChild>{children}</TooltipTrigger>
+				<TooltipTrigger>{children}</TooltipTrigger>
 				{!onOpenSubTooltip ? (
 					<TooltipPortal>
 						<TooltipContent className={cn(TOOLTIP_CONTENT_CLASSNAME)}>

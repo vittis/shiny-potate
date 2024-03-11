@@ -17,7 +17,13 @@ const ContentPopover = ({ children, content, onOpenCallback }: MarkdownTooltipPr
 
 	return (
 		<Popover open={open} onOpenChange={onOpenHandler}>
-			<PopoverTrigger asChild>{children}</PopoverTrigger>
+			<PopoverTrigger
+				onClick={e => {
+					e.stopPropagation();
+				}}
+			>
+				{children}
+			</PopoverTrigger>
 			<PopoverPortal>
 				<PopoverContent className={cn(TOOLTIP_CONTENT_CLASSNAME)}>{content}</PopoverContent>
 			</PopoverPortal>

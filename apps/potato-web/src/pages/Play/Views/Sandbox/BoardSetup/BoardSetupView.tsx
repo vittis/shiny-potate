@@ -19,6 +19,7 @@ import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
+import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
 
 const initialBoard = [
 	{
@@ -93,6 +94,7 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id,
+		data: { unit }, // todo use this
 	});
 	const style = transform
 		? {
@@ -133,14 +135,15 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 								<div className="bg-pattern-gradient relative">
 									<EquipmentMarkdownContent equip={equip} />
 									<Button
-										className="absolute top-1 right-1 text-red-400"
+										className="absolute top-1 right-1 text-red-400 flex items-center gap-1"
 										variant="ghost"
-										size="icon"
+										size="sm"
 										onClick={() => {
+											setIsTooltipOpen(false);
 											removeEquipment(equip.id);
 										}}
 									>
-										<X size={24} />
+										Unequip
 									</Button>
 								</div>
 							}
@@ -373,9 +376,13 @@ export function BoardSetupView() {
 					<div className="grow flex flex-col">
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{classes.map(unitClass => (
-								<Draggable key={unitClass.id} id={unitClass.id} isClass>
-									{unitClass.name}
-								</Draggable>
+								<MarkdownTooltip
+									content={<MarkdownContent sourcePath={`Classes/${unitClass.name}`} />}
+								>
+									<Draggable key={unitClass.id} id={unitClass.id} isClass>
+										{unitClass.name}
+									</Draggable>
+								</MarkdownTooltip>
 							))}
 						</div>
 
@@ -404,31 +411,35 @@ export function BoardSetupView() {
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable
-												id={unit.id}
-												unit={unit}
-												isClass
-												removeEquipment={(id: string) => {
-													const newBoard = boardLeft.map(cell => {
-														if (unit.id === cell?.unit?.id) {
-															const newUnit = cell.unit;
-															newUnit.equipment = newUnit.equipment.filter(
-																equip => equip.id !== id,
-															);
-
-															return {
-																...cell,
-																unit: newUnit,
-															};
-														}
-														return cell;
-													});
-
-													setBoardLeft(newBoard);
-												}}
+											<MarkdownTooltip
+												content={<MarkdownContent sourcePath={`Classes/${unit.name}`} />}
 											>
-												{unit.name}
-											</Draggable>
+												<Draggable
+													id={unit.id}
+													unit={unit}
+													isClass
+													removeEquipment={(id: string) => {
+														const newBoard = boardLeft.map(cell => {
+															if (unit.id === cell?.unit?.id) {
+																const newUnit = cell.unit;
+																newUnit.equipment = newUnit.equipment.filter(
+																	equip => equip.id !== id,
+																);
+
+																return {
+																	...cell,
+																	unit: newUnit,
+																};
+															}
+															return cell;
+														});
+
+														setBoardLeft(newBoard);
+													}}
+												>
+													{unit.name}
+												</Draggable>
+											</MarkdownTooltip>
 										</Droppable>
 									) : (
 										<Droppable id={id}></Droppable>
@@ -441,31 +452,35 @@ export function BoardSetupView() {
 								<React.Fragment key={id}>
 									{unit ? (
 										<Droppable id={id}>
-											<Draggable
-												id={unit.id}
-												unit={unit}
-												isClass
-												removeEquipment={(id: string) => {
-													const newBoard = boardRight.map(cell => {
-														if (unit.id === cell?.unit?.id) {
-															const newUnit = cell.unit;
-															newUnit.equipment = newUnit.equipment.filter(
-																equip => equip.id !== id,
-															);
-
-															return {
-																...cell,
-																unit: newUnit,
-															};
-														}
-														return cell;
-													});
-
-													setBoardRight(newBoard);
-												}}
+											<MarkdownTooltip
+												content={<MarkdownContent sourcePath={`Classes/${unit.name}`} />}
 											>
-												{unit.name}
-											</Draggable>
+												<Draggable
+													id={unit.id}
+													unit={unit}
+													isClass
+													removeEquipment={(id: string) => {
+														const newBoard = boardRight.map(cell => {
+															if (unit.id === cell?.unit?.id) {
+																const newUnit = cell.unit;
+																newUnit.equipment = newUnit.equipment.filter(
+																	equip => equip.id !== id,
+																);
+
+																return {
+																	...cell,
+																	unit: newUnit,
+																};
+															}
+															return cell;
+														});
+
+														setBoardRight(newBoard);
+													}}
+												>
+													{unit.name}
+												</Draggable>
+											</MarkdownTooltip>
 										</Droppable>
 									) : (
 										<Droppable id={id}></Droppable>

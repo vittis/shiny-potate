@@ -1,23 +1,8 @@
 ---
 tags: class
 ---
-* Base HP: 100
-* Gain +10% [[Attack Damage]] and -10% [[Attack Cooldown]]
 
-## Talent Tree
+# Warrior
 
-### Berserker
-- Tier 1:
-	- Gain [[Ki Focus]] spell
-	- Gain 1 [[Solo Strength]]
-  - Tier 2 (requires 2 points spent in this tree):
-	  - Gain 2 [[Berserk]]
-
-### Vanguard
-- Tier 1:
-	- Gain [[Balanced Strike]] attack
-	- todo: gain taunt
-
-
-### Utility
-* // maybe thorn
+* Base HP: *100*
+* Gain +10% [Attack Damage](Stats/Attack%20Damage.md) and -10% [Attack Cooldow Recovery](Attack%20Cooldow)

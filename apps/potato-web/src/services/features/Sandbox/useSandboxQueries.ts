@@ -21,7 +21,6 @@ const useSandboxQueries = (): SandboxQueriesData => {
 
 	const {
 		data: shopData,
-		isSuccess: isSuccessRollShop,
 		refetch: refetchRollShop,
 		isFetching: isFetchingRollShop,
 	} = useQuery({
@@ -29,12 +28,6 @@ const useSandboxQueries = (): SandboxQueriesData => {
 		queryFn: () => fetchRollShop({ tier: shopTier }),
 		staleTime: 0,
 	});
-
-	useEffect(() => {
-		if (isSuccessRollShop) {
-			toast.success("Shop generated 👌");
-		}
-	}, [isSuccessRollShop]);
 
 	return { shopData, isFetchingRollShop, refetchRollShop };
 };
