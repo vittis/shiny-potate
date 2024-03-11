@@ -32,7 +32,7 @@ const modsMock: Mod<MOD_TYPE.GRANT_BASE_STAT>[] = [
 
 describe("Stats", () => {
 	describe("StatManager", () => {
-		test("initialize correctly", () => {
+		it("initialize correctly", () => {
 			const manager = new StatsManager();
 			manager.initializeStats(statsMock);
 
@@ -42,7 +42,7 @@ describe("Stats", () => {
 			expect(manager.getStats()).toEqual(statsMock);
 		});
 
-		test("add mod", () => {
+		it("add mod", () => {
 			const manager = new StatsManager();
 			manager.addMods(modsMock);
 
@@ -58,7 +58,7 @@ describe("Stats", () => {
 			});
 		});
 
-		test("remove mod", () => {
+		it("remove mod", () => {
 			const manager = new StatsManager();
 			manager.addMods(modsMock);
 			manager.removeMods([modsMock[0]]);

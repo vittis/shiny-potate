@@ -9,6 +9,7 @@ export const MockClasses = {
 						type: "GRANT_ABILITY",
 						payload: {
 							name: "Thrust",
+							type: "ATTACK",
 						},
 					},
 				],
@@ -124,6 +125,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY",
 								payload: {
 									name: "Powershot",
+									type: "ATTACK",
 								},
 							},
 						],
@@ -142,6 +144,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY",
 								payload: {
 									name: "Summon Crab",
+									type: "SPELL",
 								},
 							},
 						],
@@ -155,6 +158,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY",
 								payload: {
 									name: "Summon Rabbit",
+									type: "SPELL",
 								},
 							},
 						],
@@ -168,6 +172,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY",
 								payload: {
 									name: "Summon Boar",
+									type: "SPELL",
 								},
 							},
 						],
@@ -214,6 +219,7 @@ export const MockClasses = {
 						type: "GRANT_ABILITY",
 						payload: {
 							name: "Reinforce Allies",
+							type: "SPELL",
 						},
 					},
 				],

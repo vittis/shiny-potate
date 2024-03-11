@@ -38,13 +38,13 @@ const effectsMock: PossibleTriggerEffect[] = [
 
 describe("Triggers", () => {
 	describe("TriggerManager", () => {
-		test("should add", () => {
+		it("should add", () => {
 			const manager = new TriggerManager();
 			manager.addTriggerEffectsFromSource(effectsMock, "sourceId");
 			expect(manager.triggerEffects).toHaveLength(2);
 		});
 
-		test("should remove", () => {
+		it("should remove", () => {
 			const manager = new TriggerManager();
 
 			manager.addTriggerEffectsFromSource(effectsMock, "sourceId");
@@ -53,7 +53,7 @@ describe("Triggers", () => {
 			expect(manager.triggerEffects).toHaveLength(0);
 		});
 
-		test("should get all trigers of type", () => {
+		it("should get all trigers of type", () => {
 			const manager = new TriggerManager();
 
 			manager.addTriggerEffectsFromSource(effectsMock, "sourceId");
@@ -64,7 +64,7 @@ describe("Triggers", () => {
 	});
 
 	describe("From equipment", () => {
-		test("should add trigger effect for AXE", () => {
+		it("should add trigger effect for AXE", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID);
 
 			unit.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND);
@@ -88,7 +88,7 @@ describe("Triggers", () => {
 
 	describe("From perk", () => {
 		// todo fix this test by using a weapon that only gives focused mind
-		test.skip("should add trigger effect from FOCUSED MIND (from WAND)", () => {
+		it.skip("should add trigger effect from FOCUSED MIND (from WAND)", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID);
 
 			unit.equip(new Equipment(Weapons.Wand), EQUIPMENT_SLOT.MAIN_HAND);

@@ -10,6 +10,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Disarming Shot",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
@@ -31,6 +32,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Thrust",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
@@ -62,6 +64,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Slash",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
@@ -101,6 +104,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Empowering Strike",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
@@ -154,6 +158,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Empowering Strike",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
@@ -216,6 +221,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Stab",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},

@@ -11,7 +11,7 @@ import { STATUS_EFFECT } from "./StatusEffectTypes";
 
 describe("StatusEffect", () => {
 	describe("StatusEffectManager", () => {
-		test("applies status effect", () => {
+		it("applies status effect", () => {
 			const manager = new StatusEffectManager();
 
 			manager.applyStatusEffect({
@@ -27,7 +27,7 @@ describe("StatusEffect", () => {
 			]);
 		});
 
-		test("applies multiple status effect", () => {
+		it("applies multiple status effect", () => {
 			const manager = new StatusEffectManager();
 
 			manager.applyStatusEffect({
@@ -52,7 +52,7 @@ describe("StatusEffect", () => {
 			]);
 		});
 
-		test("applying same status effect adds to quantity", () => {
+		it("applying same status effect adds to quantity", () => {
 			const manager = new StatusEffectManager();
 
 			manager.applyStatusEffect({
@@ -73,7 +73,7 @@ describe("StatusEffect", () => {
 			]);
 		});
 
-		test("removes one stack", () => {
+		it("removes one stack", () => {
 			const manager = new StatusEffectManager();
 
 			manager.applyStatusEffect({
@@ -95,7 +95,7 @@ describe("StatusEffect", () => {
 			expect(manager.activeStatusEffects).toEqual([]);
 		});
 
-		test("removes all stacks", () => {
+		it("removes all stacks", () => {
 			const manager = new StatusEffectManager();
 
 			manager.applyStatusEffect({
@@ -110,7 +110,7 @@ describe("StatusEffect", () => {
 	});
 
 	describe("VULNERABLE (Shortbow)", () => {
-		test("should apply VULNERABLE status effect on hit", () => {
+		it("should apply VULNERABLE status effect on hit", () => {
 			const bm = new BoardManager();
 			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			unit1.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
@@ -130,7 +130,7 @@ describe("StatusEffect", () => {
 			]);
 		});
 
-		test("should modify damageReductionModifier when with VULNERABLE", () => {
+		it("should modify damageReductionModifier when with VULNERABLE", () => {
 			const bm = new BoardManager();
 			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			unit1.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
@@ -147,7 +147,7 @@ describe("StatusEffect", () => {
 	});
 
 	describe("ATTACK_POWER (Axe)", () => {
-		test("should apply ATTACK_POWER status effect on hit", () => {
+		it("should apply ATTACK_POWER status effect on hit", () => {
 			const bm = new BoardManager();
 			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			unit1.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND);
@@ -169,7 +169,7 @@ describe("StatusEffect", () => {
 	});
 
 	describe("TICK_EFFECT event", () => {
-		test("should create POISON tick effect events and lose HP", () => {
+		it("should create POISON tick effect events and lose HP", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			bm.addToBoard(unit);
@@ -211,7 +211,7 @@ describe("StatusEffect", () => {
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9 - 8);
 		});
 
-		test("should create REGEN tick effect events and heal HP", () => {
+		it("should create REGEN tick effect events and heal HP", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			bm.addToBoard(unit);
@@ -260,7 +260,7 @@ describe("StatusEffect", () => {
 			expect(unit.stats.hp).toBe(unit.stats.maxHp);
 		});
 
-		test("removing POISON or REGEN should reset tick progress", () => {
+		it("removing POISON or REGEN should reset tick progress", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			bm.addToBoard(unit);

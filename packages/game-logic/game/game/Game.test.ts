@@ -125,13 +125,10 @@ describe("Run Game", () => {
 		it("should generate teams correctly", () => {
 			const game = new Game({ skipConstructor: true });
 
-			const equip1: ShopEquipmentData = new ShopEquipment(
-				Weapons.Sword,
-				5,
-			).generateShopEquipmentData();
+			const equip1: ShopEquipment = new ShopEquipment(Weapons.Sword, 5);
 
 			const unit1: UnitsDTO = {
-				equipments: [equip1],
+				equipments: [{ id: equip1.id, data: equip1.generateShopEquipmentData() }],
 				position: POSITION.TOP_FRONT,
 				unitClass: "Rogue",
 			};
@@ -140,13 +137,10 @@ describe("Run Game", () => {
 
 			game.setTeam(OWNER.TEAM_ONE, team1);
 
-			const equip2: ShopEquipmentData = new ShopEquipment(
-				Weapons.Shortbow,
-				5,
-			).generateShopEquipmentData();
+			const equip2: ShopEquipment = new ShopEquipment(Weapons.Shortbow, 5);
 
 			const unit2: UnitsDTO = {
-				equipments: [equip2],
+				equipments: [{ id: equip2.id, data: equip2.generateShopEquipmentData() }],
 				position: POSITION.TOP_FRONT,
 				unitClass: "Ranger",
 			};
@@ -158,8 +152,12 @@ describe("Run Game", () => {
 			const boardUnit1 = game.boardManager.getAllAliveUnitsOfOwner(OWNER.TEAM_ONE)[0];
 			const boardUnit2 = game.boardManager.getAllAliveUnitsOfOwner(OWNER.TEAM_TWO)[0];
 
-			expect(boardUnit1.equipment[0].equip.data).toStrictEqual(generateEquipmentData(equip1));
-			expect(boardUnit2.equipment[0].equip.data).toStrictEqual(generateEquipmentData(equip2));
+			expect(boardUnit1.equipment[0].equip.data).toStrictEqual(
+				generateEquipmentData(equip1.generateShopEquipmentData()),
+			);
+			expect(boardUnit2.equipment[0].equip.data).toStrictEqual(
+				generateEquipmentData(equip2.generateShopEquipmentData()),
+			);
 
 			expect(boardUnit1.position).toStrictEqual(unit1.position);
 			expect(boardUnit2.position).toStrictEqual(unit2.position);

@@ -19,7 +19,7 @@ describe("Perk", () => {
 		expect(perk).toBeDefined();
 	});
 
-	test("getTriggerEffects", () => {
+	it("getTriggerEffects", () => {
 		const perk = new Perk(Perks.FocusedMind);
 
 		expect(perk.getTriggerEffects()).toEqual([
@@ -33,7 +33,7 @@ describe("Perk", () => {
 		]);
 	});
 
-	test("perk with condition works", () => {
+	it("perk with condition works", () => {
 		const perk = new Perk(Perks.FocusedMind);
 
 		/* expect(perk.getTriggerEffects()).toEqual([
