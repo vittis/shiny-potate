@@ -47,6 +47,13 @@ interface MessagesPanelProps {
 
 const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 	const user = useSupabaseUserStore(state => state.user);
+	const username =
+		user?.user_metadata?.user_name ||
+		user?.user_metadata?.username ||
+		user?.user_metadata?.name ||
+		user?.user_metadata?.preferred_username ||
+		user?.user_metadata?.name ||
+		user?.email;
 
 	const { sendChatMessage, messages } = useChatMessages({ channel: "lobby" });
 
@@ -116,7 +123,7 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 										sender={message.sender}
 										message={message.message}
 										timestamp={message.timestamp}
-										isFromMe={message.sender === user?.user_metadata?.username}
+										isFromMe={message.sender === username}
 									/>
 								))}
 						</ScrollArea>

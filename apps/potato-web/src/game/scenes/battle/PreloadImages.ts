@@ -30,6 +30,19 @@ export function loadAssets(scene: Phaser.Scene) {
 	scene.load.image("ability_disarming_shot", "assets/abilities/disarming_shot.png");
 	scene.load.image("ability_slash", "assets/abilities/slash.png");
 	scene.load.image("ability_empowering_strike", "assets/abilities/empowering_strike.png");
+	scene.load.image("ability_power_shot", "assets/abilities/power_shot.png");
+	scene.load.image("ability_long_shot", "assets/abilities/long_shot.png");
+	scene.load.image("ability_weak_spot", "assets/abilities/weak_spot.png");
+	scene.load.image("ability_stab", "assets/abilities/stab.png");
+	scene.load.image("ability_quick_attack", "assets/abilities/quick_attack.png");
+	scene.load.image("ability_phallanx_fury", "assets/abilities/phallanx_fury.png");
+	scene.load.image("ability_reinforce_allies", "assets/abilities/reinforce_allies.png");
+
+	// Spell
+	scene.load.image("ability_bastion_bond", "assets/abilities/bastion_bond.png");
+	scene.load.image("ability_blessed_beacon", "assets/abilities/blessed_beacon.png");
+	scene.load.image("ability_careful_preparation ", "assets/abilities/careful_preparation.png");
+	scene.load.image("ability_dark_bolt", "assets/abilities/dark_bolt.png");
 
 	// Status Effects
 	scene.load.image("statusEffect_attack_power", "assets/status_effects/attack_power.png");

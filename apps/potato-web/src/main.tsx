@@ -8,24 +8,14 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./services/api/queryClient";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./styles/global.css";
-import { MainLayout, MainWrapper } from "./pages/MainLayout";
 import "react-toastify/dist/ReactToastify.min.css";
 import { Flip, ToastContainer } from "react-toastify";
-import App from "./App";
-import { PHASER_CONFIG } from "./game/config";
-import { Battle } from "./game/scenes/battle/BattleScene";
-import { Setup } from "./game/scenes/setup/SetupScene";
-import { SetupView } from "./pages/Setup/SetupView";
-
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/Root/RootLayout";
 import PlayLayout from "./pages/Play/PlayLayout";
 import LobbyView from "./pages/Play/Views/Lobby/LobbyView";
 import { GameView } from "./pages/Game/GameView";
-import { ShopView } from "./pages/Setup/ShopView";
-/* import { Game } from "game-logic";
-
-Game.prototype. */
+import { SandboxView } from "./pages/Play/Views/Sandbox/SandboxView";
 
 /* export const game = new Phaser.Game(
   Object.assign(PHASER_CONFIG, {
@@ -69,7 +59,7 @@ const router = createBrowserRouter([
 						),
 					},
 					{ path: "rooms", element: <LobbyView /> },
-					{ path: "sandbox", element: <ShopView /> },
+					{ path: "sandbox", element: <SandboxView /> },
 				],
 			},
 			{

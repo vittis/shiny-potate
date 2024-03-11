@@ -41,6 +41,9 @@ app.get("/setup-teams-vanilla", async c => {
 
 app.get("/roll-shop/:tier", async c => {
 	const tier = parseInt(c.req.param("tier") || "0");
+	if (isNaN(tier) || tier < -1 || tier > 6) {
+		return c.json({ error: "Invalid tier" }, 400);
+	}
 
 	const classes: string[] = [];
 	Object.keys(Classes).forEach(key => {

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SetupView } from "./SetupView";
+import { BoardSetupView } from "./BoardSetup/BoardSetupView";
 import {
 	Select,
 	SelectContent,
@@ -7,11 +7,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { api } from "@/services/api/http";
-import { toast } from "react-toastify";
 import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
+import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
+import { useSandboxStore } from "@/services/features/Sandbox/useSandboxStore";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -19,27 +19,19 @@ export async function fetchRollShop(data) {
 	return response.data;
 }
 
-export function ShopView() {
-	const [tier, setTier] = useState("-1");
+function SandboxView() {
 	const [selectTier, setSelectTier] = useState("-1");
 
-	const { isSuccess: isSuccessRollShop, refetch } = useQuery({
-		queryKey: ["roll-shop", tier],
-		queryFn: () => fetchRollShop({ tier }),
-		staleTime: Infinity,
-	});
-
-	useEffect(() => {
-		if (isSuccessRollShop) {
-			toast.success("Shop rolled :)");
-		}
-	}, [isSuccessRollShop]);
+	const { refetchRollShop, isFetchingRollShop } = useSandboxQueries();
+	const shopTier = useSandboxStore(state => state.shopTier);
+	const setShopTier = useSandboxStore(state => state.setShopTier);
 
 	function onClickRollShop() {
-		if (tier !== selectTier) {
-			setTier(selectTier);
+		setShopTier(selectTier);
+		if (shopTier !== selectTier) {
+			setShopTier(selectTier);
 		} else {
-			refetch();
+			refetchRollShop();
 		}
 	}
 
@@ -61,23 +53,22 @@ export function ShopView() {
 					</SelectContent>
 				</Select>
 
-				<Button variant="secondary" onClick={onClickRollShop}>
+				<Button variant="secondary" onClick={onClickRollShop} disabled={isFetchingRollShop}>
 					Roll Shop
 				</Button>
 			</div>
-
 			<div className="absolute top-4 right-4">
 				<TooltipSettigs />
 			</div>
-
 			{/* for testing stuff, ok to remove */}
 			{/* <div className="flex flex-col items-center gap-4">
 				<MarkdownTooltip content={<MarkdownContent sourcePath="Triggers/BATTLE START" />}>
 					<div className="w-fit bg-green-300">oi kkkkkkk</div>
 				</MarkdownTooltip>
 			</div> */}
-
-			<SetupView tier={tier} />
+			<BoardSetupView />
 		</div>
 	);
 }
+
+export { SandboxView };

@@ -1,7 +1,9 @@
 {
-	"name": "Powershot",
+	"name": "Power Shot",
 	"type": "ATTACK",
-	"tags": ["USE_WEAPON_ABILITY"],
+	"tags": [
+		"USE_WEAPON_ABILITY"
+	],
 	"target": "STANDARD_ROW",
 	"cooldown": 100,
 	"effects": [

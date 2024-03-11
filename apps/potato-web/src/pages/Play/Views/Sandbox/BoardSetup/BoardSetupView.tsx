@@ -9,16 +9,16 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader2, X } from "lucide-react";
 import { api } from "@/services/api/http";
-import { fetchRollShop } from "./ShopView";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
+import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 
 const initialBoard = [
 	{
@@ -187,13 +187,10 @@ export function Droppable({ children, id }: any) {
     2 1 0   0 1 2
     5 4 3   3 4 5
 */
-export function SetupView({ tier }) {
+export function BoardSetupView() {
 	const navigate = useNavigate();
-	const { data, isFetching } = useQuery({
-		queryKey: ["roll-shop", tier],
-		queryFn: () => fetchRollShop({ tier }),
-		staleTime: Infinity,
-	});
+
+	const { shopData: data, isFetchingRollShop: isFetching } = useSandboxQueries();
 
 	const { mutateAsync: setupTeamsMutation, isPending } = useMutation({
 		mutationFn: setupTeams,
@@ -479,7 +476,6 @@ export function SetupView({ tier }) {
 					</div>
 				</div>
 			</DndContext>
-
 			<div className="mt-2 mx-auto w-fit flex flex-col gap-4">
 				<Button onClick={onClickStartGame} disabled={isPending}>
 					Start game {isPending && <Loader2 className="animate-spin ml-1 w-[15px]" />}
