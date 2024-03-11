@@ -7,7 +7,7 @@ import { queryClient } from "@/services/api/queryClient";
 async function newArenaGame(playerId) {
 	const { data, error } = await supabase
 		.from("games")
-		.insert([{ player_id: playerId }])
+		.insert([{player_id: playerId }])
 		.select();
 
 	return data;
