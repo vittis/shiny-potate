@@ -15,7 +15,6 @@ import App from "./App";
 import { PHASER_CONFIG } from "./game/config";
 import { Battle } from "./game/scenes/battle/BattleScene";
 import { Setup } from "./game/scenes/setup/SetupScene";
-import { SetupView } from "./pages/Setup/SetupView";
 
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/Root/RootLayout";
@@ -73,7 +72,6 @@ const router = createBrowserRouter([
 					{ path: "rooms", element: <LobbyView /> },
 					{ path: "arena", element: <ArenaView /> },
 					{ path: "sandbox", element: <ShopView /> },
-					{ path: "sandbox", element: <SetupView /> },
 					{ path: "arena", element: <ArenaView /> },
 				],
 			},
