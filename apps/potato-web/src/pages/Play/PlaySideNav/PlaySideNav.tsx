@@ -85,11 +85,8 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 							label: "",
 							icon: Swords,
 							variant: "ghost",
-							selected: false,
-							props: {
-								disabled: true,
-							},
-							path: "#",
+							selected: !!matchPath("/arena/setup", pathname),
+							path: "arena",
 						},
 						{
 							title: "Rooms",
