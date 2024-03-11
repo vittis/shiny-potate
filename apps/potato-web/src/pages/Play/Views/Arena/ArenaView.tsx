@@ -22,7 +22,21 @@ const ArenaView = () => {
 		<div className="flex flex-col h-full">
 			{user && (
 				<>
-					{!hasGame && <Button onClick={onClickCreateArena}> New Run</Button>}
+					{!hasGame && <>
+						<div className="flex w-full flex-wrap justify-center items-center px-2 py-2 h-screen">
+							<div className="w-full flex justify-end mr-4"> <Button> Instructions</Button></div>
+							<div className="text-center">
+							<h1> Welcome to the arena</h1>
+							<div className="flex w-full mt-4">
+								<span className="mr-8"> Win all time: 0</span>
+								<span> Defeats all time: 0</span>
+							</div>
+							</div>
+							<div className="w-full flex justify-center mt-4">
+								<Button onClick={onClickCreateArena}> New Run</Button>
+							</div>
+						</div>
+					</>}
 					{hasGame && game && (
 						<div>
 							<div className="flex w-full justify-between py-4 px-4">
