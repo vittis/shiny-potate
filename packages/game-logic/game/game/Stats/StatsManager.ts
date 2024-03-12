@@ -68,6 +68,9 @@ export class StatsManager {
 				case STATUS_EFFECT.ATTACK_POWER:
 					this.statsFromStatusEffects.attackDamageModifier = statusEffect.quantity;
 					break;
+				case STATUS_EFFECT.SPELL_POTENCY:
+					this.statsFromStatusEffects.spellDamageModifier = statusEffect.quantity;
+					break;
 				case STATUS_EFFECT.STURDY:
 					this.statsFromStatusEffects.damageReductionModifier = statusEffect.quantity;
 					break;

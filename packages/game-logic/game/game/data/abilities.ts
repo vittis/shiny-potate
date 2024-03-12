@@ -18,6 +18,7 @@ import * as Thrust from "../../data/abilities/attacks/Thrust.json";
 import * as WeakSpot from "../../data/abilities/attacks/WeakSpot.json";
 
 // Spells
+import * as ArcaneStudies from "../../data/abilities/spells/ArcaneStudies.json";
 import * as BastionBond from "../../data/abilities/spells/BastionBond.json";
 import * as BlessedBeacon from "../../data/abilities/spells/BlessedBeacon.json";
 import * as CarefulPreparation from "../../data/abilities/spells/CarefulPreparation.json";
@@ -36,6 +37,7 @@ type AbilitiesMap = {
 };
 
 const Abilities = {
+	ArcaneStudies: ArcaneStudies as AbilityData,
 	BalancedStrike: BalancedStrike as AbilityData,
 	BreakWill: BreakWill as AbilityData,
 	DisarmingShot: DisarmingShot as AbilityData,

@@ -93,6 +93,18 @@ export const MockAbilities = {
 					},
 				],
 			},
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: [
+					{
+						name: "VULNERABLE",
+						quantity: 5,
+					},
+				],
+			},
 		],
 	},
 	ReinforceAllies: {
@@ -176,6 +188,91 @@ export const MockAbilities = {
 				payload: [
 					{
 						name: "POISON",
+						quantity: 5,
+					},
+				],
+			},
+		],
+	},
+	ArcaneStudies: {
+		name: "Arcane Studies",
+		type: "SPELL",
+		tags: ["BUFF"],
+		target: "SELF",
+		cooldown: 40,
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_USE",
+				target: "SELF",
+				conditions: [],
+				payload: [
+					{
+						name: "SPELL_POTENCY",
+						quantity: 5,
+					},
+				],
+			},
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_USE",
+				target: "SELF",
+				conditions: [],
+				payload: [
+					{
+						name: "FOCUS",
+						quantity: 5,
+					},
+				],
+			},
+		],
+	},
+	DarkBolt: {
+		name: "Dark Bolt",
+		type: "SPELL",
+		tags: [],
+		target: "STANDARD",
+		cooldown: 40,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 30,
+				},
+			},
+			{
+				type: "HEAL",
+				trigger: "ON_HIT",
+				target: "SELF",
+				conditions: [],
+				payload: {
+					value: 5,
+				},
+			},
+		],
+	},
+	SummonCrab: {
+		name: "Summon Crab",
+		type: "SPELL",
+		tags: ["SUMMON"],
+		target: "ADJACENT_ALLIES",
+		cooldown: 80,
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_USE",
+				target: "ADJACENT_ALLIES",
+				conditions: [],
+				payload: [
+					{
+						name: "STURDY",
+						quantity: 5,
+					},
+					{
+						name: "THORN",
 						quantity: 5,
 					},
 				],

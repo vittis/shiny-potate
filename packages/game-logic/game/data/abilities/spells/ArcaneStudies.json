@@ -1,0 +1,33 @@
+{
+	"name": "Arcane Studies",
+	"type": "SPELL",
+	"tags": ["BUFF"],
+	"target": "SELF",
+	"cooldown": 40,
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "ON_USE",
+			"target": "SELF",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "SPELL_POTENCY",
+					"quantity": 5
+				}
+			]
+		},
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "ON_USE",
+			"target": "SELF",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "FOCUS",
+					"quantity": 5
+				}
+			]
+		}
+	]
+}

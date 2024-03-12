@@ -86,12 +86,7 @@ export function createDamageSubEvent(
 	const targets = unit.bm.getTarget(unit, effect.target);
 
 	const subEvents = targets.map(target => {
-		const targetVulnerableModifier =
-			target.statusEffects.filter(effect => effect.name === STATUS_EFFECT.VULNERABLE)[0]
-				?.quantity || 0;
-
-		const targetDamageReductionModifier =
-			target.stats.damageReductionModifier + targetVulnerableModifier;
+		const targetDamageReductionModifier = target.stats.damageReductionModifier;
 
 		const finalModifier = damageModifier - targetDamageReductionModifier;
 

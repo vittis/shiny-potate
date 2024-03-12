@@ -147,18 +147,31 @@ describe("Ability", () => {
 			});
 		});
 
-		describe("Empowering Strike (Apply ATTACK_POWER on SELF on hit)", () => {
-			it("should generate STATUS_EFFECT subEvent", () => {
-				const { unit1 } = setupBoard();
+		describe("Empowering Strike (Apply ATTACK_POWER on SELF and VULNERABLE on target)", () => {
+			it("should generate STATUS_EFFECT subEvents correctly", () => {
+				const { unit1, unit2 } = setupBoard();
 
 				const ability = new Ability(Abilities.EmpoweringStrike);
 				const event = ability.use(unit1);
 
-				expect(event.payload.subEvents).toHaveLength(2);
+				expect(event.payload.subEvents).toHaveLength(3);
 
+				const effectDamage = ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>;
 				const effectAttackPower = ability.data
 					.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>;
+				const effectVulnerable = ability.data
+					.effects[2] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>;
 
+				expect(event.payload.subEvents[0]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "DAMAGE",
+						targetId: unit2.id,
+						payload: {
+							value: effectDamage.payload.value,
+						},
+					},
+				});
 				expect(event.payload.subEvents[1]).toEqual({
 					type: "INSTANT_EFFECT",
 					payload: {
@@ -172,6 +185,62 @@ describe("Ability", () => {
 						],
 					},
 				});
+				expect(event.payload.subEvents[2]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "STATUS_EFFECT",
+						targetId: unit2.id,
+						payload: [
+							{
+								name: "VULNERABLE",
+								quantity: effectVulnerable.payload[0].quantity,
+							},
+						],
+					},
+				});
+			});
+
+			it("should give more damage with each hit calculating ATTACK_POWER and VULNERABLE correctly", () => {
+				const { unit1, unit2 } = setupBoard();
+				const ability = new Ability(Abilities.EmpoweringStrike);
+
+				const damageValue = (ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>)
+					.payload.value as number;
+				const attackPowerQuantity = (
+					ability.data.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[0].quantity as number;
+				const vulnerableQuantity = (
+					ability.data.effects[2] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[0].quantity as number;
+
+				expect(unit1.stats.attackDamageModifier).toBe(0);
+				expect(unit2.stats.damageReductionModifier).toBe(0);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
+
+				unit1.applyEvent(ability.use(unit1)); // 1st hit
+				const hitDamage1 = damageValue;
+
+				expect(unit1.stats.attackDamageModifier).toBe(attackPowerQuantity);
+				expect(unit2.stats.damageReductionModifier).toBe(vulnerableQuantity * -1);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1);
+
+				unit1.applyEvent(ability.use(unit1)); // 2nd hit
+				const hitDamage2 =
+					damageValue +
+					Math.round((damageValue * (attackPowerQuantity + vulnerableQuantity)) / 100);
+
+				expect(unit1.stats.attackDamageModifier).toBe(attackPowerQuantity * 2);
+				expect(unit2.stats.damageReductionModifier).toBe(vulnerableQuantity * 2 * -1);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2);
+
+				unit1.applyEvent(ability.use(unit1)); // 3rd hit
+				const hitDamage3 =
+					damageValue +
+					Math.round((damageValue * (attackPowerQuantity * 2 + vulnerableQuantity * 2)) / 100);
+
+				expect(unit1.stats.attackDamageModifier).toBe(attackPowerQuantity * 3);
+				expect(unit2.stats.damageReductionModifier).toBe(vulnerableQuantity * 3 * -1);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
 			});
 		});
 
@@ -284,6 +353,188 @@ describe("Ability", () => {
 				});
 				expect(event.payload.subEvents[2].payload.targetId).toEqual(unit4.id);
 			});
+		});
+
+		describe("Arcane Studies (apply SPELL_POTENCY and FOCUS to SELF)", () => {
+			it("should generate STATUS_EFFECT subEvents correctly", () => {
+				const { unit1 } = setupBoard();
+
+				const ability = new Ability(Abilities.ArcaneStudies);
+				const event = ability.use(unit1);
+
+				expect(event.payload.subEvents).toHaveLength(2);
+
+				const effectSpellPotency = ability.data
+					.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>;
+				const effectFocus = ability.data
+					.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>;
+
+				expect(event.payload.subEvents[0]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "STATUS_EFFECT",
+						targetId: unit1.id,
+						payload: [
+							{
+								name: "SPELL_POTENCY",
+								quantity: effectSpellPotency.payload[0].quantity,
+							},
+						],
+					},
+				});
+				expect(event.payload.subEvents[1]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "STATUS_EFFECT",
+						targetId: unit1.id,
+						payload: [
+							{
+								name: "FOCUS",
+								quantity: effectFocus.payload[0].quantity,
+							},
+						],
+					},
+				});
+			});
+
+			// TODO implement FOCUS and finish test
+			it("should give more damage and cast faster using spell if has SPELL_POTENCY and FOCUS buffs", () => {
+				const { unit1, unit2 } = setupBoard();
+
+				const arcaneStudies = new Ability(Abilities.ArcaneStudies);
+				const darkBolt = new Ability(Abilities.DarkBolt);
+
+				const spellPotencyQuantity = (
+					arcaneStudies.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[0].quantity as number;
+				const focusQuantity = (
+					arcaneStudies.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[0].quantity as number;
+				const damageValue = (darkBolt.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>)
+					.payload.value as number;
+
+				expect(unit1.stats.spellCooldownModifier).toBe(0);
+				expect(unit1.stats.spellDamageModifier).toBe(0);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
+
+				unit1.applyEvent(darkBolt.use(unit1));
+				const hitDamage1 = damageValue;
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1);
+
+				unit1.applyEvent(arcaneStudies.use(unit1));
+				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity);
+
+				unit1.applyEvent(darkBolt.use(unit1));
+				const hitDamage2 = damageValue + Math.round((damageValue * spellPotencyQuantity) / 100);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2);
+
+				unit1.applyEvent(arcaneStudies.use(unit1));
+				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 2);
+
+				unit1.applyEvent(darkBolt.use(unit1));
+				const hitDamage3 = damageValue + Math.round((damageValue * spellPotencyQuantity * 2) / 100);
+				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
+
+				unit1.applyEvent(arcaneStudies.use(unit1));
+				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 3);
+			});
+		});
+
+		describe("Summon Crab (apply STURDY and THORN to ADJACENT_ALLIES)", () => {
+			it("should generate STATUS_EFFECT subEvents correctly for multiple units", () => {
+				const { unit1, unit3, unit4 } = setupBoard();
+
+				const ability = new Ability(Abilities.SummonCrab);
+				const event = ability.use(unit3);
+
+				expect(event.payload.subEvents).toHaveLength(2);
+
+				const effectSturdy = (
+					ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[0];
+				const effectThorn = (
+					ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+				).payload[1];
+
+				expect(event.payload.subEvents[0]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "STATUS_EFFECT",
+						targetId: unit1.id,
+						payload: [
+							{
+								name: "STURDY",
+								quantity: effectSturdy.quantity,
+							},
+							{
+								name: "THORN",
+								quantity: effectThorn.quantity,
+							},
+						],
+					},
+				});
+				expect(event.payload.subEvents[1]).toEqual({
+					type: "INSTANT_EFFECT",
+					payload: {
+						type: "STATUS_EFFECT",
+						targetId: unit4.id,
+						payload: [
+							{
+								name: "STURDY",
+								quantity: effectSturdy.quantity,
+							},
+							{
+								name: "THORN",
+								quantity: effectThorn.quantity,
+							},
+						],
+					},
+				});
+			});
+		});
+
+		// TODO implement THORN and finish test
+		it("should receive less damage and return damage when attacked if has STURDY and THORN", () => {
+			const { unit1, unit2, unit3 } = setupBoard();
+
+			const summonCrab = new Ability(Abilities.SummonCrab);
+			const thrust = new Ability(Abilities.Thrust);
+
+			const effectSturdyQuantity = (
+				summonCrab.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+			).payload[0].quantity as number;
+			const effectThornQuantity = (
+				summonCrab.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+			).payload[1].quantity as number;
+			const damageValue = (thrust.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>)
+				.payload.value as number;
+
+			expect(unit1.stats.damageReductionModifier).toBe(0);
+			expect(unit1.stats.hp).toBe(unit2.stats.maxHp);
+
+			unit2.applyEvent(thrust.use(unit2));
+			const hitDamage1 = damageValue;
+			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1);
+
+			unit3.applyEvent(summonCrab.use(unit3));
+			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity);
+
+			unit2.applyEvent(thrust.use(unit2));
+			const hitDamage2 = damageValue - Math.round((damageValue * effectSturdyQuantity) / 100);
+			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2);
+
+			unit3.applyEvent(summonCrab.use(unit3));
+			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 2);
+
+			unit2.applyEvent(thrust.use(unit2));
+			const hitDamage3 = damageValue - Math.round((damageValue * effectSturdyQuantity * 2) / 100);
+			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
+
+			unit3.applyEvent(summonCrab.use(unit3));
+			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 3);
 		});
 	});
 });
