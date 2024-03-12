@@ -1,11 +1,8 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { formatDistanceToNow } from "date-fns";
-import { useEffect, useState } from "react";
 
 export const ChatBubble = ({ sender, message, isFromMe, timestamp, avatar }) => {
-	console.log(avatar);
-
 	return (
 		<Tooltip>
 			<div className={`chat ${isFromMe ? "chat-end" : "chat-start"}`}>
