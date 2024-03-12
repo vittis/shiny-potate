@@ -27,7 +27,7 @@ app.use("*", prettyJSON()); // With options: prettyJSON({ space: 4 })
 app.use(
 	"*",
 	cors({
-		origin: process.env.FRONTEND_URL || "",
+		origin: "http://127.0.0.1:5173",
 		/* origin: "http://localhost:5173", */
 		credentials: true,
 	}),
@@ -175,6 +175,7 @@ connectAll().then(() => {
 		const isGlobal = channels.includes("global");
 
 		const name = urlParams.get("name");
+		const avatar = urlParams.get("avatar");
 		if (isGlobal) {
 			if (!name) {
 				console.log("name not provided in Global, closing connection");
@@ -206,6 +207,7 @@ connectAll().then(() => {
 					JSON.stringify({
 						message: finalMsg,
 						timestamp,
+						avatar: avatar,
 					}),
 				);
 
@@ -216,6 +218,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						channel: "lobby",
 						timestamp,
+						avatar: avatar,
 					}),
 				);
 			}

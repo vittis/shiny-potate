@@ -121,6 +121,7 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 									<ChatBubble
 										key={message.timestamp}
 										sender={message.sender}
+										avatar={message.avatar}
 										message={message.message}
 										timestamp={message.timestamp}
 										isFromMe={message.sender === username}
