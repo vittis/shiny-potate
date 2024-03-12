@@ -279,4 +279,70 @@ export const MockAbilities = {
 			},
 		],
 	},
+	Stab: {
+		name: "Stab",
+		type: "ATTACK",
+		tags: ["WEAPON_ABILITY"],
+		target: "STANDARD",
+		cooldown: 20,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 15,
+				},
+			},
+		],
+	},
+	Fireball: {
+		name: "Fireball",
+		type: "SPELL",
+		tags: [],
+		target: "STANDARD",
+		cooldown: 50,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 40,
+				},
+			},
+		],
+	},
+	BastionBond: {
+		name: "Bastion Bond",
+		type: "SPELL",
+		tags: ["BUFF"],
+		target: "LOWEST_HEALTH_ALLY",
+		cooldown: 100,
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_USE",
+				target: "LOWEST_HEALTH_ALLY",
+				conditions: [],
+				payload: [
+					{
+						name: "REGEN",
+						quantity: 5,
+					},
+				],
+			},
+			{
+				type: "HEAL",
+				trigger: "ON_USE",
+				target: "LOWEST_HEALTH_ALLY",
+				conditions: [],
+				payload: {
+					value: 30,
+				},
+			},
+		],
+	},
 };

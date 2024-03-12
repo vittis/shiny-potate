@@ -1,0 +1,24 @@
+{
+	"name": "Staff",
+	"tags": ["WEAPON", "MAGICAL", "RANGED"],
+	"slots": ["TWO_HANDS"],
+	"mods": [
+		{
+			"type": "GRANT_ABILITY",
+			"payload": {
+				"name": "Fireball",
+				"type": "SPELL"
+			},
+			"tier": "implicit"
+		},
+		{
+			"type": "GRANT_BASE_STAT",
+			"payload": {
+				"stat": "SPELL_DAMAGE",
+				"value": 15
+			},
+			"tier": "implicit"
+		}
+	],
+	"effects": []
+}

@@ -6,6 +6,7 @@ import * as Shortbow from "../../data/equipment/weapons/Shortbow.json";
 import * as Longbow from "../../data/equipment/weapons/Longbow.json";
 import * as Axe from "../../data/equipment/weapons/Axe.json";
 import * as Wand from "../../data/equipment/weapons/Wand.json";
+import * as Staff from "../../data/equipment/weapons/Staff.json";
 
 // todo any way to make this import/export dynamically?
 
@@ -17,4 +18,5 @@ export default {
 	Longbow: Longbow as EquipmentData,
 	Axe: Axe as EquipmentData,
 	Wand: Wand as EquipmentData,
+	Staff: Staff as EquipmentData,
 };

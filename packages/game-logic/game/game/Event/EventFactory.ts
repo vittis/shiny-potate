@@ -1,5 +1,3 @@
-import { VULNERABLE_LOSS_PER_HIT } from "../Ability/Ability";
-import { POSITION } from "../BoardManager";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
@@ -108,9 +106,7 @@ export function createDamageSubEvent(
 	});
 
 	const thornSubEvents = targets
-		.filter(target =>
-			target.statusEffects.find(statusEffect => statusEffect.name === STATUS_EFFECT.THORN),
-		)
+		.filter(target => target.statusEffectManager.hasStatusEffect(STATUS_EFFECT.THORN))
 		.map(target => {
 			const thornDamage = target.statusEffects.find(
 				statusEffect => statusEffect.name === STATUS_EFFECT.THORN,

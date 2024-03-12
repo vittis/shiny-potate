@@ -6,7 +6,7 @@ import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import { Abilities, Classes, Weapons } from "../data";
-import { Ability, VULNERABLE_LOSS_PER_HIT } from "./Ability";
+import { Ability } from "./Ability";
 
 function setupBoard() {
 	const bm = new BoardManager();
@@ -397,8 +397,7 @@ describe("Ability", () => {
 				});
 			});
 
-			// TODO implement FOCUS and finish test
-			it("should give more damage and cast faster using spell if has SPELL_POTENCY and FOCUS buffs", () => {
+			it("should give more damage using spell if has SPELL_POTENCY and also receive FOCUS buff", () => {
 				const { unit1, unit2 } = setupBoard();
 
 				const arcaneStudies = new Ability(Abilities.ArcaneStudies);
@@ -422,7 +421,7 @@ describe("Ability", () => {
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1);
 
 				unit1.applyEvent(arcaneStudies.use(unit1));
-				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity);
 
 				unit1.applyEvent(darkBolt.use(unit1));
@@ -430,7 +429,7 @@ describe("Ability", () => {
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2);
 
 				unit1.applyEvent(arcaneStudies.use(unit1));
-				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity * 2);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 2);
 
 				unit1.applyEvent(darkBolt.use(unit1));
@@ -438,7 +437,7 @@ describe("Ability", () => {
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
 
 				unit1.applyEvent(arcaneStudies.use(unit1));
-				//expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
+				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity * 3);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 3);
 			});
 		});

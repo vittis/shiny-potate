@@ -60,21 +60,32 @@ export class StatsManager {
 	}
 
 	recalculateStatsFromStatusEffects(activeStatusEffects: ActiveStatusEffect[]) {
+		this.resetStatsFromStatusEffects();
+
 		activeStatusEffects.forEach(statusEffect => {
 			switch (statusEffect.name) {
-				case STATUS_EFFECT.VULNERABLE:
-					this.statsFromStatusEffects.damageReductionModifier = statusEffect.quantity * -1;
-					break;
 				case STATUS_EFFECT.ATTACK_POWER:
 					this.statsFromStatusEffects.attackDamageModifier = statusEffect.quantity;
 					break;
 				case STATUS_EFFECT.SPELL_POTENCY:
 					this.statsFromStatusEffects.spellDamageModifier = statusEffect.quantity;
 					break;
-				case STATUS_EFFECT.STURDY:
-					this.statsFromStatusEffects.damageReductionModifier = statusEffect.quantity;
+				case STATUS_EFFECT.FAST:
+					this.statsFromStatusEffects.attackCooldownModifier += statusEffect.quantity;
 					break;
-				// todo add them all
+				case STATUS_EFFECT.FOCUS:
+					this.statsFromStatusEffects.spellCooldownModifier += statusEffect.quantity;
+					break;
+				case STATUS_EFFECT.SLOW:
+					this.statsFromStatusEffects.attackCooldownModifier -= statusEffect.quantity;
+					this.statsFromStatusEffects.spellCooldownModifier -= statusEffect.quantity;
+					break;
+				case STATUS_EFFECT.STURDY:
+					this.statsFromStatusEffects.damageReductionModifier += statusEffect.quantity;
+					break;
+				case STATUS_EFFECT.VULNERABLE:
+					this.statsFromStatusEffects.damageReductionModifier -= statusEffect.quantity;
+					break;
 			}
 		});
 	}
@@ -107,22 +118,17 @@ export class StatsManager {
 
 	addMods(mods: Mod<MOD_TYPE.GRANT_BASE_STAT>[]) {
 		this.activeMods = [...this.activeMods, ...mods];
-		this.applyModsToStats(mods);
+		this.applyModsToStats(this.activeMods);
 	}
 
 	removeMods(mods: Mod<MOD_TYPE.GRANT_BASE_STAT>[]) {
 		this.activeMods = this.activeMods.filter(activeMod => !mods.includes(activeMod));
-
-		// remove the bonuses applied to statsFromMods
-		this.applyModsToStats(
-			mods.map(mod => ({
-				...mod,
-				payload: { ...mod.payload, value: -mod.payload.value },
-			})),
-		);
+		this.applyModsToStats(this.activeMods);
 	}
 
 	applyModsToStats(mods: Mod<MOD_TYPE.GRANT_BASE_STAT>[]) {
+		this.resetStatsFromMods();
+
 		mods.forEach(mod => {
 			const { stat, value } = mod.payload;
 			switch (stat) {

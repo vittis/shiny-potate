@@ -1,5 +1,4 @@
 import { nanoid } from "nanoid";
-import { Ability } from "../Ability/Ability";
 import { AbilityManager } from "../Ability/AbilityManager";
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Class } from "../Class/Class";
@@ -126,11 +125,11 @@ export class Unit {
 
 		this.equipmentManager.equip(equip, slot);
 
+		this.statsManager.addMods(equip.getStatsMods());
+
 		this.abilityManager.addAbilitiesFromSource(equip.getGrantedAbilities(), equip.id);
 
-		this.abilityManager.applyCooldownModifierFromMods(equip.getCooldownModifierStatsMods());
-
-		this.statsManager.addMods(equip.getStatsMods());
+		this.abilityManager.applyCooldownModifierFromStats(this.stats);
 
 		this.triggerManager.addTriggerEffectsFromSource(equip.getTriggerEffects(), equip.id);
 
@@ -149,6 +148,8 @@ export class Unit {
 			this.statsManager.removeMods(unequippedItem.equip.getStatsMods());
 			this.perkManager.removePerksFromSource(unequippedItem.equip.id);
 		});
+
+		this.abilityManager.applyCooldownModifierFromStats(this.stats);
 
 		// Put items on storage
 	}
@@ -230,6 +231,7 @@ export class Unit {
 				});
 
 				target.statsManager.recalculateStatsFromStatusEffects(target.statusEffects);
+				target.abilityManager.applyCooldownModifierFromStats(target.stats);
 			}
 
 			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.SHIELD) {

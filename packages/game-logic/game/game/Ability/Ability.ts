@@ -23,8 +23,6 @@ import {
 	createStatusEffectSubEvent,
 } from "../Event/EventFactory";
 
-export const VULNERABLE_LOSS_PER_HIT = 5; // todo put in json? (data/config/statusEffects.json)
-
 export class Ability {
 	id: string;
 	data: AbilityData;
@@ -48,7 +46,7 @@ export class Ability {
 	}
 
 	modifyCooldown(value: number) {
-		this.cooldown = this.cooldown - this.cooldown * (value / 100);
+		this.cooldown = Math.round(this.data.cooldown - this.data.cooldown * (value / 100));
 	}
 
 	canActivate() {

@@ -157,8 +157,8 @@ export const MockWeapons = {
 			{
 				type: "GRANT_ABILITY",
 				payload: {
-					name: "Empowering Strike",
-					type: "ATTACK",
+					name: "Bastion Bond",
+					type: "SPELL",
 				},
 				tier: "implicit",
 			},
@@ -237,6 +237,30 @@ export const MockWeapons = {
 				type: "GRANT_BASE_STAT",
 				payload: {
 					stat: "ATTACK_DAMAGE",
+					value: 15,
+				},
+				tier: "implicit",
+			},
+		],
+		effects: [],
+	} as EquipmentData,
+	Staff: {
+		name: "Staff",
+		tags: ["WEAPON", "MAGICAL", "RANGED"],
+		slots: ["TWO_HANDS"],
+		mods: [
+			{
+				type: "GRANT_ABILITY",
+				payload: {
+					name: "Fireball",
+					type: "SPELL",
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_BASE_STAT",
+				payload: {
+					stat: "SPELL_DAMAGE",
 					value: 15,
 				},
 				tier: "implicit",
