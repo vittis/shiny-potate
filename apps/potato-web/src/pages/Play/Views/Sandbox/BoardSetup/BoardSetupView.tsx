@@ -3,6 +3,7 @@ import {
 	DndContext,
 	DragEndEvent,
 	MouseSensor,
+	TouchSensor,
 	useDraggable,
 	useDroppable,
 	useSensor,
@@ -176,7 +177,7 @@ export function Droppable({ children, id }: any) {
 		<div
 			ref={setNodeRef}
 			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 transition-transform",
+				"w-[100px] h-[100px] rounded-md border border-zinc-700 transition-transform duration-75",
 				isOver && "bg-zinc-800",
 				isOver && "scale-110",
 			)}
@@ -352,13 +353,18 @@ export function BoardSetupView() {
 	}
 
 	const mouseSensor = useSensor(MouseSensor, {
-		// Require the mouse to move by 10 pixels before activating
 		activationConstraint: {
 			distance: 1,
 		},
 	});
 
-	const sensors = useSensors(mouseSensor);
+	const touchSensor = useSensor(TouchSensor, {
+		activationConstraint: {
+			distance: 1,
+		},
+	});
+
+	const sensors = useSensors(mouseSensor, touchSensor);
 
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
