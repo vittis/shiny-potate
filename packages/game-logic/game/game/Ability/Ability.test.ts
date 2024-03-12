@@ -496,7 +496,6 @@ describe("Ability", () => {
 			});
 		});
 
-		// TODO implement THORN and finish test
 		it("should receive less damage and return damage when attacked if has STURDY and THORN", () => {
 			const { unit1, unit2, unit3 } = setupBoard();
 
@@ -514,10 +513,12 @@ describe("Ability", () => {
 
 			expect(unit1.stats.damageReductionModifier).toBe(0);
 			expect(unit1.stats.hp).toBe(unit2.stats.maxHp);
+			expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
 			unit2.applyEvent(thrust.use(unit2));
 			const hitDamage1 = damageValue;
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1);
+			expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
 			unit3.applyEvent(summonCrab.use(unit3));
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity);
@@ -525,6 +526,7 @@ describe("Ability", () => {
 			unit2.applyEvent(thrust.use(unit2));
 			const hitDamage2 = damageValue - Math.round((damageValue * effectSturdyQuantity) / 100);
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2);
+			expect(unit2.stats.hp).toBe(unit2.stats.maxHp - effectThornQuantity);
 
 			unit3.applyEvent(summonCrab.use(unit3));
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 2);
@@ -532,6 +534,9 @@ describe("Ability", () => {
 			unit2.applyEvent(thrust.use(unit2));
 			const hitDamage3 = damageValue - Math.round((damageValue * effectSturdyQuantity * 2) / 100);
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
+			expect(unit2.stats.hp).toBe(
+				unit2.stats.maxHp - effectThornQuantity - effectThornQuantity * 2,
+			);
 
 			unit3.applyEvent(summonCrab.use(unit3));
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 3);

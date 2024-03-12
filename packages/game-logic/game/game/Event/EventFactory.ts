@@ -107,7 +107,28 @@ export function createDamageSubEvent(
 		} as SubEvent;
 	});
 
-	return subEvents as SubEvent[];
+	const thornSubEvents = targets
+		.filter(target =>
+			target.statusEffects.find(statusEffect => statusEffect.name === STATUS_EFFECT.THORN),
+		)
+		.map(target => {
+			const thornDamage = target.statusEffects.find(
+				statusEffect => statusEffect.name === STATUS_EFFECT.THORN,
+			)?.quantity as number;
+
+			return {
+				type: SUBEVENT_TYPE.INSTANT_EFFECT,
+				payload: {
+					type: INSTANT_EFFECT_TYPE.DAMAGE,
+					targetId: unit.id,
+					payload: {
+						value: thornDamage,
+					},
+				},
+			} as SubEvent;
+		});
+
+	return [...subEvents, ...thornSubEvents] as SubEvent[];
 }
 
 export function createTickEffectEvent(unit: Unit, effect: TICK_EFFECT_TYPE, value: number) {
