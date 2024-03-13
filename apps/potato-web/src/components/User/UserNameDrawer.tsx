@@ -47,7 +47,6 @@ const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
 	});
 
 	async function onSubmit(formData: z.infer<typeof FormSchema>) {
-		console.log(user.id);
 		const { data, error } = await supabase
 			.from("profiles")
 			.update({ username: formData.username })
