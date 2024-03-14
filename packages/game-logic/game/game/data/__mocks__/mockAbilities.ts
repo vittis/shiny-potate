@@ -345,4 +345,25 @@ export const MockAbilities = {
 			},
 		],
 	},
+	CarefulPreparation: {
+		name: "Careful Preparation",
+		type: "SPELL",
+		tags: ["BUFF"],
+		target: "SELF",
+		cooldown: 100,
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_USE",
+				target: "SELF",
+				conditions: [],
+				payload: [
+					{
+						name: "MULTISTRIKE",
+						quantity: 3,
+					},
+				],
+			},
+		],
+	},
 };

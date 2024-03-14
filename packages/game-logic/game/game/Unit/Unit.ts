@@ -8,11 +8,9 @@ import { EquipmentManager } from "../Equipment/EquipmentManager";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import {
 	EVENT_TYPE,
-	FaintEvent,
 	INSTANT_EFFECT_TYPE,
 	PossibleEvent,
 	SubEvent,
-	SUBEVENT_TYPE,
 	TICK_EFFECT_TYPE,
 	TickEffectEvent,
 	TriggerEffectEvent,
@@ -22,10 +20,9 @@ import { PerkManager } from "../Perk/PerkManager";
 import { StatsManager } from "../Stats/StatsManager";
 import { UnitStats } from "../Stats/StatsTypes";
 import { StatusEffectManager } from "../StatusEffect/StatusEffectManager";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { ActiveStatusEffect, STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TriggerManager } from "../Trigger/TriggerManager";
-import { TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
-import { createTickEffectEvent } from "../Event/EventFactory";
+import { TRIGGER } from "../Trigger/TriggerTypes";
 
 // use for better perfomance
 /* export enum EVENT_TYPE {
@@ -200,17 +197,37 @@ export class Unit {
 
 		this.abilities.forEach(ability => {
 			ability.step();
+
 			if (ability.canActivate()) {
 				const event = ability.use(this);
+
 				if (event) {
 					this.stepEvents.push(event);
+
+					if (this.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)) {
+						/* 
+							TODO:
+							IDEALLY if event deals damage check if enemy will die before all hits, then get new target for the remaining ones
+							FOR NOW repeat same event
+							maybe create a function to do this multistrike stuff if step gets too big
+						*/
+						const multistrikeQuantity = (
+							this.statusEffects.find(
+								statusEffect => statusEffect.name === STATUS_EFFECT.MULTISTRIKE,
+							) as ActiveStatusEffect
+						).quantity;
+
+						for (let i = 0; i < multistrikeQuantity; i++) {
+							this.stepEvents.push(event);
+						}
+
+						this.statusEffectManager.removeAllStacks(STATUS_EFFECT.MULTISTRIKE);
+					}
 				}
 			}
 		});
 
 		this.statusEffectManager.tickEffectStep(this);
-
-		// add step logic
 	}
 
 	applySubEvents(subEvents: SubEvent[]) {

@@ -2,6 +2,8 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
+import { EVENT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
+import { sortAndExecuteEvents } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
@@ -539,6 +541,71 @@ describe("Ability", () => {
 
 			unit3.applyEvent(summonCrab.use(unit3));
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 3);
+		});
+	});
+
+	describe("Careful Preparation (apply MULTISTRIKE to SELF)", () => {
+		it("should generate STATUS_EFFECT subEvent correctly", () => {
+			const { unit1 } = setupBoard();
+
+			const ability = new Ability(Abilities.CarefulPreparation);
+			const event = ability.use(unit1);
+
+			expect(event.payload.subEvents).toHaveLength(1);
+
+			const effectMultistrike = (
+				ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+			).payload[0];
+
+			expect(event.payload.subEvents[0]).toEqual({
+				type: "INSTANT_EFFECT",
+				payload: {
+					type: "STATUS_EFFECT",
+					targetId: unit1.id,
+					payload: [
+						{
+							name: "MULTISTRIKE",
+							quantity: effectMultistrike.quantity,
+						},
+					],
+				},
+			});
+		});
+
+		it("should cast next ability extra times for the number of MULTISTRIKE stacks and then remove all stacks", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
+			bm.addToBoard(unit);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
+			bm.addToBoard(unit2);
+
+			const ability = new Ability(Abilities.CarefulPreparation);
+			const event = ability.use(unit);
+
+			const multistrikeQuantity = (
+				ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
+			).payload[0].quantity as number;
+
+			sortAndExecuteEvents(bm, [event]);
+
+			expect(unit.statusEffects[0].name).toBe(STATUS_EFFECT.MULTISTRIKE);
+			expect(unit.statusEffects[0].quantity).toBe(multistrikeQuantity);
+
+			for (let i = 0; i < unit.abilities[0].cooldown; i++) unit.step(i);
+
+			expect(unit.stepEvents.length).toBe(multistrikeQuantity + 1);
+			expect(unit.stepEvents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+			expect((unit.stepEvents[0] as UseAbilityEvent).payload.name).toBe(
+				unit.abilities[0].data.name,
+			);
+			for (let i = 1; i <= multistrikeQuantity; i++) {
+				expect(unit.stepEvents[0]).toStrictEqual(unit.stepEvents[i]);
+			}
+
+			sortAndExecuteEvents(bm, unit.stepEvents);
+
+			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)).toBeFalsy();
 		});
 	});
 });
