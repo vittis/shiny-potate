@@ -16,13 +16,12 @@ async function fetchChatMessages(channel: string) {
 // todo adjust to allow many channels properly
 const useChatMessages = ({ channel }: { channel: string }) => {
 	const user = useSupabaseUserStore(state => state.user);
-	const username =
-		user?.user_metadata?.user_name || user?.user_metadata?.username || user?.user_metadata?.name; // todo unify this
+	const username = useSupabaseUserStore(state => state.username);
 
 	const userAvatar = user?.identities[0]?.identity_data?.avatar_url;
 
 	const searchParams = useMemo(() => {
-		if (!user?.id) return null;
+		if (!user?.id || !username) return null;
 
 		const params = new URLSearchParams({ userId: user?.id });
 		params.append("channels", "chat");

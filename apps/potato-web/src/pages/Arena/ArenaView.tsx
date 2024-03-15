@@ -7,7 +7,6 @@ import { SandboxView } from "../Play/Views/Sandbox/SandboxView";
 
 const ArenaView = () => {
 	const user = useSupabaseUserStore(state => state.user);
-	console.log(user);
 	const { createArenaGame, win } = useArenaMutation();
 	const { arenaData, arenaIsLoading, hasGame, game } = useArenaQueries();
 

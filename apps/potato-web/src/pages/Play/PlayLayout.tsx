@@ -6,7 +6,7 @@ import debounce from "lodash.debounce";
 import { PlaySideNav } from "./PlaySideNav/PlaySideNav";
 import MessagesPanel from "../MessagesPanel/MessagesPanel";
 import { useProfileQueries } from "@/services/features/Profile/useProfileQueries";
-import { UsernameDrawer } from "@/components/User/UserNameDrawer";
+import { UsernameDrawer } from "@/components/User/UsernameDrawer";
 
 const PlayLayout = () => {
 	useProfileQueries();

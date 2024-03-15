@@ -22,12 +22,10 @@ const useProfileQueries = () => {
 
 	useEffect(() => {
 		if (username) {
-			console.log({ username });
 			setUsername(username);
 		}
 	}, [username]);
 
-	console.log({ username });
 };
 
 export { useProfileQueries };

@@ -18,13 +18,8 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
 	const user = useSupabaseUserStore(state => state.user);
-	const username =
-		user?.user_metadata?.user_name ||
-		user?.user_metadata?.username ||
-		user?.user_metadata?.name ||
-		user?.user_metadata?.preferred_username ||
-		user?.user_metadata?.name ||
-		user?.email;
+	const username = useSupabaseUserStore(state => state.username);
+
 
 	const { pathname } = useLocation();
 

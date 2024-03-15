@@ -6,18 +6,18 @@ import { useSupabaseUserStore } from "../User/useSupabaseUserStore";
 
 const useGlobalConnection = () => {
 	const user = useSupabaseUserStore(state => state.user);
-	const username =
-		user?.user_metadata?.user_name || user?.user_metadata?.username || user?.user_metadata?.name; // todo unify this
+	const username = useSupabaseUserStore(state => state.username);
+
 
 	const searchParams = useMemo(() => {
-		if (!user?.id) return null;
+		if (!user?.id || !username) return null;
 
 		const params = new URLSearchParams({ userId: user.id, name: username });
 		params.append("channels", "global");
 		params.append("channels", "user");
 
 		return params.toString(); // userId=id&channels=global&channels=user
-	}, [user]);
+	}, [user, username]);
 
 	const { readyState } = useWebSocket(
 		`${SOCKET_URL}/?${searchParams}`,
