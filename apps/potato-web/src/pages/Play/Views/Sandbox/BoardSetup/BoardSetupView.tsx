@@ -21,6 +21,7 @@ import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
+import { Separator } from "@/components/ui/separator";
 
 const initialBoard = [
 	{
@@ -207,7 +208,7 @@ export function BoardSetupView() {
 	});
 
 	const classes = data?.classes || [];
-	const weapons = data?.weapons || [];
+	const weapons = [...(data?.weapons || []), ...(data?.trinkets || [])] || [];
 
 	const [boardLeft, setBoardLeft] = useState<{ id: string; unit: any }[]>(initialBoard);
 
@@ -392,6 +393,8 @@ export function BoardSetupView() {
 							))}
 						</div>
 
+						<Separator className="mb-4 mt-8" />
+
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{weapons?.map(weapon => (
 								<MarkdownTooltip
@@ -410,6 +413,8 @@ export function BoardSetupView() {
 							))}
 						</div>
 					</div>
+
+					<Separator className="mt-2" />
 
 					<div className="flex items-center justify-center min-w-[500px] gap-20 mt-10">
 						<div className="w-fit h-fit grid grid-cols-3 gap-5">
@@ -497,7 +502,7 @@ export function BoardSetupView() {
 					</div>
 				</div>
 			</DndContext>
-			<div className="mt-2 mx-auto w-fit flex flex-col gap-4">
+			<div className="mt-2 mx-auto w-fit flex flex-col gap-4 pb-20">
 				<Button onClick={onClickStartGame} disabled={isPending}>
 					Start game {isPending && <Loader2 className="animate-spin ml-1 w-[15px]" />}
 				</Button>

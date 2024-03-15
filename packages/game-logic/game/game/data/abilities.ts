@@ -25,6 +25,7 @@ import * as CarefulPreparation from "../../data/abilities/spells/CarefulPreparat
 import * as DarkBolt from "../../data/abilities/spells/DarkBolt.json";
 import * as DecayStrike from "../../data/abilities/spells/DecayStrike.json";
 import * as DivineIntervention from "../../data/abilities/spells/DivineIntervention.json";
+import * as Fireball from "../../data/abilities/spells/Fireball.json";
 import * as KiFocus from "../../data/abilities/spells/KiFocus.json";
 import * as ReinforceAllies from "../../data/abilities/spells/ReinforceAllies.json";
 import * as SummonBoar from "../../data/abilities/spells/SummonBoar.json";
@@ -42,6 +43,7 @@ const Abilities = {
 	BreakWill: BreakWill as AbilityData,
 	DisarmingShot: DisarmingShot as AbilityData,
 	EmpoweringStrike: EmpoweringStrike as AbilityData,
+	Fireball: Fireball as AbilityData,
 	LongShot: LongShot as AbilityData,
 	PhalanxFury: PhalanxFury as AbilityData,
 	Powershot: Powershot as AbilityData,

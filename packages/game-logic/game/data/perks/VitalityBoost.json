@@ -1,5 +1,5 @@
 {
-	"name": "Focused Mind",
+	"name": "Vitality Boost",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
@@ -17,7 +17,7 @@
 	],
 	"tiers": [
 		{
-			"name": "FOCUS",
+			"name": "REGEN",
 			"values": [
 				5,
 				10,
@@ -35,7 +35,7 @@
 			"conditions": [],
 			"payload": [
 				{
-					"name": "FOCUS",
+					"name": "REGEN",
 					"quantity": "DYNAMIC"
 				}
 			]

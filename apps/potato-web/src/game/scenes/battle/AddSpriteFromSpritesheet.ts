@@ -85,7 +85,7 @@ export function addEquipOffhandSprite(scene: Phaser.Scene, x: number, y: number,
 	else if (keyword === "map") sprite.setFrame(3);
 	else if (keyword === "woodenShield") sprite.setFrame(4);
 	else if (keyword === "book") sprite.setFrame(5);
-	else if (keyword === "dagger") sprite.setFrame(6);
+	else if (keyword === "dagger" || keyword === "sword") sprite.setFrame(6);
 	else throw Error(`addEquipOffhandSprite: ${keyword} not found`);
 
 	return sprite;

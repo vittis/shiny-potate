@@ -43,11 +43,11 @@ export class Unit {
 	currentStep = 1;
 	stepEvents: PossibleEvent[] = [];
 
-	private statsManager: StatsManager;
-	private equipmentManager: EquipmentManager;
-	private classManager: ClassManager;
-	private abilityManager: AbilityManager;
-	private perkManager: PerkManager;
+	public statsManager: StatsManager;
+	public equipmentManager: EquipmentManager;
+	public classManager: ClassManager;
+	public abilityManager: AbilityManager;
+	public perkManager: PerkManager;
 	public statusEffectManager: StatusEffectManager;
 	public triggerManager: TriggerManager;
 

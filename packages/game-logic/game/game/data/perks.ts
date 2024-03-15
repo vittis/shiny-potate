@@ -1,4 +1,5 @@
 import * as FocusedMind from "../../data/perks/FocusedMind.json";
+import * as VitalityBoost from "../../data/perks/VitalityBoost.json";
 import * as DesperateWill from "../../data/perks/DesperateWill.json";
 import * as LastWords from "../../data/perks/LastWords.json";
 import * as Berserk from "../../data/perks/Berserk.json";
@@ -11,6 +12,7 @@ type PerksMap = {
 
 const Perks = {
 	FocusedMind: FocusedMind as PerkData,
+	VitalityBoost: VitalityBoost as PerkData,
 	DesperateWill: DesperateWill as PerkData,
 	LastWords: LastWords as PerkData,
 	Berserk: Berserk as PerkData,

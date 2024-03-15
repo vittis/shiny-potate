@@ -1,6 +1,12 @@
 import { Hono } from "hono";
 import { Variables } from "../../index";
-import { Game, Classes, generateWeaponsFromTier, generateRandomWeapons } from "game-logic";
+import {
+	Game,
+	Classes,
+	generateItemsFromTier,
+	generateRandomItems,
+	EQUIPMENT_TYPE,
+} from "game-logic";
 import { nanoid } from "nanoid";
 
 const app = new Hono<{ Variables: Variables }>();
@@ -53,14 +59,22 @@ app.get("/roll-shop/:tier", async c => {
 	try {
 		let weapons = [];
 		if (tier === -1) {
-			weapons = generateRandomWeapons({ quantityPerWeapon: 3 });
+			weapons = generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.WEAPON);
 		} else {
-			weapons = generateWeaponsFromTier(tier, { quantityPerWeapon: 1 });
+			weapons = generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.WEAPON);
+		}
+
+		let trinkets = [];
+		if (tier === -1) {
+			trinkets = generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.TRINKET);
+		} else {
+			trinkets = generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.TRINKET);
 		}
 
 		const data = {
 			classes: classes.map(c => ({ id: nanoid(4), name: c })),
 			weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
+			trinkets: trinkets.map(t => ({ id: nanoid(4), data: t })),
 		};
 
 		return c.json(data);

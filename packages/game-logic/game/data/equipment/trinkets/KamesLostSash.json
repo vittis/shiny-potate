@@ -1,12 +1,17 @@
 {
 	"name": "Kame's Lost Sash",
-	"tags": ["TRINKET"],
-	"slots": ["TRINKET"],
+	"tags": [
+		"TRINKET"
+	],
+	"slots": [
+		"TRINKET"
+	],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
 			"payload": {
-				"name": "Ki Focus"
+				"name": "Ki Focus",
+				"type": "SPELL"
 			},
 			"tier": "implicit"
 		},

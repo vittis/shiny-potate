@@ -20,6 +20,11 @@ export enum EQUIPMENT_TAG {
 	DEFENSE = "DEFENSE",
 }
 
+export enum EQUIPMENT_TYPE {
+	WEAPON = "WEAPON",
+	TRINKET = "TRINKET",
+}
+
 // this represents the JSON of the equipment
 export interface EquipmentData {
 	name: string;

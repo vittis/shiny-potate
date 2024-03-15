@@ -1,35 +1,37 @@
 import RandomDataGenerator from "../../utils/math";
-import { Weapons } from "../data";
-import { EquipmentData, ShopEquipmentData } from "./EquipmentTypes";
+import { Trinkets, Weapons } from "../data";
+import { EQUIPMENT_TYPE, EquipmentData, ShopEquipmentData } from "./EquipmentTypes";
 import { ShopEquipment } from "./ShopEquipment";
 
-export function generateWeaponsFromTier(tier: number, { quantityPerWeapon = 3 }) {
-	const weapons: ShopEquipmentData[] = [];
+export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
+	const items: ShopEquipmentData[] = [];
+	const itemDatabase = type === EQUIPMENT_TYPE.WEAPON ? Weapons : Trinkets;
 
-	Object.keys(Weapons).forEach(key => {
-		for (let i = 0; i < quantityPerWeapon; i++) {
-			let weapon = new ShopEquipment((Weapons as any)[key], tier).generateShopEquipmentData();
-			weapons.push(weapon);
+	Object.keys(itemDatabase).forEach(key => {
+		for (let i = 0; i < quantityPerItem; i++) {
+			let item = new ShopEquipment((itemDatabase as any)[key], tier).generateShopEquipmentData();
+			items.push(item);
 		}
 	});
 
-	return weapons;
+	return items;
 }
 
-export function generateRandomWeapons({ quantityPerWeapon = 3 }) {
-	const weapons: ShopEquipmentData[] = [];
+export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
+	const items: ShopEquipmentData[] = [];
+	const itemDatabase = type === EQUIPMENT_TYPE.WEAPON ? Weapons : Trinkets;
 
-	Object.keys(Weapons).forEach(key => {
-		for (let i = 0; i < quantityPerWeapon; i++) {
-			let weapon = new ShopEquipment(
-				(Weapons as any)[key],
+	Object.keys(itemDatabase).forEach(key => {
+		for (let i = 0; i < quantityPerItem; i++) {
+			let item = new ShopEquipment(
+				(itemDatabase as any)[key],
 				RandomDataGenerator.between(0, 5),
 			).generateShopEquipmentData();
-			weapons.push(weapon);
+			items.push(item);
 		}
 	});
 
-	return weapons;
+	return items;
 }
 
 export function generateEquipmentData(data: ShopEquipmentData): EquipmentData {
