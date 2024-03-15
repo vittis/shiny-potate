@@ -2,30 +2,32 @@ import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserSt
 import { useQuery } from "@tanstack/react-query";
 
 import { supabase } from "@/services/supabase/supabase";
+import { useEffect } from "react";
 
-async function checkUsername(playerId) {
-	console.log(playerId);
-	const { data: profile, error } = await supabase.from("profiles").select("*").eq("id", playerId);
+async function fetchUsername(playerId) {
+	const { data: profile } = await supabase.from("profiles").select("*").eq("id", playerId);
 
-	if (profile?.[0].username) {
-		return true;
-	} else {
-		return false;
-	}
+	return profile?.[0]?.username;
 }
 
-const useProfileQueries = (): any => {
+const useProfileQueries = () => {
 	const user = useSupabaseUserStore(state => state.user);
+	const setUsername = useSupabaseUserStore(state => state.setUsername);
 
-	const { data: hasUsername } = useQuery({
+	const { data: username } = useQuery({
 		queryKey: ["profile", "check"],
-		queryFn: () => checkUsername(user.id),
+		queryFn: () => fetchUsername(user.id),
 		enabled: !!user,
 	});
-	/* 
-	const hasGame = arenaData && arenaData?.length > 0;
-	const game = hasGame && arenaData[0]; */
-	return { hasUsername };
+
+	useEffect(() => {
+		if (username) {
+			console.log({ username });
+			setUsername(username);
+		}
+	}, [username]);
+
+	console.log({ username });
 };
 
 export { useProfileQueries };

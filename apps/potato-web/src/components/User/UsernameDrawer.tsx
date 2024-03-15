@@ -19,10 +19,10 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { supabase } from "@/services/supabase/supabase";
 import { toast } from "react-toastify";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
+import { queryClient } from "@/services/api/queryClient";
 
 const FormSchema = z.object({
 	username: z.string().min(4, { message: "Name must be at least 4 characters" }).max(16, {
@@ -30,12 +30,8 @@ const FormSchema = z.object({
 	}),
 });
 
-interface UserNameDrawer {
-	hasUsername: boolean;
-}
-
-const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
-	const [isOpen, setIsOpen] = useState(hasUsername ? true : false);
+const UsernameDrawer = () => {
+	const username = useSupabaseUserStore(state => state.username);
 
 	const user = useSupabaseUserStore(state => state.user);
 
@@ -47,21 +43,26 @@ const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
 	});
 
 	async function onSubmit(formData: z.infer<typeof FormSchema>) {
-		const { data, error } = await supabase
+		const { error } = await supabase
 			.from("profiles")
 			.update({ username: formData.username })
-			.eq("id", user.id)
-			.select();
+			.eq("id", user.id);
+
 		if (error) {
 			throw error;
 		}
 
-		setIsOpen(false);
+		queryClient.invalidateQueries({ queryKey: ["profile", "check"] });
+
 		toast.success("Username created (:");
 	}
 
+	if (username || username === undefined) {
+		return null;
+	}
+
 	return (
-		<Dialog open={isOpen}>
+		<Dialog open={!username}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Create a new username</DialogTitle>
@@ -94,4 +95,4 @@ const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
 	);
 };
 
-export { UserNameDrawer };
+export { UsernameDrawer };

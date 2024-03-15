@@ -28,7 +28,9 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 		params.append("channels", "chat");
 		params.append("channels", channel);
 		params.append("name", username);
-		params.append("avatar", userAvatar);
+		if (userAvatar) {
+			params.append("avatar", userAvatar);
+		}
 
 		return params.toString();
 	}, [user, channel]);

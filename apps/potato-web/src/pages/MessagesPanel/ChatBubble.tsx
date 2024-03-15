@@ -20,11 +20,11 @@ export const ChatBubble = ({ sender, message, isFromMe, timestamp, avatar }) => 
 
 					<TooltipTrigger asChild>
 						<time className="text-xs opacity-50 ml-1 text-muted-foreground">
-							{format(new Date(timestamp), "HH:mm")}
+							{formatDistanceToNow(new Date(timestamp))} ago
 						</time>
 					</TooltipTrigger>
 					<TooltipContent side="right" className="flex items-center gap-4">
-						{formatDistanceToNow(new Date(timestamp))} ago
+						{format(new Date(timestamp), "HH:mm")}
 					</TooltipContent>
 				</div>
 				<div className="chat-bubble">{message}</div>

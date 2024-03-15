@@ -1,17 +1,16 @@
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useCallback, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useCallback } from "react";
+import { Outlet } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { PlaySideNav } from "./PlaySideNav/PlaySideNav";
 import MessagesPanel from "../MessagesPanel/MessagesPanel";
 import { useProfileQueries } from "@/services/features/Profile/useProfileQueries";
-import { UserNameDrawer } from "@/components/User/UserNameDrawer";
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
+import { UsernameDrawer } from "@/components/User/UserNameDrawer";
 
 const PlayLayout = () => {
-	const { hasUsername } = useProfileQueries();
-	const user = useSupabaseUserStore(state => state.user);
+	useProfileQueries();
+
 	const layout = localStorage.getItem("react-resizable-panels:layout");
 	const collapsed = localStorage.getItem("react-resizable-panels:collapsed");
 
@@ -26,30 +25,32 @@ const PlayLayout = () => {
 	);
 
 	return (
-		<div className="main-panel grow overflow-hidden rounded-[0.5rem] border bg-background shadow-md md:shadow-xl">
-			<TooltipProvider delayDuration={0}>
-				{user && <UserNameDrawer hasUsername={hasUsername} />}
-				<ResizablePanelGroup
-					direction="horizontal"
-					onLayout={(sizes: number[]) => {
-						debouncedSaveToLocalStorage(sizes);
-					}}
-					className="h-full items-stretch"
-				>
-					<PlaySideNav
-						defaultCollapsed={defaultCollapsed}
-						defaultSize={defaultLayout?.[0]}
-						navCollapsedSize={1}
-					/>
+		<>
+			<UsernameDrawer />
+			<div className="main-panel grow overflow-hidden rounded-[0.5rem] border bg-background shadow-md md:shadow-xl">
+				<TooltipProvider delayDuration={0}>
+					<ResizablePanelGroup
+						direction="horizontal"
+						onLayout={(sizes: number[]) => {
+							debouncedSaveToLocalStorage(sizes);
+						}}
+						className="h-full items-stretch"
+					>
+						<PlaySideNav
+							defaultCollapsed={defaultCollapsed}
+							defaultSize={defaultLayout?.[0]}
+							navCollapsedSize={1}
+						/>
 
-					<ResizablePanel defaultSize={defaultLayout?.[1]} minSize={30}>
-						<Outlet />
-					</ResizablePanel>
+						<ResizablePanel defaultSize={defaultLayout?.[1]} minSize={30}>
+							<Outlet />
+						</ResizablePanel>
 
-					<MessagesPanel defaultSize={defaultLayout?.[2]} />
-				</ResizablePanelGroup>
-			</TooltipProvider>
-		</div>
+						<MessagesPanel defaultSize={defaultLayout?.[2]} />
+					</ResizablePanelGroup>
+				</TooltipProvider>
+			</div>
+		</>
 	);
 };
 
