@@ -1,20 +1,8 @@
 import { ABILITY_CATEGORY, AbilityData } from "./AbilityTypes";
 import { AbilityDataSchema } from "./AbilitySchema";
 import { Unit } from "../Unit/Unit";
-import {
-	EVENT_TYPE,
-	INSTANT_EFFECT_TYPE,
-	SUBEVENT_TYPE,
-	UseAbilityEvent,
-	SubEvent,
-} from "../Event/EventTypes";
-import {
-	PossibleTriggerEffect,
-	TRIGGER,
-	TRIGGER_EFFECT_TYPE,
-	TriggerEffect,
-} from "../Trigger/TriggerTypes";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { EVENT_TYPE, UseAbilityEvent, SubEvent } from "../Event/EventTypes";
+import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
 import {
 	createDamageSubEvent,

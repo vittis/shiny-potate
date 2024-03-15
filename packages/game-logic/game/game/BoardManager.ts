@@ -1,3 +1,4 @@
+import { STATUS_EFFECT } from "./StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "./Target/TargetTypes";
 import { getTargetFunction } from "./Target/TargetUtils";
 import { Unit } from "./Unit/Unit";
@@ -196,33 +197,6 @@ export class BoardManager {
 		return unit;
 	}
 
-	getClosestAttackTarget(unit: Unit): Unit {
-		const otherBoard = this.board[this.getEnemyOwner(unit.owner)];
-
-		const isTop = this.getUnitRow(unit) === ROW.TOP;
-		let target;
-		if (isTop) {
-			target =
-				checkForDead(otherBoard[POSITION.TOP_FRONT]) ||
-				checkForDead(otherBoard[POSITION.BOT_FRONT]) ||
-				checkForDead(otherBoard[POSITION.TOP_MID]) ||
-				checkForDead(otherBoard[POSITION.BOT_MID]) ||
-				checkForDead(otherBoard[POSITION.TOP_BACK]) ||
-				checkForDead(otherBoard[POSITION.BOT_BACK]);
-			return target as Unit;
-		} else {
-			target =
-				checkForDead(otherBoard[POSITION.BOT_FRONT]) ||
-				checkForDead(otherBoard[POSITION.TOP_FRONT]) ||
-				checkForDead(otherBoard[POSITION.BOT_MID]) ||
-				checkForDead(otherBoard[POSITION.TOP_MID]) ||
-				checkForDead(otherBoard[POSITION.BOT_BACK]) ||
-				checkForDead(otherBoard[POSITION.TOP_BACK]);
-		}
-
-		return target as Unit;
-	}
-
 	getTarget(unit: Unit, targetType: TARGET_TYPE = TARGET_TYPE.STANDARD): Unit[] {
 		const targetFunction = getTargetFunction(targetType);
 
@@ -230,46 +204,4 @@ export class BoardManager {
 
 		return target;
 	}
-
-	// todo update
-	/* printBoard() {
-        const firstLine = "";
-
-        
-
-        process.stdout.write(
-            `${this.getUnit("P1", POSITION.BACK_UP)}           ${this.getUnit("P2", POSITION.BACK_UP)}`
-        );
-        process.stdout.write(`\n`);
-        process.stdout.write(
-            `   ${this.getUnit("P1", POSITION.FRONT_UP)}     ${this.getUnit("P2", POSITION.FRONT_UP)}  `
-        );
-        process.stdout.write(`\n`);
-        process.stdout.write(
-            `${this.getUnit("P1", POSITION.BACK_MID)}           ${this.getUnit("P2", POSITION.BACK_MID)}`
-        );
-        process.stdout.write(`\n`);
-        process.stdout.write(
-            `   ${this.getUnit("P1", POSITION.FRONT_DOWN)}     ${this.getUnit("P2", POSITION.FRONT_DOWN)}  `
-        );
-        process.stdout.write(`\n`);
-        process.stdout.write(
-            `${this.getUnit("P1", POSITION.BACK_DOWN)}           ${this.getUnit("P2", POSITION.BACK_DOWN)}`
-        );
-        process.stdout.write(`\n`);
-        console.log("----------------------------------------");
-    } */
 }
-
-/* 
-    2 1 0   0 1 2
-    5 4 3   3 4 5
-*/
-
-/* 
-U       U
-  U   U  
-U       U
-  U   U
-U       U
- */

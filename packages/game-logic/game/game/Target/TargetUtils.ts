@@ -1,4 +1,5 @@
 import { BOX, BoardManager, COLUMN, ROW } from "../BoardManager";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Unit } from "../Unit/Unit";
 import { TARGET_TYPE } from "./TargetTypes";
 
@@ -41,18 +42,19 @@ export function getTargetFunction(targetType: TARGET_TYPE) {
 function getStandardTarget(bm: BoardManager, unit: Unit): Unit[] {
 	const frontEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.FRONT);
 	const midEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.MID);
-
 	const backEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.BACK);
 
-	// todo any cleaner way to do this?
-	const enemyUnitsInClosestColumn =
-		(frontEnemies.length > 0 ? frontEnemies : undefined) ||
-		(midEnemies.length > 0 ? midEnemies : undefined) ||
-		backEnemies;
+	const closestColumnEnemies = frontEnemies || midEnemies || backEnemies;
+	const closestColumnEnemiesWithTaunt =
+		frontEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)) ||
+		midEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)) ||
+		backEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT));
+
+	const possibleTargets = closestColumnEnemiesWithTaunt || closestColumnEnemies;
 
 	const target =
-		enemyUnitsInClosestColumn.find(enemyUnit => bm.getUnitRow(enemyUnit) === bm.getUnitRow(unit)) ||
-		enemyUnitsInClosestColumn[0];
+		possibleTargets.find(enemyUnit => bm.getUnitRow(enemyUnit) === bm.getUnitRow(unit)) ||
+		possibleTargets[0];
 
 	return [target] as Unit[];
 }
@@ -62,12 +64,10 @@ function getStandardBoxTarget(bm: BoardManager, unit: Unit): Unit[] {
 
 	if (bm.getUnitColumn(standardTarget) === COLUMN.FRONT) {
 		const unitsInFrontBox = bm.getAllAliveUnitsInBox(bm.getEnemyOwner(unit.owner), BOX.FRONT);
-
 		return unitsInFrontBox as Unit[];
 	}
 
 	const unitsInBackBox = bm.getAllAliveUnitsInBox(bm.getEnemyOwner(unit.owner), BOX.BACK);
-
 	return unitsInBackBox as Unit[];
 }
 
@@ -94,15 +94,21 @@ function getStandardRowTarget(bm: BoardManager, unit: Unit): Unit[] {
 }
 
 function getFurthestTarget(bm: BoardManager, unit: Unit): Unit[] {
-	const enemyUnitsInFurthestColumn =
-		bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.BACK) ||
-		bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.MID) ||
-		bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.FRONT);
+	const frontEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.FRONT);
+	const midEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.MID);
+	const backEnemies = bm.getAllAliveUnitsInColumn(bm.getEnemyOwner(unit.owner), COLUMN.BACK);
+
+	const furthestColumnEnemies = backEnemies || midEnemies || frontEnemies;
+	const furthestColumnEnemiesWithTaunt =
+		backEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)) ||
+		midEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)) ||
+		frontEnemies.filter(unit => unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT));
+
+	const possibleTargets = furthestColumnEnemiesWithTaunt || furthestColumnEnemies;
 
 	const target =
-		enemyUnitsInFurthestColumn.find(
-			enemyUnit => bm.getUnitRow(enemyUnit) !== bm.getUnitRow(unit),
-		) || enemyUnitsInFurthestColumn[0];
+		possibleTargets.find(enemyUnit => bm.getUnitRow(enemyUnit) !== bm.getUnitRow(unit)) ||
+		possibleTargets[0];
 
 	return [target] as Unit[];
 }
@@ -112,12 +118,10 @@ function getFurthestBoxTarget(bm: BoardManager, unit: Unit): Unit[] {
 
 	if (bm.getUnitColumn(furthestTarget) === COLUMN.BACK) {
 		const unitsInBackBox = bm.getAllAliveUnitsInBox(bm.getEnemyOwner(unit.owner), BOX.BACK);
-
 		return unitsInBackBox as Unit[];
 	}
 
 	const unitsInFrontBox = bm.getAllAliveUnitsInBox(bm.getEnemyOwner(unit.owner), BOX.FRONT);
-
 	return unitsInFrontBox as Unit[];
 }
 
@@ -252,8 +256,13 @@ function getLowestHealthAllyTarget(bm: BoardManager, unit: Unit): Unit[] {
 
 function getLowestHealthEnemyTarget(bm: BoardManager, unit: Unit): Unit[] {
 	const allEnemyUnits = getAllEnemyUnitsTarget(bm, unit);
+	const allEnemyUnitsWithTaunt = allEnemyUnits.filter(enemyUnit =>
+		enemyUnit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT),
+	);
 
-	const lowestHealthUnit = allEnemyUnits.reduce((prev, curr) => {
+	const possibleTargets = allEnemyUnitsWithTaunt || allEnemyUnits;
+
+	const lowestHealthUnit = possibleTargets.reduce((prev, curr) => {
 		if (curr.stats.hp < prev.stats.hp) {
 			return curr;
 		} else {
