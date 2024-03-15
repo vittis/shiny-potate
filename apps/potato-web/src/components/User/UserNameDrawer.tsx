@@ -35,7 +35,7 @@ interface UserNameDrawer {
 }
 
 const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
-	const [isOpen, setIsOpen] = useState(!hasUsername);
+	const [isOpen, setIsOpen] = useState(hasUsername ? true : false);
 
 	const user = useSupabaseUserStore(state => state.user);
 
@@ -61,7 +61,7 @@ const UserNameDrawer = ({ hasUsername }: UserNameDrawer) => {
 	}
 
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
+		<Dialog open={isOpen}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Create a new username</DialogTitle>
