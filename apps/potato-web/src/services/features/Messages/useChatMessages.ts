@@ -19,6 +19,8 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 	const username =
 		user?.user_metadata?.user_name || user?.user_metadata?.username || user?.user_metadata?.name; // todo unify this
 
+	const userAvatar = user?.identities[0]?.identity_data?.avatar_url;
+
 	const searchParams = useMemo(() => {
 		if (!user?.id) return null;
 
@@ -26,6 +28,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 		params.append("channels", "chat");
 		params.append("channels", channel);
 		params.append("name", username);
+		params.append("avatar", userAvatar);
 
 		return params.toString();
 	}, [user, channel]);
@@ -55,6 +58,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 								{
 									message: data.message,
 									timestamp: data.timestamp,
+									avatar: data.avatar,
 								},
 							],
 						};
@@ -74,6 +78,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 				sender,
 				message,
 				timestamp: messageObj.timestamp,
+				avatar: messageObj.avatar,
 			};
 		});
 	}, [messagesData]);

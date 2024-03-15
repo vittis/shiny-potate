@@ -81,7 +81,7 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 					isCollapsed={isCollapsed}
 					links={[
 						{
-							title: "Matchmaking",
+							title: "Arena",
 							label: "",
 							icon: Swords,
 							variant: "ghost",

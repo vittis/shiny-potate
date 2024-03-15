@@ -175,6 +175,7 @@ connectAll().then(() => {
 		const isGlobal = channels.includes("global");
 
 		const name = urlParams.get("name");
+		const avatar = urlParams.get("avatar");
 		if (isGlobal) {
 			if (!name) {
 				console.log("name not provided in Global, closing connection");
@@ -206,6 +207,7 @@ connectAll().then(() => {
 					JSON.stringify({
 						message: finalMsg,
 						timestamp,
+						avatar: avatar,
 					}),
 				);
 
@@ -216,6 +218,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						channel: "lobby",
 						timestamp,
+						avatar: avatar,
 					}),
 				);
 			}

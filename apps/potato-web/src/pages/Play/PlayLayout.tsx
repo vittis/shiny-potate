@@ -1,12 +1,17 @@
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { PlaySideNav } from "./PlaySideNav/PlaySideNav";
 import MessagesPanel from "../MessagesPanel/MessagesPanel";
+import { useProfileQueries } from "@/services/features/Profile/useProfileQueries";
+import { UserNameDrawer } from "@/components/User/UserNameDrawer";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 const PlayLayout = () => {
+	const { hasUsername } = useProfileQueries();
+	const user = useSupabaseUserStore(state => state.user);
 	const layout = localStorage.getItem("react-resizable-panels:layout");
 	const collapsed = localStorage.getItem("react-resizable-panels:collapsed");
 
@@ -23,6 +28,7 @@ const PlayLayout = () => {
 	return (
 		<div className="main-panel grow overflow-hidden rounded-[0.5rem] border bg-background shadow-md md:shadow-xl">
 			<TooltipProvider delayDuration={0}>
+				{user && <UserNameDrawer hasUsername={hasUsername} />}
 				<ResizablePanelGroup
 					direction="horizontal"
 					onLayout={(sizes: number[]) => {

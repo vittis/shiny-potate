@@ -2,13 +2,17 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { format } from "date-fns";
 import { formatDistanceToNow } from "date-fns";
 
-export const ChatBubble = ({ sender, message, isFromMe, timestamp }) => {
+export const ChatBubble = ({ sender, message, isFromMe, timestamp, avatar }) => {
 	return (
 		<Tooltip>
 			<div className={`chat ${isFromMe ? "chat-end" : "chat-start"}`}>
-				<div className="chat-image avatar">
-					<div className="w-8 h-8 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground flex items-center justify-center text-xl text-center">
-						{sender?.[0]?.toUpperCase()}{" "}
+				<div className="chat-image ">
+					<div className="flex w-8 h-8 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground items-center justify-center text-xl text-center">
+						{avatar ? (
+							<img src={avatar} className="w-8 h-8 rounded-full" />
+						) : (
+							sender?.[0]?.toUpperCase()
+						)}{" "}
 					</div>
 				</div>
 				<div className="chat-header">
