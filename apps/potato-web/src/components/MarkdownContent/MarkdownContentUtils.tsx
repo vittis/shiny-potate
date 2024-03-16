@@ -13,6 +13,18 @@ export async function importMarkdownFile(filePath: string) {
 		throw Error(`Error importing file: ${error}`);
 	}
 }
+export function equipToMarkdown(equip: any) {
+	let contentFromEquip = `# ${equip.data.name}\n`;
+	let implicits = equip?.data?.mods?.filter(mod => mod.tier === "implicit");
+	contentFromEquip += implicits?.map(mod => modToMarkdown(mod)).join("\n");
+	if (equip?.data?.tier > 0) {
+		let rolledMods = equip?.data?.mods?.filter(mod => mod.tier !== "implicit");
+		contentFromEquip += "\n---\n";
+		contentFromEquip += rolledMods?.map(mod => modToMarkdown(mod)).join("\n");
+	}
+
+	return contentFromEquip;
+}
 
 // todo get from game-logic
 export function modToMarkdown(mod: any) {

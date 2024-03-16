@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { modToMarkdown } from "./MarkdownContentUtils";
+import { equipToMarkdown } from "./MarkdownContentUtils";
 import { MarkdownWrapper } from "./MarkdownWrapper";
 
 interface MarkdownContentProps {
@@ -8,30 +7,9 @@ interface MarkdownContentProps {
 }
 
 const EquipmentMarkdownContent = ({ onOpenSubTooltip, equip }: MarkdownContentProps) => {
-	const [content, setContent] = useState<string | undefined>();
-
-	useEffect(() => {
-		function parseEquipToMarkdown() {
-			let contentFromEquip = `# ${equip.data.name}\n`;
-
-			let implicits = equip?.data?.mods?.filter(mod => mod.tier === "implicit");
-			contentFromEquip += implicits?.map(mod => modToMarkdown(mod)).join("\n");
-			if (equip?.data?.tier > 0) {
-				let rolledMods = equip?.data?.mods?.filter(mod => mod.tier !== "implicit");
-				contentFromEquip += "\n---\n";
-				contentFromEquip += rolledMods?.map(mod => modToMarkdown(mod)).join("\n");
-			}
-
-			setContent(contentFromEquip);
-		}
-		if (equip) {
-			parseEquipToMarkdown();
-		}
-	}, [equip]);
-
 	return (
 		<MarkdownWrapper
-			content={content}
+			content={equipToMarkdown(equip)}
 			tier={equip?.data?.tier}
 			tags={equip?.data?.tags}
 			onOpenSubTooltip={onOpenSubTooltip}

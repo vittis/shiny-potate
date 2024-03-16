@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
@@ -22,6 +22,8 @@ import { EquipmentMarkdownContent } from "@/components/MarkdownContent/Equipment
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
 import { Separator } from "@/components/ui/separator";
+import { getUnitData } from "game-logic";
+import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnitMarkdownContent";
 
 const initialBoard = [
 	{
@@ -384,9 +386,10 @@ export function BoardSetupView() {
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{classes.map(unitClass => (
 								<MarkdownTooltip
+									key={unitClass.id}
 									content={<MarkdownContent sourcePath={`Classes/${unitClass.name}`} />}
 								>
-									<Draggable key={unitClass.id} id={unitClass.id} isClass>
+									<Draggable id={unitClass.id} isClass>
 										{unitClass.name}
 									</Draggable>
 								</MarkdownTooltip>
@@ -423,7 +426,7 @@ export function BoardSetupView() {
 									{unit ? (
 										<Droppable id={id}>
 											<MarkdownTooltip
-												content={<MarkdownContent sourcePath={`Classes/${unit.name}`} />}
+												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
 											>
 												<Draggable
 													id={unit.id}
