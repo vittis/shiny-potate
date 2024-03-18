@@ -1,6 +1,6 @@
 import { BattleUnit } from "./BattleUnit";
 
-const animationSpeed = 0.8;
+const animationSpeed = 0.6;
 
 export function createWiggleAnimation(unit: BattleUnit) {
 	const fx = unit.sprite.preFX?.addDisplacement("distort", 0);

@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { api } from "@/services/api/http";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
@@ -22,60 +22,9 @@ import { EquipmentMarkdownContent } from "@/components/MarkdownContent/Equipment
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
 import { Separator } from "@/components/ui/separator";
-
-const initialBoard = [
-	{
-		id: "2",
-		unit: null,
-	},
-	{
-		id: "1",
-		unit: null,
-	},
-	{
-		id: "0",
-		unit: null,
-	},
-	{
-		id: "5",
-		unit: null,
-	},
-	{
-		id: "4",
-		unit: null,
-	},
-	{
-		id: "3",
-		unit: null,
-	},
-];
-
-const initialBoardRight = [
-	{
-		id: "-0",
-		unit: null,
-	},
-	{
-		id: "-1",
-		unit: null,
-	},
-	{
-		id: "-2",
-		unit: null,
-	},
-	{
-		id: "-3",
-		unit: null,
-	},
-	{
-		id: "-4",
-		unit: null,
-	},
-	{
-		id: "-5",
-		unit: null,
-	},
-];
+import { getUnitData } from "game-logic";
+import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnitMarkdownContent";
+import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
 
 export async function setupTeams(data) {
 	const response = await api.post("/game/setup-teams", data, {
@@ -111,13 +60,13 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 	const finalAttributes = isTooltipOpen ? {} : attributes;
 
 	return (
-		<button
+		<div
 			ref={setNodeRef}
 			style={style}
 			{...finalListeners}
 			{...finalAttributes}
 			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors",
+				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
 				isDragging && "z-30",
 				isClass && "border-green-900 hover:border-green-700",
 				!isClass &&
@@ -126,46 +75,26 @@ export function Draggable({ children, id, unit, isClass, weaponTier, removeEquip
 				isWeapon && tierColorMap[weaponTier],
 			)}
 		>
-			{children}
+			<div>{children}</div>
 			{unitEquips.length > 0 && (
 				<div className="absolute top-0 right-0">
 					{unitEquips.map(equip => (
-						<MarkdownTooltip
-							onOpenCallback={setIsTooltipOpen}
+						<div
 							key={equip.id}
-							content={
-								<div className="bg-pattern-gradient relative">
-									<EquipmentMarkdownContent equip={equip} />
-									<Button
-										className="absolute top-1 right-1 text-red-400 flex items-center gap-1"
-										variant="ghost"
-										size="sm"
-										onClick={() => {
-											setIsTooltipOpen(false);
-											removeEquipment(equip.id);
-										}}
-									>
-										Unequip
-									</Button>
-								</div>
-							}
+							className={cn(
+								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+								tierColorMap[equip.data.tier],
+							)}
 						>
-							<div
-								className={cn(
-									"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-									tierColorMap[equip.data.tier],
-								)}
-							>
-								{equip.data.name}{" "}
-								<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
-									T{equip.data.tier}
-								</span>
-							</div>
-						</MarkdownTooltip>
+							{equip.data.name}{" "}
+							<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
+								T{equip.data.tier}
+							</span>
+						</div>
 					))}
 				</div>
 			)}
-		</button>
+		</div>
 	);
 }
 
@@ -210,9 +139,7 @@ export function BoardSetupView() {
 	const classes = data?.classes || [];
 	const weapons = [...(data?.weapons || []), ...(data?.trinkets || [])] || [];
 
-	const [boardLeft, setBoardLeft] = useState<{ id: string; unit: any }[]>(initialBoard);
-
-	const [boardRight, setBoardRight] = useState<{ id: string; unit: any }[]>(initialBoardRight);
+	const { boardLeft, boardRight, setBoardLeft, setBoardRight, resetBoards } = useBoardUnitsStore();
 
 	useEffect(() => {
 		const board = JSON.parse(localStorage.getItem("boardLeft") || "[]");
@@ -223,6 +150,51 @@ export function BoardSetupView() {
 			setBoardRight(boardRight);
 		}
 	}, []);
+
+	function onClickReset() {
+		resetBoards();
+	}
+
+	function onClickStartGame() {
+		const team1finalUnits: UnitsDTO[] = boardLeft
+			.filter(cell => !!cell.unit)
+			.map(cell => {
+				return {
+					equipments: cell.unit?.equipment,
+					position: parseInt(cell.id),
+					unitClass: cell.unit.name,
+				};
+			});
+
+		const team2finalUnits: UnitsDTO[] = boardRight
+			.filter(cell => !!cell.unit)
+			.map(cell => {
+				return {
+					equipments: cell.unit?.equipment,
+					position: parseInt(cell.id.toString().replace("-", "")),
+					unitClass: cell.unit.name,
+				};
+			});
+
+		localStorage.setItem("boardLeft", JSON.stringify(boardLeft));
+		localStorage.setItem("boardRight", JSON.stringify(boardRight));
+
+		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
+	}
+
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint: {
+			distance: 1,
+		},
+	});
+
+	const touchSensor = useSensor(TouchSensor, {
+		activationConstraint: {
+			distance: 1,
+		},
+	});
+
+	const sensors = useSensors(mouseSensor, touchSensor);
 
 	function handleDragEnd(event: DragEndEvent) {
 		let targetBoard;
@@ -321,55 +293,10 @@ export function BoardSetupView() {
 		targetSetBoard(newBoard);
 	}
 
-	function onClickReset() {
-		setBoardLeft(initialBoard);
-		setBoardRight(initialBoardRight);
-	}
-
-	function onClickStartGame() {
-		const team1finalUnits: UnitsDTO[] = boardLeft
-			.filter(cell => !!cell.unit)
-			.map(cell => {
-				return {
-					equipments: cell.unit?.equipment,
-					position: parseInt(cell.id),
-					unitClass: cell.unit.name,
-				};
-			});
-
-		const team2finalUnits: UnitsDTO[] = boardRight
-			.filter(cell => !!cell.unit)
-			.map(cell => {
-				return {
-					equipments: cell.unit?.equipment,
-					position: parseInt(cell.id.toString().replace("-", "")),
-					unitClass: cell.unit.name,
-				};
-			});
-
-		localStorage.setItem("boardLeft", JSON.stringify(boardLeft));
-		localStorage.setItem("boardRight", JSON.stringify(boardRight));
-
-		setupTeamsMutation({ team1: team1finalUnits, team2: team2finalUnits });
-	}
-
-	const mouseSensor = useSensor(MouseSensor, {
-		activationConstraint: {
-			distance: 1,
-		},
-	});
-
-	const touchSensor = useSensor(TouchSensor, {
-		activationConstraint: {
-			distance: 1,
-		},
-	});
-
-	const sensors = useSensors(mouseSensor, touchSensor);
-
 	if (isFetching) {
 		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
 	}
+
 	return (
 		<>
 			<DndContext
@@ -384,9 +311,10 @@ export function BoardSetupView() {
 						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
 							{classes.map(unitClass => (
 								<MarkdownTooltip
+									key={unitClass.id}
 									content={<MarkdownContent sourcePath={`Classes/${unitClass.name}`} />}
 								>
-									<Draggable key={unitClass.id} id={unitClass.id} isClass>
+									<Draggable id={unitClass.id} isClass>
 										{unitClass.name}
 									</Draggable>
 								</MarkdownTooltip>
@@ -423,7 +351,7 @@ export function BoardSetupView() {
 									{unit ? (
 										<Droppable id={id}>
 											<MarkdownTooltip
-												content={<MarkdownContent sourcePath={`Classes/${unit.name}`} />}
+												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
 											>
 												<Draggable
 													id={unit.id}
@@ -464,7 +392,7 @@ export function BoardSetupView() {
 									{unit ? (
 										<Droppable id={id}>
 											<MarkdownTooltip
-												content={<MarkdownContent sourcePath={`Classes/${unit.name}`} />}
+												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
 											>
 												<Draggable
 													id={unit.id}

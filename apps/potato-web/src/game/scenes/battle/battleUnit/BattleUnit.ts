@@ -11,6 +11,7 @@ import { BattleUnitSprite } from "./BattleUnitSprite";
 import { Ability, BattleUnitAbilities } from "./BattleUnitAbilities";
 import { BattleUnitStatusEffects } from "./BattleUnitStatusEffects";
 import { BattleUnitBars } from "./BattleUnitBars";
+import { addFadingText } from "../utils/text";
 
 export class BattleUnit extends Phaser.GameObjects.Container {
 	public id: string;
@@ -108,7 +109,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		onStart?: Function;
 		allUnits?: BattleUnit[];
 	}) {
-		console.log("playing ", event.type, event.trigger);
+		// console.log("playing ", event.type, event.trigger);
 
 		if (event.type === "FAINT") {
 			const onFinishAnimation = () => {
@@ -223,6 +224,10 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		}
 
 		if (event.type === "USE_ABILITY") {
+			console.log(event.payload.name);
+
+			this.add(addFadingText(this.scene, 0, -50, event.payload.name));
+
 			const abilityUsed = this.abilitiesManager.abilities.find(
 				ability => ability.id === event.payload.id,
 			) as Ability;

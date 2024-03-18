@@ -21,7 +21,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 	const userAvatar = user?.identities[0]?.identity_data?.avatar_url;
 
 	const searchParams = useMemo(() => {
-		if (!user?.id || !username) return null;
+		if (!user?.id || !username) return undefined;
 
 		const params = new URLSearchParams({ userId: user?.id });
 		params.append("channels", "chat");
@@ -67,7 +67,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 				}
 			},
 		},
-		user?.id !== undefined,
+		!!searchParams,
 	);
 
 	const messages = useMemo(() => {

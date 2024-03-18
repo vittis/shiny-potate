@@ -1,6 +1,6 @@
 {
   "name": "Rogue",
-  "hp": 90,
+  "hp": 180,
   "base": [
     {
       "mods": [
