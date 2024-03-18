@@ -5,7 +5,7 @@ import { useTooltipStore } from "./useTooltipStore";
 import { cn } from "@/lib/utils";
 import { TooltipPortal } from "@radix-ui/react-tooltip";
 
-export const TOOLTIP_CONTENT_CLASSNAME = "p-0 w-max max-w-[750px]";
+export const TOOLTIP_CONTENT_CLASSNAME = "p-0 w-max";
 
 const ContentChainableTooltip = ({
 	children,

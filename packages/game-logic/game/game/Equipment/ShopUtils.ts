@@ -54,10 +54,29 @@ export function getUnitData(
 		boardUnit.equipment.forEach((shopEquip: any) => {
 			const equipmentData = generateEquipmentData(shopEquip.data);
 
-			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
+			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
+				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
+				} else {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
+				}
+			} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
 				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
 			} else {
-				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+				if (!unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+				} else {
+					if (
+						unit.equipmentManager.canEquipOnSlot(
+							new Equipment(equipmentData),
+							EQUIPMENT_SLOT.OFF_HAND,
+						)
+					) {
+						unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
+					} else {
+						console.error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
+					}
+				}
 			}
 		});
 	}

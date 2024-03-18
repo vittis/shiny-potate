@@ -1,13 +1,13 @@
 {
   "name": "Ranger",
-  "hp": 80,
+  "hp": 180,
   "base": [
     {
       "mods": [
         {
           "type": "GRANT_ABILITY",
           "payload": {
-            "name": "Thrust",
+            "name": "Weak Spot",
             "type": "ATTACK"
           }
         }
