@@ -1,4 +1,5 @@
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { getAllTargetUnits } from "../Target/TargetUtils";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import {
@@ -14,9 +15,9 @@ export function createStatusEffectSubEvent(
 	unit: Unit,
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target);
+	const targetUnits = unit.bm.getTarget(unit, effect.target);
 
-	const subEvents = targets.map(target => {
+	const subEvents = getAllTargetUnits(targetUnits).map(target => {
 		const payloadStatusEffects = effect.payload.map(statusEffect => ({
 			name: statusEffect.name,
 			quantity: statusEffect.quantity,
@@ -36,9 +37,9 @@ export function createStatusEffectSubEvent(
 }
 
 export function createHealSubEvent(unit: Unit, effect: TriggerEffect<TRIGGER_EFFECT_TYPE.HEAL>) {
-	const targets = unit.bm.getTarget(unit, effect.target);
+	const targetUnits = unit.bm.getTarget(unit, effect.target);
 
-	const subEvents = targets.map(target => {
+	const subEvents = getAllTargetUnits(targetUnits).map(target => {
 		return {
 			type: SUBEVENT_TYPE.INSTANT_EFFECT,
 			payload: {
@@ -58,9 +59,9 @@ export function createShieldSubEvent(
 	unit: Unit,
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.SHIELD>,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target);
+	const targetUnits = unit.bm.getTarget(unit, effect.target);
 
-	const subEvents = targets.map(target => {
+	const subEvents = getAllTargetUnits(targetUnits).map(target => {
 		return {
 			type: SUBEVENT_TYPE.INSTANT_EFFECT,
 			payload: {
@@ -81,9 +82,10 @@ export function createDamageSubEvent(
 	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>,
 	damageModifier = 0,
 ) {
-	const targets = unit.bm.getTarget(unit, effect.target);
+	const targetUnits = unit.bm.getTarget(unit, effect.target);
+	const allTargets = getAllTargetUnits(targetUnits);
 
-	const subEvents = targets.map(target => {
+	const subEvents = allTargets.map(target => {
 		const targetDamageReductionModifier = target.stats.damageReductionModifier;
 
 		const finalModifier = damageModifier - targetDamageReductionModifier;
@@ -105,7 +107,7 @@ export function createDamageSubEvent(
 		} as SubEvent;
 	});
 
-	const thornSubEvents = targets
+	const thornSubEvents = allTargets
 		.filter(target => target.statusEffectManager.hasStatusEffect(STATUS_EFFECT.THORN))
 		.map(target => {
 			const thornDamage = target.statusEffects.find(
@@ -124,7 +126,28 @@ export function createDamageSubEvent(
 			} as SubEvent;
 		});
 
-	return [...subEvents, ...thornSubEvents] as SubEvent[];
+	const tauntSubEvent =
+		(targetUnits.mainTarget &&
+			[targetUnits.mainTarget]
+				.filter(target => target.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT))
+				.map(target => {
+					return {
+						type: SUBEVENT_TYPE.INSTANT_EFFECT,
+						payload: {
+							type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+							targetId: target.id,
+							payload: [
+								{
+									name: STATUS_EFFECT.TAUNT,
+									quantity: -1,
+								},
+							],
+						},
+					} as SubEvent;
+				})) ||
+		[];
+
+	return [...subEvents, ...thornSubEvents, ...tauntSubEvent] as SubEvent[];
 }
 
 export function createTickEffectEvent(unit: Unit, effect: TICK_EFFECT_TYPE, value: number) {

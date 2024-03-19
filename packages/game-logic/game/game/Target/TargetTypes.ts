@@ -1,3 +1,5 @@
+import { Unit } from "../Unit/Unit";
+
 export enum TARGET_TYPE {
 	ADJACENT_ALLIES = "ADJACENT_ALLIES",
 	ALL_ALLIES = "ALL_ALLIES",
@@ -22,4 +24,9 @@ export enum TARGET_TYPE {
 	STANDARD_COLUMN = "STANDARD_COLUMN",
 	STANDARD_ROW = "STANDARD_ROW",
 	HIT_TARGET = "HIT_TARGET",
+}
+
+export interface TargetUnits {
+	mainTarget: Unit | null;
+	secondaryTargets: Unit[];
 }

@@ -1,6 +1,6 @@
 import { STATUS_EFFECT } from "./StatusEffect/StatusEffectTypes";
-import { TARGET_TYPE } from "./Target/TargetTypes";
-import { getTargetFunction } from "./Target/TargetUtils";
+import { TARGET_TYPE, TargetUnits } from "./Target/TargetTypes";
+import { getTarget } from "./Target/TargetUtils";
 import { Unit } from "./Unit/Unit";
 
 export enum OWNER {
@@ -197,11 +197,10 @@ export class BoardManager {
 		return unit;
 	}
 
-	getTarget(unit: Unit, targetType: TARGET_TYPE = TARGET_TYPE.STANDARD): Unit[] {
-		const targetFunction = getTargetFunction(targetType);
+	// TODO remove from bm?
+	getTarget(unit: Unit, targetType: TARGET_TYPE = TARGET_TYPE.STANDARD): TargetUnits {
+		const targetUnits = getTarget(this, unit, targetType);
 
-		const target = targetFunction(this, unit);
-
-		return target;
+		return targetUnits;
 	}
 }

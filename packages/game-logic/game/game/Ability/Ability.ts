@@ -10,6 +10,7 @@ import {
 	createShieldSubEvent,
 	createStatusEffectSubEvent,
 } from "../Event/EventFactory";
+import { getAllTargetUnits } from "../Target/TargetUtils";
 
 export class Ability {
 	id: string;
@@ -42,10 +43,10 @@ export class Ability {
 	}
 
 	use(unit: Unit): UseAbilityEvent {
-		const targets = this.getTargets(unit);
+		const targetUnits = this.getTargets(unit);
 
 		// TODO fix abilities with no target
-		if (targets.length === 0) {
+		if (getAllTargetUnits(targetUnits).length == 0) {
 			//@ts-expect-error
 			return;
 		}
@@ -69,7 +70,7 @@ export class Ability {
 			payload: {
 				id: this.id,
 				name: this.data.name,
-				targetsId: targets.map(t => t?.id),
+				targetsId: getAllTargetUnits(targetUnits).map(t => t?.id), //TODO replace with main and secondary targetsId
 				subEvents: abilitySubEvents,
 			},
 		};
@@ -95,13 +96,13 @@ export class Ability {
 	}
 
 	getTargets(unit: Unit) {
-		const targets = unit.bm.getTarget(unit, this.data.target);
-		if (targets.length === 0 || targets[0] === undefined) {
-			//throw Error(`Couldnt find target for ${this.data.name}`);
+		const targetUnits = unit.bm.getTarget(unit, this.data.target);
+
+		if (getAllTargetUnits(targetUnits).length == 0) {
 			console.log(`Couldnt find target for ${this.data.name}`);
 		}
 
-		return targets;
+		return targetUnits;
 	}
 
 	onUse(unit: Unit, effects: PossibleTriggerEffect[]) {
