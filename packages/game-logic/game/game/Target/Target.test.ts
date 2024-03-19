@@ -2,9 +2,11 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Unit } from "../Unit/Unit";
 import { Weapons } from "../data";
 import { TARGET_TYPE } from "./TargetTypes";
+import { getAllTargetUnits } from "./TargetUtils";
 
 describe("Target", () => {
 	const bm = new BoardManager();
@@ -54,238 +56,378 @@ describe("Target", () => {
 	const unitAlone = new Unit(OWNER.TEAM_ONE, POSITION.TOP_MID, bmEmpty);
 	bmEmpty.addToBoard(unitAlone);
 
-	it("should work ADJACENT_ALLIES", () => {
-		const targetUnits = bm.getTarget(unit01, TARGET_TYPE.ADJACENT_ALLIES);
+	describe("Target Types", () => {
+		it("ADJACENT_ALLIES should work", () => {
+			const targetUnits = bm.getTarget(unit01, TARGET_TYPE.ADJACENT_ALLIES);
 
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(3);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-		expect(targetUnits.secondaryTargets).toContain(unit02);
-		expect(targetUnits.secondaryTargets).toContain(unit04);
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+			expect(targetUnits.secondaryTargets).toContain(unit02);
+			expect(targetUnits.secondaryTargets).toContain(unit04);
+		});
+
+		it("ALL_ALLIES should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_ALLIES);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(6);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+			expect(targetUnits.secondaryTargets).toContain(unit01);
+			expect(targetUnits.secondaryTargets).toContain(unit02);
+			expect(targetUnits.secondaryTargets).toContain(unit03);
+			expect(targetUnits.secondaryTargets).toContain(unit04);
+			expect(targetUnits.secondaryTargets).toContain(unit05);
+		});
+
+		it("ALL_ENEMIES should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_ENEMIES);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(6);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+			expect(targetUnits.secondaryTargets).toContain(unit15);
+		});
+
+		it("ALL_UNITS should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_UNITS);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(12);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+			expect(targetUnits.secondaryTargets).toContain(unit01);
+			expect(targetUnits.secondaryTargets).toContain(unit02);
+			expect(targetUnits.secondaryTargets).toContain(unit03);
+			expect(targetUnits.secondaryTargets).toContain(unit04);
+			expect(targetUnits.secondaryTargets).toContain(unit05);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+			expect(targetUnits.secondaryTargets).toContain(unit15);
+		});
+
+		it("BACK_ALLY should work", () => {
+			const targetUnitsWhenHaveBackAlly = bm.getTarget(unit00, TARGET_TYPE.BACK_ALLY);
+
+			expect(targetUnitsWhenHaveBackAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenHaveBackAlly.secondaryTargets).toHaveLength(1);
+			expect(targetUnitsWhenHaveBackAlly.secondaryTargets).toContain(unit01);
+
+			const targetUnitsWhenOnBackColumn = bm.getTarget(unit02, TARGET_TYPE.BACK_ALLY);
+
+			expect(targetUnitsWhenOnBackColumn.mainTarget).toBeNull();
+			expect(targetUnitsWhenOnBackColumn.secondaryTargets).toHaveLength(0);
+
+			const targetUnitsWhenNoBackAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.BACK_ALLY);
+
+			expect(targetUnitsWhenNoBackAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenNoBackAlly.secondaryTargets).toHaveLength(0);
+		});
+
+		it("DIAGONAL_ALLIES should work", () => {
+			const targetUnitsWhenMid = bm.getTarget(unit01, TARGET_TYPE.DIAGONAL_ALLIES);
+
+			expect(targetUnitsWhenMid.mainTarget).toBeNull();
+			expect(targetUnitsWhenMid.secondaryTargets).toHaveLength(2);
+			expect(targetUnitsWhenMid.secondaryTargets).toContain(unit03);
+			expect(targetUnitsWhenMid.secondaryTargets).toContain(unit05);
+
+			const targetUnitsWhenFrontOrBot = bm.getTarget(unit00, TARGET_TYPE.DIAGONAL_ALLIES);
+
+			expect(targetUnitsWhenFrontOrBot.mainTarget).toBeNull();
+			expect(targetUnitsWhenFrontOrBot.secondaryTargets).toHaveLength(1);
+			expect(targetUnitsWhenFrontOrBot.secondaryTargets).toContain(unit04);
+		});
+
+		it("FRONT_ALLY should work", () => {
+			const targetUnitsWhenHaveFrontAlly = bm.getTarget(unit02, TARGET_TYPE.FRONT_ALLY);
+
+			expect(targetUnitsWhenHaveFrontAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenHaveFrontAlly.secondaryTargets).toHaveLength(1);
+			expect(targetUnitsWhenHaveFrontAlly.secondaryTargets).toContain(unit01);
+
+			const targetUnitsWhenOnFrontColumn = bm.getTarget(unit00, TARGET_TYPE.FRONT_ALLY);
+
+			expect(targetUnitsWhenOnFrontColumn.mainTarget).toBeNull();
+			expect(targetUnitsWhenOnFrontColumn.secondaryTargets).toHaveLength(0);
+
+			const targetUnitsWhenNoFrontAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.FRONT_ALLY);
+
+			expect(targetUnitsWhenNoFrontAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenNoFrontAlly.secondaryTargets).toHaveLength(0);
+		});
+
+		it("FURTHEST should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST);
+
+			expect(targetUnits.mainTarget).toBe(unit15);
+			expect(targetUnits.secondaryTargets).toHaveLength(0);
+		});
+
+		it("FURTHEST_BOX should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_BOX);
+
+			expect(targetUnits.mainTarget).toBe(unit15);
+			expect(targetUnits.secondaryTargets).not.toContain(unit15);
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+		});
+
+		it("FURTHEST_COLUMN should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_COLUMN);
+
+			expect(targetUnits.mainTarget).toBe(unit15);
+			expect(targetUnits.secondaryTargets).not.toContain(unit15);
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+		});
+
+		it("FURTHEST_ROW should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_ROW);
+
+			expect(targetUnits.mainTarget).toBe(unit15);
+			expect(targetUnits.secondaryTargets).not.toContain(unit15);
+			expect(targetUnits.secondaryTargets).toHaveLength(2);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+		});
+
+		it("LOWEST_HEALTH_ALLY should work", () => {
+			const targetUnits = bm.getTarget(unit11, TARGET_TYPE.LOWEST_HEALTH_ALLY);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+		});
+
+		it("LOWEST_HEALTH_ENEMY should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.LOWEST_HEALTH_ENEMY);
+
+			expect(targetUnits.mainTarget).toBe(unit10);
+			expect(targetUnits.secondaryTargets).toHaveLength(0);
+		});
+
+		it("SAME_COLUMN_ALLIES should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SAME_COLUMN_ALLIES);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(2);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+			expect(targetUnits.secondaryTargets).toContain(unit03);
+		});
+
+		it("SAME_ROW_ALLIES should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SAME_ROW_ALLIES);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+			expect(targetUnits.secondaryTargets).toContain(unit01);
+			expect(targetUnits.secondaryTargets).toContain(unit02);
+		});
+
+		it("SELF should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SELF);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit00);
+		});
+
+		it("SIDE_ALLY should work", () => {
+			const targetUnitsWhenHaveSideAlly = bm.getTarget(unit00, TARGET_TYPE.SIDE_ALLY);
+
+			expect(targetUnitsWhenHaveSideAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenHaveSideAlly.secondaryTargets).toHaveLength(1);
+			expect(targetUnitsWhenHaveSideAlly.secondaryTargets).toContain(unit03);
+
+			const targetUnitsWhenNoSideAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.SIDE_ALLY);
+
+			expect(targetUnitsWhenNoSideAlly.mainTarget).toBeNull();
+			expect(targetUnitsWhenNoSideAlly.secondaryTargets).toHaveLength(0);
+		});
+
+		it("STANDARD should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD);
+
+			expect(targetUnits.mainTarget).toBe(unit10);
+			expect(targetUnits.secondaryTargets).toHaveLength(0);
+		});
+
+		it("STANDARD_BOX should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_BOX);
+
+			expect(targetUnits.mainTarget).toBe(unit10);
+			expect(targetUnits.secondaryTargets).not.toContain(unit10);
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+		});
+
+		it("STANDARD_COLUMN should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_COLUMN);
+
+			expect(targetUnits.mainTarget).toBe(unit10);
+			expect(targetUnits.secondaryTargets).not.toContain(unit10);
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+		});
+
+		it("STANDARD_ROW should work", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_ROW);
+
+			expect(targetUnits.mainTarget).toBe(unit10);
+			expect(targetUnits.secondaryTargets).not.toContain(unit10);
+			expect(targetUnits.secondaryTargets).toHaveLength(2);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+		});
 	});
 
-	it("should work ALL_ALLIES", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_ALLIES);
+	describe("Target Types with Taunt", () => {
+		beforeAll(() => {
+			// Apply TAUNT to 2 units to test target functions with taunt units
+			[unit11, unit14].forEach(unit =>
+				unit.statusEffectManager.applyStatusEffect({
+					name: STATUS_EFFECT.TAUNT,
+					quantity: 1,
+				}),
+			);
 
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(6);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-		expect(targetUnits.secondaryTargets).toContain(unit01);
-		expect(targetUnits.secondaryTargets).toContain(unit02);
-		expect(targetUnits.secondaryTargets).toContain(unit03);
-		expect(targetUnits.secondaryTargets).toContain(unit04);
-		expect(targetUnits.secondaryTargets).toContain(unit05);
+			/* Board
+				02 01 00 | 10 11(T) 12
+      			05 04 03 | 13 14(T) 15
+			*/
+		});
+
+		it("ALL_ENEMIES should work the same with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_ENEMIES);
+
+			expect(targetUnits.mainTarget).toBeNull();
+			expect(targetUnits.secondaryTargets).toHaveLength(6);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+			expect(targetUnits.secondaryTargets).toContain(unit15);
+		});
+
+		it("FURTHEST should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST);
+
+			expect(targetUnits.mainTarget).toBe(unit14);
+			expect(targetUnits.secondaryTargets).toHaveLength(0);
+		});
+
+		it("FURTHEST_BOX should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_BOX);
+
+			expect(targetUnits.mainTarget).toBe(unit14);
+			expect(targetUnits.secondaryTargets).not.toContain(unit14);
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+		});
+
+		it("FURTHEST_COLUMN should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_COLUMN);
+
+			expect(targetUnits.mainTarget).toBe(unit14);
+			expect(targetUnits.secondaryTargets).not.toContain(unit14);
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit11);
+		});
+
+		it("FURTHEST_ROW should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_ROW);
+
+			expect(targetUnits.mainTarget).toBe(unit14);
+			expect(targetUnits.secondaryTargets).not.toContain(unit14);
+			expect(targetUnits.secondaryTargets).toHaveLength(2);
+			expect(targetUnits.secondaryTargets).toContain(unit13);
+			expect(targetUnits.secondaryTargets).toContain(unit15);
+		});
+
+		it("LOWEST_HEALTH_ENEMY should work with TAUNT enemies", () => {
+			const targetUnitsFullHealth = bm.getTarget(unit00, TARGET_TYPE.LOWEST_HEALTH_ENEMY);
+
+			expect(targetUnitsFullHealth.mainTarget).toBe(unit11);
+			expect(targetUnitsFullHealth.secondaryTargets).toHaveLength(0);
+
+			unit14.receiveDamage(10);
+
+			const targetUnitsWhenOneIsDamaged = bm.getTarget(unit00, TARGET_TYPE.LOWEST_HEALTH_ENEMY);
+
+			expect(targetUnitsWhenOneIsDamaged.mainTarget).toBe(unit14);
+			expect(targetUnitsWhenOneIsDamaged.secondaryTargets).toHaveLength(0);
+		});
+
+		it("STANDARD should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD);
+
+			expect(targetUnits.mainTarget).toBe(unit11);
+			expect(targetUnits.secondaryTargets).toHaveLength(0);
+		});
+
+		it("STANDARD_BOX should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_BOX);
+
+			expect(targetUnits.mainTarget).toBe(unit11);
+			expect(targetUnits.secondaryTargets).not.toContain(unit11);
+			expect(targetUnits.secondaryTargets).toHaveLength(3);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+			expect(targetUnits.secondaryTargets).toContain(unit15);
+		});
+
+		it("STANDARD_COLUMN should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_COLUMN);
+
+			expect(targetUnits.mainTarget).toBe(unit11);
+			expect(targetUnits.secondaryTargets).not.toContain(unit11);
+			expect(targetUnits.secondaryTargets).toHaveLength(1);
+			expect(targetUnits.secondaryTargets).toContain(unit14);
+		});
+
+		it("STANDARD_ROW should work with TAUNT enemies", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_ROW);
+
+			expect(targetUnits.mainTarget).toBe(unit11);
+			expect(targetUnits.secondaryTargets).not.toContain(unit11);
+			expect(targetUnits.secondaryTargets).toHaveLength(2);
+			expect(targetUnits.secondaryTargets).toContain(unit10);
+			expect(targetUnits.secondaryTargets).toContain(unit12);
+		});
+
+		afterAll(() => {
+			[unit11, unit14].forEach(unit =>
+				unit.statusEffectManager.removeAllStacks(STATUS_EFFECT.TAUNT),
+			);
+		});
 	});
 
-	it("should work ALL_ENEMIES", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_ENEMIES);
+	describe("Target Utils", () => {
+		it("getAllTargetUnits", () => {
+			const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_BOX);
 
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(6);
-		expect(targetUnits.secondaryTargets).toContain(unit10);
-		expect(targetUnits.secondaryTargets).toContain(unit11);
-		expect(targetUnits.secondaryTargets).toContain(unit12);
-		expect(targetUnits.secondaryTargets).toContain(unit13);
-		expect(targetUnits.secondaryTargets).toContain(unit14);
-		expect(targetUnits.secondaryTargets).toContain(unit15);
-	});
+			const allTargets = getAllTargetUnits(targetUnits);
 
-	it("should work ALL_UNITS", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.ALL_UNITS);
-
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(12);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-		expect(targetUnits.secondaryTargets).toContain(unit01);
-		expect(targetUnits.secondaryTargets).toContain(unit02);
-		expect(targetUnits.secondaryTargets).toContain(unit03);
-		expect(targetUnits.secondaryTargets).toContain(unit04);
-		expect(targetUnits.secondaryTargets).toContain(unit05);
-		expect(targetUnits.secondaryTargets).toContain(unit10);
-		expect(targetUnits.secondaryTargets).toContain(unit11);
-		expect(targetUnits.secondaryTargets).toContain(unit12);
-		expect(targetUnits.secondaryTargets).toContain(unit13);
-		expect(targetUnits.secondaryTargets).toContain(unit14);
-		expect(targetUnits.secondaryTargets).toContain(unit15);
-	});
-
-	it("should work BACK_ALLY", () => {
-		const targetUnitsWhenHaveBackAlly = bm.getTarget(unit00, TARGET_TYPE.BACK_ALLY);
-
-		expect(targetUnitsWhenHaveBackAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenHaveBackAlly.secondaryTargets).toHaveLength(1);
-		expect(targetUnitsWhenHaveBackAlly.secondaryTargets).toContain(unit01);
-
-		const targetUnitsWhenOnBackColumn = bm.getTarget(unit02, TARGET_TYPE.BACK_ALLY);
-
-		expect(targetUnitsWhenOnBackColumn.mainTarget).toBeNull();
-		expect(targetUnitsWhenOnBackColumn.secondaryTargets).toHaveLength(0);
-
-		const targetUnitsWhenNoBackAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.BACK_ALLY);
-
-		expect(targetUnitsWhenNoBackAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenNoBackAlly.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work DIAGONAL_ALLIES", () => {
-		const targetUnitsWhenMid = bm.getTarget(unit01, TARGET_TYPE.DIAGONAL_ALLIES);
-
-		expect(targetUnitsWhenMid.mainTarget).toBeNull();
-		expect(targetUnitsWhenMid.secondaryTargets).toHaveLength(2);
-		expect(targetUnitsWhenMid.secondaryTargets).toContain(unit03);
-		expect(targetUnitsWhenMid.secondaryTargets).toContain(unit05);
-
-		const targetUnitsWhenFrontOrBot = bm.getTarget(unit00, TARGET_TYPE.DIAGONAL_ALLIES);
-
-		expect(targetUnitsWhenFrontOrBot.mainTarget).toBeNull();
-		expect(targetUnitsWhenFrontOrBot.secondaryTargets).toHaveLength(1);
-		expect(targetUnitsWhenFrontOrBot.secondaryTargets).toContain(unit04);
-	});
-
-	it("should work FRONT_ALLY", () => {
-		const targetUnitsWhenHaveFrontAlly = bm.getTarget(unit02, TARGET_TYPE.FRONT_ALLY);
-
-		expect(targetUnitsWhenHaveFrontAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenHaveFrontAlly.secondaryTargets).toHaveLength(1);
-		expect(targetUnitsWhenHaveFrontAlly.secondaryTargets).toContain(unit01);
-
-		const targetUnitsWhenOnFrontColumn = bm.getTarget(unit00, TARGET_TYPE.FRONT_ALLY);
-
-		expect(targetUnitsWhenOnFrontColumn.mainTarget).toBeNull();
-		expect(targetUnitsWhenOnFrontColumn.secondaryTargets).toHaveLength(0);
-
-		const targetUnitsWhenNoFrontAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.FRONT_ALLY);
-
-		expect(targetUnitsWhenNoFrontAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenNoFrontAlly.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work FURTHEST", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST);
-
-		expect(targetUnits.mainTarget).toBe(unit15);
-		expect(targetUnits.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work FURTHEST_BOX", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_BOX);
-
-		expect(targetUnits.mainTarget).toBe(unit15);
-		expect(targetUnits.secondaryTargets).not.toContain(unit15);
-		expect(targetUnits.secondaryTargets).toHaveLength(3);
-		expect(targetUnits.secondaryTargets).toContain(unit11);
-		expect(targetUnits.secondaryTargets).toContain(unit12);
-		expect(targetUnits.secondaryTargets).toContain(unit14);
-	});
-
-	it("should work FURTHEST_COLUMN", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_COLUMN);
-
-		expect(targetUnits.mainTarget).toBe(unit15);
-		expect(targetUnits.secondaryTargets).not.toContain(unit15);
-		expect(targetUnits.secondaryTargets).toHaveLength(1);
-		expect(targetUnits.secondaryTargets).toContain(unit12);
-	});
-
-	it("should work FURTHEST_ROW", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.FURTHEST_ROW);
-
-		expect(targetUnits.mainTarget).toBe(unit15);
-		expect(targetUnits.secondaryTargets).not.toContain(unit15);
-		expect(targetUnits.secondaryTargets).toHaveLength(2);
-		expect(targetUnits.secondaryTargets).toContain(unit13);
-		expect(targetUnits.secondaryTargets).toContain(unit14);
-	});
-
-	it("should work LOWEST_HEALTH_ALLY", () => {
-		const targetUnits = bm.getTarget(unit11, TARGET_TYPE.LOWEST_HEALTH_ALLY);
-
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(1);
-		expect(targetUnits.secondaryTargets).toContain(unit10);
-	});
-
-	it("should work LOWEST_HEALTH_ENEMY", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.LOWEST_HEALTH_ENEMY);
-
-		expect(targetUnits.mainTarget).toBe(unit10);
-		expect(targetUnits.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work SAME_COLUMN_ALLIES", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SAME_COLUMN_ALLIES);
-
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(2);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-		expect(targetUnits.secondaryTargets).toContain(unit03);
-	});
-
-	it("should work SAME_ROW_ALLIES", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SAME_ROW_ALLIES);
-
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(3);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-		expect(targetUnits.secondaryTargets).toContain(unit01);
-		expect(targetUnits.secondaryTargets).toContain(unit02);
-	});
-
-	it("should work SELF", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.SELF);
-
-		expect(targetUnits.mainTarget).toBeNull();
-		expect(targetUnits.secondaryTargets).toHaveLength(1);
-		expect(targetUnits.secondaryTargets).toContain(unit00);
-	});
-
-	it("should work SIDE_ALLY", () => {
-		const targetUnitsWhenHaveSideAlly = bm.getTarget(unit00, TARGET_TYPE.SIDE_ALLY);
-
-		expect(targetUnitsWhenHaveSideAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenHaveSideAlly.secondaryTargets).toHaveLength(1);
-		expect(targetUnitsWhenHaveSideAlly.secondaryTargets).toContain(unit03);
-
-		const targetUnitsWhenNoSideAlly = bmEmpty.getTarget(unitAlone, TARGET_TYPE.SIDE_ALLY);
-
-		expect(targetUnitsWhenNoSideAlly.mainTarget).toBeNull();
-		expect(targetUnitsWhenNoSideAlly.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work STANDARD", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD);
-
-		expect(targetUnits.mainTarget).toBe(unit10);
-		expect(targetUnits.secondaryTargets).toHaveLength(0);
-	});
-
-	it("should work STANDARD_BOX", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_BOX);
-
-		expect(targetUnits.mainTarget).toBe(unit10);
-		expect(targetUnits.secondaryTargets).not.toContain(unit10);
-		expect(targetUnits.secondaryTargets).toHaveLength(3);
-		expect(targetUnits.secondaryTargets).toContain(unit11);
-		expect(targetUnits.secondaryTargets).toContain(unit13);
-		expect(targetUnits.secondaryTargets).toContain(unit14);
-	});
-
-	it("should work STANDARD_COLUMN", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_COLUMN);
-
-		expect(targetUnits.mainTarget).toBe(unit10);
-		expect(targetUnits.mainTarget).not.toContain(unit10);
-		expect(targetUnits.secondaryTargets).toHaveLength(1);
-		expect(targetUnits.secondaryTargets).toContain(unit13);
-	});
-
-	it("should work STANDARD_ROW", () => {
-		const targetUnits = bm.getTarget(unit00, TARGET_TYPE.STANDARD_ROW);
-
-		expect(targetUnits.mainTarget).toBe(unit10);
-		expect(targetUnits.secondaryTargets).not.toContain(unit10);
-		expect(targetUnits.secondaryTargets).toHaveLength(2);
-		expect(targetUnits.secondaryTargets).toContain(unit11);
-		expect(targetUnits.secondaryTargets).toContain(unit12);
+			expect(allTargets.length).toBe(4);
+			expect(allTargets).toContain(unit15);
+			expect(allTargets).toContain(unit11);
+			expect(allTargets).toContain(unit12);
+			expect(allTargets).toContain(unit14);
+		});
 	});
 });
