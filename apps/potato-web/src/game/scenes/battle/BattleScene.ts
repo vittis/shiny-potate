@@ -11,6 +11,7 @@ import {
 } from "./battleUnit/BattleUnitAbilities";
 import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
+import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
@@ -56,8 +57,6 @@ export async function fetchVanillaBattleSetup() {
 
 	return response.data;
 }
-
-export const GAME_LOOP_SPEED = 20;
 
 export class Battle extends Phaser.Scene {
 	text: any;
@@ -424,8 +423,9 @@ export class Battle extends Phaser.Scene {
 			unit.onStart();
 		});
 
+		console.log("hello from beginning", useGameControlsStore.getState().stepTime);
 		stepsThatHaveEvents.forEach(step => {
-			const delay = step * GAME_LOOP_SPEED;
+			const delay = step * useGameControlsStore.getState().stepTime;
 
 			const timeEvent = this.time.addEvent({
 				delay: delay,

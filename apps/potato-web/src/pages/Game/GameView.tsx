@@ -3,6 +3,8 @@ import { PHASER_CONFIG } from "@/game/config";
 import { Battle } from "@/game/scenes/battle/BattleScene";
 import { useGameState } from "@/services/state/useGameState";
 import { useEffect } from "react";
+import { GameSpeedControls } from "./GameSpeedControls";
+import { CopyEventHistoryWidget } from "./CopyEventHistoryWidget";
 
 const GameView = () => {
 	const gameInstance = useGameState(state => state.gameInstance);
@@ -29,6 +31,10 @@ const GameView = () => {
 	return (
 		<>
 			<App />
+
+			<GameSpeedControls />
+
+			<CopyEventHistoryWidget />
 		</>
 	);
 };

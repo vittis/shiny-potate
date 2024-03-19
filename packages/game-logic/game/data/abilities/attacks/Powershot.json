@@ -5,7 +5,7 @@
 		"USE_WEAPON_ABILITY"
 	],
 	"target": "STANDARD_ROW",
-	"cooldown": 100,
+	"cooldown": 70,
 	"effects": [
 		{
 			"type": "DAMAGE",

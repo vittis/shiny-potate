@@ -35,7 +35,7 @@ export function loadAssets(scene: Phaser.Scene) {
 	scene.load.image("ability_weak_spot", "assets/abilities/weak_spot.png");
 	scene.load.image("ability_stab", "assets/abilities/stab.png");
 	scene.load.image("ability_quick_attack", "assets/abilities/quick_attack.png");
-	scene.load.image("ability_phallanx_fury", "assets/abilities/phallanx_fury.png");
+	scene.load.image("ability_phallanx_fury", "assets/abilities/phalanx_fury.png");
 	scene.load.image("ability_reinforce_allies", "assets/abilities/reinforce_allies.png");
 
 	// Spell

@@ -1,8 +1,9 @@
+import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { BattleUnit } from "./BattleUnit";
 
-const animationSpeed = 0.6;
-
 export function createWiggleAnimation(unit: BattleUnit) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const fx = unit.sprite.preFX?.addDisplacement("distort", 0);
 	unit.scene.tweens.add({
 		targets: fx,
@@ -22,6 +23,8 @@ export function createDeathAnimation({
 	unit: BattleUnit;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const deathTween = unit.scene.tweens.add({
 		targets: unit.sprite,
 		alpha: 0,
@@ -52,6 +55,8 @@ export function createAttackAnimation({
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	// const unitGlowFx = unit.sprite.preFX?.addGlow(0xeeee00, 2);
 
 	//const targetGlowFx = target.sprite.preFX?.addGlow(0xff0000, 0);
@@ -234,6 +239,8 @@ export function createTriggerEffectAnimation({
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const targetGlowFx = target.sprite.preFX?.addGlow(0x10ab8c, 0);
 	unit.scene.tweens.add({
 		targets: targetGlowFx,
@@ -308,6 +315,8 @@ export function createHealingWordAnimation({
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const healingWordTween = unit.scene.tweens.chain({
 		delay: 50 * animationSpeed,
 		targets: unit,
@@ -349,6 +358,8 @@ export function createPowershotAnimation({
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const RUN_DISTANCE = unit.owner === 0 ? 70 : -70;
 	const DISTANCE_TO_ENEMY = unit.owner === 0 ? 80 : -80;
 	const PUSHBACK_DISTANCE = unit.owner === 0 ? 45 : -45;
@@ -517,6 +528,8 @@ export function createHeadCrushAnimation({
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
 }) {
+	const animationSpeed = useGameControlsStore.getState().animationSpeed;
+
 	const RUN_DISTANCE = unit.owner === 0 ? 70 : -70;
 	const DISTANCE_TO_ENEMY = unit.owner === 0 ? 80 : -80;
 	const PUSHBACK_DISTANCE = unit.owner === 0 ? 45 : -45;

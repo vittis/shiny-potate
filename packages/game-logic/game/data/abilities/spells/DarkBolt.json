@@ -3,7 +3,7 @@
   "type": "SPELL",
   "tags": [],
   "target": "STANDARD",
-  "cooldown": 40,
+  "cooldown": 45,
   "effects": [
     {
       "type": "DAMAGE",
@@ -11,7 +11,7 @@
       "target": "STANDARD",
       "conditions": [],
       "payload": {
-        "value": 30
+        "value": 35
       }
     },
     {
@@ -20,7 +20,7 @@
       "target": "SELF",
       "conditions": [],
       "payload": {
-        "value": 5
+        "value": 15
       }
     }
   ]

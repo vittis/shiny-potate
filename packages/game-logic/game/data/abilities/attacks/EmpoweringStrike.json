@@ -27,18 +27,6 @@
           "quantity": 15
         }
       ]
-    },
-    {
-      "type": "STATUS_EFFECT",
-      "trigger": "ON_HIT",
-      "target": "STANDARD",
-      "conditions": [],
-      "payload": [
-        {
-          "name": "VULNERABLE",
-          "quantity": 5
-        }
-      ]
     }
   ]
 }

@@ -8,7 +8,7 @@
 		{
 			"type": "DAMAGE",
 			"trigger": "ON_HIT",
-			"target": "STANDARD",
+			"target": "STANDARD_BOX",
 			"conditions": [],
 			"payload": {
 				"value": 30

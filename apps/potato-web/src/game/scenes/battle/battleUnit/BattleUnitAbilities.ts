@@ -1,4 +1,4 @@
-import { GAME_LOOP_SPEED } from "../BattleScene";
+import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { BattleUnit } from "./BattleUnit";
 
 const ABILITY_ICON_SIZE = 28;
@@ -110,12 +110,13 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 
 	createAbilityOverlayTween() {
 		this.abilities.forEach((ability, index: number) => {
-			ability.overlay.setAlpha(0.6);
+			ability.overlay.setAlpha(0.7);
 
 			ability.tween = this.scene.tweens.add({
 				targets: ability.overlay,
 				scaleY: { from: 1, to: 0 },
-				duration: GAME_LOOP_SPEED * this.dataUnit.abilities[index].cooldown,
+				duration:
+					useGameControlsStore.getState().stepTime * this.dataUnit.abilities[index].cooldown,
 				ease: "Linear",
 				repeat: -1,
 			});
