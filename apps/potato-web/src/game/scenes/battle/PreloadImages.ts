@@ -58,6 +58,9 @@ export function loadAssets(scene: Phaser.Scene) {
 	scene.load.image("statusEffect_thorn", "assets/status_effects/thorn.png");
 	scene.load.image("statusEffect_vulnerable", "assets/status_effects/vulnerable.png");
 
+	// Disables
+	scene.load.image("disable_stun", "assets/hammer.png");
+
 	// Unit
 	scene.load.spritesheet("unit", "assets/unit.png", {
 		frameWidth: 180,

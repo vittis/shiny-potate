@@ -12,6 +12,7 @@ import { Ability, BattleUnitAbilities } from "./BattleUnitAbilities";
 import { BattleUnitStatusEffects } from "./BattleUnitStatusEffects";
 import { BattleUnitBars } from "./BattleUnitBars";
 import { addFadingText } from "../utils/text";
+import { BattleUnitDisables } from "./BattleUnitDisables";
 
 export class BattleUnit extends Phaser.GameObjects.Container {
 	public id: string;
@@ -31,6 +32,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 
 	public abilitiesManager: BattleUnitAbilities;
 	public statusEffectsManager: BattleUnitStatusEffects;
+	public disablesManager: BattleUnitDisables;
 	public barsManager: BattleUnitBars;
 
 	public isDead = false;
@@ -82,6 +84,9 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		this.statusEffectsManager = new BattleUnitStatusEffects(scene, dataUnit);
 		this.add(this.statusEffectsManager);
 
+		this.disablesManager = new BattleUnitDisables(this, scene, dataUnit);
+		this.add(this.disablesManager);
+
 		scene.add.existing(this);
 	}
 
@@ -101,6 +106,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		onEnd,
 		onStart,
 		allUnits,
+		step,
 	}: {
 		event: StepEvent;
 		targets?: BattleUnit[];
@@ -108,6 +114,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		onAttack?: Function;
 		onStart?: Function;
 		allUnits?: BattleUnit[];
+		step?: number;
 	}) {
 		// console.log("playing ", event.type, event.trigger);
 
@@ -147,7 +154,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 							);
 						}
 
-						target.playEvent({ event: damageSubEvent });
+						target.playEvent({ event: damageSubEvent, step });
 					});
 
 				const statusEffectEvents =
@@ -165,7 +172,25 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply status effect on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: statusEffectSubEvent });
+						target.playEvent({ event: statusEffectSubEvent, step });
+					});
+
+				const disableEvents =
+					(event.subEvents?.filter(
+						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DISABLE",
+					) as StepEvent[]) || [];
+
+				disableEvents &&
+					disableEvents.forEach(disableSubEvent => {
+						const targetId = disableSubEvent.payload.targetId as string;
+
+						const target = allUnits?.find(unit => unit.id === targetId);
+						if (!target) {
+							throw Error(
+								`Trying to apply disable on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
+							);
+						}
+						target.playEvent({ event: disableSubEvent, step });
 					});
 
 				const shieldEvents =
@@ -183,7 +208,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: shieldSubEvent });
+						target.playEvent({ event: shieldSubEvent, step });
 					});
 
 				const healEvents =
@@ -201,7 +226,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: healEvent });
+						target.playEvent({ event: healEvent, step });
 					});
 			};
 
@@ -262,7 +287,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 							);
 						}
 
-						target.playEvent({ event: damageSubEvent });
+						target.playEvent({ event: damageSubEvent, step });
 					});
 
 				const statusEffectEvents =
@@ -280,7 +305,25 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply status effect on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: statusEffectSubEvent });
+						target.playEvent({ event: statusEffectSubEvent, step });
+					});
+
+				const disableEvents =
+					(event.payload?.subEvents?.filter(
+						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DISABLE",
+					) as StepEvent[]) || [];
+
+				disableEvents &&
+					disableEvents.forEach(disableSubEvent => {
+						const targetId = disableSubEvent.payload.targetId as string;
+
+						const target = allUnits?.find(unit => unit.id === targetId);
+						if (!target) {
+							throw Error(
+								`Trying to apply disable on USE_ABILITY: Couldn't find target with id: ${targetId}`,
+							);
+						}
+						target.playEvent({ event: disableSubEvent, step });
 					});
 
 				const shieldEvents =
@@ -298,7 +341,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: shieldSubEvent });
+						target.playEvent({ event: shieldSubEvent, step });
 					});
 
 				const healEvents =
@@ -316,7 +359,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: healEvent });
+						target.playEvent({ event: healEvent, step });
 					});
 			};
 
@@ -352,6 +395,12 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 						quantity: statusEffect.quantity,
 					});
 				}
+			});
+		}
+
+		if (event.type === "INSTANT_EFFECT" && event.payload.type === "DISABLE") {
+			event.payload.payload.forEach(disable => {
+				this.disablesManager.addDisable(disable, step as number);
 			});
 		}
 

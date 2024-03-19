@@ -222,6 +222,10 @@ export class Battle extends Phaser.Scene {
 			}
 		};
 
+		this.units.forEach(unit => {
+			unit.disablesManager.decreaseDurations(step);
+		});
+
 		/* const hasFaintEvent = eventsOnThisStep.find(
       (event) => event.type === "TRIGGER_EFFECT" && event.trigger === "SELF_FAINT"
     ); */
@@ -358,7 +362,7 @@ export class Battle extends Phaser.Scene {
 			}
 
 			//  "allUnits" is a hack to access all units from the event, need to think a better way in the future
-			eventPile.push({ unit, event, targets, onEnd, onStart, allUnits: this.units });
+			eventPile.push({ unit, event, targets, onEnd, onStart, allUnits: this.units, step });
 		});
 		const unit: BattleUnit = eventPile[0].unit;
 		unit.playEvent(eventPile[0]);
@@ -400,7 +404,10 @@ export class Battle extends Phaser.Scene {
 	resumeTimeEvents() {
 		this.isPlayingEventAnimation = false;
 		this.units.forEach(unit => {
-			unit.abilitiesManager.resumeSkillCooldown();
+			unit.disablesManager.resumeDisableDuration();
+			if (!unit.disablesManager.isStunned()) {
+				unit.abilitiesManager.resumeSkillCooldown();
+			}
 		});
 		this.timeEventsHistory.forEach(event => {
 			event.paused = false;
@@ -409,6 +416,7 @@ export class Battle extends Phaser.Scene {
 	pauseTimeEvents() {
 		this.units.forEach(unit => {
 			unit.abilitiesManager.pauseSkillCooldown();
+			unit.disablesManager.pauseDisableDuration();
 		});
 		this.timeEventsHistory.forEach(event => {
 			event.paused = true;
