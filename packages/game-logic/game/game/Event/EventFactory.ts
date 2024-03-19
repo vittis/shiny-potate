@@ -36,6 +36,31 @@ export function createStatusEffectSubEvent(
 	return subEvents;
 }
 
+export function createDisableSubEvent(
+	unit: Unit,
+	effect: TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>,
+) {
+	const targetUnits = unit.bm.getTarget(unit, effect.target);
+
+	const subEvents = getAllTargetUnits(targetUnits).map(target => {
+		const payloadDisables = effect.payload.map(disable => ({
+			name: disable.name,
+			duration: disable.duration,
+		}));
+
+		return {
+			type: SUBEVENT_TYPE.INSTANT_EFFECT,
+			payload: {
+				type: INSTANT_EFFECT_TYPE.DISABLE,
+				targetId: target.id,
+				payload: [...payloadDisables],
+			},
+		} as SubEvent;
+	});
+
+	return subEvents;
+}
+
 export function createHealSubEvent(unit: Unit, effect: TriggerEffect<TRIGGER_EFFECT_TYPE.HEAL>) {
 	const targetUnits = unit.bm.getTarget(unit, effect.target);
 

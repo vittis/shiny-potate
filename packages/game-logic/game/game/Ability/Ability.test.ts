@@ -2,7 +2,7 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { EVENT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
+import { EVENT_TYPE, INSTANT_EFFECT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
 import { sortAndExecuteEvents } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
@@ -606,6 +606,70 @@ describe("Ability", () => {
 			sortAndExecuteEvents(bm, unit.stepEvents);
 
 			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)).toBeFalsy();
+		});
+	});
+
+	describe("Summon Boar (STUN)", () => {
+		it("should generate STUN subEvent correctly", () => {
+			const { unit1, unit2 } = setupBoard();
+
+			const ability = new Ability(Abilities.SummonBoar);
+			const event = ability.use(unit1);
+
+			expect(event.payload.subEvents).toHaveLength(2);
+			expect(event.payload.subEvents[0].payload.type).toBe(INSTANT_EFFECT_TYPE.DAMAGE);
+
+			const durationStun = (ability.data.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>)
+				.payload[0].duration;
+
+			expect(event.payload.subEvents[1]).toEqual({
+				type: "INSTANT_EFFECT",
+				payload: {
+					type: "DISABLE",
+					targetId: unit2.id,
+					payload: [
+						{
+							name: "STUN",
+							duration: durationStun,
+						},
+					],
+				},
+			});
+		});
+
+		it("should not decrease ability cooldown while STUNNED", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			bm.addToBoard(unit);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
+			bm.addToBoard(unit2);
+
+			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.abilities[0].progress).toBe(0);
+
+			for (let i = 0; i < 10; i++) unit.step(i);
+
+			expect(unit.abilities[0].progress).toBe(10);
+
+			for (let i = 0; i < unit.abilities[0].cooldown - 10; i++) unit.step(i);
+
+			expect(unit.stepEvents.length).toBe(1);
+			expect(unit.stepEvents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+
+			const ability = new Ability(Abilities.SummonBoar);
+			const event = ability.use(unit2);
+
+			sortAndExecuteEvents(bm, [event]);
+
+			const durationStun = (ability.data.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>)
+				.payload[0].duration;
+
+			expect(unit.abilities[0].progress).toBe(0);
+
+			for (let i = 0; i < durationStun; i++) unit.step(i);
+
+			expect(unit.abilities[0].progress).toBe(0);
 		});
 	});
 });

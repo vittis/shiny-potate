@@ -11,7 +11,7 @@ describe("Disable", () => {
 				duration: 20,
 			});
 
-			expect(manager.activeDisable).toEqual([
+			expect(manager.activeDisables).toEqual([
 				{
 					name: DISABLE.STUN,
 					duration: 20,
@@ -27,14 +27,14 @@ describe("Disable", () => {
 				duration: 20,
 			});
 
-			expect(manager.activeDisable[0].duration).toBe(20);
+			expect(manager.activeDisables[0].duration).toBe(20);
 
 			manager.applyDisable({
 				name: DISABLE.STUN,
 				duration: 10,
 			});
 
-			expect(manager.activeDisable[0].duration).toBe(20);
+			expect(manager.activeDisables[0].duration).toBe(20);
 		});
 
 		it("when applies disable with more duration should replace duration", () => {
@@ -45,14 +45,14 @@ describe("Disable", () => {
 				duration: 20,
 			});
 
-			expect(manager.activeDisable[0].duration).toBe(20);
+			expect(manager.activeDisables[0].duration).toBe(20);
 
 			manager.applyDisable({
 				name: DISABLE.STUN,
 				duration: 30,
 			});
 
-			expect(manager.activeDisable[0].duration).toBe(30);
+			expect(manager.activeDisables[0].duration).toBe(30);
 		});
 
 		it("check if has disable", () => {
@@ -68,7 +68,7 @@ describe("Disable", () => {
 			expect(manager.hasDisable(DISABLE.STUN)).toBeTruthy();
 		});
 
-		it("remove stack", () => {
+		it("decrease durations", () => {
 			const manager = new DisableManager();
 
 			manager.applyDisable({
@@ -76,14 +76,14 @@ describe("Disable", () => {
 				duration: 20,
 			});
 
-			expect(manager.activeDisable[0].duration).toBe(20);
+			expect(manager.activeDisables[0].duration).toBe(20);
 
-			manager.removeStack(DISABLE.STUN);
+			manager.decreaseDurations();
 
-			expect(manager.activeDisable[0].duration).toBe(19);
+			expect(manager.activeDisables[0].duration).toBe(19);
 		});
 
-		it("remove disable when remove last stack", () => {
+		it("remove disable when decrease last duration", () => {
 			const manager = new DisableManager();
 
 			manager.applyDisable({
@@ -92,9 +92,9 @@ describe("Disable", () => {
 			});
 
 			expect(manager.hasDisable(DISABLE.STUN)).toBeTruthy();
-			expect(manager.activeDisable[0].duration).toBe(1);
+			expect(manager.activeDisables[0].duration).toBe(1);
 
-			manager.removeStack(DISABLE.STUN);
+			manager.decreaseDurations();
 
 			expect(manager.hasDisable(DISABLE.STUN)).toBeFalsy();
 		});

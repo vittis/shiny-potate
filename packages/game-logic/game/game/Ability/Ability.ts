@@ -6,6 +6,7 @@ import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/
 import { nanoid } from "nanoid";
 import {
 	createDamageSubEvent,
+	createDisableSubEvent,
 	createHealSubEvent,
 	createShieldSubEvent,
 	createStatusEffectSubEvent,
@@ -119,6 +120,8 @@ export class Ability {
 				newSubEvents = createShieldSubEvent(unit, effect);
 			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
 				newSubEvents = createStatusEffectSubEvent(unit, effect);
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
+				newSubEvents = createDisableSubEvent(unit, effect);
 			}
 
 			subEvents = [...subEvents, ...newSubEvents];
@@ -141,6 +144,8 @@ export class Ability {
 				newSubEvents = createShieldSubEvent(unit, effect);
 			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
 				newSubEvents = createStatusEffectSubEvent(unit, effect);
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
+				newSubEvents = createDisableSubEvent(unit, effect);
 			}
 
 			subEvents = [...subEvents, ...newSubEvents];

@@ -23,6 +23,8 @@ import { StatusEffectManager } from "../StatusEffect/StatusEffectManager";
 import { ActiveStatusEffect, STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TriggerManager } from "../Trigger/TriggerManager";
 import { TRIGGER } from "../Trigger/TriggerTypes";
+import { DisableManager } from "../Disable/DisableManager";
+import { DISABLE } from "../Disable/DisableTypes";
 
 // use for better perfomance
 /* export enum EVENT_TYPE {
@@ -49,6 +51,7 @@ export class Unit {
 	public abilityManager: AbilityManager;
 	public perkManager: PerkManager;
 	public statusEffectManager: StatusEffectManager;
+	public disableManager: DisableManager;
 	public triggerManager: TriggerManager;
 
 	get stats() {
@@ -87,6 +90,10 @@ export class Unit {
 		return this.statusEffectManager.activeStatusEffects;
 	}
 
+	get disables() {
+		return this.disableManager.activeDisables;
+	}
+
 	constructor(owner: OWNER, position: POSITION, bm?: BoardManager) {
 		this.statsManager = new StatsManager();
 		this.equipmentManager = new EquipmentManager();
@@ -94,6 +101,7 @@ export class Unit {
 		this.abilityManager = new AbilityManager();
 		this.perkManager = new PerkManager();
 		this.statusEffectManager = new StatusEffectManager();
+		this.disableManager = new DisableManager();
 		this.triggerManager = new TriggerManager();
 		this.bm = bm as BoardManager;
 
@@ -193,7 +201,14 @@ export class Unit {
 	step(stepNumber: number) {
 		this.currentStep = stepNumber;
 
-		//this.decreaseDisables();
+		this.statusEffectManager.tickEffectStep(this);
+
+		if (this.disableManager.hasDisable(DISABLE.STUN)) {
+			this.disableManager.decreaseDurations();
+			return;
+		}
+
+		this.disableManager.decreaseDurations();
 
 		this.abilities.forEach(ability => {
 			ability.step();
@@ -226,8 +241,6 @@ export class Unit {
 				}
 			}
 		});
-
-		this.statusEffectManager.tickEffectStep(this);
 	}
 
 	applySubEvents(subEvents: SubEvent[]) {
@@ -257,6 +270,12 @@ export class Unit {
 
 			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.HEAL) {
 				target.receiveHeal(subEvent.payload.payload.value);
+			}
+
+			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.DISABLE) {
+				subEvent.payload.payload.forEach(disable => {
+					target.disableManager.applyDisable(disable);
+				});
 			}
 		});
 	}

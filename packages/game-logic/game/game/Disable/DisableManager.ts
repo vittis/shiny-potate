@@ -2,18 +2,18 @@ import { ActiveStatusEffect, STATUS_EFFECT } from "../StatusEffect/StatusEffectT
 import { ActiveDisable, DISABLE } from "./DisableTypes";
 
 export class DisableManager {
-	private _activeDisable = [] as ActiveDisable[];
+	private _activeDisables = [] as ActiveDisable[];
 
 	constructor() {}
 
-	get activeDisable() {
-		return this._activeDisable;
+	get activeDisables() {
+		return this._activeDisables;
 	}
 
 	applyDisable(disable: ActiveDisable) {
 		const alreadyHasDisable = this.hasDisable(disable.name);
 		if (alreadyHasDisable) {
-			this._activeDisable = this._activeDisable.map(activeDisable => {
+			this._activeDisables = this._activeDisables.map(activeDisable => {
 				if (activeDisable.name === disable.name) {
 					const duration =
 						disable.duration > activeDisable.duration ? disable.duration : activeDisable.duration;
@@ -26,31 +26,30 @@ export class DisableManager {
 				return activeDisable;
 			});
 		} else {
-			this._activeDisable = [...this._activeDisable, disable];
+			this._activeDisables = [...this._activeDisables, disable];
 		}
 	}
 
 	hasDisable(name: DISABLE): boolean {
-		return this._activeDisable.some(disable => disable.name === name);
+		return this._activeDisables.some(disable => disable.name === name);
 	}
 
-	removeStack(name: DISABLE) {
-		this._activeDisable = this._activeDisable.map(disable => {
-			if (disable.name === name) {
-				return {
-					...disable,
-					duration: disable.duration - 1,
-				};
-			}
-			return disable;
+	decreaseDurations() {
+		this._activeDisables = this._activeDisables.map(disable => {
+			return {
+				...disable,
+				duration: disable.duration - 1,
+			};
 		});
 
-		if (this._activeDisable.find(disable => disable.name === name)?.duration === 0) {
-			this.removeDisable(name);
-		}
+		this._activeDisables.forEach(disable => {
+			if (disable.duration == 0) {
+				this.removeDisable(disable.name);
+			}
+		});
 	}
 
 	removeDisable(name: DISABLE) {
-		this._activeDisable = this._activeDisable.filter(disable => disable.name !== name);
+		this._activeDisables = this._activeDisables.filter(disable => disable.name !== name);
 	}
 }
