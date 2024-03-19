@@ -43,7 +43,6 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 		{
 			share: true,
 			onMessage: event => {
-				console.log(event);
 				const data = JSON.parse(event.data);
 				console.log(data);
 
