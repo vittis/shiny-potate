@@ -1,3 +1,4 @@
+import { DISABLE } from "../Disable/DisableTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER } from "../Trigger/TriggerTypes";
 
@@ -98,7 +99,7 @@ export interface ShieldPayload {
 }
 
 export interface DisablePayload {
-	name: string; // todo enum
+	name: DISABLE;
 	duration: number;
 }
 
