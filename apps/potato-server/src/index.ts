@@ -12,6 +12,7 @@ import gameRoutes from "./controllers/game/gameRoutes";
 import { jwt } from "hono/jwt";
 
 import { uniqueNamesGenerator, starWars } from "unique-names-generator";
+import { randomUUID } from "node:crypto";
 
 export type Variables = {
 	session: any;
@@ -108,7 +109,7 @@ app.get("/api/chat/:channel", async c => {
 	});
 });
 
-app.post("/api/chat/:channel/:message", async c => {
+app.post("api/chat/:channel/:message", async c => {
 	const channel = c.req.param("channel");
 	const msg = c.req.param("message");
 	const finalMsg = `${c.get("session").name}: ${msg}`;
@@ -198,7 +199,7 @@ connectAll().then(() => {
 				if (!msg) return;
 				const finalMsg = `${name}^${msg}`;
 
-				console.log(req.url);
+				const id = randomUUID();
 
 				const timestamp = Date.now();
 
@@ -208,6 +209,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						timestamp,
 						avatar: avatar,
+						id: id,
 					}),
 				);
 
@@ -218,6 +220,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						channel: "lobby",
 						timestamp,
+						id:id,
 						avatar: avatar,
 					}),
 				);

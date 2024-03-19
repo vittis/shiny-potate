@@ -49,7 +49,6 @@ export function Nav() {
 	const user = useSupabaseUserStore(state => state.user);
 	const username = useSupabaseUserStore(state => state.username);
 
-
 	const { readyState } = useGlobalConnection();
 
 	const { pathname } = useLocation();

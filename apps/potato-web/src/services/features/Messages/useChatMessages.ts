@@ -17,7 +17,6 @@ async function fetchChatMessages(channel: string) {
 const useChatMessages = ({ channel }: { channel: string }) => {
 	const user = useSupabaseUserStore(state => state.user);
 	const username = useSupabaseUserStore(state => state.username);
-
 	const userAvatar = user?.identities[0]?.identity_data?.avatar_url;
 
 	const searchParams = useMemo(() => {
@@ -29,10 +28,9 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 		params.append("name", username);
 		if (userAvatar) {
 			params.append("avatar", userAvatar);
+			return params.toString();
 		}
-
-		return params.toString();
-	}, [user, channel]);
+	}, [user, username, channel]);
 
 	const { data: messagesData, isLoading: messagesLoading } = useQuery<{ data: any[] }>({
 		queryKey: ["chat", channel],
@@ -60,6 +58,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 									message: data.message,
 									timestamp: data.timestamp,
 									avatar: data.avatar,
+									id: data.id,
 								},
 							],
 						};
@@ -80,6 +79,7 @@ const useChatMessages = ({ channel }: { channel: string }) => {
 				message,
 				timestamp: messageObj.timestamp,
 				avatar: messageObj.avatar,
+				id: messageObj.id,
 			};
 		});
 	}, [messagesData]);

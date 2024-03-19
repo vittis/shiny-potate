@@ -8,7 +8,6 @@ const useGlobalConnection = () => {
 	const user = useSupabaseUserStore(state => state.user);
 	const username = useSupabaseUserStore(state => state.username);
 
-
 	const searchParams = useMemo(() => {
 		if (!user?.id || !username) return null;
 
