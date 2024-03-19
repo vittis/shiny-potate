@@ -12,6 +12,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useChatMessages } from "@/services/features/Messages/useChatMessages";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
+import { Loader2 } from "lucide-react";
 
 const mockChatNavItems = [
 	{
@@ -49,8 +50,7 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 	const user = useSupabaseUserStore(state => state.user);
 	const username = useSupabaseUserStore(state => state.username);
 
-	const { sendChatMessage, messages } = useChatMessages({ channel: "lobby" });
-
+	const { sendChatMessage, messages, messagesLoading } = useChatMessages({ channel: "lobby" });
 	const chatBoxRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -82,38 +82,46 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 						</div>
 					</div>
 					<Separator />
-
-					<div className="h-[48px] bg-background">
-						<ScrollArea className="max-w-[100%]">
-							<div className={cn("px-1 pt-2 mb-2.5 flex items-center gap-2")}>
-								{mockChatNavItems.map((navItem, index) => (
-									<Button
-										id={index === 0 ? "" : ""}
-										size="sm"
-										variant={"ghost"}
-										key={navItem.name}
-										className={cn(
-											"bg-transparent h-[28px] flex items-center justify-center px-3 text-center  transition-colors hover:text-primary py-1",
-											index === 0 ? "bg-muted font-medium text-primary" : "text-muted-foreground ",
-										)}
-									>
-										<span className="overflow-hidden text-ellipsis max-w-[100px] ">
-											{navItem.name}
-										</span>
-									</Button>
-								))}
+					{messagesLoading ? (
+						<Loader2 className="animate-spin mx-auto w-80 my-20 " />
+					) : (
+						<>
+							<div className="h-[48px] bg-background">
+								<ScrollArea className="max-w-[100%]">
+									<div className={cn("px-1 pt-2 mb-2.5 flex items-center gap-2")}>
+										{mockChatNavItems.map((navItem, index) => (
+											<Button
+												id={index === 0 ? "" : ""}
+												size="sm"
+												variant={"ghost"}
+												key={navItem.name}
+												className={cn(
+													"bg-transparent h-[28px] flex items-center justify-center px-3 text-center  transition-colors hover:text-primary py-1",
+													index === 0
+														? "bg-muted font-medium text-primary"
+														: "text-muted-foreground ",
+												)}
+											>
+												<span className="overflow-hidden text-ellipsis max-w-[100px] ">
+													{navItem.name}
+												</span>
+											</Button>
+										))}
+									</div>
+									<ScrollBar className="mt-4" orientation="horizontal" />
+								</ScrollArea>
 							</div>
-							<ScrollBar className="mt-4" orientation="horizontal" />
-						</ScrollArea>
-					</div>
-					<Separator />
+							<Separator />
+						</>
+					)}
+
 					<TooltipProvider delayDuration={0}>
 						<ScrollArea ref={chatBoxRef} className="h-full px-3.5 pb-0">
 							<ScrollBar orientation="vertical" />
 							{user &&
 								messages.map(message => (
 									<ChatBubble
-										key={message.timestamp}
+										key={message.id}
 										sender={message.sender}
 										avatar={message.avatar}
 										message={message.message}
@@ -126,7 +134,7 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 					<div className="px-3.5 pb-3">
 						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 							<Input
-								disabled={!user}
+								disabled={!user || messagesLoading}
 								{...register("message", { required: true })}
 								placeholder={!!user ? "Send message" : "Sign in to view and send messages"}
 							/>
