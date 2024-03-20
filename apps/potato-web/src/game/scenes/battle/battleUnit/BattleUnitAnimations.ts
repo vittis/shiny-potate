@@ -289,12 +289,17 @@ export function createTriggerEffectAnimation({
 
 					allSourceNames.forEach(sourceName => {
 						unit.add(
-							addFadingText(unit.scene, Phaser.Math.Between(-100, 100), -10, {
-								text: sourceName,
-								color: "red",
-								fontSize: 22,
-								duration: 2000,
-							}),
+							addFadingText(
+								unit.scene,
+								Phaser.Math.Between(-50, 50),
+								Phaser.Math.Between(-50, 50),
+								{
+									text: sourceName,
+									color: "red",
+									fontSize: 22,
+									duration: 2000,
+								},
+							),
 						);
 					});
 

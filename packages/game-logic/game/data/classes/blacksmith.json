@@ -22,32 +22,6 @@
             "stat": "DAMAGE_REDUCTION",
             "value": 10
           }
-        },
-        {
-          "type": "GRANT_BASE_STAT",
-          "payload": {
-            "stat": "DAMAGE_REDUCTION",
-            "value": 5
-          }
-        }
-      ],
-      "description": "Gain 10% Damage Reduction"
-    },
-    {
-      "mods": [
-        {
-          "type": "GRANT_BASE_STAT",
-          "payload": {
-            "stat": "DAMAGE_REDUCTION",
-            "value": 10
-          }
-        },
-        {
-          "type": "GRANT_BASE_STAT",
-          "payload": {
-            "stat": "DAMAGE_REDUCTION",
-            "value": 5
-          }
         }
       ],
       "description": "Gain 10% Damage Reduction"
