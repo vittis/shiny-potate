@@ -1,5 +1,4 @@
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
-import { Ability } from "./BattleUnitAbilities";
 import { BattleUnit } from "./BattleUnit";
 
 interface Disable {
@@ -29,24 +28,26 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 	}
 
 	addDisable({ name, duration }: any, step: number) {
-		const disableAlreadyExists = this.disables.find(disable => disable.name === name);
+		const existingDisable = this.disables.find(disable => disable.name === name);
 
-		if (disableAlreadyExists) {
-			const newDuration =
-				disableAlreadyExists.duration > duration ? disableAlreadyExists.duration : duration;
-			disableAlreadyExists.duration = newDuration;
-			disableAlreadyExists.text.setText(`${newDuration}`);
+		if (existingDisable) {
+			let shouldContinue = false;
 
-			if (newDuration > duration) {
-				disableAlreadyExists.tween = this.scene.tweens.add({
-					targets: disableAlreadyExists.overlay,
-					scaleY: { from: 1, to: 0 },
-					duration: useGameControlsStore.getState().stepTime * duration,
-					ease: "Linear",
-					repeat: -1,
-				});
+			const durationRemaining = existingDisable.tween.duration - existingDisable.tween.elapsed;
+			const newDuration = useGameControlsStore.getState().stepTime * duration;
+
+			if (newDuration > durationRemaining) {
+				existingDisable.text.destroy();
+				existingDisable.overlay.destroy();
+				existingDisable.tween.destroy();
+				existingDisable.container.destroy();
+				existingDisable.icon.destroy();
+				this.disables = this.disables.filter(disable => disable.name !== name);
+				shouldContinue = true;
 			}
-			return;
+			if (!shouldContinue) {
+				return;
+			}
 		}
 
 		const disableContainer = this.scene.add.container(this.dataUnit.owner === 0 ? -35 : 33, -30);
@@ -100,7 +101,6 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 		}
 
 		overlay.scale = 0.12;
-		overlay.setTint(0x000000).setAlpha(0.7);
 
 		disableContainer.add(overlay);
 
@@ -111,14 +111,20 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 			targets: overlay,
 			duration: useGameControlsStore.getState().stepTime * duration,
 			onUpdateScope: this,
-			onUpdate: function (tween) {
+			onUpdate: tween => {
 				const currentHeight = initialHeight * tween.progress;
-
 				overlay.setCrop(0, initialHeight - currentHeight, width, currentHeight);
 			},
+			onStart: () => {
+				overlay.setTint(0x000000).setAlpha(0.7);
+			},
+			onComplete: () => {
+				this.removeDisable("STUN");
+			},
 			ease: "Linear",
-			repeat: 1,
 		});
+
+		tween.pause();
 
 		this.disables.push({
 			name,
@@ -136,31 +142,16 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 		}
 	}
 
-	decreaseDurations(step: number) {
-		this.disables = this.disables.map(disable => {
-			const newDuration = Math.max(0, disable.duration + disable.step - step);
-
-			return {
-				...disable,
-				duration: newDuration,
-				step,
-				text: disable.text.setText(`${newDuration}`),
-			};
-		});
-
-		this.disables.forEach(disable => {
-			if (disable.duration == 0) {
-				this.removeDisable(disable.name);
-			}
-		});
-	}
-
 	removeDisable(name: string) {
 		const disableToRemove = this.disables.find(disable => disable.name === name);
 
 		if (!disableToRemove) return;
 
 		disableToRemove.container.destroy();
+		disableToRemove?.text?.destroy();
+		disableToRemove?.overlay?.destroy();
+		disableToRemove?.tween?.destroy();
+		disableToRemove?.icon?.destroy();
 		this.disables = this.disables.filter(disable => disable.name !== name);
 
 		if (disableToRemove.name === "STUN") {
@@ -185,6 +176,6 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 	}
 
 	isStunned(): boolean {
-		return !!this.disables.find(disable => disable.name === "STUN");
+		return this.disables.some(disable => disable.name === "STUN");
 	}
 }

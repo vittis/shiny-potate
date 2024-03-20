@@ -249,8 +249,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		}
 
 		if (event.type === "USE_ABILITY") {
-			console.log(event.payload.name);
-
 			this.add(addFadingText(this.scene, 0, -50, event.payload.name));
 
 			const abilityUsed = this.abilitiesManager.abilities.find(
