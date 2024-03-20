@@ -13,6 +13,13 @@ async function newArenaGame(playerId) {
 	return data;
 }
 
+async function findMatch(payload) {
+	console.log(payload);
+	const response = await api.post("/arena/start", payload);
+
+	return response;
+}
+
 async function winAGame(game) {
 	const { data, error } = await supabase
 		.from("games")
@@ -42,9 +49,19 @@ const useArenaMutation = () => {
 		},
 	});
 
+	const { mutateAsync: startMatch } = useMutation({
+		mutationFn: findMatch,
+		mutationKey: ["arena", "create"],
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["arena", "check"] });
+			toast.success("team saved");
+		},
+	});
+
 	return {
 		createArenaGame: createNewArenaGame,
 		win: winGame,
+		startMatch,
 	};
 };
 

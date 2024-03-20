@@ -27,6 +27,7 @@ import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnit
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
 
 export async function setupTeams(data) {
+	console.log(data);
 	const response = await api.post("/game/setup-teams", data, {
 		withCredentials: true,
 	});

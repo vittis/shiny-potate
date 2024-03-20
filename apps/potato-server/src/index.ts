@@ -9,6 +9,7 @@ import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import gameRoutes from "./controllers/game/gameRoutes";
+import arenaRoutes from "./controllers/arena/arenaRoute";
 import { jwt } from "hono/jwt";
 
 import { uniqueNamesGenerator, starWars } from "unique-names-generator";
@@ -48,7 +49,15 @@ app.use("/api/*", (c, next) => {
 	return jwtMiddleware(c, next);
 });
 
+app.use("/arena/*", (c, next) => {
+	const jwtMiddleware = jwt({
+		secret: process.env.JWT_SECRET ?? "",
+	});
+	return jwtMiddleware(c, next);
+});
+
 app.route("/game", gameRoutes);
+app.route("/arena", arenaRoutes);
 
 app.post("/login", async c => {
 	// You would typically validate user credentials here
@@ -136,7 +145,6 @@ const connectAll = async () => {
 
 	await redisSub.subscribe("live-chat", message => {
 		const parsedMessage = JSON.parse(message);
-		console.log("live-chat new: ", parsedMessage);
 
 		wsConnections.forEach(c => {
 			if (!c.channels.includes(parsedMessage.channel)) return;
@@ -220,7 +228,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						channel: "lobby",
 						timestamp,
-						id:id,
+						id: id,
 						avatar: avatar,
 					}),
 				);

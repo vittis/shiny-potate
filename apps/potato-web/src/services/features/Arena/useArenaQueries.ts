@@ -7,12 +7,9 @@ import { toast } from "react-toastify";
 import { supabase } from "@/services/supabase/supabase";
 
 async function checkArenaGame(playerId) {
-	const { data: games, error } = await supabase
-		.from("games")
-		.select("player_id", playerId)
-		.select();
+	const { data } = await api.get(`/arena/find-game`);
 
-	return games;
+	return data;
 }
 
 const useArenaQueries = (): any => {
