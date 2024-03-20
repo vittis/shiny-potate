@@ -1,5 +1,6 @@
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { BattleUnit } from "./BattleUnit";
+import { addFadingText } from "../utils/text";
 
 export function createWiggleAnimation(unit: BattleUnit) {
 	const animationSpeed = useGameControlsStore.getState().animationSpeed;
@@ -232,12 +233,14 @@ export function createTriggerEffectAnimation({
 	trigger,
 	onImpactPoint,
 	onFinishAnimation,
+	allSourceNames,
 }: {
 	unit: BattleUnit;
 	target: BattleUnit;
 	trigger: string;
 	onImpactPoint: Function;
 	onFinishAnimation: Function;
+	allSourceNames: string[];
 }) {
 	const animationSpeed = useGameControlsStore.getState().animationSpeed;
 
@@ -266,7 +269,7 @@ export function createTriggerEffectAnimation({
 				onYoyo: () => {
 					onImpactPoint();
 
-					const battleStartText = unit.scene.add.text(0, -30, trigger.replace(/_/g, " "), {
+					const triggerText = unit.scene.add.text(0, -30, trigger.replace(/_/g, " "), {
 						fontSize: 28,
 						color: "#10AB8C",
 						fontFamily: "IM Fell DW Pica",
@@ -282,22 +285,33 @@ export function createTriggerEffectAnimation({
 							fill: false,
 						},
 					});
-					battleStartText.setOrigin(0.5);
+					triggerText.setOrigin(0.5);
+
+					allSourceNames.forEach(sourceName => {
+						unit.add(
+							addFadingText(unit.scene, Phaser.Math.Between(-100, 100), -10, {
+								text: sourceName,
+								color: "red",
+								fontSize: 22,
+								duration: 2000,
+							}),
+						);
+					});
 
 					// damage text going up
 					unit.scene.tweens.add({
-						targets: battleStartText,
+						targets: triggerText,
 						x: Phaser.Math.Between(-15, 15),
-						y: battleStartText.y - 38 - Phaser.Math.Between(0, 10),
+						y: triggerText.y - 38 - Phaser.Math.Between(0, 10),
 						alpha: 0,
 						duration: 1200,
 						ease: "Linear",
 						onComplete: () => {
-							battleStartText.destroy();
+							triggerText.destroy();
 						},
 					});
 
-					unit.add(battleStartText);
+					unit.add(triggerText);
 				},
 			},
 		],

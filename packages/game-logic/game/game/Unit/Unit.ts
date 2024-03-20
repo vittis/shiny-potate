@@ -187,6 +187,7 @@ export class Unit {
 			},
 			abilities: this.abilities,
 			equipment: this.equipment,
+			perks: this.perks,
 			position: this.position,
 			statusEffects: [...this.statusEffects],
 		};

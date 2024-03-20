@@ -237,19 +237,27 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			// TODO set animationTarget based on target type
 			const animationTarget = targets?.[0];
 
+			const allSources = event.subEvents?.map(subEvent => subEvent.sourceId) || [];
+
+			const allSourceNames = allSources.map(sourceId => {
+				const source = this.dataUnit.perks.find(perk => perk.id === sourceId);
+				return source?.data?.name;
+			});
+
 			const { triggerEffectTweenChain } = createTriggerEffectAnimation({
 				unit: this,
 				target: animationTarget,
 				trigger: event?.trigger || "",
 				onImpactPoint,
 				onFinishAnimation,
+				allSourceNames,
 			});
 
 			this.currentAnimation = triggerEffectTweenChain;
 		}
 
 		if (event.type === "USE_ABILITY") {
-			this.add(addFadingText(this.scene, 0, -50, event.payload.name));
+			this.add(addFadingText(this.scene, 0, -50, { text: event.payload.name }));
 
 			const abilityUsed = this.abilitiesManager.abilities.find(
 				ability => ability.id === event.payload.id,

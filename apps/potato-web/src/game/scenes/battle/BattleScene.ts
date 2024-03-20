@@ -29,7 +29,9 @@ enum EVENT_TYPE {
 	CAST_SKILL = "CAST_SKILL",
 	RECEIVED_HEAL = "RECEIVED_HEAL",
 }
-export type SubStepEvent = Omit<StepEvent, "step" | "subEvents">;
+export type SubStepEvent = Omit<StepEvent, "step" | "subEvents"> & {
+	sourceId?: string;
+};
 
 export interface StepEvent {
 	actorId: string;

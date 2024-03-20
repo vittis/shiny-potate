@@ -1,6 +1,7 @@
 import { BoardManager } from "../BoardManager";
 import {
 	createDamageSubEvent,
+	createDisableSubEvent,
 	createHealSubEvent,
 	createShieldSubEvent,
 	createStatusEffectSubEvent,
@@ -99,7 +100,16 @@ export class TriggerManager {
 				newSubEvents = createShieldSubEvent(unit, activeEffect.effect);
 			} else if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
 				newSubEvents = createStatusEffectSubEvent(unit, activeEffect.effect);
+			} else if (activeEffect.effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
+				newSubEvents = createDisableSubEvent(unit, activeEffect.effect);
 			}
+
+			newSubEvents = newSubEvents.map(subEvent => {
+				return {
+					...subEvent,
+					sourceId: activeEffect.sourceId,
+				};
+			});
 
 			subEvents = [...subEvents, ...newSubEvents];
 		});
