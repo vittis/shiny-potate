@@ -1,6 +1,7 @@
 import { BoardManager } from "../BoardManager";
 import { EQUIPMENT_SLOT, EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
+import { getAllTargetUnits } from "../Target/TargetUtils";
 import { Unit } from "../Unit/Unit";
 import { BOARD_POSITION } from "./TriggerTypes";
 
@@ -12,11 +13,11 @@ export function isPositionConditionValid(
 ) {
 	const targetUnits = bm.getTarget(unit, target);
 
-	if (targetUnits.length === 0) {
+	if (getAllTargetUnits(targetUnits).length === 0) {
 		return false;
 	}
 
-	const targetUnit = targetUnits[0];
+	const targetUnit = getAllTargetUnits(targetUnits)[0];
 
 	if (position === BOARD_POSITION.FRONT) {
 		return bm.getUnitColumn(targetUnit) === 0;
@@ -38,11 +39,11 @@ export function isEquipmentConditionValid(
 ) {
 	const targetUnits = bm.getTarget(unit, target);
 
-	if (targetUnits.length === 0) {
+	if (getAllTargetUnits(targetUnits).length === 0) {
 		return false;
 	}
 
-	const targetUnit = targetUnits[0];
+	const targetUnit = getAllTargetUnits(targetUnits)[0];
 
 	let isValid = false;
 

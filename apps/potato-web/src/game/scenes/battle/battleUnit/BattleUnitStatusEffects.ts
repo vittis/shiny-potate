@@ -78,12 +78,10 @@ export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 			statusEffect => statusEffect.name === name,
 		);
 
-		console.log({ statusEffectToRemove });
 		if (!statusEffectToRemove) return;
 
 		statusEffectToRemove.quantity -= quantity;
 
-		console.log(statusEffectToRemove.quantity);
 		if (statusEffectToRemove.quantity <= 0) {
 			statusEffectToRemove.container.destroy();
 			this.statusEffects = this.statusEffects.filter(statusEffect => statusEffect.name !== name);

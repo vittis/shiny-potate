@@ -1,3 +1,4 @@
+import { DISABLE } from "../Disable/DisableTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER } from "../Trigger/TriggerTypes";
 
@@ -81,7 +82,7 @@ export type InstantEffectPayloadMap = {
 	[INSTANT_EFFECT_TYPE.DAMAGE]: DamagePayload;
 	[INSTANT_EFFECT_TYPE.HEAL]: HealPayload;
 	[INSTANT_EFFECT_TYPE.SHIELD]: ShieldPayload;
-	[INSTANT_EFFECT_TYPE.DISABLE]: DisablePayload;
+	[INSTANT_EFFECT_TYPE.DISABLE]: DisablePayload[];
 	[INSTANT_EFFECT_TYPE.STATUS_EFFECT]: StatusEffectPayload[];
 };
 
@@ -98,7 +99,7 @@ export interface ShieldPayload {
 }
 
 export interface DisablePayload {
-	name: string; // todo enum
+	name: DISABLE;
 	duration: number;
 }
 

@@ -67,6 +67,7 @@ export class Battle extends Phaser.Scene {
 	units: BattleUnit[] = [];
 	eventHistory: StepEvent[] = [];
 	timeEventsHistory: Phaser.Time.TimerEvent[] = [];
+	static timeStarted: number;
 
 	isGamePaused = true;
 	isPlayingEventAnimation = false;
@@ -80,9 +81,9 @@ export class Battle extends Phaser.Scene {
 	}
 
 	create() {
-		this.text = this.add.text(100, 50, "Move the mouse", {
+		this.text = this.add.text(150, 200, "Move the mouse", {
 			font: "16px Courier",
-			color: "black",
+			color: "white",
 		});
 		this.text.setOrigin(0.5);
 		// zuera de particula
@@ -225,7 +226,6 @@ export class Battle extends Phaser.Scene {
 		/* const hasFaintEvent = eventsOnThisStep.find(
       (event) => event.type === "TRIGGER_EFFECT" && event.trigger === "SELF_FAINT"
     ); */
-		console.log(eventsOnThisStep);
 
 		eventsOnThisStep.forEach(event => {
 			const unit = this.units.find(unit => unit.id === event.actorId);
@@ -358,7 +358,7 @@ export class Battle extends Phaser.Scene {
 			}
 
 			//  "allUnits" is a hack to access all units from the event, need to think a better way in the future
-			eventPile.push({ unit, event, targets, onEnd, onStart, allUnits: this.units });
+			eventPile.push({ unit, event, targets, onEnd, onStart, allUnits: this.units, step });
 		});
 		const unit: BattleUnit = eventPile[0].unit;
 		unit.playEvent(eventPile[0]);
@@ -386,13 +386,11 @@ export class Battle extends Phaser.Scene {
 	}
 
 	resumeUnitsAnimations() {
-		console.log("resumeUnitsAnimations");
 		this.units.forEach(unit => {
 			unit.resumeAnimations();
 		});
 	}
 	pauseUnitsAnimations() {
-		console.log("pauseUnitsAnimations");
 		this.units.forEach(unit => {
 			unit.pauseAnimations();
 		});
@@ -400,7 +398,10 @@ export class Battle extends Phaser.Scene {
 	resumeTimeEvents() {
 		this.isPlayingEventAnimation = false;
 		this.units.forEach(unit => {
-			unit.abilitiesManager.resumeSkillCooldown();
+			unit.disablesManager.resumeDisableDuration();
+			if (!unit.disablesManager.isStunned()) {
+				unit.abilitiesManager.resumeSkillCooldown();
+			}
 		});
 		this.timeEventsHistory.forEach(event => {
 			event.paused = false;
@@ -409,6 +410,7 @@ export class Battle extends Phaser.Scene {
 	pauseTimeEvents() {
 		this.units.forEach(unit => {
 			unit.abilitiesManager.pauseSkillCooldown();
+			unit.disablesManager.pauseDisableDuration();
 		});
 		this.timeEventsHistory.forEach(event => {
 			event.paused = true;
@@ -416,6 +418,7 @@ export class Battle extends Phaser.Scene {
 	}
 
 	startFromBeggining() {
+		Battle.timeStarted = this.time.now;
 		const stepsThatHaveEvents = [...new Set(this.eventHistory.map(event => event.step))];
 
 		this.units.forEach(unit => {
@@ -423,7 +426,6 @@ export class Battle extends Phaser.Scene {
 			unit.onStart();
 		});
 
-		console.log("hello from beginning", useGameControlsStore.getState().stepTime);
 		stepsThatHaveEvents.forEach(step => {
 			const delay = step * useGameControlsStore.getState().stepTime;
 
@@ -441,15 +443,9 @@ export class Battle extends Phaser.Scene {
 
 	update(/* time: number, delta: number */): void {
 		if (this.units.length === 0) return;
-		const pointer = this.input.activePointer;
 		this.text.setText([
-			"mouse: " + Math.ceil(pointer.x) + "," + Math.ceil(pointer.y),
-			/* "warrior: " +
-            Math.ceil(this.warrior.parentContainer.x + this.warrior.x) +
-            "," +
-            Math.ceil(this.warrior.parentContainer.y + this.warrior.y), */
-			"board: " + Math.ceil(this.board.x) + "," + Math.ceil(this.board.y),
-			"guy: " + Math.ceil(this.units[0].x) + "," + Math.ceil(this.units[0].y),
+			`isGamePaused: ${this.isGamePaused}`,
+			`isPlayingEventAnimation: ${this.isPlayingEventAnimation}`,
 		]);
 	}
 }

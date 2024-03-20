@@ -14,8 +14,8 @@ describe("BoardManager", () => {
 
 			const targets = bm.getTarget(unit1, TARGET_TYPE.STANDARD);
 
-			expect(targets).toHaveLength(1);
-			expect(targets[0].id).toBe(unit2.id);
+			expect(targets.mainTarget).toBe(unit2);
+			expect(targets.secondaryTargets).toHaveLength(0);
 		});
 	});
 });

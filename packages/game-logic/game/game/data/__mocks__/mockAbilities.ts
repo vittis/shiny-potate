@@ -366,4 +366,34 @@ export const MockAbilities = {
 			},
 		],
 	},
+	SummonBoar: {
+		name: "Summon Boar",
+		type: "SPELL",
+		tags: ["SUMMON"],
+		target: "STANDARD",
+		cooldown: 80,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 30,
+				},
+			},
+			{
+				type: "DISABLE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: [
+					{
+						name: "STUN",
+						duration: 10,
+					},
+				],
+			},
+		],
+	},
 };

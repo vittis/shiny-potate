@@ -10,6 +10,7 @@ import { TARGET_TYPE } from "../Target/TargetTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { EQUIPMENT_SLOT, EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { ModTagSchema } from "../Mods/ModsSchema";
+import { DISABLE } from "../Disable/DisableTypes";
 
 const PositionEffectCondition = z.object({
 	type: z.literal(EFFECT_CONDITION_TYPE.POSITION),
@@ -74,8 +75,27 @@ const HealTriggerEffect = z.object({
 	payload: z.object({ value: z.number() }),
 });
 
+const DisableEffect = z.object({
+	type: z.literal(TRIGGER_EFFECT_TYPE.DISABLE),
+	trigger: z.nativeEnum(TRIGGER),
+	target: z.nativeEnum(TARGET_TYPE),
+	conditions: EffectConditionsSchema,
+	payload: z.array(
+		z.object({
+			name: z.nativeEnum(DISABLE),
+			duration: z.number(),
+		}),
+	),
+});
+
 export const TriggerEffectsSchema = z.array(
-	z.union([StatusTriggerEffect, DamageTriggerEffect, ShieldTriggerEffect, HealTriggerEffect]),
+	z.union([
+		StatusTriggerEffect,
+		DamageTriggerEffect,
+		ShieldTriggerEffect,
+		HealTriggerEffect,
+		DisableEffect,
+	]),
 );
 
 export const PerkDataSchema = z.object({
