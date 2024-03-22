@@ -6,7 +6,7 @@ import { queryClient } from "@/services/api/queryClient";
 
 async function newArenaGame(playerId) {
 	const { data, error } = await supabase
-		.from("games")
+		.from("arena")
 		.insert([{ player_id: playerId }])
 		.select();
 
@@ -15,7 +15,7 @@ async function newArenaGame(playerId) {
 
 async function winAGame(game) {
 	const { data, error } = await supabase
-		.from("games")
+		.from("arena")
 		.update({ wins: game.wins + 1 })
 		.eq("id", game.id)
 		.select();

@@ -4,7 +4,6 @@ import {
 	DragEndEvent,
 	MouseSensor,
 	TouchSensor,
-	useDraggable,
 	useDroppable,
 	useSensor,
 	useSensors,
@@ -25,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { getUnitData } from "game-logic";
 import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnitMarkdownContent";
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
+import { DraggableBoardUnit } from "./DraggableBoardUnit";
 
 export async function setupTeams(data) {
 	const response = await api.post("/game/setup-teams", data, {
@@ -38,64 +38,6 @@ export interface UnitsDTO {
 	equipments: any[]; // ShopEquipmentData
 	position: number;
 	unitClass: string;
-}
-
-export function Draggable({ children, id, unit, isClass, weaponTier, removeEquipment }: any) {
-	const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-
-	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-		id,
-		data: { unit }, // todo use this
-	});
-	const style = transform
-		? {
-				transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-			}
-		: undefined;
-
-	const unitEquips = unit?.equipment || [];
-	const isWeapon = !isClass && !unit;
-
-	const finalListeners = isTooltipOpen ? {} : listeners;
-	const finalAttributes = isTooltipOpen ? {} : attributes;
-
-	return (
-		<div
-			ref={setNodeRef}
-			style={style}
-			{...finalListeners}
-			{...finalAttributes}
-			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
-				isDragging && "z-30",
-				isClass && "border-green-900 hover:border-green-700",
-				!isClass &&
-					!unit &&
-					"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
-				isWeapon && tierColorMap[weaponTier],
-			)}
-		>
-			<div>{children}</div>
-			{unitEquips.length > 0 && (
-				<div className="absolute top-0 right-0">
-					{unitEquips.map(equip => (
-						<div
-							key={equip.id}
-							className={cn(
-								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-								tierColorMap[equip.data.tier],
-							)}
-						>
-							{equip.data.name}{" "}
-							<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
-								T{equip.data.tier}
-							</span>
-						</div>
-					))}
-				</div>
-			)}
-		</div>
-	);
 }
 
 export function Droppable({ children, id }: any) {
@@ -314,9 +256,9 @@ export function BoardSetupView() {
 									key={unitClass.id}
 									content={<MarkdownContent sourcePath={`Classes/${unitClass.name}`} />}
 								>
-									<Draggable id={unitClass.id} isClass>
+									<DraggableBoardUnit id={unitClass.id} isClass>
 										{unitClass.name}
-									</Draggable>
+									</DraggableBoardUnit>
 								</MarkdownTooltip>
 							))}
 						</div>
@@ -330,12 +272,12 @@ export function BoardSetupView() {
 									content={<EquipmentMarkdownContent equip={weapon} />}
 								>
 									<div className="font-mono">
-										<Draggable id={weapon.id} weaponTier={weapon.data.tier}>
+										<DraggableBoardUnit id={weapon.id} weaponTier={weapon.data.tier}>
 											{weapon.data.name}{" "}
 											<span className={cn("text-xs", tierColorMap[weapon.data.tier])}>
 												T{weapon.data.tier}
 											</span>
-										</Draggable>
+										</DraggableBoardUnit>
 									</div>
 								</MarkdownTooltip>
 							))}
@@ -353,7 +295,7 @@ export function BoardSetupView() {
 											<MarkdownTooltip
 												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
 											>
-												<Draggable
+												<DraggableBoardUnit
 													id={unit.id}
 													unit={unit}
 													isClass
@@ -377,7 +319,7 @@ export function BoardSetupView() {
 													}}
 												>
 													{unit.name}
-												</Draggable>
+												</DraggableBoardUnit>
 											</MarkdownTooltip>
 										</Droppable>
 									) : (
@@ -394,7 +336,7 @@ export function BoardSetupView() {
 											<MarkdownTooltip
 												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
 											>
-												<Draggable
+												<DraggableBoardUnit
 													id={unit.id}
 													unit={unit}
 													isClass
@@ -418,7 +360,7 @@ export function BoardSetupView() {
 													}}
 												>
 													{unit.name}
-												</Draggable>
+												</DraggableBoardUnit>
 											</MarkdownTooltip>
 										</Droppable>
 									) : (

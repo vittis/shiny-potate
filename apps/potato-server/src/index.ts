@@ -9,8 +9,8 @@ import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import gameRoutes from "./controllers/game/gameRoutes";
+import arenaRoutes from "./controllers/arena/arenaRoutes";
 import { jwt } from "hono/jwt";
-
 import { uniqueNamesGenerator, starWars } from "unique-names-generator";
 import { randomUUID } from "node:crypto";
 
@@ -48,7 +48,8 @@ app.use("/api/*", (c, next) => {
 	return jwtMiddleware(c, next);
 });
 
-app.route("/game", gameRoutes);
+app.route("/game", gameRoutes); //todo change to /sandbox?
+app.route("/api/arena", arenaRoutes);
 
 app.post("/login", async c => {
 	// You would typically validate user credentials here
@@ -220,7 +221,7 @@ connectAll().then(() => {
 						message: finalMsg,
 						channel: "lobby",
 						timestamp,
-						id:id,
+						id: id,
 						avatar: avatar,
 					}),
 				);
