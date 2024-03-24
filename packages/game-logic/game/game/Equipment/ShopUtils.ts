@@ -83,5 +83,5 @@ export function getUnitData(
 
 	const serializedUnit = unit.serialize();
 
-	return unit;
+	return serializedUnit;
 }

@@ -7,12 +7,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/services/api/http";
 import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { useSandboxStore } from "@/services/features/Sandbox/useSandboxStore";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { trpc } from "@/services/api/trpc";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -35,6 +36,13 @@ function SandboxView() {
 			refetchRollShop();
 		}
 	}
+
+	useEffect(() => {
+		async function test() {
+			console.log(await trpc.arena.new.query());
+		}
+		test();
+	}, []);
 
 	return (
 		<ScrollArea className="h-full w-full px-4">

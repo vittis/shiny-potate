@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { Variables } from "../../index";
+import { Variables } from "../../../src/server";
 import {
 	Game,
 	Classes,

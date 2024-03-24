@@ -1,19 +1,30 @@
 import { Hono } from "hono";
-import { Variables } from "../../index";
-import { createServerSupabase } from "../../supabase";
+import { Variables } from "../../../src/server";
+import { createServerSupabase } from "../../../src/services/supabase";
 
 const app = new Hono<{ Variables: Variables }>();
 
-app.post("/new-run", async c => {
+app.use("*", async (c, next) => {
+	const supabase = createServerSupabase(c);
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	c.set("supabase", supabase);
+	c.set("user", user);
+	await next();
+});
+
+app.post("/new", async c => {
 	try {
-		const supabase = createServerSupabase(c);
+		const supabase = c.get("supabase");
+		const user = c.get("user");
 
-		const payload = c.get("jwtPayload");
+		console.log(user);
 
-		const userId = payload?.sub;
 		const { data, error } = await supabase
 			.from("arena")
-			.insert([{ player_id: userId }])
+			.insert([{ player_id: user.id }])
 			.select();
 
 		if (error) {

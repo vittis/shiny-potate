@@ -7,7 +7,8 @@ interface MarkdownContentProps {
 }
 
 const BoardUnitMarkdownContent = ({ unit }: MarkdownContentProps) => {
-	const className = unit.classManager.class.data.name;
+	// @ts-expect-error todo: created SerializedUnit type
+	const className = unit.class;
 
 	const allAbilities = unit.abilities;
 	const allPerks = unit.perks;
