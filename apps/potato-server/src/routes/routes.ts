@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { supaProcedure } from "@/routes/middlewares";
+import { router } from "@/services/trpc";
 import { arenaRouter } from "./arena/arenaRouter";
-import { publicProcedure, router } from "../services/trpc";
 
 export const appRouter = router({
-	hello: publicProcedure.input(z.string().nullish()).query(({ input, ctx }) => {
-		console.log(ctx.bagulho);
-		return `Hello ${input ?? "World"}!`;
+	hello: supaProcedure.input(z.string().nullish()).query(({ input, ctx }) => {
+		console.log("pu", ctx.user.action_link);
+		return { path: ctx.req.url };
 	}),
 	arena: arenaRouter,
 });

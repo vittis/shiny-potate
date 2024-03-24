@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
-import { redisClient } from "./redis";
 import { WebSocketServer, WebSocket } from "ws";
 import type { Server as HTTPSServer } from "node:http";
+import { redisClient } from "./redis";
 
 interface wsConnection {
 	socket: WebSocket;

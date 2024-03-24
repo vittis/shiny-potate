@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import { Variables } from "../../../src/server";
-import { createServerSupabase } from "../../../src/services/supabase";
+import { createServerSupabase } from "@/services/supabase";
+import { Variables } from "@/server";
 
 const app = new Hono<{ Variables: Variables }>();
 
 app.use("*", async (c, next) => {
-	const supabase = createServerSupabase(c);
+	const supabase = createServerSupabase(c.req as any);
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();

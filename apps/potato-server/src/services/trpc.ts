@@ -1,22 +1,22 @@
 import { initTRPC } from "@trpc/server";
-import { HonoRequest } from "hono";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 
-export const createContext = async (opts: { req: HonoRequest; resHeaders: any }) => {
-	const bagulho = { kek: "w" };
+interface TRPCContext {
+	user?: User;
+	req: Request;
+	supabase?: SupabaseClient;
+}
 
+export const createContext = async (opts: {
+	req: Request;
+	resHeaders: any;
+}): Promise<TRPCContext> => {
 	return {
-		bagulho,
+		req: opts.req,
 	};
 };
 
 const t = initTRPC.context<typeof createContext>().create();
-
-/* t.procedure.use(({ ctx, next }) => {
-	console.log("opa");
-	console.log(ctx.bagulho);
-
-	return next();
-}); */
 
 export const publicProcedure = t.procedure;
 export const router = t.router;
