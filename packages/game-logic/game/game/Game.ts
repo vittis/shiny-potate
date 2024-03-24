@@ -2,10 +2,15 @@ import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Unit } from "./Unit/Unit";
 import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
-import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils";
+import {
+	getAndExecuteDeathEvents,
+	getStepEffects,
+	sortAndExecuteEvents,
+	sortEventsByType,
+} from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
-import { PossibleEvent } from "./Event/EventTypes";
+import { PossibleEvent, StepEffects } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 
 export interface UnitsDTO {
@@ -77,9 +82,9 @@ export class Game {
 	}
 
 	startGame() {
-		const { totalSteps, eventHistory, firstStep } = runGame(this.boardManager);
+		const { totalSteps, eventHistory, firstStep, effectHistory } = runGame(this.boardManager);
 
-		return { totalSteps, eventHistory, firstStep };
+		return { totalSteps, eventHistory, firstStep, effectHistory };
 	}
 }
 
@@ -104,34 +109,93 @@ export function runGame(bm: BoardManager) {
 
 	let currentStep = 1;
 
-	const battleStartEvents: PossibleEvent[] = [];
-	bm.getAllUnits().forEach(unit => {
-		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
-		battleStartEvents.push(...unit.serializeEvents());
-	});
-	const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents);
-	orderedEvents.forEach(event => {
-		eventHistory.push(event);
-	});
+	const effectHistory: StepEffects[] = [];
 
-	do {
-		bm.getAllAliveUnits().forEach(unit => {
-			unit.step(currentStep);
-		});
+	const NEW_EVENT_SYSTEM = true;
 
-		const stepEvents: PossibleEvent[] = [];
+	if (!NEW_EVENT_SYSTEM) {
+		// DONT WRITE HERE
+		const battleStartEvents: PossibleEvent[] = [];
 		bm.getAllUnits().forEach(unit => {
-			stepEvents.push(...unit.serializeEvents());
+			unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
+			battleStartEvents.push(...unit.serializeEvents());
 		});
-		const orderedEvents = sortAndExecuteEvents(bm, stepEvents);
-		eventHistory.push(...orderedEvents);
+		const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents);
 
-		eventHistory.push(...getAndExecuteDeathEvents(bm));
+		orderedEvents.forEach(event => {
+			eventHistory.push(event);
+		});
 
-		currentStep++;
-	} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
+		// Loop steps
+		do {
+			// Step each unit alive / ok
+			bm.getAllAliveUnits().forEach(unit => {
+				unit.step(currentStep);
+			});
 
-	return { totalSteps: currentStep - 1, eventHistory, firstStep };
+			// Get each stepEvents from each unit / ok
+			const stepEvents: PossibleEvent[] = [];
+			bm.getAllUnits().forEach(unit => {
+				stepEvents.push(...unit.serializeEvents());
+			});
+
+			// Order and execute each stepEvents / doing
+			const orderedEvents = sortAndExecuteEvents(bm, stepEvents);
+			eventHistory.push(...orderedEvents);
+
+			// Check and execute death events, if an unit dies, add death triggers related events
+			eventHistory.push(...getAndExecuteDeathEvents(bm));
+
+			currentStep++;
+		} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
+	} else {
+		// Later apply same stuff for trigger battle start / waiting
+		const battleStartEvents: PossibleEvent[] = [];
+		bm.getAllUnits().forEach(unit => {
+			unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
+			battleStartEvents.push(...unit.serializeEvents());
+		});
+		const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents);
+		orderedEvents.forEach(event => {
+			eventHistory.push(event);
+		});
+		effectHistory.push(getStepEffects(orderedEvents));
+
+		// Loop steps
+		do {
+			// Step each unit alive / ok
+			bm.getAllAliveUnits().forEach(unit => {
+				unit.step(currentStep);
+			});
+
+			// Get each stepEvents from each unit / ok
+			const stepEvents: PossibleEvent[] = [];
+			bm.getAllUnits().forEach(unit => {
+				stepEvents.push(...unit.serializeEvents());
+			});
+
+			// Order each stepEvents / ok
+			const orderedEvents = sortEventsByType(stepEvents);
+			eventHistory.push(...orderedEvents);
+			/* effectsPerStep.push(...orderedEvents); */
+
+			// Execute each stepEvents in new system / DOING
+			if (orderedEvents.length > 0) {
+				const effectsInThisStep = getStepEffects(orderedEvents);
+				effectHistory.push(effectsInThisStep);
+			}
+
+			/* executeEffectsInStep(bm, effectsInStep); */
+
+			// Check and execute death events, if an unit dies, add death triggers related events
+			eventHistory.push(...getAndExecuteDeathEvents(bm));
+			//effectsPerStep.push(...getAndExecuteDeathEvents(bm));
+
+			currentStep++;
+		} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
+	}
+
+	return { totalSteps: currentStep - 1, eventHistory, firstStep, effectHistory };
 }
 
 /* 

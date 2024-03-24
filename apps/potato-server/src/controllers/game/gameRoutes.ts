@@ -20,12 +20,13 @@ app.post("/setup-teams", async c => {
 		game.setTeam(0, team1);
 		game.setTeam(1, team2);
 
-		const { totalSteps, eventHistory, firstStep } = game.startGame();
+		const { totalSteps, eventHistory, firstStep, effectHistory } = game.startGame();
 
 		return c.json({
 			firstStep,
 			totalSteps,
 			eventHistory,
+			effectHistory,
 		});
 	} catch (e: TypeError | any) {
 		console.log(e);
@@ -36,12 +37,13 @@ app.post("/setup-teams", async c => {
 app.get("/setup-teams-vanilla", async c => {
 	const game = new Game();
 
-	const { totalSteps, eventHistory, firstStep } = game.startGame();
+	const { totalSteps, eventHistory, firstStep, effectHistory } = game.startGame();
 
 	return c.json({
 		firstStep,
 		totalSteps,
 		eventHistory,
+		effectHistory,
 	});
 });
 

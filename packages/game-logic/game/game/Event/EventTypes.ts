@@ -115,3 +115,256 @@ export interface TriggerEffectEvent extends Event<EVENT_TYPE.TRIGGER_EFFECT> {
 	trigger: TRIGGER;
 	subEvents: SubEvent[];
 }
+
+// NEW EVENT SYSTEM ---------------------------------------------------
+
+export interface StepEffects {
+	step: number;
+	units: UnitEffects[];
+}
+
+export interface UnitEffects {
+	unitId: string;
+	effects: PossibleEffects[];
+}
+
+export type PossibleEffects =
+	| Effects<INSTANT_EFFECT_TYPE.DAMAGE>
+	| Effects<INSTANT_EFFECT_TYPE.HEAL>
+	| Effects<INSTANT_EFFECT_TYPE.SHIELD>
+	| Effects<INSTANT_EFFECT_TYPE.DISABLE>
+	| Effects<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+
+export interface Effects<T extends INSTANT_EFFECT_TYPE>
+	extends Omit<InstantEffectPayload<T>, "targetId"> {}
+
+/* 	
+	example effects in EffectsInStepPerUnit:
+	(only one effect per type)
+
+	const effects = [
+		{
+			type: INSTANT_EFFECT_TYPE.DAMAGE,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.HEAL,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DISABLE,
+			payload: [
+				{
+					name: DISABLE.STUN,
+					duration: 10,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.FAST,
+					quantity: 10,
+				},
+				{
+					name: STATUS_EFFECT.ATTACK_POWER,
+					quantity: 10,
+				},
+			],
+		},
+	];
+ */
+
+/* const effects = [
+		{
+			type: INSTANT_EFFECT_TYPE.DAMAGE,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 22,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DAMAGE,
+			payload: {
+				value: 15,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.ATTACK_POWER,
+					quantity: 11,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.ATTACK_POWER,
+					quantity: 18,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.HEAL,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.HEAL,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 10,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 22,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.FAST,
+					quantity: 2,
+				},
+				{
+					name: STATUS_EFFECT.ATTACK_POWER,
+					quantity: 14,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DAMAGE,
+			payload: {
+				value: 15,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DISABLE,
+			payload: [
+				{
+					name: DISABLE.STUN,
+					duration: 10,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 22,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.HEAL,
+			payload: {
+				value: 43,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DAMAGE,
+			payload: {
+				value: 12,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DISABLE,
+			payload: [
+				{
+					name: DISABLE.STUN,
+					duration: 10,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.SHIELD,
+			payload: {
+				value: 5,
+			},
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.FAST,
+					quantity: 10,
+				},
+				{
+					name: STATUS_EFFECT.ATTACK_POWER,
+					quantity: 10,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+			payload: [
+				{
+					name: STATUS_EFFECT.FAST,
+					quantity: 5,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.DISABLE,
+			payload: [
+				{
+					name: DISABLE.STUN,
+					duration: 33,
+				},
+			],
+		},
+		{
+			type: INSTANT_EFFECT_TYPE.HEAL,
+			payload: {
+				value: 43,
+			},
+		},
+	];
+ */
+/* 
+export interface EffectsInStep {
+	step: number;
+	effectsPerUnit: EffectsInStepPerUnit[];
+}
+
+export interface EffectsInStepPerUnit {
+	unitId: string;
+	effects: UnitPossibleEffectsInStep[];
+}
+
+export type UnitPossibleEffectsInStep =
+	| UnitEffectsInStep<INSTANT_EFFECT_TYPE.DAMAGE>
+	| UnitEffectsInStep<INSTANT_EFFECT_TYPE.HEAL>
+	| UnitEffectsInStep<INSTANT_EFFECT_TYPE.SHIELD>
+	| UnitEffectsInStep<INSTANT_EFFECT_TYPE.DISABLE>
+	| UnitEffectsInStep<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+
+export interface UnitEffectsInStep<T extends INSTANT_EFFECT_TYPE>
+	extends Omit<InstantEffectPayload<T>, "targetId"> {}
+ */
