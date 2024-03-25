@@ -4,10 +4,10 @@ import {
 	DamagePayload,
 	DisablePayload,
 	EVENT_TYPE,
-	Effects,
+	Effect,
 	HealPayload,
 	INSTANT_EFFECT_TYPE,
-	PossibleEffects,
+	PossibleEffect,
 	PossibleEvent,
 	SUBEVENT_TYPE,
 	ShieldPayload,
@@ -31,6 +31,7 @@ export function sortEventsByType(events: PossibleEvent[]) {
 	});
 }
 
+// TODO: remove after switch to effects
 function executeStepEvents(bm: BoardManager, events: PossibleEvent[]) {
 	events.forEach(event => {
 		bm.getUnitById(event.actorId).applyEvent(event);
@@ -69,6 +70,14 @@ export function getAndExecuteDeathEvents(bm: BoardManager) {
 	return events;
 }
 
+export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {
+	stepEffects.units.forEach(unit => {
+		unit.effects.forEach(effect => {
+			bm.getUnitById(unit.unitId).applyEffect(effect);
+		});
+	});
+}
+
 export function getStepEffects(events: PossibleEvent[]): StepEffects {
 	if (events.length === 0) return {} as StepEffects;
 
@@ -94,7 +103,7 @@ export function getStepEffects(events: PossibleEvent[]): StepEffects {
 		const effect = {
 			type: subEvent.payload.type,
 			payload: subEvent.payload.payload,
-		} as PossibleEffects;
+		} as PossibleEffect;
 
 		const existingUnitEffects = unitEffects.find(
 			(unitEffects: UnitEffects) => unitEffects.unitId === unitId,
@@ -173,8 +182,8 @@ export function getSubEventsFromTickEffects(tickEffect: TickEffectEventPayload):
 	}
 }
 
-export function aggregateEffects(effects: PossibleEffects[]): PossibleEffects[] {
-	const aggregatedEffectsMap: Map<INSTANT_EFFECT_TYPE, PossibleEffects> = new Map();
+export function aggregateEffects(effects: PossibleEffect[]): PossibleEffect[] {
+	const aggregatedEffectsMap: Map<INSTANT_EFFECT_TYPE, PossibleEffect> = new Map();
 
 	effects.forEach(effect => {
 		const { type, payload } = effect;
@@ -245,7 +254,7 @@ export function aggregateEffects(effects: PossibleEffects[]): PossibleEffects[] 
 	return Array.from(aggregatedEffectsMap.values());
 }
 
-export function calculateEffects(effects: PossibleEffects[]): PossibleEffects[] {
+export function calculateEffects(effects: PossibleEffect[]): PossibleEffect[] {
 	/* 
 		Comparar dano com heal, pegar o maior e subtrair o outro
 		Caso sobre dano, comparar com o valor do shield igualmente
@@ -256,19 +265,19 @@ export function calculateEffects(effects: PossibleEffects[]): PossibleEffects[] 
 		(
 			effects.find(
 				effect => effect.type === INSTANT_EFFECT_TYPE.DAMAGE,
-			) as Effects<INSTANT_EFFECT_TYPE.DAMAGE>
+			) as Effect<INSTANT_EFFECT_TYPE.DAMAGE>
 		)?.payload.value || 0;
 	let heal =
 		(
 			effects.find(
 				effect => effect.type === INSTANT_EFFECT_TYPE.HEAL,
-			) as Effects<INSTANT_EFFECT_TYPE.HEAL>
+			) as Effect<INSTANT_EFFECT_TYPE.HEAL>
 		)?.payload.value || 0;
 	let shield =
 		(
 			effects.find(
 				effect => effect.type === INSTANT_EFFECT_TYPE.SHIELD,
-			) as Effects<INSTANT_EFFECT_TYPE.SHIELD>
+			) as Effect<INSTANT_EFFECT_TYPE.SHIELD>
 		)?.payload.value || 0;
 
 	if (damage && heal) {
@@ -291,7 +300,7 @@ export function calculateEffects(effects: PossibleEffects[]): PossibleEffects[] 
 		}
 	}
 
-	const calculatedEffects: PossibleEffects[] = [];
+	const calculatedEffects: PossibleEffect[] = [];
 
 	effects.forEach(effect => {
 		if (effect.type === INSTANT_EFFECT_TYPE.DAMAGE) {

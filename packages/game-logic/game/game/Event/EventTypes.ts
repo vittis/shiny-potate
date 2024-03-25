@@ -125,17 +125,17 @@ export interface StepEffects {
 
 export interface UnitEffects {
 	unitId: string;
-	effects: PossibleEffects[];
+	effects: PossibleEffect[];
 }
 
-export type PossibleEffects =
-	| Effects<INSTANT_EFFECT_TYPE.DAMAGE>
-	| Effects<INSTANT_EFFECT_TYPE.HEAL>
-	| Effects<INSTANT_EFFECT_TYPE.SHIELD>
-	| Effects<INSTANT_EFFECT_TYPE.DISABLE>
-	| Effects<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+export type PossibleEffect =
+	| Effect<INSTANT_EFFECT_TYPE.DAMAGE>
+	| Effect<INSTANT_EFFECT_TYPE.HEAL>
+	| Effect<INSTANT_EFFECT_TYPE.SHIELD>
+	| Effect<INSTANT_EFFECT_TYPE.DISABLE>
+	| Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-export interface Effects<T extends INSTANT_EFFECT_TYPE>
+export interface Effect<T extends INSTANT_EFFECT_TYPE>
 	extends Omit<InstantEffectPayload<T>, "targetId"> {}
 
 /* 	

@@ -9,7 +9,7 @@ import {
 	DamagePayload,
 	HealPayload,
 	INSTANT_EFFECT_TYPE,
-	PossibleEffects,
+	PossibleEffect,
 	SUBEVENT_TYPE,
 	StatusEffectPayload,
 	TickEffectEvent,
@@ -274,7 +274,7 @@ describe("Event", () => {
 						},
 					],
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(aggregateEffects(effects)).toEqual([
 				{
@@ -336,7 +336,7 @@ describe("Event", () => {
 						value: 5,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 			const effectsDamageAndShield = [
 				{
 					type: INSTANT_EFFECT_TYPE.DAMAGE,
@@ -350,7 +350,7 @@ describe("Event", () => {
 						value: 5,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effectsDamageAndHeal)).toEqual([
 				{
@@ -379,7 +379,7 @@ describe("Event", () => {
 						value: 10,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 			const effectsDamageAndShield = [
 				{
 					type: INSTANT_EFFECT_TYPE.DAMAGE,
@@ -393,7 +393,7 @@ describe("Event", () => {
 						value: 10,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effectsDamageAndHeal)).toEqual([
 				{
@@ -427,7 +427,7 @@ describe("Event", () => {
 						value: 10,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 			const effectsDamageAndShield = [
 				{
 					type: INSTANT_EFFECT_TYPE.DAMAGE,
@@ -441,7 +441,7 @@ describe("Event", () => {
 						value: 10,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effectsDamageAndHeal)).toEqual([]);
 			expect(calculateEffects(effectsDamageAndShield)).toEqual([]);
@@ -467,7 +467,7 @@ describe("Event", () => {
 						value: 5,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effects)).toEqual([
 				{
@@ -499,7 +499,7 @@ describe("Event", () => {
 						value: 15,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effects)).toEqual([
 				{
@@ -531,7 +531,7 @@ describe("Event", () => {
 						value: 5,
 					},
 				},
-			] as PossibleEffects[];
+			] as PossibleEffect[];
 
 			expect(calculateEffects(effects)).toEqual([]);
 		});

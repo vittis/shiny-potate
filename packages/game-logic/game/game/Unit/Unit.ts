@@ -9,6 +9,7 @@ import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import {
 	EVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
+	PossibleEffect,
 	PossibleEvent,
 	SubEvent,
 	TICK_EFFECT_TYPE,
@@ -222,6 +223,32 @@ export class Unit {
 		});
 	}
 
+	applyEffect(effect: PossibleEffect) {
+		if (effect.type === INSTANT_EFFECT_TYPE.DAMAGE) {
+			this.receiveDamage(effect.payload.value);
+		} else if (effect.type === INSTANT_EFFECT_TYPE.HEAL) {
+			this.receiveHeal(effect.payload.value);
+		} else if (effect.type === INSTANT_EFFECT_TYPE.SHIELD) {
+			this.receiveShield(effect.payload.value);
+		} else if (effect.type === INSTANT_EFFECT_TYPE.STATUS_EFFECT) {
+			effect.payload.forEach(statusEffect => {
+				if (statusEffect.quantity > 0) {
+					this.statusEffectManager.applyStatusEffect(statusEffect);
+				} else {
+					this.statusEffectManager.removeStacks(statusEffect.name, statusEffect.quantity * -1);
+				}
+			});
+
+			this.statsManager.recalculateStatsFromStatusEffects(this.statusEffects);
+			this.abilityManager.applyCooldownModifierFromStats(this.stats);
+		} else if (effect.type === INSTANT_EFFECT_TYPE.DISABLE) {
+			effect.payload.forEach(disable => {
+				this.disableManager.applyDisable(disable);
+			});
+		}
+	}
+
+	// TODO: remove after switch to effects
 	applySubEvents(subEvents: SubEvent[]) {
 		subEvents.forEach(subEvent => {
 			const target = this.bm.getUnitById(subEvent.payload.targetId);
@@ -259,6 +286,7 @@ export class Unit {
 		});
 	}
 
+	// TODO: remove after switch to effects
 	applyEvent(event: PossibleEvent) {
 		if (event.type === EVENT_TYPE.USE_ABILITY) {
 			this.applySubEvents((event as UseAbilityEvent).payload.subEvents);
@@ -271,6 +299,7 @@ export class Unit {
 		}
 	}
 
+	// TODO: remove after switch to effects
 	applyTickEffectEvents(tickEffect: TickEffectEvent) {
 		if (tickEffect.payload.type === TICK_EFFECT_TYPE.POISON) {
 			const target = this.bm.getUnitById(tickEffect.payload.targetId);

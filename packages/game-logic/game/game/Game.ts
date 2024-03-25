@@ -3,6 +3,7 @@ import { Unit } from "./Unit/Unit";
 import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
 import {
+	executeStepEffects,
 	getAndExecuteDeathEvents,
 	getStepEffects,
 	sortAndExecuteEvents,
@@ -177,15 +178,13 @@ export function runGame(bm: BoardManager) {
 			// Order each stepEvents / ok
 			const orderedEvents = sortEventsByType(stepEvents);
 			eventHistory.push(...orderedEvents);
-			/* effectsPerStep.push(...orderedEvents); */
 
 			// Execute each stepEvents in new system / DOING
 			if (orderedEvents.length > 0) {
-				const effectsInThisStep = getStepEffects(orderedEvents);
-				effectHistory.push(effectsInThisStep);
+				const stepEffects = getStepEffects(orderedEvents);
+				effectHistory.push(stepEffects);
+				executeStepEffects(bm, stepEffects);
 			}
-
-			/* executeEffectsInStep(bm, effectsInStep); */
 
 			// Check and execute death events, if an unit dies, add death triggers related events
 			eventHistory.push(...getAndExecuteDeathEvents(bm));
