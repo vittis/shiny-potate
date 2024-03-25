@@ -2,7 +2,7 @@ import { authProcedure } from "@/routes/middlewares";
 import { router } from "@/services/trpc";
 
 export const arenaRouter = router({
-	new: authProcedure.query(async ({ ctx }) => {
+	new: authProcedure.mutation(async ({ ctx }) => {
 		const { supabase, user } = ctx;
 
 		const { data, error } = await supabase
@@ -18,8 +18,6 @@ export const arenaRouter = router({
 	}),
 	me: authProcedure.query(async ({ ctx }) => {
 		const { supabase, user } = ctx;
-
-		console.log(user.id);
 
 		const { data, error } = await supabase.from("arena").select("*").eq("player_id", user.id);
 

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { Variables } from "../../../src/server";
+import { nanoid } from "nanoid";
 import {
 	Game,
 	Classes,
@@ -7,7 +7,7 @@ import {
 	generateRandomItems,
 	EQUIPMENT_TYPE,
 } from "game-logic";
-import { nanoid } from "nanoid";
+import { Variables } from "@/server";
 
 const app = new Hono<{ Variables: Variables }>();
 
