@@ -7,7 +7,7 @@ interface TRPCContext {
 	supabase?: SupabaseClient;
 }
 
-export const createContext = async (opts: {
+export const createTRPCContext = async (opts: {
 	req: Request;
 	resHeaders: any;
 }): Promise<TRPCContext> => {
@@ -16,7 +16,7 @@ export const createContext = async (opts: {
 	};
 };
 
-const t = initTRPC.context<typeof createContext>().create();
+const t = initTRPC.context<typeof createTRPCContext>().create();
 
 export const publicProcedure = t.procedure;
 export const router = t.router;

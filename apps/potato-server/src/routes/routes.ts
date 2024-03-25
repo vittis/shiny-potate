@@ -5,7 +5,7 @@ import { arenaRouter } from "./arena/arenaRouter";
 
 export const appRouter = router({
 	hello: supaProcedure.input(z.string().nullish()).query(({ input, ctx }) => {
-		console.log("pu", ctx.user.action_link);
+		console.log("pu", ctx.user?.action_link);
 		return { path: ctx.req.url };
 	}),
 	arena: arenaRouter,
