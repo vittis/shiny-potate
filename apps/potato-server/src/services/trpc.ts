@@ -1,22 +1,23 @@
 import { initTRPC } from "@trpc/server";
-import { SupabaseClient, User } from "@supabase/supabase-js";
+import { createTRPCContext } from "@/routes/context";
+import { ZodError } from "zod";
 
-interface TRPCContext {
-	user?: User;
-	req: Request;
-	supabase?: SupabaseClient;
-}
-
-export const createTRPCContext = async (opts: {
-	req: Request;
-	resHeaders: any;
-}): Promise<TRPCContext> => {
-	return {
-		req: opts.req,
-	};
-};
-
-const t = initTRPC.context<typeof createTRPCContext>().create();
+const t = initTRPC.context<typeof createTRPCContext>().create({
+	errorFormatter(opts) {
+		const { shape, error } = opts;
+		return {
+			...shape,
+			data: {
+				...shape.data,
+				// helper to detect validation error
+				zodError:
+					error.code === "BAD_REQUEST" && error.cause instanceof ZodError
+						? error.cause.flatten()
+						: null,
+			},
+		};
+	},
+});
 
 export const publicProcedure = t.procedure;
 export const router = t.router;

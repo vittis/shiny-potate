@@ -3,7 +3,7 @@ import { publicProcedure } from "@/services/trpc";
 import { createServerSupabase } from "@/services/supabase";
 
 export const supaProcedure = publicProcedure.use(async ({ ctx, next }) => {
-	const supabase = createServerSupabase();
+	const supabase = createServerSupabase(ctx.req);
 
 	return next({
 		ctx: {
@@ -18,6 +18,7 @@ export const authProcedure = supaProcedure.use(async ({ ctx, next }) => {
 
 	const authHeader = req.headers.get("Authorization");
 	const accessToken = authHeader?.split(" ")?.[1];
+
 	if (!accessToken) {
 		throw new TRPCError({ code: "UNAUTHORIZED" });
 	}

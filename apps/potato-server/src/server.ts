@@ -13,7 +13,7 @@ import { trpcServer } from "@hono/trpc-server";
 import { appRouter } from "./routes/routes";
 import { WebsocketService } from "./services/websocket";
 import type { Server as HTTPSServer } from "node:http";
-import { createTRPCContext } from "./services/trpc";
+import { createTRPCContext } from "./routes/context";
 
 export type Variables = {
 	session: any;

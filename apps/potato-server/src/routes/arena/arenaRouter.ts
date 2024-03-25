@@ -1,10 +1,9 @@
-import { authProcedure, supaProcedure } from "@/routes/middlewares";
+import { authProcedure } from "@/routes/middlewares";
 import { router } from "@/services/trpc";
 
 export const arenaRouter = router({
 	new: authProcedure.query(async ({ ctx }) => {
 		const { supabase, user } = ctx;
-		console.log(user);
 
 		const { data, error } = await supabase
 			.from("arena")
@@ -22,10 +21,7 @@ export const arenaRouter = router({
 
 		console.log(user.id);
 
-		const { data, error } = await supabase
-			.from("arena")
-			.select("*")
-			.eq("player_id", "a22ca091-943c-4151-9398-2730fc37c2be");
+		const { data, error } = await supabase.from("arena").select("*").eq("player_id", user.id);
 
 		if (error) {
 			throw error;
