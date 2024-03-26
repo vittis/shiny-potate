@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { createServerSupabase } from "@/services/supabase";
-import { Variables } from "@/server";
+import { Variables } from "../../server";
+import { createServerSupabase } from "../../services/supabase";
 
 const app = new Hono<{ Variables: Variables }>();
 

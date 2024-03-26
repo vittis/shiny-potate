@@ -3,7 +3,6 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { connectRedis, redisClient, redisSub } from "./services/redis";
 import { logger } from "hono/logger";
-import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import gameRoutes from "./controllers/game/gameRoutes";

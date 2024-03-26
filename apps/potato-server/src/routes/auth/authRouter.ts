@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { supaProcedure } from "@/routes/middlewares";
-import { router } from "@/services/trpc";
+import { router } from "../../services/trpc";
+import { supaProcedure } from "../middlewares";
 
 export const authRouter = router({
 	login: supaProcedure

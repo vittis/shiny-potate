@@ -7,7 +7,7 @@ import {
 	generateRandomItems,
 	EQUIPMENT_TYPE,
 } from "game-logic";
-import { Variables } from "@/server";
+import { Variables } from "../../server";
 
 const app = new Hono<{ Variables: Variables }>();
 

@@ -1,6 +1,6 @@
+import { createServerSupabase } from "../services/supabase";
+import { publicProcedure } from "../services/trpc";
 import { TRPCError } from "@trpc/server";
-import { publicProcedure } from "@/services/trpc";
-import { createServerSupabase } from "@/services/supabase";
 
 export const supaProcedure = publicProcedure.use(async ({ ctx, next }) => {
 	const supabase = createServerSupabase(ctx.req);

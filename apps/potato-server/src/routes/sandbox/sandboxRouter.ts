@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { publicProcedure, router } from "@/services/trpc";
 import {
 	Classes,
 	EQUIPMENT_TYPE,
@@ -8,6 +7,7 @@ import {
 	generateRandomItems,
 } from "game-logic";
 import { nanoid } from "nanoid";
+import { publicProcedure, router } from "../../services/trpc";
 
 export const sandboxRouter = router({
 	setupTeams: publicProcedure

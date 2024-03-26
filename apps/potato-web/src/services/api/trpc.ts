@@ -9,4 +9,6 @@ const trpc = createTRPCProxyClient<AppRouter>({
 	],
 });
 
+console.log(trpc);
+
 export { trpc };

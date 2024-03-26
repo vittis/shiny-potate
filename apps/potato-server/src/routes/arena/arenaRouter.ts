@@ -1,5 +1,5 @@
-import { authProcedure } from "@/routes/middlewares";
-import { router } from "@/services/trpc";
+import { router } from "../../services/trpc";
+import { authProcedure } from "../middlewares";
 
 export const arenaRouter = router({
 	new: authProcedure.mutation(async ({ ctx }) => {
