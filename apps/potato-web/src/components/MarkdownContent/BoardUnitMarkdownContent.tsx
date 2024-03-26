@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
 interface MarkdownContentProps {
-	unit: Unit;
+	unit: Unit; // todo change to serialized unit type
 }
 
 const BoardUnitMarkdownContent = ({ unit }: MarkdownContentProps) => {

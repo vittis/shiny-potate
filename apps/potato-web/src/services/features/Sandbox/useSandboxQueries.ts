@@ -1,17 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "../../api/http";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useSandboxStore } from "./useSandboxStore";
+import { trpc } from "@/services/api/trpc";
+import type { inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "potato-server/src/types";
 
-export async function fetchRollShop(data: { tier: string }) {
-	const response = await api.get(`/game/roll-shop/${data.tier}`);
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
-	return response.data;
+export async function fetchRollShop(input: { tier: string }) {
+	const tier = Number(input.tier);
+	const data = await trpc.sandbox.rollShop.query({ tier });
+
+	return data;
 }
 
 interface SandboxQueriesData {
-	shopData: any;
+	shopData?: RouterOutput["sandbox"]["rollShop"];
 	isFetchingRollShop: boolean;
 	refetchRollShop: () => void;
 }

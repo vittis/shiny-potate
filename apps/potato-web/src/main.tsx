@@ -73,30 +73,29 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<QueryClientProvider client={queryClient}>
-		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			<ToastContainer
-				toastClassName="border"
-				theme="dark"
-				containerId="B"
-				position="top-center"
-				transition={Flip}
-				closeButton={false}
-			/>
-			<ToastContainer
-				position="bottom-left"
-				theme="dark"
-				toastClassName="border"
-				draggablePercent={30}
-				stacked
-				hideProgressBar={false}
-			/>
-			<RouterProvider router={router} />
-			{/* <SetupView /> */}
-			{/* <MainLayout /> */}
-			{/* <App /> */}
-
-			{/* <MainWrapper /> */}
-		</ThemeProvider>
-	</QueryClientProvider>,
+	<>
+		{/* <trpc.Provider client={trpcClient} queryClient={queryClient}> */}
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+				<ToastContainer
+					toastClassName="border"
+					theme="dark"
+					containerId="B"
+					position="top-center"
+					transition={Flip}
+					closeButton={false}
+				/>
+				<ToastContainer
+					position="bottom-left"
+					theme="dark"
+					toastClassName="border"
+					draggablePercent={30}
+					stacked
+					hideProgressBar={false}
+				/>
+				<RouterProvider router={router} />
+			</ThemeProvider>
+		</QueryClientProvider>
+		{/* </trpc.Provider> */}
+	</>,
 );

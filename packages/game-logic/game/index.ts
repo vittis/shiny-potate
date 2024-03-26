@@ -1,5 +1,4 @@
 export { generateItemsFromTier, generateRandomItems } from "./game/Equipment/ShopUtils";
-
 export { EQUIPMENT_TYPE } from "./game/Equipment/EquipmentTypes";
 export { getUnitData } from "./game/Equipment/ShopUtils"; // todo refactor
 
@@ -9,3 +8,4 @@ export { Game } from "./game/Game";
 export { Unit } from "./game/Unit/Unit";
 
 export { Weapons, Abilities, Classes, Perks } from "./game/data";
+export type { ShopEquipmentData } from "./game/Equipment/EquipmentTypes";

@@ -14,8 +14,6 @@ import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries
 import { useSandboxStore } from "@/services/features/Sandbox/useSandboxStore";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { trpc } from "@/services/api/trpc";
-import { supabase } from "@/services/supabase/supabase";
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 export async function fetchRollShop(data) {
 	const response = await api.get(`/game/roll-shop/${data.tier}`);
@@ -24,7 +22,9 @@ export async function fetchRollShop(data) {
 }
 
 function SandboxView() {
-	const user = useSupabaseUserStore(state => state.user);
+	/* const { data } = trpc.hello.useQuery();
+	console.log(data); */
+
 	const [selectTier, setSelectTier] = useState("-1");
 
 	const { refetchRollShop, isFetchingRollShop } = useSandboxQueries();
@@ -40,23 +40,14 @@ function SandboxView() {
 		}
 	}
 
-	// todo remove
-	useEffect(() => {
+	/* useEffect(() => {
 		async function test() {
-			/* console.log(user.id);
-			const { data, error } = await supabase.from("arena").select("*").eq("player_id", user.id);
-			console.log(data); */
-			/* const { data, error } = await supabase
-				.from("arena")
-				.insert([{ player_id: user.id }])
-				.select();
-
-			console.log(data); */
+			console.log("trying");
+			// console.log(await trpc.arena.my.query());
+			console.log(await trpc.hello.query());
 		}
-		if (user) {
-			test();
-		}
-	}, [user]);
+		test();
+	}, []); */
 
 	return (
 		<ScrollArea className="h-full w-full px-4">

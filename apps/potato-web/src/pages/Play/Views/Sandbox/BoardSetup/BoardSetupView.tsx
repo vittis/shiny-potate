@@ -293,7 +293,9 @@ export function BoardSetupView() {
 									{unit ? (
 										<Droppable id={id}>
 											<MarkdownTooltip
-												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
+												content={
+													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
+												}
 											>
 												<DraggableBoardUnit
 													id={unit.id}
@@ -334,7 +336,9 @@ export function BoardSetupView() {
 									{unit ? (
 										<Droppable id={id}>
 											<MarkdownTooltip
-												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
+												content={
+													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
+												}
 											>
 												<DraggableBoardUnit
 													id={unit.id}

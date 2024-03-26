@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { Database } from "../../types/supabase";
 
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || "";
@@ -15,7 +16,7 @@ export function createServerSupabase(req: Request) {
 			}
 		: {};
 
-	return createClient(supabaseUrl, supabaseAnonKey, {
+	return createClient<Database>(supabaseUrl, supabaseAnonKey, {
 		db: {
 			schema: "public",
 		},

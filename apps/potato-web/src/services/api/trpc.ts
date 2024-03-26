@@ -1,6 +1,14 @@
 import type { AppRouter } from "potato-server/src/types";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 
+/* const trpcClient = trpc.create({
+	links: [
+		httpBatchLink({
+			url: `http://localhost:8080/trpc`,
+		}),
+	],
+}); */
+
 const trpc = createTRPCProxyClient<AppRouter>({
 	links: [
 		httpBatchLink({
@@ -8,7 +16,5 @@ const trpc = createTRPCProxyClient<AppRouter>({
 		}),
 	],
 });
-
-console.log(trpc);
 
 export { trpc };

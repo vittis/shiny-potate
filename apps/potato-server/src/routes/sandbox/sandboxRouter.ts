@@ -3,6 +3,7 @@ import {
 	Classes,
 	EQUIPMENT_TYPE,
 	Game,
+	ShopEquipmentData,
 	generateItemsFromTier,
 	generateRandomItems,
 } from "game-logic";
@@ -46,13 +47,15 @@ export const sandboxRouter = router({
 		}),
 	rollShop: publicProcedure
 		.input(
-			z.object({
-				tier: z.number(),
-			}),
+			z
+				.object({
+					tier: z.number(),
+				})
+				.optional(),
 		)
 		.query(async ({ input }) => {
 			// console.log(`input=${encodeURIComponent(JSON.stringify({ tier: 1 }))}`);
-			const tier = input.tier || 0;
+			const tier = input?.tier ?? 0;
 			if (tier < -1 || tier > 6) {
 				throw new Error("Invalid tier");
 			}
@@ -78,8 +81,8 @@ export const sandboxRouter = router({
 
 			const data = {
 				classes: classes.map(c => ({ id: nanoid(4), name: c })),
-				weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
-				trinkets: trinkets.map(t => ({ id: nanoid(4), data: t })),
+				weapons: weapons.map(w => ({ id: nanoid(4), data: w as ShopEquipmentData })),
+				trinkets: trinkets.map(t => ({ id: nanoid(4), data: t as ShopEquipmentData })),
 			};
 
 			return data;
