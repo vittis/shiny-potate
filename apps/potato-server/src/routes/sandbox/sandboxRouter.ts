@@ -3,7 +3,6 @@ import {
 	Classes,
 	EQUIPMENT_TYPE,
 	Game,
-	ShopEquipmentData,
 	generateItemsFromTier,
 	generateRandomItems,
 } from "game-logic";
@@ -65,24 +64,20 @@ export const sandboxRouter = router({
 				classes.push(key);
 			});
 
-			let weapons = [];
-			if (tier === -1) {
-				weapons = generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.WEAPON);
-			} else {
-				weapons = generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.WEAPON);
-			}
+			const weapons =
+				tier === -1
+					? generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.WEAPON)
+					: generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.WEAPON);
 
-			let trinkets = [];
-			if (tier === -1) {
-				trinkets = generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.TRINKET);
-			} else {
-				trinkets = generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.TRINKET);
-			}
+			const trinkets =
+				tier === -1
+					? generateRandomItems({ quantityPerItem: 3 }, EQUIPMENT_TYPE.TRINKET)
+					: generateItemsFromTier(tier, { quantityPerItem: 1 }, EQUIPMENT_TYPE.TRINKET);
 
 			const data = {
 				classes: classes.map(c => ({ id: nanoid(4), name: c })),
-				weapons: weapons.map(w => ({ id: nanoid(4), data: w as ShopEquipmentData })),
-				trinkets: trinkets.map(t => ({ id: nanoid(4), data: t as ShopEquipmentData })),
+				weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
+				trinkets: trinkets.map(t => ({ id: nanoid(4), data: t })),
 			};
 
 			return data;
