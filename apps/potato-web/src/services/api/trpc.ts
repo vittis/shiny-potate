@@ -1,20 +1,21 @@
 import type { AppRouter } from "potato-server/src/types";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
 
-/* const trpcClient = trpc.create({
-	links: [
-		httpBatchLink({
-			url: `http://localhost:8080/trpc`,
-		}),
-	],
-}); */
+const trpc = createTRPCReact<AppRouter>();
 
-const trpc = createTRPCProxyClient<AppRouter>({
+const trpcClient = trpc.createClient({
 	links: [
 		httpBatchLink({
 			url: `${import.meta.env.VITE_API_URL}/trpc`,
+			async headers() {
+				const token = localStorage.getItem("sb-auth");
+				const parsedToken = JSON.parse(token || "{}");
+				return {
+					authorization: `Bearer ${parsedToken.access_token}`,
+				};
+			},
 		}),
 	],
 });
 
-export { trpc };
+export { trpc, trpcClient };

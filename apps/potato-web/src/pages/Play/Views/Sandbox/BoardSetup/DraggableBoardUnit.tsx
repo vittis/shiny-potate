@@ -4,7 +4,6 @@ import { useDraggable } from "@dnd-kit/core";
 import { useState } from "react";
 
 const DraggableBoardUnit = ({ children, id, unit, isClass, weaponTier, removeEquipment }: any) => {
-	console.log("unit", unit);
 	const [isTooltipOpen, setIsTooltipOpen] = useState(false);
 
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({

@@ -1,38 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSandboxStore } from "./useSandboxStore";
 import { trpc } from "@/services/api/trpc";
-import type { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "potato-server/src/types";
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-
-export async function fetchRollShop(input: { tier: string }) {
-	const tier = Number(input.tier);
-	const data = await trpc.sandbox.rollShop.query({ tier });
-
-	return data;
-}
-
-interface SandboxQueriesData {
-	shopData?: RouterOutput["sandbox"]["rollShop"];
-	isFetchingRollShop: boolean;
-	refetchRollShop: () => void;
-}
-
-const useSandboxQueries = (): SandboxQueriesData => {
+const useSandboxQueries = () => {
 	const shopTier = useSandboxStore(state => state.shopTier);
 
-	const {
-		data: shopData,
-		refetch: refetchRollShop,
-		isFetching: isFetchingRollShop,
-	} = useQuery({
-		queryKey: ["sandbox", "roll-shop", shopTier],
-		queryFn: () => fetchRollShop({ tier: shopTier }),
-		staleTime: 0,
-	});
+	const { data, refetch, isFetching } = trpc.sandbox.rollShop.useQuery({ tier: Number(shopTier) });
 
-	return { shopData, isFetchingRollShop, refetchRollShop };
+	return { shopData: data, isFetchingRollShop: isFetching, refetchRollShop: refetch };
 };
 
 export { useSandboxQueries };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
 	DndContext,
 	DragEndEvent,
@@ -9,12 +9,10 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { api } from "@/services/api/http";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
@@ -25,14 +23,7 @@ import { getUnitData } from "game-logic";
 import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnitMarkdownContent";
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
 import { DraggableBoardUnit } from "./DraggableBoardUnit";
-
-export async function setupTeams(data) {
-	const response = await api.post("/game/setup-teams", data, {
-		withCredentials: true,
-	});
-
-	return response.data;
-}
+import { trpc } from "@/services/api/trpc";
 
 export interface UnitsDTO {
 	equipments: any[]; // ShopEquipmentData
@@ -68,9 +59,7 @@ export function BoardSetupView() {
 
 	const { shopData: data, isFetchingRollShop: isFetching } = useSandboxQueries();
 
-	const { mutateAsync: setupTeamsMutation, isPending } = useMutation({
-		mutationFn: setupTeams,
-		mutationKey: ["setup-teams"],
+	const { mutateAsync: setupTeamsMutation, isPending } = trpc.sandbox.setupTeams.useMutation({
 		onSuccess: data => {
 			localStorage.setItem("game", JSON.stringify(data));
 			toast.success("Game started!");

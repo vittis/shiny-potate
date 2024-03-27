@@ -17,6 +17,7 @@ import LobbyView from "./pages/Play/Views/Lobby/LobbyView";
 import { GameView } from "./pages/Game/GameView";
 import { SandboxView } from "./pages/Play/Views/Sandbox/SandboxView";
 import ArenaView from "./pages/Arena/ArenaView";
+import { trpc, trpcClient } from "./services/api/trpc";
 
 /* export const game = new Phaser.Game(
   Object.assign(PHASER_CONFIG, {
@@ -73,8 +74,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<>
-		{/* <trpc.Provider client={trpcClient} queryClient={queryClient}> */}
+	<trpc.Provider client={trpcClient} queryClient={queryClient}>
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 				<ToastContainer
@@ -96,6 +96,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 				<RouterProvider router={router} />
 			</ThemeProvider>
 		</QueryClientProvider>
-		{/* </trpc.Provider> */}
-	</>,
+	</trpc.Provider>,
 );
