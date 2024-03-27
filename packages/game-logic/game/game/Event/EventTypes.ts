@@ -121,6 +121,7 @@ export interface TriggerEffectEvent extends Event<EVENT_TYPE.TRIGGER_EFFECT> {
 export interface StepEffects {
 	step: number;
 	units: UnitEffects[];
+	deadUnits?: string[]; // unitId
 }
 
 export interface UnitEffects {

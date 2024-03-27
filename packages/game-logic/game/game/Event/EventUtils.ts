@@ -18,56 +18,79 @@ import {
 	UnitEffects,
 } from "./EventTypes";
 
-export function sortEventsByType(events: PossibleEvent[]) {
+export function sortEventsByType(events: PossibleEvent[], orderType: string = "REGULAR") {
 	return events.sort((a, b) => {
-		const order = {
-			[EVENT_TYPE.TICK_EFFECT]: 1,
-			[EVENT_TYPE.USE_ABILITY]: 2,
-			[EVENT_TYPE.TRIGGER_EFFECT]: 3,
-			[EVENT_TYPE.FAINT]: 4,
-		};
+		const order =
+			orderType == "DEATH"
+				? {
+						[EVENT_TYPE.FAINT]: 1,
+						[EVENT_TYPE.TRIGGER_EFFECT]: 2,
+						[EVENT_TYPE.USE_ABILITY]: 3,
+						[EVENT_TYPE.TICK_EFFECT]: 4,
+					}
+				: {
+						[EVENT_TYPE.TICK_EFFECT]: 1,
+						[EVENT_TYPE.USE_ABILITY]: 2,
+						[EVENT_TYPE.TRIGGER_EFFECT]: 3,
+						[EVENT_TYPE.FAINT]: 4,
+					};
 
 		return order[a.type] - order[b.type];
 	});
 }
 
-// TODO: remove after switch to effects
-function executeStepEvents(bm: BoardManager, events: PossibleEvent[]) {
-	events.forEach(event => {
-		bm.getUnitById(event.actorId).applyEvent(event);
-	});
-
-	return events;
-}
-
-/* 
-	need to still return this for eventHistory but not execute
-	create new function to execute events in new system
-*/
-export function sortAndExecuteEvents(bm: BoardManager, events: PossibleEvent[]) {
-	// keep only sort function to return events
-	//return sortEventsByType(events);
-
-	return executeStepEvents(bm, sortEventsByType(events));
-}
-
-export function getAndExecuteDeathEvents(bm: BoardManager) {
-	let events: PossibleEvent[] = [];
+export function getDeathEvents(bm: BoardManager) {
+	const events: PossibleEvent[] = [];
 	bm.getAllAliveUnits().forEach(unit => {
 		if (!unit.isDead && unit.hasDied()) {
 			unit.onDeath();
 
-			// execute events from death related triggers
+			// get events from death related triggers
 			bm.getAllUnits().forEach(unit => {
-				const triggerEvents: PossibleEvent[] = [];
-				triggerEvents.push(...unit.serializeEvents());
-				const orderedEvents = sortAndExecuteEvents(bm, triggerEvents);
-				events.push(...orderedEvents);
+				events.push(...unit.serializeEvents());
 			});
 		}
 	});
 
 	return events;
+}
+
+export function mergeStepEffects(
+	currentStepEffects: StepEffects | undefined,
+	addedStepEffects: StepEffects,
+) {
+	if (!currentStepEffects) return addedStepEffects;
+
+	const mergedStepEffects: StepEffects = currentStepEffects;
+
+	addedStepEffects.units.forEach(unit => {
+		const existingUnitEffects = mergedStepEffects.units.find(
+			mergedUnit => mergedUnit.unitId === unit.unitId,
+		);
+
+		if (existingUnitEffects) {
+			existingUnitEffects.effects.push(...unit.effects);
+		} else {
+			mergedStepEffects.units.push(unit);
+		}
+	});
+
+	if (addedStepEffects?.deadUnits) {
+		if (mergedStepEffects?.deadUnits) {
+			mergedStepEffects.deadUnits = [...mergedStepEffects.deadUnits, ...addedStepEffects.deadUnits];
+		} else {
+			mergedStepEffects.deadUnits = addedStepEffects.deadUnits;
+		}
+	}
+
+	mergedStepEffects.units = mergedStepEffects.units.map(unit => {
+		return {
+			unitId: unit.unitId,
+			effects: calculateEffects(aggregateEffects(unit.effects)),
+		};
+	});
+
+	return mergedStepEffects;
 }
 
 export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {
@@ -82,6 +105,7 @@ export function getStepEffects(events: PossibleEvent[]): StepEffects {
 	if (events.length === 0) return {} as StepEffects;
 
 	let allSubEvents: SubEvent[] = [];
+	const deadUnits: string[] = [];
 
 	events.forEach(event => {
 		if (event.type === EVENT_TYPE.USE_ABILITY) {
@@ -90,9 +114,8 @@ export function getStepEffects(events: PossibleEvent[]): StepEffects {
 			allSubEvents = [...allSubEvents, ...event.subEvents];
 		} else if (event.type === EVENT_TYPE.TICK_EFFECT) {
 			allSubEvents = [...allSubEvents, ...getSubEventsFromTickEffects(event.payload)];
-		} else {
-			console.log("getStepEffects: FAINT");
-			console.log("FAINT will be generated after all subEvents for the step are calculated");
+		} else if (event.type === EVENT_TYPE.FAINT) {
+			deadUnits.push(event.actorId);
 		}
 	});
 
@@ -129,6 +152,7 @@ export function getStepEffects(events: PossibleEvent[]): StepEffects {
 	const stepEffects: StepEffects = {
 		step: events[0]?.step,
 		units: calculateUnitEffects,
+		...(deadUnits.length > 0 && { deadUnits }),
 	};
 
 	return stepEffects;
@@ -152,12 +176,12 @@ export function getSubEventsFromTickEffects(tickEffect: TickEffectEventPayload):
 			payload: {
 				type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
 				targetId: tickEffect.targetId,
-				payload: [{ name: STATUS_EFFECT.REGEN, quantity: tickEffect.payload.value }],
+				payload: [{ name: STATUS_EFFECT.REGEN, quantity: tickEffect.payload.decrement * -1 }],
 			},
 		} as SubEvent;
 
 		return [healSubEvent, statusEffectSubEvent];
-	} /* if (tickEffect.type === "POISON") */ else {
+	} else if (tickEffect.type === "POISON") {
 		const damageSubEvent = {
 			type: SUBEVENT_TYPE.INSTANT_EFFECT,
 			payload: {
@@ -174,12 +198,14 @@ export function getSubEventsFromTickEffects(tickEffect: TickEffectEventPayload):
 			payload: {
 				type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
 				targetId: tickEffect.targetId,
-				payload: [{ name: STATUS_EFFECT.POISON, quantity: tickEffect.payload.value }],
+				payload: [{ name: STATUS_EFFECT.POISON, quantity: tickEffect.payload.decrement * -1 }],
 			},
 		} as SubEvent;
 
 		return [damageSubEvent, statusEffectSubEvent];
 	}
+
+	throw Error("getSubEventsFromTickEffects: Invalid tick effect type - " + tickEffect.type);
 }
 
 export function aggregateEffects(effects: PossibleEffect[]): PossibleEffect[] {
