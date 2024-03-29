@@ -1,6 +1,6 @@
 import { EquipmentData } from "../../Equipment/EquipmentTypes";
 
-export const MockWeapons = {
+export const MockTrinkets = {
 	BrainsInAJar: {
 		name: "Brains in a Jar",
 		tags: ["TRINKET", "MAGICAL"],
@@ -26,6 +26,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Ki Focus",
+					type: "SPELL",
 				},
 				tier: "implicit",
 			},
@@ -137,6 +138,7 @@ export const MockWeapons = {
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Stab",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},

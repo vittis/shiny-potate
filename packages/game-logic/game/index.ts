@@ -1,6 +1,6 @@
-export { generateItemsFromTier, generateRandomItems } from "./game/Equipment/ShopUtils";
+export { generateItemsFromTier, generateRandomItems } from "./shop/ShopUtils";
 export { EQUIPMENT_TYPE } from "./game/Equipment/EquipmentTypes";
-export { getUnitData } from "./game/Equipment/ShopUtils"; // todo refactor
+export { getUnitData } from "./shop/ShopUtils"; // todo refactor
 
 export { Class } from "./game/Class/Class";
 

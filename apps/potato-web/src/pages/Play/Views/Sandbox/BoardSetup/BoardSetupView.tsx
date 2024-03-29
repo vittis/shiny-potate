@@ -24,30 +24,12 @@ import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnit
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
 import { DraggableBoardUnit } from "./DraggableBoardUnit";
 import { trpc } from "@/services/api/trpc";
+import { DroppableTile } from "./DroppableTile";
 
 export interface UnitsDTO {
 	equipments: any[]; // ShopEquipmentData
 	position: number;
 	unitClass: string;
-}
-
-export function Droppable({ children, id }: any) {
-	const { isOver, setNodeRef } = useDroppable({
-		id: id,
-	});
-
-	return (
-		<div
-			ref={setNodeRef}
-			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 transition-transform duration-75",
-				isOver && "bg-zinc-800",
-				isOver && "scale-110",
-			)}
-		>
-			{children}
-		</div>
-	);
 }
 
 /* 
@@ -280,7 +262,7 @@ export function BoardSetupView() {
 							{boardLeft.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
-										<Droppable id={id}>
+										<DroppableTile id={id}>
 											<MarkdownTooltip
 												content={
 													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
@@ -312,9 +294,9 @@ export function BoardSetupView() {
 													{unit.name}
 												</DraggableBoardUnit>
 											</MarkdownTooltip>
-										</Droppable>
+										</DroppableTile>
 									) : (
-										<Droppable id={id}></Droppable>
+										<DroppableTile id={id}></DroppableTile>
 									)}
 								</React.Fragment>
 							))}
@@ -323,7 +305,7 @@ export function BoardSetupView() {
 							{boardRight.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
-										<Droppable id={id}>
+										<DroppableTile id={id}>
 											<MarkdownTooltip
 												content={
 													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
@@ -355,9 +337,9 @@ export function BoardSetupView() {
 													{unit.name}
 												</DraggableBoardUnit>
 											</MarkdownTooltip>
-										</Droppable>
+										</DroppableTile>
 									) : (
-										<Droppable id={id}></Droppable>
+										<DroppableTile id={id}></DroppableTile>
 									)}
 								</React.Fragment>
 							))}

@@ -3,7 +3,7 @@ import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
 import { ShopEquipment } from "./Equipment/ShopEquipment";
-import { generateEquipmentData } from "./Equipment/ShopUtils";
+import { generateEquipmentData } from "../shop/ShopUtils";
 import { UnitsDTO, runGame } from "./Game";
 import { Unit } from "./Unit/Unit";
 import { Weapons } from "./data";

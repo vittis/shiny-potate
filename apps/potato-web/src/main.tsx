@@ -16,8 +16,8 @@ import PlayLayout from "./pages/Play/PlayLayout";
 import LobbyView from "./pages/Play/Views/Lobby/LobbyView";
 import { GameView } from "./pages/Game/GameView";
 import { SandboxView } from "./pages/Play/Views/Sandbox/SandboxView";
-import ArenaView from "./pages/Arena/ArenaView";
 import { trpc, trpcClient } from "./services/api/trpc";
+import { ArenaView } from "./pages/Play/Arena/ArenaView";
 
 /* export const game = new Phaser.Game(
   Object.assign(PHASER_CONFIG, {

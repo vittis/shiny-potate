@@ -7,7 +7,7 @@ import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
 import { PossibleEvent } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
-import { generateEquipmentData } from "./Equipment/ShopUtils";
+import { generateEquipmentData } from "../shop/ShopUtils";
 import { ShopEquipment } from "./Equipment/ShopEquipment";
 
 export interface UnitsDTO {

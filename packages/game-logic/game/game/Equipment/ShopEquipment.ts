@@ -16,6 +16,7 @@ import { STAT } from "../Stats/StatsTypes";
 
 const MOD_LIMIT = 4;
 
+// todo merge with equipment
 export class ShopEquipment {
 	id: string;
 	data: EquipmentData;
@@ -247,4 +248,16 @@ export class ShopEquipment {
 			mods: [...this.data.mods, ...this.rolledMods],
 		};
 	}
+
+	// todo do this properly
+	/* serialize() {
+		return {
+			id: this.id,
+			data: {
+				...this.data,
+				mods: [...this.data.mods, ...this.rolledMods],
+			},
+			tier: this.tier,
+		};
+	} */
 }
