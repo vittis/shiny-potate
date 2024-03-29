@@ -6,19 +6,18 @@ import {
 	EQUIPMENT_SLOT,
 	EQUIPMENT_TYPE,
 	EquipmentData,
-	ShopEquipmentData,
+	EquipmentInstance,
 } from "../game/Equipment/EquipmentTypes";
-import { ShopEquipment } from "../game/Equipment/ShopEquipment";
 import { ShopUnit } from "./ShopUnit";
 import { TrueShopEquip } from "./TrueShopEquip";
 
 export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
-	const items: ShopEquipmentData[] = [];
+	const items: EquipmentInstance[] = [];
 	const itemDatabase = type === EQUIPMENT_TYPE.WEAPON ? Weapons : Trinkets;
 
 	Object.keys(itemDatabase).forEach(key => {
 		for (let i = 0; i < quantityPerItem; i++) {
-			let item = new ShopEquipment((itemDatabase as any)[key], tier).generateShopEquipmentData();
+			let item = new Equipment((itemDatabase as any)[key], tier).serialize();
 			items.push(item);
 		}
 	});
@@ -27,15 +26,12 @@ export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, typ
 }
 
 export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
-	const items: ShopEquipmentData[] = [];
+	const items: EquipmentInstance[] = [];
 	const itemDatabase = type === EQUIPMENT_TYPE.WEAPON ? Weapons : Trinkets;
 
 	Object.keys(itemDatabase).forEach(key => {
 		for (let i = 0; i < quantityPerItem; i++) {
-			let item = new ShopEquipment(
-				(itemDatabase as any)[key],
-				RNG.between(0, 5),
-			).generateShopEquipmentData();
+			let item = new Equipment((itemDatabase as any)[key], RNG.between(0, 5)).serialize();
 			items.push(item);
 		}
 	});
@@ -43,8 +39,8 @@ export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYP
 	return items;
 }
 
-export function generateEquipmentData(data: ShopEquipmentData): EquipmentData {
-	const { tier, ...equipmentData } = data;
+export function generateEquipmentData(equip: EquipmentInstance): EquipmentData {
+	const { tier, ...equipmentData } = equip;
 
 	return equipmentData as EquipmentData;
 }
@@ -103,7 +99,7 @@ export function generateRandomItem(tier: number, type: EQUIPMENT_TYPE) {
 
 	const randomItem = itemDatabase[randomItemKey];
 
-	return new ShopEquipment(randomItem, tier);
+	return new Equipment(randomItem, tier);
 }
 
 export function generateRandomUnitWithEquipment(tier: number) {

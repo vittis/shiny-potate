@@ -4,5 +4,6 @@ tags: class
 
 # Warrior
 
-* Base HP: *100*
-* Gain +10% [Attack Damage](Stats/Attack%20Damage.md) and -10% [Attack Cooldow Recovery](Attack%20Cooldow)
+* Base HP: *240*
+* *+10%* increased [Attack Damage](Stats/Attack%20Damage.md) 
+* *+10%* increased [Attack Cooldown Recovery](Stats/Attack%20Cooldown.md)

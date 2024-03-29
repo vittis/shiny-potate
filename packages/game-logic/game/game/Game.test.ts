@@ -1,7 +1,7 @@
 import { Game } from "../../dist";
 import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Equipment } from "./Equipment/Equipment";
-import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
+import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
 import { ShopEquipment } from "./Equipment/ShopEquipment";
 import { generateEquipmentData } from "../shop/ShopUtils";
 import { UnitsDTO, runGame } from "./Game";
@@ -125,10 +125,10 @@ describe("Run Game", () => {
 		it("should generate teams correctly", () => {
 			const game = new Game({ skipConstructor: true });
 
-			const equip1: ShopEquipment = new ShopEquipment(Weapons.Sword, 5);
+			const equip1 = new Equipment(Weapons.Sword, 5);
 
 			const unit1: UnitsDTO = {
-				equipments: [{ id: equip1.id, data: equip1.generateShopEquipmentData() }],
+				equipments: [{ id: equip1.id, data: equip1.serialize() }],
 				position: POSITION.TOP_FRONT,
 				unitClass: "Rogue",
 			};
@@ -137,10 +137,10 @@ describe("Run Game", () => {
 
 			game.setTeam(OWNER.TEAM_ONE, team1);
 
-			const equip2: ShopEquipment = new ShopEquipment(Weapons.Shortbow, 5);
+			const equip2 = new Equipment(Weapons.Shortbow, 5);
 
 			const unit2: UnitsDTO = {
-				equipments: [{ id: equip2.id, data: equip2.generateShopEquipmentData() }],
+				equipments: [{ id: equip2.id, data: equip2.serialize() }],
 				position: POSITION.TOP_FRONT,
 				unitClass: "Ranger",
 			};
@@ -153,10 +153,10 @@ describe("Run Game", () => {
 			const boardUnit2 = game.boardManager.getAllAliveUnitsOfOwner(OWNER.TEAM_TWO)[0];
 
 			expect(boardUnit1.equipment[0].equip.data).toStrictEqual(
-				generateEquipmentData(equip1.generateShopEquipmentData()),
+				generateEquipmentData(equip1.serialize()),
 			);
 			expect(boardUnit2.equipment[0].equip.data).toStrictEqual(
-				generateEquipmentData(equip2.generateShopEquipmentData()),
+				generateEquipmentData(equip2.serialize()),
 			);
 
 			expect(boardUnit1.position).toStrictEqual(unit1.position);

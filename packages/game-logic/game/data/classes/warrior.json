@@ -1,7 +1,27 @@
 {
   "name": "Warrior",
   "hp": 240,
-  "base": [],
+  "base": [
+    {
+      "mods": [
+        {
+          "type": "GRANT_BASE_STAT",
+          "payload": {
+            "stat": "ATTACK_DAMAGE",
+            "value": 10
+          }
+        },
+        {
+          "type": "GRANT_BASE_STAT",
+          "payload": {
+            "stat": "ATTACK_COOLDOWN",
+            "value": 10
+          }
+        }
+      ],
+      "description": "Stronk"
+    }
+  ],
   "utility": [],
   "tree": [
     {

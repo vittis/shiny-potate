@@ -8,4 +8,4 @@ export { Game } from "./game/Game";
 export { Unit } from "./game/Unit/Unit";
 
 export { Weapons, Abilities, Classes, Perks } from "./game/data";
-export type { ShopEquipmentData } from "./game/Equipment/EquipmentTypes";
+export type { EquipmentInstance as ShopEquipmentData } from "./game/Equipment/EquipmentTypes";

@@ -1,7 +1,7 @@
 import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Unit } from "./Unit/Unit";
 import { Equipment } from "./Equipment/Equipment";
-import { EQUIPMENT_SLOT, ShopEquipmentData } from "./Equipment/EquipmentTypes";
+import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
 import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
@@ -11,7 +11,7 @@ import { generateEquipmentData } from "../shop/ShopUtils";
 import { ShopEquipment } from "./Equipment/ShopEquipment";
 
 export interface UnitsDTO {
-	equipments: { id: string; data: ShopEquipmentData }[];
+	equipments: { id: string; data: EquipmentInstance }[];
 	position: POSITION;
 	unitClass: string;
 }
@@ -27,10 +27,7 @@ export class Game {
 		}
 
 		const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, this.boardManager);
-		unit1.equip(
-			new Equipment(new ShopEquipment(Weapons.Longbow, 5).generateShopEquipmentData()),
-			EQUIPMENT_SLOT.TWO_HANDS,
-		);
+		unit1.equip(new Equipment(Weapons.Longbow, 5), EQUIPMENT_SLOT.TWO_HANDS);
 		unit1.equip(new Equipment(Trinkets.ScoutsEye), EQUIPMENT_SLOT.TRINKET);
 		unit1.equip(new Equipment(Trinkets.KamesLostSash), EQUIPMENT_SLOT.TRINKET_2);
 		unit1.setClass(new Class(Classes.Ranger));
@@ -40,10 +37,7 @@ export class Game {
 			new Equipment(new ShopEquipment(Weapons.Dagger, 3).generateShopEquipmentData()),
 			EQUIPMENT_SLOT.MAIN_HAND,
 		);
-		unit2.equip(
-			new Equipment(new ShopEquipment(Weapons.Dagger, 3).generateShopEquipmentData()),
-			EQUIPMENT_SLOT.OFF_HAND,
-		);
+		unit2.equip(new Equipment(Weapons.Dagger, 3), EQUIPMENT_SLOT.OFF_HAND);
 		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET);
 		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET_2);
 		unit2.setClass(new Class(Classes.Rogue));
