@@ -4,7 +4,7 @@ describe("Shop", () => {
 	it("generateShop", () => {
 		const stuff = generateShop(1);
 
-		// console.log(stuff);
+		console.log(stuff);
 
 		expect(stuff).toBeDefined();
 	});

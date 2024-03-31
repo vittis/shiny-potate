@@ -1,4 +1,4 @@
-import { Classes, ShopEquipmentData } from "..";
+import { Classes } from "..";
 import { Equipment } from "../game/Equipment/Equipment";
 
 // todo delete this and refactor kek

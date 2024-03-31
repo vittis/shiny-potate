@@ -12,7 +12,8 @@ import { EQUIPMENT_TAG, EquipmentStatsData } from "./EquipmentTypes";
 import STATS_MOD_CONFIG from "../../data/mods/stats.json";
 import { EquipmentStatsDataArraySchema } from "./EquipmentSchema";
 import { STAT } from "../Stats/StatsTypes";
-import { MOD_LIMIT } from "./ShopEquipment";
+
+export const MOD_LIMIT = 4;
 
 export function getAllApplicablePerkMods(tags: EQUIPMENT_TAG[]): ShopItemPerkMod[] {
 	let applicableMods: ShopItemPerkMod[] = [];

@@ -35,6 +35,7 @@ export interface EquipmentData {
 }
 
 export interface EquipmentInstance extends EquipmentData {
+	id: string;
 	tier: number;
 }
 

@@ -11,7 +11,6 @@ import {
 	getAllApplicableStatMods,
 	rollTieredMods,
 } from "./EquipmentUtils";
-import { ShopEquipment } from "./ShopEquipment";
 
 describe("Equipment", () => {
 	describe("equip", () => {

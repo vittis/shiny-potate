@@ -7,11 +7,9 @@ import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
 import { PossibleEvent } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
-import { generateEquipmentData } from "../shop/ShopUtils";
-import { ShopEquipment } from "./Equipment/ShopEquipment";
 
 export interface UnitsDTO {
-	equipments: { id: string; data: EquipmentInstance }[];
+	equipments: EquipmentInstance[];
 	position: POSITION;
 	unitClass: string;
 }
@@ -33,10 +31,7 @@ export class Game {
 		unit1.setClass(new Class(Classes.Ranger));
 
 		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
-		unit2.equip(
-			new Equipment(new ShopEquipment(Weapons.Dagger, 3).generateShopEquipmentData()),
-			EQUIPMENT_SLOT.MAIN_HAND,
-		);
+		unit2.equip(new Equipment(Weapons.Sword, 3), EQUIPMENT_SLOT.MAIN_HAND);
 		unit2.equip(new Equipment(Weapons.Dagger, 3), EQUIPMENT_SLOT.OFF_HAND);
 		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET);
 		unit2.equip(new Equipment(Trinkets.TrainingArmbands), EQUIPMENT_SLOT.TRINKET_2);
@@ -50,9 +45,7 @@ export class Game {
 		units.forEach(unitDTO => {
 			const unit = new Unit(team, unitDTO.position, this.boardManager);
 			unit.setClass(new Class(Classes[unitDTO.unitClass as keyof typeof Classes]));
-			unitDTO.equipments.forEach(shopEquip => {
-				const equipmentData = generateEquipmentData(shopEquip.data);
-
+			unitDTO.equipments.forEach(equipmentData => {
 				if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
 					if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
 						unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);

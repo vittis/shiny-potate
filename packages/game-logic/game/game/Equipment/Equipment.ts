@@ -68,6 +68,7 @@ export class Equipment {
 	serialize(): EquipmentInstance {
 		return {
 			...this.data,
+			id: this.id,
 			tier: this.tier,
 			mods: [...this.data.mods, ...this.rolledMods],
 		};

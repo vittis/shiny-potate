@@ -39,14 +39,8 @@ export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYP
 	return items;
 }
 
-export function generateEquipmentData(equip: EquipmentInstance): EquipmentData {
-	const { tier, ...equipmentData } = equip;
-
-	return equipmentData as EquipmentData;
-}
-
 export function getUnitData(
-	boardUnit: { id: string; name: string; equipment?: any[] },
+	boardUnit: { id: string; name: string; equipment?: EquipmentInstance[] },
 	owner: number,
 	position: string,
 ) {
@@ -54,9 +48,7 @@ export function getUnitData(
 	unit.setClass(new Class(Classes[boardUnit.name as keyof typeof Classes]));
 
 	if (boardUnit?.equipment && boardUnit?.equipment?.length > 0) {
-		boardUnit.equipment.forEach((shopEquip: any) => {
-			const equipmentData = generateEquipmentData(shopEquip.data);
-
+		boardUnit.equipment.forEach(equipmentData => {
 			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
 				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
 					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
