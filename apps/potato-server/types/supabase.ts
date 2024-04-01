@@ -1,3 +1,5 @@
+import { Shop } from 'game-logic';
+
 export type Json =
   | string
   | number
@@ -18,7 +20,7 @@ export type Database = {
           losses: number | null
           player_id: string
           round: number | null
-          shop: Json | null
+          shop: Shop | null
           wins: number | null
           xp: number | null
         }
@@ -30,7 +32,7 @@ export type Database = {
           losses?: number | null
           player_id: string
           round?: number | null
-          shop?: Json | null
+          shop: Shop | null
           wins?: number | null
           xp?: number | null
         }
@@ -42,7 +44,7 @@ export type Database = {
           losses?: number | null
           player_id?: string
           round?: number | null
-          shop?: Json | null
+          shop: Shop | null
           wins?: number | null
           xp?: number | null
         }

@@ -8,8 +8,8 @@ import {
 	EquipmentData,
 	EquipmentInstance,
 } from "../game/Equipment/EquipmentTypes";
-import { ShopUnit } from "./ShopUnit";
-import { TrueShopEquip } from "./TrueShopEquip";
+import { ShopUnit, ShopUnitInstance } from "./ShopUnit";
+import { ShopEquipment, ShopEquipmentInstance } from "./ShopEquipment";
 
 export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
 	const items: EquipmentInstance[] = [];
@@ -106,6 +106,12 @@ export function generateRandomUnitWithEquipment(tier: number) {
 	};
 }
 
+export interface Shop {
+	units: ShopUnitInstance[];
+	weapons: ShopEquipmentInstance[];
+	trinkets: ShopEquipmentInstance[];
+}
+
 export function generateShop(round: number) {
 	if (round < 1 || round > 7) {
 		throw new Error("generateShop: Invalid round number");
@@ -145,8 +151,8 @@ export function generateShop(round: number) {
 	const weaponsOffered = 3;
 	const trinketsOffered = 2;
 
-	const shop: any = {
-		unitsOffered: [],
+	const shop: Shop = {
+		units: [],
 		weapons: [],
 		trinkets: [],
 	};
@@ -154,16 +160,17 @@ export function generateShop(round: number) {
 	for (let i = 0; i < unitsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const unit = generateRandomUnitWithEquipment(tier);
-		shop.unitsOffered.push(new ShopUnit(unit.class, unit.equipment));
+		shop.units.push(new ShopUnit(unit.class, unit.equipment).serialize());
 	}
 	for (let i = 0; i < weaponsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const item = generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON);
-		shop.weapons.push(new TrueShopEquip(item));
+		shop.weapons.push(new ShopEquipment(item).serialize());
 	}
 	for (let i = 0; i < trinketsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
-		shop.trinkets.push(generateRandomItem(tier, EQUIPMENT_TYPE.TRINKET));
+		const item = generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON);
+		shop.trinkets.push(new ShopEquipment(item).serialize());
 	}
 
 	return shop;
