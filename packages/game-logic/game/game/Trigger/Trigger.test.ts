@@ -2,12 +2,12 @@ import { TARGET_TYPE } from "../Target/TargetTypes";
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Unit } from "../Unit/Unit";
 import { Weapons } from "../data";
 import { TriggerManager } from "./TriggerManager";
 import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "./TriggerTypes";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 
 const effectsMock: PossibleTriggerEffect[] = [
 	{
@@ -115,7 +115,7 @@ describe("Triggers", () => {
 
 			unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			expect(unit.statusEffects).toHaveLength(2);
 

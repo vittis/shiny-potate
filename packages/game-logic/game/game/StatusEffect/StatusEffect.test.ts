@@ -3,7 +3,7 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { EVENT_TYPE, INSTANT_EFFECT_TYPE, SubEvent, TickEffectEvent } from "../Event/EventTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { Unit } from "../Unit/Unit";
 import { useAbility } from "../_tests_/testsUtils";
 import { Abilities, Weapons } from "../data";
@@ -121,7 +121,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit2.statusEffects).toEqual([
 				{
@@ -141,7 +141,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit2.stats.damageReductionModifier).toBe(-15);
 		});
@@ -158,7 +158,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit1.statusEffects).toEqual([
 				{
@@ -198,17 +198,17 @@ describe("StatusEffect", () => {
 				type: EVENT_TYPE.TICK_EFFECT,
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9 - 8);
 		});
 
@@ -242,22 +242,22 @@ describe("StatusEffect", () => {
 				type: EVENT_TYPE.TICK_EFFECT,
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10 + 9);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(7);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp);
 		});
 
@@ -567,7 +567,7 @@ describe("StatusEffect", () => {
 					},
 				});
 
-				sortAndExecuteEvents(bm, [event]);
+				executeStepEffects(bm, getStepEffects([event]));
 
 				expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeFalsy();
 			});

@@ -3,7 +3,7 @@ import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { EVENT_TYPE, INSTANT_EFFECT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
@@ -587,7 +587,7 @@ describe("Ability", () => {
 				ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
 			).payload[0].quantity as number;
 
-			sortAndExecuteEvents(bm, [event]);
+			executeStepEffects(bm, getStepEffects([event]));
 
 			expect(unit.statusEffects[0].name).toBe(STATUS_EFFECT.MULTISTRIKE);
 			expect(unit.statusEffects[0].quantity).toBe(multistrikeQuantity);
@@ -603,7 +603,7 @@ describe("Ability", () => {
 				expect(unit.stepEvents[0]).toStrictEqual(unit.stepEvents[i]);
 			}
 
-			sortAndExecuteEvents(bm, unit.stepEvents);
+			executeStepEffects(bm, getStepEffects(unit.stepEvents));
 
 			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)).toBeFalsy();
 		});
@@ -660,7 +660,7 @@ describe("Ability", () => {
 			const ability = new Ability(Abilities.SummonBoar);
 			const event = ability.use(unit2);
 
-			sortAndExecuteEvents(bm, [event]);
+			executeStepEffects(bm, getStepEffects([event]));
 
 			const durationStun = (ability.data.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>)
 				.payload[0].duration;

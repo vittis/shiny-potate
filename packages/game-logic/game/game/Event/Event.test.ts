@@ -7,20 +7,23 @@ import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import {
 	DamagePayload,
+	DisablePayload,
 	HealPayload,
 	INSTANT_EFFECT_TYPE,
 	PossibleEffect,
 	SUBEVENT_TYPE,
+	ShieldPayload,
 	StatusEffectPayload,
+	SubEvent,
 	TickEffectEvent,
 	TickEffectEventPayload,
 } from "./EventTypes";
 import {
 	aggregateEffects,
 	calculateEffects,
+	executeStepEffects,
 	getStepEffects,
 	getSubEventsFromTickEffects,
-	sortAndExecuteEvents,
 } from "./EventUtils";
 
 function setupBoard() {
@@ -38,48 +41,235 @@ function setupBoard() {
 
 describe("Event", () => {
 	describe("getStepEffects", () => {
-		it.skip("should execute step effects", () => {
-			const { bm, unit1 } = setupBoard();
+		it("convert DAMAGE event to stepEffect", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
 
-			const ability = new Ability(Abilities.CarefulPreparation);
-			const event = ability.use(unit1);
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
 
-			expect(event.payload.subEvents).toHaveLength(1);
+			const ability = new Ability(Abilities.Stab);
+			const event = ability.use(unit);
 
-			const effectMultistrike = (
-				ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
-			).payload[0];
-
-			expect(event.payload.subEvents[0]).toEqual({
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit1.id,
-					payload: [
-						{
-							name: "MULTISTRIKE",
-							quantity: effectMultistrike.quantity,
-						},
-					],
-				},
+			expect(getStepEffects([event])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value: (ability.data.effects[0].payload as DamagePayload).value,
+								},
+							},
+						],
+					},
+				],
 			});
+		});
 
-			unit1.statusEffectManager.applyStatusEffect({
-				name: STATUS_EFFECT.REGEN,
-				quantity: 10,
+		it("convert HEAL event to stepEffect and cancel it's effect with DAMAGE", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
+
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+
+			// Ability deals 45 damage and gives 15 heal to self
+			const ability = new Ability(Abilities.DarkBolt);
+			const event1 = ability.use(unit);
+			const event2 = ability.use(unit2);
+
+			expect(getStepEffects([event1])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value: (ability.data.effects[0].payload as DamagePayload).value,
+								},
+							},
+						],
+					},
+					{
+						unitId: unit.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.HEAL,
+								payload: {
+									value: (ability.data.effects[1].payload as ShieldPayload).value,
+								},
+							},
+						],
+					},
+				],
 			});
+			expect(getStepEffects([event1, event2])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value:
+										(ability.data.effects[0].payload as DamagePayload).value -
+										(ability.data.effects[1].payload as HealPayload).value,
+								},
+							},
+						],
+					},
+					{
+						unitId: unit.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value:
+										(ability.data.effects[0].payload as DamagePayload).value -
+										(ability.data.effects[1].payload as HealPayload).value,
+								},
+							},
+						],
+					},
+				],
+			});
+		});
 
-			for (let i = 0; i < TICK_COOLDOWN; i++) unit1.step(i);
+		it("convert SHIELD event to stepEffect and cancel it's effect with DAMAGE", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
 
-			let tickEffect = (unit1.stepEvents[0] as TickEffectEvent).payload as TickEffectEventPayload;
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
 
-			/* console.log(event);
-			console.log(event.payload.subEvents); */
+			// Ability deals 30 damage and gives 30 shield to self
+			const ability = new Ability(Abilities.BalancedStrike);
+			const event1 = ability.use(unit);
+			const event2 = ability.use(unit2);
 
-			console.log(getStepEffects([event, unit1.stepEvents[0]]));
-			//console.log(getStepEffects([event, unit1.stepEvents[0]])[0].effects);
+			expect(getStepEffects([event1])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value: (ability.data.effects[0].payload as DamagePayload).value,
+								},
+							},
+						],
+					},
+					{
+						unitId: unit.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.SHIELD,
+								payload: {
+									value: (ability.data.effects[1].payload as ShieldPayload).value,
+								},
+							},
+						],
+					},
+				],
+			});
+			expect(getStepEffects([event1, event2])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [],
+					},
+					{
+						unitId: unit.id,
+						effects: [],
+					},
+				],
+			});
+		});
 
-			//expect(event.payload.subEvents).toEqual(getStepEffects([event]));
+		it("convert STATUS_EFFECT event to stepEffect", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+
+			bm.addToBoard(unit);
+
+			const ability = new Ability(Abilities.ArcaneStudies);
+			const event = ability.use(unit);
+
+			expect(getStepEffects([event])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+								payload: [
+									{
+										name: STATUS_EFFECT.SPELL_POTENCY,
+										quantity: (ability.data.effects[0].payload as StatusEffectPayload[])[0]
+											.quantity,
+									},
+									{
+										name: STATUS_EFFECT.FOCUS,
+										quantity: (ability.data.effects[1].payload as StatusEffectPayload[])[0]
+											.quantity,
+									},
+								],
+							},
+						],
+					},
+				],
+			});
+		});
+
+		it("convert DISABLE event to stepEffect", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
+
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+
+			const ability = new Ability(Abilities.SummonBoar);
+			const event = ability.use(unit);
+
+			expect(getStepEffects([event])).toEqual({
+				step: 1,
+				units: [
+					{
+						unitId: unit2.id,
+						effects: [
+							{
+								type: INSTANT_EFFECT_TYPE.DAMAGE,
+								payload: {
+									value: (ability.data.effects[0].payload as DamagePayload).value,
+								},
+							},
+							{
+								type: INSTANT_EFFECT_TYPE.DISABLE,
+								payload: [
+									{
+										name: DISABLE.STUN,
+										duration: (ability.data.effects[1].payload as DisablePayload[])[0].duration,
+									},
+								],
+							},
+						],
+					},
+				],
+			});
 		});
 	});
 
@@ -117,13 +307,13 @@ describe("Event", () => {
 					payload: [
 						{
 							name: STATUS_EFFECT.REGEN,
-							quantity: 10,
+							quantity: -1,
 						},
 					],
 				},
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
@@ -136,7 +326,7 @@ describe("Event", () => {
 			expect(
 				(getSubEventsFromTickEffects(tickEffect)[1].payload.payload as StatusEffectPayload[])[0]
 					.quantity,
-			).toBe(9);
+			).toBe(-1);
 		});
 
 		it("should get subEvents from POISON tickEffect correctly", () => {
@@ -172,13 +362,13 @@ describe("Event", () => {
 					payload: [
 						{
 							name: STATUS_EFFECT.POISON,
-							quantity: 10,
+							quantity: -1,
 						},
 					],
 				},
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
@@ -191,7 +381,7 @@ describe("Event", () => {
 			expect(
 				(getSubEventsFromTickEffects(tickEffect)[1].payload.payload as StatusEffectPayload[])[0]
 					.quantity,
-			).toBe(9);
+			).toBe(-1);
 		});
 	});
 

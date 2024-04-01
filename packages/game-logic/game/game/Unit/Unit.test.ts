@@ -3,8 +3,8 @@ import { Class } from "../Class/Class";
 import { DISABLE } from "../Disable/DisableTypes";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { Effect, INSTANT_EFFECT_TYPE, PossibleEffect } from "../Event/EventTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { Effect, INSTANT_EFFECT_TYPE } from "../Event/EventTypes";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { MOD_TYPE } from "../Mods/ModsTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Weapons, Classes } from "../data";
@@ -155,7 +155,7 @@ describe("Unit", () => {
 				unit.step(i);
 			}
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			expect(ability.progress).toBe(0);
 			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
@@ -178,7 +178,7 @@ describe("Unit", () => {
 			}
 
 			expect(ability.progress).toBe(0);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
 		});
