@@ -4,7 +4,8 @@
 		"start": "node dist/server.js",
 		"build": "tsup",
 		"dev": "tsx watch src/server.ts --clear-screen=false",
-		"generate-db-types": "supabase gen types typescript --project-id olxyngtemwtptqqqskna --schema public > types/supabase.ts"
+		"generate-db-types": "supabase gen types typescript --project-id olxyngtemwtptqqqskna --schema public > types/supabase.ts && npm run update-db-types",
+		"update-db-types": "cd types && node ./script.js"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.3.3",

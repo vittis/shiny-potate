@@ -169,7 +169,7 @@ export function generateShop(round: number) {
 	}
 	for (let i = 0; i < trinketsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
-		const item = generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON);
+		const item = generateRandomItem(tier, EQUIPMENT_TYPE.TRINKET);
 		shop.trinkets.push(new ShopEquipment(item).serialize());
 	}
 
