@@ -1,35 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../../api/http";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useSandboxStore } from "./useSandboxStore";
+import { trpc } from "@/services/api/trpc";
 
-export async function fetchRollShop(data: { tier: string }) {
-	const response = await api.get(`/game/roll-shop/${data.tier}`);
-
-	return response.data;
-}
-
-interface SandboxQueriesData {
-	shopData: any;
-	isFetchingRollShop: boolean;
-	refetchRollShop: () => void;
-}
-
-const useSandboxQueries = (): SandboxQueriesData => {
+const useSandboxQueries = () => {
 	const shopTier = useSandboxStore(state => state.shopTier);
 
-	const {
-		data: shopData,
-		refetch: refetchRollShop,
-		isFetching: isFetchingRollShop,
-	} = useQuery({
-		queryKey: ["sandbox", "roll-shop", shopTier],
-		queryFn: () => fetchRollShop({ tier: shopTier }),
-		staleTime: 0,
-	});
+	const { data, refetch, isFetching } = trpc.sandbox.rollShop.useQuery({ tier: Number(shopTier) });
 
-	return { shopData, isFetchingRollShop, refetchRollShop };
+	return { shopData: data, isFetchingRollShop: isFetching, refetchRollShop: refetch };
 };
 
 export { useSandboxQueries };

@@ -3,11 +3,12 @@ import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
 interface MarkdownContentProps {
-	unit: Unit;
+	unit: Unit; // todo change to serialized unit type
 }
 
 const BoardUnitMarkdownContent = ({ unit }: MarkdownContentProps) => {
-	const className = unit.classManager.class.data.name;
+	// @ts-expect-error todo: created SerializedUnit type
+	const className = unit.class;
 
 	const allAbilities = unit.abilities;
 	const allPerks = unit.perks;

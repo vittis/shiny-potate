@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
 	DndContext,
 	DragEndEvent,
 	MouseSensor,
 	TouchSensor,
-	useDraggable,
 	useDroppable,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { api } from "@/services/api/http";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
@@ -25,96 +22,14 @@ import { Separator } from "@/components/ui/separator";
 import { getUnitData } from "game-logic";
 import { BoardUnitMarkdownContent } from "@/components/MarkdownContent/BoardUnitMarkdownContent";
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
-
-export async function setupTeams(data) {
-	const response = await api.post("/game/setup-teams", data, {
-		withCredentials: true,
-	});
-
-	return response.data;
-}
+import { DraggableBoardUnit } from "./DraggableBoardUnit";
+import { trpc } from "@/services/api/trpc";
+import { DroppableTile } from "./DroppableTile";
 
 export interface UnitsDTO {
 	equipments: any[]; // ShopEquipmentData
 	position: number;
 	unitClass: string;
-}
-
-export function Draggable({ children, id, unit, isClass, weaponTier, removeEquipment }: any) {
-	const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-
-	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-		id,
-		data: { unit }, // todo use this
-	});
-	const style = transform
-		? {
-				transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-			}
-		: undefined;
-
-	const unitEquips = unit?.equipment || [];
-	const isWeapon = !isClass && !unit;
-
-	const finalListeners = isTooltipOpen ? {} : listeners;
-	const finalAttributes = isTooltipOpen ? {} : attributes;
-
-	return (
-		<div
-			ref={setNodeRef}
-			style={style}
-			{...finalListeners}
-			{...finalAttributes}
-			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
-				isDragging && "z-30",
-				isClass && "border-green-900 hover:border-green-700",
-				!isClass &&
-					!unit &&
-					"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
-				isWeapon && tierColorMap[weaponTier],
-			)}
-		>
-			<div>{children}</div>
-			{unitEquips.length > 0 && (
-				<div className="absolute top-0 right-0">
-					{unitEquips.map(equip => (
-						<div
-							key={equip.id}
-							className={cn(
-								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-								tierColorMap[equip.data.tier],
-							)}
-						>
-							{equip.data.name}{" "}
-							<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
-								T{equip.data.tier}
-							</span>
-						</div>
-					))}
-				</div>
-			)}
-		</div>
-	);
-}
-
-export function Droppable({ children, id }: any) {
-	const { isOver, setNodeRef } = useDroppable({
-		id: id,
-	});
-
-	return (
-		<div
-			ref={setNodeRef}
-			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 transition-transform duration-75",
-				isOver && "bg-zinc-800",
-				isOver && "scale-110",
-			)}
-		>
-			{children}
-		</div>
-	);
 }
 
 /* 
@@ -126,9 +41,7 @@ export function BoardSetupView() {
 
 	const { shopData: data, isFetchingRollShop: isFetching } = useSandboxQueries();
 
-	const { mutateAsync: setupTeamsMutation, isPending } = useMutation({
-		mutationFn: setupTeams,
-		mutationKey: ["setup-teams"],
+	const { mutateAsync: setupTeamsMutation, isPending } = trpc.sandbox.setupTeams.useMutation({
 		onSuccess: data => {
 			localStorage.setItem("game", JSON.stringify(data));
 			toast.success("Game started!");
@@ -314,9 +227,9 @@ export function BoardSetupView() {
 									key={unitClass.id}
 									content={<MarkdownContent sourcePath={`Classes/${unitClass.name}`} />}
 								>
-									<Draggable id={unitClass.id} isClass>
+									<DraggableBoardUnit id={unitClass.id} isClass>
 										{unitClass.name}
-									</Draggable>
+									</DraggableBoardUnit>
 								</MarkdownTooltip>
 							))}
 						</div>
@@ -330,12 +243,12 @@ export function BoardSetupView() {
 									content={<EquipmentMarkdownContent equip={weapon} />}
 								>
 									<div className="font-mono">
-										<Draggable id={weapon.id} weaponTier={weapon.data.tier}>
+										<DraggableBoardUnit id={weapon.id} weaponTier={weapon.data.tier}>
 											{weapon.data.name}{" "}
 											<span className={cn("text-xs", tierColorMap[weapon.data.tier])}>
 												T{weapon.data.tier}
 											</span>
-										</Draggable>
+										</DraggableBoardUnit>
 									</div>
 								</MarkdownTooltip>
 							))}
@@ -349,11 +262,13 @@ export function BoardSetupView() {
 							{boardLeft.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
-										<Droppable id={id}>
+										<DroppableTile id={id}>
 											<MarkdownTooltip
-												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
+												content={
+													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
+												}
 											>
-												<Draggable
+												<DraggableBoardUnit
 													id={unit.id}
 													unit={unit}
 													isClass
@@ -377,11 +292,11 @@ export function BoardSetupView() {
 													}}
 												>
 													{unit.name}
-												</Draggable>
+												</DraggableBoardUnit>
 											</MarkdownTooltip>
-										</Droppable>
+										</DroppableTile>
 									) : (
-										<Droppable id={id}></Droppable>
+										<DroppableTile id={id}></DroppableTile>
 									)}
 								</React.Fragment>
 							))}
@@ -390,11 +305,13 @@ export function BoardSetupView() {
 							{boardRight.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
-										<Droppable id={id}>
+										<DroppableTile id={id}>
 											<MarkdownTooltip
-												content={<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id)} />}
+												content={
+													<BoardUnitMarkdownContent unit={getUnitData(unit, 0, id) as any} />
+												}
 											>
-												<Draggable
+												<DraggableBoardUnit
 													id={unit.id}
 													unit={unit}
 													isClass
@@ -418,11 +335,11 @@ export function BoardSetupView() {
 													}}
 												>
 													{unit.name}
-												</Draggable>
+												</DraggableBoardUnit>
 											</MarkdownTooltip>
-										</Droppable>
+										</DroppableTile>
 									) : (
-										<Droppable id={id}></Droppable>
+										<DroppableTile id={id}></DroppableTile>
 									)}
 								</React.Fragment>
 							))}

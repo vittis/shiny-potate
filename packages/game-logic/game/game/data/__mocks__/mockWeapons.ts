@@ -25,7 +25,7 @@ export const MockWeapons = {
 	} as EquipmentData,
 	ShortSpear: {
 		name: "Short Spear",
-		tags: [],
+		tags: ["WEAPON", "PHYSICAL"],
 		slots: ["MAIN_HAND"],
 		mods: [
 			{
@@ -97,7 +97,7 @@ export const MockWeapons = {
 	} as EquipmentData,
 	Axe: {
 		name: "Axe",
-		tags: [],
+		tags: ["WEAPON", "PHYSICAL"],
 		slots: ["MAIN_HAND"],
 		mods: [
 			{
@@ -151,7 +151,7 @@ export const MockWeapons = {
 	} as EquipmentData,
 	Wand: {
 		name: "Wand",
-		tags: [],
+		tags: ["WEAPON", "MAGICAL"],
 		slots: ["MAIN_HAND"],
 		mods: [
 			{

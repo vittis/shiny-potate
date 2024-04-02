@@ -269,7 +269,9 @@ class RandomDataGenerator {
 		return this.realInRange(min || 946684800000, max || 1577862000000);
 	}
 
-	static instance = new RandomDataGenerator("heypaul");
+	static instance = new RandomDataGenerator(new Date().getTime().toString()); // todo fixed?
 }
 
-export default RandomDataGenerator.instance;
+const RNG = RandomDataGenerator.instance;
+
+export { RNG };

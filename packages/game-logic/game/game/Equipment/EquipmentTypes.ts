@@ -34,10 +34,12 @@ export interface EquipmentData {
 	effects: PossibleTriggerEffect[];
 }
 
-export interface ShopEquipmentData extends EquipmentData {
+export interface EquipmentInstance extends EquipmentData {
+	id: string;
 	tier: number;
 }
 
+// todo rename to StatsModConfig
 export interface EquipmentStatsData {
 	name: STAT;
 	tiers: number[];

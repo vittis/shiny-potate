@@ -176,29 +176,6 @@ export class Unit {
 		});
 	}
 
-	serialize() {
-		return {
-			id: this.id,
-			owner: this.owner,
-			name: this.getName(),
-			class: `${this.classManager?.class?.data?.name}`,
-			stats: {
-				...this.stats,
-			},
-			abilities: this.abilities,
-			equipment: this.equipment,
-			perks: this.perks,
-			position: this.position,
-			statusEffects: [...this.statusEffects],
-		};
-	}
-
-	serializeEvents() {
-		const events = [...this.stepEvents];
-		this.stepEvents = [];
-		return events;
-	}
-
 	step(stepNumber: number) {
 		this.currentStep = stepNumber;
 
@@ -385,4 +362,27 @@ export class Unit {
 	public toString = (): string => {
 		return `${this.owner}${this.position} ${this.classManager?.class?.data?.name}`;
 	};
+
+	serialize() {
+		return {
+			id: this.id,
+			owner: this.owner,
+			name: this.getName(),
+			class: `${this.classManager?.class?.data?.name}`,
+			stats: {
+				...this.stats,
+			},
+			abilities: this.abilities,
+			equipment: this.equipment,
+			perks: this.perks,
+			position: this.position,
+			statusEffects: [...this.statusEffects],
+		};
+	}
+
+	serializeEvents() {
+		const events = [...this.stepEvents];
+		this.stepEvents = [];
+		return events;
+	}
 }

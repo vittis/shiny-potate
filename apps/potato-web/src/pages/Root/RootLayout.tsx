@@ -19,7 +19,7 @@ const RootLayout = () => {
 	}, []);
 
 	return (
-		<div className="relative h-full p-4">
+		<div className="relative h-full p-1 md:p-4">
 			<section className="flex flex-col h-full">
 				<Nav />
 				<Outlet />

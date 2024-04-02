@@ -1,0 +1,18 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/trpc/auth.login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "xiba@email.com",
+    "password": "qwqwqw"
+  }
+}

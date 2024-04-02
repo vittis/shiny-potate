@@ -8,17 +8,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import { api } from "@/services/api/http";
 import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { useSandboxStore } from "@/services/features/Sandbox/useSandboxStore";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
-export async function fetchRollShop(data) {
-	const response = await api.get(`/game/roll-shop/${data.tier}`);
-
-	return response.data;
-}
 
 function SandboxView() {
 	const [selectTier, setSelectTier] = useState("-1");
