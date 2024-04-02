@@ -8,6 +8,7 @@ import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import {
 	DamagePayload,
 	DisablePayload,
+	EVENT_TYPE,
 	HealPayload,
 	INSTANT_EFFECT_TYPE,
 	PossibleEffect,
@@ -22,22 +23,10 @@ import {
 	aggregateEffects,
 	calculateEffects,
 	executeStepEffects,
+	getDeathEvents,
 	getStepEffects,
 	getSubEventsFromTickEffects,
 } from "./EventUtils";
-
-function setupBoard() {
-	const bm = new BoardManager();
-	const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
-	const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
-	const unit3 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_MID, bm);
-	const unit4 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_BACK, bm);
-	bm.addToBoard(unit1);
-	bm.addToBoard(unit2);
-	bm.addToBoard(unit3);
-	bm.addToBoard(unit4);
-	return { bm, unit1, unit2, unit3, unit4 };
-}
 
 describe("Event", () => {
 	describe("getStepEffects", () => {
@@ -270,6 +259,25 @@ describe("Event", () => {
 					},
 				],
 			});
+		});
+	});
+
+	describe("getDeathEvents", () => {
+		it("should get FAINT event", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+
+			bm.addToBoard(unit);
+
+			unit.receiveDamage(unit.stats.maxHp);
+			expect(unit.stats.hp).toEqual(0);
+			expect(getDeathEvents(bm)).toEqual([
+				{
+					step: 1,
+					type: EVENT_TYPE.FAINT,
+					actorId: unit.id,
+				},
+			]);
 		});
 	});
 

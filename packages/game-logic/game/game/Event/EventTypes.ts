@@ -369,3 +369,96 @@ export type UnitPossibleEffectsInStep =
 export interface UnitEffectsInStep<T extends INSTANT_EFFECT_TYPE>
 	extends Omit<InstantEffectPayload<T>, "targetId"> {}
  */
+
+/* 
+	effectHistory
+
+	{
+		"step": 1,
+		"units": [
+			{
+				"unitId": "NPUpCE8k",
+				"effects": [
+					{
+						"type": "DAMAGE",
+						"payload": {
+							"value": 12
+						}
+					}
+				]
+			}
+		],
+		"subEffect": [
+			{
+				"units": [
+					{
+						"unitId": "NPUpCE8k",
+						"effects": [
+							{
+								"type": "DAMAGE",
+								"payload": {
+									"value": 12
+								}
+							}
+						]
+					}
+				],
+				"subStep": 1
+			},
+			{
+				"units": [
+					{
+						"unitId": "NPUpCE8k",
+						"effects": [
+							{
+								"type": "DAMAGE",
+								"payload": {
+									"value": 12
+								}
+							}
+						]
+					}
+				],
+				"subStep": 2
+			}
+		]
+	}, 
+	
+	eventHistory
+
+	{
+      "type": "USE_ABILITY",
+      "actorId": "tARMwwdi",
+      "step": 40,
+      "subStep": 1,
+      "payload": {
+        "id": "3djY-tif",
+        "name": "Stab",
+        "targetsId": [
+          "gsJCREZl"
+        ],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "gsJCREZl",
+              "payload": {
+                "value": 18
+              }
+            }
+          }
+        ]
+      }
+    },
+	
+		when a unit dies, the death related events are added to a "subEvent"
+		the events have subEvent = 1, 2, 3, 4, etc
+		the effects have a subEffect array with the same subEvent number
+		
+		events of step X are played together
+		then events of step X subStep 1 are played together
+		then events of step X subStep 2 are played together
+		etc
+
+	*/
