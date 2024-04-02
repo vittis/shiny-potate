@@ -243,10 +243,10 @@ export function BoardSetupView() {
 									content={<EquipmentMarkdownContent equip={weapon} />}
 								>
 									<div className="font-mono">
-										<DraggableBoardUnit id={weapon.id} weaponTier={weapon.data.tier}>
-											{weapon.data.name}{" "}
-											<span className={cn("text-xs", tierColorMap[weapon.data.tier])}>
-												T{weapon.data.tier}
+										<DraggableBoardUnit id={weapon.id} weaponTier={weapon.tier}>
+											{weapon.name}{" "}
+											<span className={cn("text-xs", tierColorMap[weapon.tier])}>
+												T{weapon.tier}
 											</span>
 										</DraggableBoardUnit>
 									</div>

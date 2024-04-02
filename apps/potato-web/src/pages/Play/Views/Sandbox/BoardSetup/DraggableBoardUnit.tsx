@@ -46,13 +46,11 @@ const DraggableBoardUnit = ({ children, id, unit, isClass, weaponTier, removeEqu
 							key={equip.id}
 							className={cn(
 								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-								tierColorMap[equip.data.tier],
+								tierColorMap[equip.tier],
 							)}
 						>
-							{equip.data.name}{" "}
-							<span className={cn("text-xs", tierColorMap[equip.data.tier])}>
-								T{equip.data.tier}
-							</span>
+							{equip.name}{" "}
+							<span className={cn("text-xs", tierColorMap[equip.tier])}>T{equip.tier}</span>
 						</div>
 					))}
 				</div>

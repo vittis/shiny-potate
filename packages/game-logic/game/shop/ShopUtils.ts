@@ -49,6 +49,7 @@ export function getUnitData(
 
 	if (boardUnit?.equipment && boardUnit?.equipment?.length > 0) {
 		boardUnit.equipment.forEach(equipmentData => {
+			console.log(equipmentData);
 			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
 				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
 					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);

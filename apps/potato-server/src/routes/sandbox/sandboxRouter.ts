@@ -33,8 +33,8 @@ export const sandboxRouter = router({
 			const { team1, team2 } = input;
 			const game = new Game({ skipConstructor: true });
 
-			game.setTeam(0, team1 as any);
-			game.setTeam(1, team2 as any);
+			game.setTeam(0, team1);
+			game.setTeam(1, team2);
 
 			const { totalSteps, eventHistory, firstStep } = game.startGame();
 
@@ -76,8 +76,8 @@ export const sandboxRouter = router({
 
 			const data = {
 				classes: classes.map(c => ({ id: nanoid(4), name: c })),
-				weapons: weapons.map(w => ({ id: nanoid(4), data: w })),
-				trinkets: trinkets.map(t => ({ id: nanoid(4), data: t })),
+				weapons: weapons,
+				trinkets: trinkets,
 			};
 
 			return data;
