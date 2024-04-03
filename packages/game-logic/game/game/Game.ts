@@ -6,12 +6,11 @@ import {
 	executeStepEffects,
 	getDeathEvents,
 	getStepEffects,
-	mergeStepEffects,
 	sortEventsByType,
 } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
-import { PossibleEvent, StepEffects } from "./Event/EventTypes";
+import { PossibleEvent, StepEffects, SubStepEffects } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 
 export interface UnitsDTO {
@@ -102,26 +101,28 @@ function reachTimeLimit(currentStep: number) {
 }
 
 export function runGame(bm: BoardManager) {
-	let firstStep: any;
 	const eventHistory: PossibleEvent[] = [];
-
-	const serializedUnits = bm.getAllUnits().map(unit => unit.serialize());
-	firstStep = { units: serializedUnits };
-
-	let currentStep = 1;
-
 	const effectHistory: StepEffects[] = [];
 
+	const serializedUnits = bm.getAllUnits().map(unit => unit.serialize());
+	const firstStep = { units: serializedUnits };
+
+	// Get BATTLE_START trigger events
 	const battleStartEvents: PossibleEvent[] = [];
 	bm.getAllUnits().forEach(unit => {
 		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
 		battleStartEvents.push(...unit.serializeEvents());
 	});
-	const orderedEvents = sortEventsByType(battleStartEvents);
-	orderedEvents.forEach(event => {
-		eventHistory.push(event);
-	});
-	effectHistory.push(getStepEffects(orderedEvents));
+
+	if (battleStartEvents.length > 0) {
+		const orderedEvents = sortEventsByType(battleStartEvents);
+		orderedEvents.forEach(event => {
+			eventHistory.push(event);
+		});
+		effectHistory.push(getStepEffects(orderedEvents));
+	}
+
+	let currentStep = 1;
 
 	// Loop steps
 	do {
@@ -138,29 +139,54 @@ export function runGame(bm: BoardManager) {
 
 		// Order each stepEvents
 		const orderedEvents = sortEventsByType(stepEvents);
-		eventHistory.push(...orderedEvents);
 
-		// Get effects from events and execute them
 		if (orderedEvents.length > 0) {
-			const stepEffects = getStepEffects(orderedEvents);
+			// Add events to eventHistory
+			eventHistory.push(...orderedEvents);
+
+			// Get effects from events and execute them
+			let stepEffects = getStepEffects(orderedEvents);
 			executeStepEffects(bm, stepEffects);
+
+			// Check and execute death related events
+			let deathEvents: PossibleEvent[] = getDeathEvents(bm);
+			let subStep: number = 1;
+			let subSteps: SubStepEffects[] = [];
+			while (deathEvents.length > 0) {
+				// Order each deathEvents
+				const sortedDeathEvents = sortEventsByType(deathEvents, "DEATH");
+
+				// Add deathEvents with subStep to eventHistory
+				const subStepEvents = sortedDeathEvents.map(event => {
+					return { ...event, subStep };
+				}) as PossibleEvent[];
+				eventHistory.push(...subStepEvents);
+
+				// Get deathEffects from events and execute them
+				const deathEffects = getStepEffects(sortedDeathEvents);
+				executeStepEffects(bm, deathEffects);
+
+				// Transform deathEffects into subStepEffects and add to subSteps
+				const subStepEffects = {
+					units: deathEffects.units,
+					deadUnits: deathEffects.deadUnits,
+					subStep,
+				} as SubStepEffects;
+
+				subSteps.push(subStepEffects);
+
+				// Check for more death related events to continue looping subSteps
+				deathEvents = getDeathEvents(bm);
+				subStep++;
+			}
+
+			// If there are subSteps, add them to stepEffects
+			if (subSteps.length > 0) {
+				stepEffects = { ...stepEffects, subSteps };
+			}
+
+			// Add stepEffects to effectHistory
 			effectHistory.push(stepEffects);
-		}
-
-		// Check and execute death related events
-		let deathEvents = getDeathEvents(bm);
-		while (deathEvents.length > 0) {
-			const sortedDeathEvents = sortEventsByType(deathEvents, "DEATH");
-
-			eventHistory.push(...sortedDeathEvents);
-
-			const deathEffects = getStepEffects(sortedDeathEvents);
-			executeStepEffects(bm, deathEffects);
-
-			const mergedEffects = mergeStepEffects(effectHistory.pop(), deathEffects);
-			effectHistory.push(mergedEffects);
-
-			deathEvents = getDeathEvents(bm);
 		}
 
 		currentStep++;

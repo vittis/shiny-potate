@@ -23,12 +23,15 @@ export function sortEventsByType(events: PossibleEvent[], orderType: string = "R
 		const order =
 			orderType == "DEATH"
 				? {
+						// on DEATH only FAINT and TRIGGER_EFFECT are possible
 						[EVENT_TYPE.FAINT]: 1,
 						[EVENT_TYPE.TRIGGER_EFFECT]: 2,
 						[EVENT_TYPE.USE_ABILITY]: 3,
 						[EVENT_TYPE.TICK_EFFECT]: 4,
 					}
 				: {
+						// on REGULAR only TICK_EFFECT and USE_ABILITY are possible,
+						// TRIGGER_EFFECT currently only possible on BATTLE_START
 						[EVENT_TYPE.TICK_EFFECT]: 1,
 						[EVENT_TYPE.USE_ABILITY]: 2,
 						[EVENT_TYPE.TRIGGER_EFFECT]: 3,
@@ -39,7 +42,7 @@ export function sortEventsByType(events: PossibleEvent[], orderType: string = "R
 	});
 }
 
-export function getDeathEvents(bm: BoardManager) {
+export function getDeathEvents(bm: BoardManager): PossibleEvent[] {
 	const events: PossibleEvent[] = [];
 	bm.getAllAliveUnits().forEach(unit => {
 		if (!unit.isDead && unit.hasDied()) {
@@ -53,44 +56,6 @@ export function getDeathEvents(bm: BoardManager) {
 	});
 
 	return events;
-}
-
-export function mergeStepEffects(
-	currentStepEffects: StepEffects | undefined,
-	addedStepEffects: StepEffects,
-) {
-	if (!currentStepEffects) return addedStepEffects;
-
-	const mergedStepEffects: StepEffects = currentStepEffects;
-
-	addedStepEffects.units.forEach(unit => {
-		const existingUnitEffects = mergedStepEffects.units.find(
-			mergedUnit => mergedUnit.unitId === unit.unitId,
-		);
-
-		if (existingUnitEffects) {
-			existingUnitEffects.effects.push(...unit.effects);
-		} else {
-			mergedStepEffects.units.push(unit);
-		}
-	});
-
-	if (addedStepEffects?.deadUnits) {
-		if (mergedStepEffects?.deadUnits) {
-			mergedStepEffects.deadUnits = [...mergedStepEffects.deadUnits, ...addedStepEffects.deadUnits];
-		} else {
-			mergedStepEffects.deadUnits = addedStepEffects.deadUnits;
-		}
-	}
-
-	mergedStepEffects.units = mergedStepEffects.units.map(unit => {
-		return {
-			unitId: unit.unitId,
-			effects: calculateEffects(aggregateEffects(unit.effects)),
-		};
-	});
-
-	return mergedStepEffects;
 }
 
 export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {
