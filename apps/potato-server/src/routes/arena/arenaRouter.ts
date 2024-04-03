@@ -28,6 +28,17 @@ export const arenaRouter = router({
 			throw error;
 		}
 
-		return data as unknown as { aaa: number };
+		return data;
+	}),
+	abandon: authProcedure.mutation(async ({ ctx }) => {
+		const { supabase, user } = ctx;
+
+		const { error } = await supabase.from("arena").delete().eq("player_id", user.id);
+
+		if (error) {
+			throw error;
+		}
+
+		return true;
 	}),
 });

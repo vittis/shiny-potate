@@ -20,7 +20,6 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 	const user = useSupabaseUserStore(state => state.user);
 	const username = useSupabaseUserStore(state => state.username);
 
-
 	const { pathname } = useLocation();
 
 	return (
@@ -80,7 +79,7 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 							label: "",
 							icon: Swords,
 							variant: "ghost",
-							selected: !!matchPath("/arena/setup", pathname),
+							selected: !!matchPath("/play/arena", pathname),
 							path: "arena",
 						},
 						{
