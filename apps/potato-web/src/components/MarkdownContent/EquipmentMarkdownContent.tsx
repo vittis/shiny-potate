@@ -1,17 +1,18 @@
+import { EquipmentInstance } from "game-logic";
 import { equipToMarkdown } from "./MarkdownContentUtils";
 import { MarkdownWrapper } from "./MarkdownWrapper";
 
 interface MarkdownContentProps {
 	onOpenSubTooltip?: () => void;
-	equip: any;
+	equip: EquipmentInstance;
 }
 
 const EquipmentMarkdownContent = ({ onOpenSubTooltip, equip }: MarkdownContentProps) => {
 	return (
 		<MarkdownWrapper
 			content={equipToMarkdown(equip)}
-			tier={equip?.data?.tier}
-			tags={equip?.data?.tags}
+			tier={equip?.tier}
+			tags={equip?.tags}
 			onOpenSubTooltip={onOpenSubTooltip}
 		/>
 	);

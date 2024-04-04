@@ -7,7 +7,7 @@ import { Components } from "react-markdown";
 import { MarkdownContent } from "./MarkdownContent";
 
 export const tierColorMap = {
-	"0": "text-gray-400",
+	"0": "text-zinc-300",
 	"1": "text-green-400",
 	"2": "text-blue-400",
 	"3": "text-purple-400",

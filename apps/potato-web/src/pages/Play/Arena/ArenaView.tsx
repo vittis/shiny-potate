@@ -1,29 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/services/api/trpc";
 import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/services/api/queryClient";
+import { ArenaWrapper } from "./ArenaDraggableWrapper";
+import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 
 function ArenaView() {
-	const utils = trpc.useUtils();
+	const { client } = trpc.useUtils(); // todo fuck trpc-react, use vanilla client
 
-	const { data, error, isFetching } = trpc.arena.my.useQuery();
+	const { data, error, isFetching, isPending } = useQuery({
+		queryKey: ["arena", "my"],
+		queryFn: () => client.arena.my.query(),
+	});
+
 	const { mutateAsync: newRun, isPending: newRunIsPending } = trpc.arena.new.useMutation({
 		onSuccess: () => {
-			utils.arena.my.invalidate();
+			queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 		},
 	});
 
 	const { mutateAsync: abandonRun, isPending: abandonRunIsPending } =
 		trpc.arena.abandon.useMutation({
 			onSuccess: () => {
-				utils.arena.my.invalidate();
+				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},
 		});
 
-	console.log(data);
-	console.log(error?.message);
-
-	if (isFetching) {
+	if (isPending) {
 		return <Loader2 className="animate-spin mx-auto w-80 my-20" />;
 	}
 
@@ -39,27 +45,65 @@ function ArenaView() {
 		abandonRun();
 	}
 
-	console.log(data);
-
 	const hasCurrentRun = data && data.length > 0;
+	const shop = data?.[0]?.shop;
 
 	return (
-		<ScrollArea className="h-full w-full px-4">
-			<ScrollBar />
-			<div className="relative">
-				{hasCurrentRun && <div>Current run: {data[0].id}</div>}
-				{!hasCurrentRun && (
-					<Button disabled={newRunIsPending} onClick={onClickNewRun}>
-						New run
-					</Button>
-				)}
-				{hasCurrentRun && (
-					<Button disabled={abandonRunIsPending} onClick={onClickAbandonRun} variant="destructive">
-						Abandon run
-					</Button>
-				)}
+		<>
+			<div>
+				<div className="breadcrumbs h-[52px] flex items-center px-4">
+					<ul>
+						<li>
+							<h1 className="text-lg font-bold">Play</h1>
+						</li>
+						<li>
+							<h2 className="text-md text-muted-foreground font-bold">Arena</h2>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</ScrollArea>
+
+			<Separator />
+
+			<ScrollArea className="relative h-full w-full px-4">
+				<ScrollBar />
+
+				<div className="absolute top-4 right-4">
+					<TooltipSettigs />
+				</div>
+
+				<div className="mt-10">
+					<div className="flex justify-center">
+						{!hasCurrentRun && (
+							<Button disabled={newRunIsPending} onClick={onClickNewRun}>
+								Start New Run
+							</Button>
+						)}
+						{hasCurrentRun && (
+							<Button
+								disabled={abandonRunIsPending}
+								onClick={onClickAbandonRun}
+								variant="destructive"
+							>
+								Abandon run
+							</Button>
+						)}
+					</div>
+
+					{/* {hasCurrentRun && <div>Current run: {data[0].id}</div>} */}
+					{hasCurrentRun && (
+						<div className="flex gap-4">
+							<div>Round: {data[0].round}</div>
+							<div className="text-green-300">Wins: {data[0].wins}</div>
+							<div className="text-red-300">Losses: {data[0].losses}</div>
+							<div className="text-yellow-300">Gold: {data[0].gold}</div>
+							<div className="text-sky-300">XP: {data[0].xp}</div>
+						</div>
+					)}
+					{shop && <ArenaWrapper shop={shop} />}
+				</div>
+			</ScrollArea>
+		</>
 	);
 }
 

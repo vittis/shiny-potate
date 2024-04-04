@@ -49,7 +49,6 @@ export function getUnitData(
 
 	if (boardUnit?.equipment && boardUnit?.equipment?.length > 0) {
 		boardUnit.equipment.forEach(equipmentData => {
-			console.log(equipmentData);
 			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
 				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
 					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
@@ -102,7 +101,7 @@ export function generateRandomUnitWithEquipment(tier: number) {
 	/* const randomClass = Classes[randomItemKey as keyof typeof Classes]; */
 
 	return {
-		class: randomClassKey as keyof typeof Classes,
+		className: randomClassKey as keyof typeof Classes,
 		equipment: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON),
 	};
 }
@@ -148,9 +147,9 @@ export function generateShop(round: number) {
 		},
 	};
 
-	const unitsOffered = 3;
-	const weaponsOffered = 3;
-	const trinketsOffered = 2;
+	const unitsOffered = 4;
+	const weaponsOffered = 5;
+	const trinketsOffered = 3;
 
 	const shop: Shop = {
 		units: [],
@@ -161,7 +160,7 @@ export function generateShop(round: number) {
 	for (let i = 0; i < unitsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const unit = generateRandomUnitWithEquipment(tier);
-		shop.units.push(new ShopUnit(unit.class, unit.equipment).serialize());
+		shop.units.push(new ShopUnit(unit.className, unit.equipment).serialize());
 	}
 	for (let i = 0; i < weaponsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);

@@ -5,7 +5,7 @@ import { Equipment } from "../game/Equipment/Equipment";
 export interface ShopUnitInstance {
 	id: string;
 	price: number;
-	class: keyof typeof Classes;
+	className: keyof typeof Classes;
 	equipment: EquipmentInstance;
 }
 
@@ -31,7 +31,7 @@ export class ShopUnit {
 		return {
 			id: this.id,
 			price: this.price,
-			class: this.className,
+			className: this.className,
 			equipment: this.equipment.serialize(),
 		};
 	}

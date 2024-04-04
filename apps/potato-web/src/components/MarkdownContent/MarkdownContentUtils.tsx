@@ -1,4 +1,5 @@
 import { parseMarkdownWithYamlFrontmatter } from "@/utils/parseMarkdown";
+import { EquipmentInstance } from "game-logic";
 
 export async function importMarkdownFile(filePath: string) {
 	try {
@@ -13,12 +14,12 @@ export async function importMarkdownFile(filePath: string) {
 		throw Error(`Error importing file: ${error}`);
 	}
 }
-export function equipToMarkdown(equip: any) {
-	let contentFromEquip = `# ${equip.data.name}\n`;
-	let implicits = equip?.data?.mods?.filter(mod => mod.tier === "implicit");
+export function equipToMarkdown(equip: EquipmentInstance) {
+	let contentFromEquip = `# ${equip.name}\n`;
+	let implicits = equip?.mods?.filter(mod => mod.tier === "implicit");
 	contentFromEquip += implicits?.map(mod => modToMarkdown(mod)).join("\n");
-	if (equip?.data?.tier > 0) {
-		let rolledMods = equip?.data?.mods?.filter(mod => mod.tier !== "implicit");
+	if (equip?.tier > 0) {
+		let rolledMods = equip?.mods?.filter(mod => mod.tier !== "implicit");
 		contentFromEquip += "\n---\n";
 		contentFromEquip += rolledMods?.map(mod => modToMarkdown(mod)).join("\n");
 	}
@@ -59,7 +60,8 @@ export function modToMarkdown(mod: any) {
 		let transformedName = mod.payload.name.replace(" ", "%20");
 		let path = `Abilities/${subPath}/${transformedName}.md`;
 
-		finalString = `- Grants ability: [${mod.payload.name}](${path})`;
+		const spellOrAttack = mod.payload.type === "ATTACK" ? "attack" : "spell";
+		finalString = `- Grants ${spellOrAttack}: [${mod.payload.name}](${path})`;
 	}
 
 	if (mod.type === "GRANT_PERK") {

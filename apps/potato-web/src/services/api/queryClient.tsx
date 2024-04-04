@@ -19,10 +19,12 @@ const queryClient = new QueryClient({
 		/* onSuccess: () => {
       toast.success("Operation successful");
     }, */
-		// @ts-expect-error
-		onError: (error: AxiosError<any>) => {
+		onError: (error: any) => {
+			const trpcPath = error?.meta?.responseJSON?.[0]?.error?.data?.path;
+			const uppercaseTrpcPath = trpcPath && trpcPath.toUpperCase();
+
 			toast.error(
-				`Error at ${error?.config?.url}: ${
+				`Error at ${uppercaseTrpcPath || error?.config?.url}: ${
 					error?.response?.data?.message || error?.response?.data?.error || error?.message
 				}`,
 				{
@@ -33,7 +35,7 @@ const queryClient = new QueryClient({
 	}),
 	defaultOptions: {
 		queries: {
-			refetchOnWindowFocus: false,
+			refetchOnWindowFocus: true,
 			/* refetchOnMount: false, */
 			staleTime: 10000,
 			retry: false,

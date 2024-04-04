@@ -22,6 +22,7 @@ export function getPerksInstancesFromMods(mods: PossibleMods) {
 
 	return perkMods.map(mod => {
 		const PerkData = getPerkData(mod.payload.name);
-		return new Perk(PerkData);
+		const tier = mod.tier === "implicit" ? undefined : mod.tier;
+		return new Perk(PerkData, tier);
 	});
 }

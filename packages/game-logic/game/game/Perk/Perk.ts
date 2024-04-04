@@ -8,13 +8,17 @@ export class Perk {
 	data: PerkData;
 	tier: number = 1;
 
-	constructor(data?: PerkData) {
+	// todo test if tier is working alright
+	constructor(data?: PerkData, tier?: number) {
 		if (!data) {
 			throw Error(
 				"Perk data is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
 		const parsedData = PerkDataSchema.parse(data);
+		if (tier) {
+			this.tier = tier;
+		}
 		this.data = parsedData;
 		this.id = nanoid(8);
 	}
