@@ -200,23 +200,17 @@ export class Unit {
 					this.stepEvents.push(event);
 
 					if (this.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)) {
-						/* 
-							TODO:
-							IDEALLY if event deals damage check if enemy will die before all hits, then get new target for the remaining ones
-							FOR NOW repeat same event
-							maybe create a function to do this multistrike stuff if step gets too big
-						*/
 						const multistrikeQuantity = (
 							this.statusEffects.find(
 								statusEffect => statusEffect.name === STATUS_EFFECT.MULTISTRIKE,
 							) as ActiveStatusEffect
 						).quantity;
 
-						for (let i = 0; i < multistrikeQuantity; i++) {
-							this.stepEvents.push(event);
-						}
+						const eventWithMultistrike = ability.use(this, true);
 
-						this.statusEffectManager.removeAllStacks(STATUS_EFFECT.MULTISTRIKE);
+						for (let i = 0; i < multistrikeQuantity; i++) {
+							this.stepEvents.push(eventWithMultistrike);
+						}
 					}
 				}
 			}
@@ -245,77 +239,6 @@ export class Unit {
 			effect.payload.forEach(disable => {
 				this.disableManager.applyDisable(disable);
 			});
-		}
-	}
-
-	// TODO: remove after switch to effects
-	applySubEvents(subEvents: SubEvent[]) {
-		subEvents.forEach(subEvent => {
-			const target = this.bm.getUnitById(subEvent.payload.targetId);
-
-			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.DAMAGE) {
-				target.receiveDamage(subEvent.payload.payload.value);
-			}
-
-			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.STATUS_EFFECT) {
-				subEvent.payload.payload.forEach(statusEffect => {
-					if (statusEffect.quantity > 0) {
-						target.statusEffectManager.applyStatusEffect(statusEffect);
-					} else {
-						target.statusEffectManager.removeStacks(statusEffect.name, statusEffect.quantity * -1);
-					}
-				});
-
-				target.statsManager.recalculateStatsFromStatusEffects(target.statusEffects);
-				target.abilityManager.applyCooldownModifierFromStats(target.stats);
-			}
-
-			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.SHIELD) {
-				target.receiveShield(subEvent.payload.payload.value);
-			}
-
-			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.HEAL) {
-				target.receiveHeal(subEvent.payload.payload.value);
-			}
-
-			if (subEvent.payload.type === INSTANT_EFFECT_TYPE.DISABLE) {
-				subEvent.payload.payload.forEach(disable => {
-					target.disableManager.applyDisable(disable);
-				});
-			}
-		});
-	}
-
-	// TODO: remove after switch to effects
-	applyEvent(event: PossibleEvent) {
-		if (event.type === EVENT_TYPE.USE_ABILITY) {
-			this.applySubEvents((event as UseAbilityEvent).payload.subEvents);
-		}
-		if (event.type === EVENT_TYPE.TRIGGER_EFFECT) {
-			this.applySubEvents((event as TriggerEffectEvent).subEvents);
-		}
-		if (event.type === EVENT_TYPE.TICK_EFFECT) {
-			this.applyTickEffectEvents(event as TickEffectEvent);
-		}
-	}
-
-	// TODO: remove after switch to effects
-	applyTickEffectEvents(tickEffect: TickEffectEvent) {
-		if (tickEffect.payload.type === TICK_EFFECT_TYPE.POISON) {
-			const target = this.bm.getUnitById(tickEffect.payload.targetId);
-			target.receiveDamage(tickEffect.payload.payload.value);
-			this.statusEffectManager.removeStacks(
-				STATUS_EFFECT.POISON,
-				tickEffect.payload.payload.decrement,
-			);
-		}
-		if (tickEffect.payload.type === TICK_EFFECT_TYPE.REGEN) {
-			const target = this.bm.getUnitById(tickEffect.payload.targetId);
-			target.receiveHeal(tickEffect.payload.payload.value);
-			this.statusEffectManager.removeStacks(
-				STATUS_EFFECT.REGEN,
-				tickEffect.payload.payload.decrement,
-			);
 		}
 	}
 
@@ -393,7 +316,25 @@ export class Unit {
 		return `${this.owner}${this.position} ${this.classManager?.class?.data?.name}`;
 	};
 
-	serialize(): BoardUnitInstance {
+	serialize() {
+		return {
+			id: this.id,
+			owner: this.owner,
+			name: this.getName(),
+			class: `${this.classManager?.class?.data?.name}`,
+			stats: {
+				...this.stats,
+			},
+			abilities: this.abilities,
+			equipment: this.equipment,
+			perks: this.perks,
+			position: this.position,
+			statusEffects: [...this.statusEffects],
+		};
+	}
+
+	// not being used
+	serializeUnitInfo(): BoardUnitInstance {
 		return {
 			id: this.id,
 			className: `${this.classManager?.class?.data?.name}`,

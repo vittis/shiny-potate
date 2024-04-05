@@ -4,8 +4,8 @@ import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
 import {
 	executeStepEffects,
-	getDeathEvents,
 	getStepEffects,
+	getSubStepEvents,
 	sortEventsByType,
 } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
@@ -33,7 +33,7 @@ export class Game {
 		unit1.equip(new Equipment(Weapons.Longbow, 5), EQUIPMENT_SLOT.TWO_HANDS);
 		unit1.equip(new Equipment(Trinkets.ScoutsEye), EQUIPMENT_SLOT.TRINKET);
 		unit1.equip(new Equipment(Trinkets.KamesLostSash), EQUIPMENT_SLOT.TRINKET_2);
-		unit1.setClass(new Class(Classes.Ranger));
+		unit1.setClass(new Class(Classes.Paladin));
 
 		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
 		unit2.equip(new Equipment(Weapons.Sword, 3), EQUIPMENT_SLOT.MAIN_HAND);
@@ -148,36 +148,30 @@ export function runGame(bm: BoardManager) {
 			let stepEffects = getStepEffects(orderedEvents);
 			executeStepEffects(bm, stepEffects);
 
-			// Check and execute death related events
-			let deathEvents: PossibleEvent[] = getDeathEvents(bm);
+			// Check and execute subStep events
 			let subStep: number = 1;
+			let subStepEvents: PossibleEvent[] = getSubStepEvents(bm, orderedEvents, subStep);
 			let subSteps: SubStepEffects[] = [];
-			while (deathEvents.length > 0) {
-				// Order each deathEvents
-				const sortedDeathEvents = sortEventsByType(deathEvents, "DEATH");
+			while (subStepEvents.length > 0) {
+				// Order and add subStepEvents to eventHistory
+				const sortedSubStepEvents = sortEventsByType(subStepEvents, "SUBSTEP");
+				eventHistory.push(...sortedSubStepEvents);
 
-				// Add deathEvents with subStep to eventHistory
-				const subStepEvents = sortedDeathEvents.map(event => {
-					return { ...event, subStep };
-				}) as PossibleEvent[];
-				eventHistory.push(...subStepEvents);
+				// Get subStepEffects from events and execute them
+				const subStepEffects = getStepEffects(sortedSubStepEvents);
+				executeStepEffects(bm, subStepEffects);
 
-				// Get deathEffects from events and execute them
-				const deathEffects = getStepEffects(sortedDeathEvents);
-				executeStepEffects(bm, deathEffects);
-
-				// Transform deathEffects into subStepEffects and add to subSteps
-				const subStepEffects = {
-					units: deathEffects.units,
-					deadUnits: deathEffects.deadUnits,
+				// Add subStep to subStepEffects and add it to subSteps
+				const subStepEffectsWithSubStep = {
+					units: subStepEffects.units,
+					deadUnits: subStepEffects.deadUnits,
 					subStep,
 				} as SubStepEffects;
+				subSteps.push(subStepEffectsWithSubStep);
 
-				subSteps.push(subStepEffects);
-
-				// Check for more death related events to continue looping subSteps
-				deathEvents = getDeathEvents(bm);
+				// Check for more subStep events to continue looping
 				subStep++;
+				subStepEvents = getSubStepEvents(bm, orderedEvents, subStep);
 			}
 
 			// If there are subSteps, add them to stepEffects
@@ -194,6 +188,25 @@ export function runGame(bm: BoardManager) {
 
 	return { totalSteps: currentStep - 1, eventHistory, firstStep, effectHistory };
 }
+
+/* 
+
+	ordenar abilities pra loopar no step (qual a logica de prioridade?)
+	multistrike gera no step mesmo (levando em conta as regras de ordem e mandando todo o multistrike pra ability 1)
+	ai gera passando flag true pra gerar subEvent removendo multistrike na ability
+	no game loop de steps:
+	separa os eventos de cada unit, criando uma pilha pra cada unit com os eventos sequencialmente
+	step normal: inclui tick_effect se houver, e 1 entre trigger / ability
+	*prioriza tick -> trigger -> ability
+	remove primeiro elemento das pilhas, se tiver algum ainda loopa subSteps, removendo a cada loop
+	no começo de cada loop, checar por death events e adicionar nas pilhas, ordenando novamente
+	*faint pode ser usado junto de trigger self_faint
+	*no caso de faint, ele vai pro topo da pilha e depois de usado a pilha é esvaziada (como se as ações deixassem de existir)
+
+	*como passar os eventos pro stepEvents no caso de multiplas abilities?
+	 precisa indicar q tem multistrike mas ter a opção de gerar o target novamente
+
+ */
 
 /* 
 Ideia:

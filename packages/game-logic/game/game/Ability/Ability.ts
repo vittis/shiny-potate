@@ -1,7 +1,13 @@
 import { ABILITY_CATEGORY, AbilityData } from "./AbilityTypes";
 import { AbilityDataSchema } from "./AbilitySchema";
 import { Unit } from "../Unit/Unit";
-import { EVENT_TYPE, UseAbilityEvent, SubEvent } from "../Event/EventTypes";
+import {
+	EVENT_TYPE,
+	UseAbilityEvent,
+	SubEvent,
+	SUBEVENT_TYPE,
+	INSTANT_EFFECT_TYPE,
+} from "../Event/EventTypes";
 import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
 import {
@@ -12,6 +18,7 @@ import {
 	createStatusEffectSubEvent,
 } from "../Event/EventFactory";
 import { getAllTargetUnits } from "../Target/TargetUtils";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 
 export class Ability {
 	id: string;
@@ -43,7 +50,7 @@ export class Ability {
 		return this.progress >= this.cooldown;
 	}
 
-	use(unit: Unit): UseAbilityEvent {
+	use(unit: Unit, useMultistrike: boolean = false): UseAbilityEvent {
 		const targetUnits = this.getTargets(unit);
 
 		// TODO fix abilities with no target
@@ -63,6 +70,22 @@ export class Ability {
 		);
 
 		const abilitySubEvents = [...onUseSubEvents, ...onHitSubEvents];
+
+		const multistrikeSubEvent = {
+			type: SUBEVENT_TYPE.INSTANT_EFFECT,
+			payload: {
+				type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+				targetId: unit.id,
+				payload: [
+					{
+						name: STATUS_EFFECT.MULTISTRIKE,
+						quantity: -1,
+					},
+				],
+			},
+		} as SubEvent;
+
+		if (useMultistrike) abilitySubEvents.push(multistrikeSubEvent);
 
 		const useAbilityEvent: UseAbilityEvent = {
 			type: EVENT_TYPE.USE_ABILITY,

@@ -21,9 +21,9 @@ import {
 export function sortEventsByType(events: PossibleEvent[], orderType: string = "REGULAR") {
 	return events.sort((a, b) => {
 		const order =
-			orderType == "DEATH"
+			orderType == "SUBSTEP"
 				? {
-						// on DEATH only FAINT and TRIGGER_EFFECT are possible
+						// on SUBSTEP only FAINT, TRIGGER_EFFECT and USE_ABILITY (with MULTISTRIKE) are possible,
 						[EVENT_TYPE.FAINT]: 1,
 						[EVENT_TYPE.TRIGGER_EFFECT]: 2,
 						[EVENT_TYPE.USE_ABILITY]: 3,
@@ -42,8 +42,14 @@ export function sortEventsByType(events: PossibleEvent[], orderType: string = "R
 	});
 }
 
-export function getDeathEvents(bm: BoardManager): PossibleEvent[] {
+export function getSubStepEvents(
+	bm: BoardManager,
+	stepEvents: PossibleEvent[],
+	subStep: number,
+): PossibleEvent[] {
 	const events: PossibleEvent[] = [];
+
+	// Death events
 	bm.getAllAliveUnits().forEach(unit => {
 		if (!unit.isDead && unit.hasDied()) {
 			unit.onDeath();
@@ -55,7 +61,29 @@ export function getDeathEvents(bm: BoardManager): PossibleEvent[] {
 		}
 	});
 
-	return events;
+	// Multistrike events
+	stepEvents.forEach(event => {
+		const unit = bm.getUnitById(event.actorId);
+
+		if (
+			event.type === EVENT_TYPE.USE_ABILITY &&
+			unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)
+		) {
+			//if (!unit.statusEffectManager.canUseMultistrike()) return;
+
+			const ability = unit.abilities.find(ability => ability.id === event.payload.id);
+
+			if (!ability) throw Error("getSubStepEvents: Ability not found on multistrike event");
+
+			const abilityEvent = ability.use(unit, true);
+
+			if (abilityEvent) events.push(abilityEvent);
+		}
+	});
+
+	const eventsWithSubStep = events.map(event => ({ ...event, subStep }));
+
+	return eventsWithSubStep;
 }
 
 export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {
@@ -306,4 +334,9 @@ export function calculateEffects(effects: PossibleEffect[]): PossibleEffect[] {
 	});
 
 	return calculatedEffects;
+}
+
+// only for testing
+export function applyEvents(bm: BoardManager, events: PossibleEvent[]) {
+	executeStepEffects(bm, getStepEffects(events));
 }
