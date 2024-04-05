@@ -3,7 +3,7 @@ import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { EVENT_TYPE, INSTANT_EFFECT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { applyEvents, executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
@@ -203,7 +203,7 @@ describe("Ability", () => {
 			});
 
 			it("should give more damage with each hit calculating ATTACK_POWER and VULNERABLE correctly", () => {
-				const { unit1, unit2 } = setupBoard();
+				const { bm, unit1, unit2 } = setupBoard();
 				const ability = new Ability(Abilities.EmpoweringStrike);
 
 				const damageValue = (ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.DAMAGE>)
@@ -219,14 +219,15 @@ describe("Ability", () => {
 				expect(unit2.stats.damageReductionModifier).toBe(0);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
-				unit1.applyEvent(ability.use(unit1)); // 1st hit
+				applyEvents(bm, [ability.use(unit1)]); // 1st hit
+
 				const hitDamage1 = damageValue;
 
 				expect(unit1.stats.attackDamageModifier).toBe(attackPowerQuantity);
 				expect(unit2.stats.damageReductionModifier).toBe(vulnerableQuantity * -1);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1);
 
-				unit1.applyEvent(ability.use(unit1)); // 2nd hit
+				applyEvents(bm, [ability.use(unit1)]); // 2nd hit
 				const hitDamage2 =
 					damageValue +
 					Math.round((damageValue * (attackPowerQuantity + vulnerableQuantity)) / 100);
@@ -235,7 +236,7 @@ describe("Ability", () => {
 				expect(unit2.stats.damageReductionModifier).toBe(vulnerableQuantity * 2 * -1);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2);
 
-				unit1.applyEvent(ability.use(unit1)); // 3rd hit
+				applyEvents(bm, [ability.use(unit1)]); // 3rd hit
 				const hitDamage3 =
 					damageValue +
 					Math.round((damageValue * (attackPowerQuantity * 2 + vulnerableQuantity * 2)) / 100);
@@ -400,7 +401,7 @@ describe("Ability", () => {
 			});
 
 			it("should give more damage using spell if has SPELL_POTENCY and also receive FOCUS buff", () => {
-				const { unit1, unit2 } = setupBoard();
+				const { bm, unit1, unit2 } = setupBoard();
 
 				const arcaneStudies = new Ability(Abilities.ArcaneStudies);
 				const darkBolt = new Ability(Abilities.DarkBolt);
@@ -418,27 +419,27 @@ describe("Ability", () => {
 				expect(unit1.stats.spellDamageModifier).toBe(0);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
-				unit1.applyEvent(darkBolt.use(unit1));
+				applyEvents(bm, [darkBolt.use(unit1)]);
 				const hitDamage1 = damageValue;
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1);
 
-				unit1.applyEvent(arcaneStudies.use(unit1));
+				applyEvents(bm, [arcaneStudies.use(unit1)]);
 				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity);
 
-				unit1.applyEvent(darkBolt.use(unit1));
+				applyEvents(bm, [darkBolt.use(unit1)]);
 				const hitDamage2 = damageValue + Math.round((damageValue * spellPotencyQuantity) / 100);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2);
 
-				unit1.applyEvent(arcaneStudies.use(unit1));
+				applyEvents(bm, [arcaneStudies.use(unit1)]);
 				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity * 2);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 2);
 
-				unit1.applyEvent(darkBolt.use(unit1));
+				applyEvents(bm, [darkBolt.use(unit1)]);
 				const hitDamage3 = damageValue + Math.round((damageValue * spellPotencyQuantity * 2) / 100);
 				expect(unit2.stats.hp).toBe(unit2.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
 
-				unit1.applyEvent(arcaneStudies.use(unit1));
+				applyEvents(bm, [arcaneStudies.use(unit1)]);
 				expect(unit1.stats.spellCooldownModifier).toBe(focusQuantity * 3);
 				expect(unit1.stats.spellDamageModifier).toBe(spellPotencyQuantity * 3);
 			});
@@ -498,7 +499,7 @@ describe("Ability", () => {
 		});
 
 		it("should receive less damage and return damage when attacked if has STURDY and THORN", () => {
-			const { unit1, unit2, unit3 } = setupBoard();
+			const { bm, unit1, unit2, unit3 } = setupBoard();
 
 			const summonCrab = new Ability(Abilities.SummonCrab);
 			const thrust = new Ability(Abilities.Thrust);
@@ -516,30 +517,30 @@ describe("Ability", () => {
 			expect(unit1.stats.hp).toBe(unit2.stats.maxHp);
 			expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
-			unit2.applyEvent(thrust.use(unit2));
+			applyEvents(bm, [thrust.use(unit2)]);
 			const hitDamage1 = damageValue;
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1);
 			expect(unit2.stats.hp).toBe(unit2.stats.maxHp);
 
-			unit3.applyEvent(summonCrab.use(unit3));
+			applyEvents(bm, [summonCrab.use(unit3)]);
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity);
 
-			unit2.applyEvent(thrust.use(unit2));
+			applyEvents(bm, [thrust.use(unit2)]);
 			const hitDamage2 = damageValue - Math.round((damageValue * effectSturdyQuantity) / 100);
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2);
 			expect(unit2.stats.hp).toBe(unit2.stats.maxHp - effectThornQuantity);
 
-			unit3.applyEvent(summonCrab.use(unit3));
+			applyEvents(bm, [summonCrab.use(unit3)]);
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 2);
 
-			unit2.applyEvent(thrust.use(unit2));
+			applyEvents(bm, [thrust.use(unit2)]);
 			const hitDamage3 = damageValue - Math.round((damageValue * effectSturdyQuantity * 2) / 100);
 			expect(unit1.stats.hp).toBe(unit1.stats.maxHp - hitDamage1 - hitDamage2 - hitDamage3);
 			expect(unit2.stats.hp).toBe(
 				unit2.stats.maxHp - effectThornQuantity - effectThornQuantity * 2,
 			);
 
-			unit3.applyEvent(summonCrab.use(unit3));
+			applyEvents(bm, [summonCrab.use(unit3)]);
 			expect(unit1.stats.damageReductionModifier).toBe(effectSturdyQuantity * 3);
 		});
 	});
@@ -587,7 +588,7 @@ describe("Ability", () => {
 				ability.data.effects[0] as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>
 			).payload[0].quantity as number;
 
-			sortAndExecuteEvents(bm, [event]);
+			executeStepEffects(bm, getStepEffects([event]));
 
 			expect(unit.statusEffects[0].name).toBe(STATUS_EFFECT.MULTISTRIKE);
 			expect(unit.statusEffects[0].quantity).toBe(multistrikeQuantity);
@@ -603,7 +604,7 @@ describe("Ability", () => {
 				expect(unit.stepEvents[0]).toStrictEqual(unit.stepEvents[i]);
 			}
 
-			sortAndExecuteEvents(bm, unit.stepEvents);
+			executeStepEffects(bm, getStepEffects(unit.stepEvents));
 
 			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)).toBeFalsy();
 		});
@@ -660,7 +661,7 @@ describe("Ability", () => {
 			const ability = new Ability(Abilities.SummonBoar);
 			const event = ability.use(unit2);
 
-			sortAndExecuteEvents(bm, [event]);
+			executeStepEffects(bm, getStepEffects([event]));
 
 			const durationStun = (ability.data.effects[1] as TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>)
 				.payload[0].duration;

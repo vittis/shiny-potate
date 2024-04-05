@@ -7,8 +7,9 @@ export const TICK_COOLDOWN = 20;
 
 export class StatusEffectManager {
 	private _activeStatusEffects = [] as ActiveStatusEffect[];
-	poisonTickProgress = 0;
-	regenTickProgress = 0;
+
+	poisonTickProgress: number = 0;
+	regenTickProgress: number = 0;
 
 	constructor() {}
 

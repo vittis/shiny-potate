@@ -2,10 +2,15 @@ import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Unit } from "./Unit/Unit";
 import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
-import { getAndExecuteDeathEvents, sortAndExecuteEvents } from "./Event/EventUtils";
+import {
+	executeStepEffects,
+	getStepEffects,
+	getSubStepEvents,
+	sortEventsByType,
+} from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
-import { PossibleEvent } from "./Event/EventTypes";
+import { PossibleEvent, StepEffects, SubStepEffects } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 
 export interface UnitsDTO {
@@ -28,7 +33,7 @@ export class Game {
 		unit1.equip(new Equipment(Weapons.Longbow, 5), EQUIPMENT_SLOT.TWO_HANDS);
 		unit1.equip(new Equipment(Trinkets.ScoutsEye), EQUIPMENT_SLOT.TRINKET);
 		unit1.equip(new Equipment(Trinkets.KamesLostSash), EQUIPMENT_SLOT.TRINKET_2);
-		unit1.setClass(new Class(Classes.Ranger));
+		unit1.setClass(new Class(Classes.Paladin));
 
 		const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, this.boardManager);
 		unit2.equip(new Equipment(Weapons.Sword, 3), EQUIPMENT_SLOT.MAIN_HAND);
@@ -77,9 +82,9 @@ export class Game {
 	}
 
 	startGame() {
-		const { totalSteps, eventHistory, firstStep } = runGame(this.boardManager);
+		const { totalSteps, eventHistory, firstStep, effectHistory } = runGame(this.boardManager);
 
-		return { totalSteps, eventHistory, firstStep };
+		return { totalSteps, eventHistory, firstStep, effectHistory };
 	}
 }
 
@@ -96,43 +101,112 @@ function reachTimeLimit(currentStep: number) {
 }
 
 export function runGame(bm: BoardManager) {
-	let firstStep: any;
 	const eventHistory: PossibleEvent[] = [];
+	const effectHistory: StepEffects[] = [];
 
 	const serializedUnits = bm.getAllUnits().map(unit => unit.serialize());
-	firstStep = { units: serializedUnits };
+	const firstStep = { units: serializedUnits };
 
-	let currentStep = 1;
-
+	// Get BATTLE_START trigger events
 	const battleStartEvents: PossibleEvent[] = [];
 	bm.getAllUnits().forEach(unit => {
 		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
 		battleStartEvents.push(...unit.serializeEvents());
 	});
-	const orderedEvents = sortAndExecuteEvents(bm, battleStartEvents);
-	orderedEvents.forEach(event => {
-		eventHistory.push(event);
-	});
 
+	if (battleStartEvents.length > 0) {
+		const orderedEvents = sortEventsByType(battleStartEvents);
+		orderedEvents.forEach(event => {
+			eventHistory.push(event);
+		});
+		effectHistory.push(getStepEffects(orderedEvents));
+	}
+
+	let currentStep = 1;
+
+	// Loop steps
 	do {
+		// Step each unit alive
 		bm.getAllAliveUnits().forEach(unit => {
 			unit.step(currentStep);
 		});
 
+		// Get each stepEvents from each unit
 		const stepEvents: PossibleEvent[] = [];
 		bm.getAllUnits().forEach(unit => {
 			stepEvents.push(...unit.serializeEvents());
 		});
-		const orderedEvents = sortAndExecuteEvents(bm, stepEvents);
-		eventHistory.push(...orderedEvents);
 
-		eventHistory.push(...getAndExecuteDeathEvents(bm));
+		// Order each stepEvents
+		const orderedEvents = sortEventsByType(stepEvents);
+
+		if (orderedEvents.length > 0) {
+			// Add events to eventHistory
+			eventHistory.push(...orderedEvents);
+
+			// Get effects from events and execute them
+			let stepEffects = getStepEffects(orderedEvents);
+			executeStepEffects(bm, stepEffects);
+
+			// Check and execute subStep events
+			let subStep: number = 1;
+			let subStepEvents: PossibleEvent[] = getSubStepEvents(bm, orderedEvents, subStep);
+			let subSteps: SubStepEffects[] = [];
+			while (subStepEvents.length > 0) {
+				// Order and add subStepEvents to eventHistory
+				const sortedSubStepEvents = sortEventsByType(subStepEvents, "SUBSTEP");
+				eventHistory.push(...sortedSubStepEvents);
+
+				// Get subStepEffects from events and execute them
+				const subStepEffects = getStepEffects(sortedSubStepEvents);
+				executeStepEffects(bm, subStepEffects);
+
+				// Add subStep to subStepEffects and add it to subSteps
+				const subStepEffectsWithSubStep = {
+					units: subStepEffects.units,
+					deadUnits: subStepEffects.deadUnits,
+					subStep,
+				} as SubStepEffects;
+				subSteps.push(subStepEffectsWithSubStep);
+
+				// Check for more subStep events to continue looping
+				subStep++;
+				subStepEvents = getSubStepEvents(bm, orderedEvents, subStep);
+			}
+
+			// If there are subSteps, add them to stepEffects
+			if (subSteps.length > 0) {
+				stepEffects = { ...stepEffects, subSteps };
+			}
+
+			// Add stepEffects to effectHistory
+			effectHistory.push(stepEffects);
+		}
 
 		currentStep++;
 	} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
 
-	return { totalSteps: currentStep - 1, eventHistory, firstStep };
+	return { totalSteps: currentStep - 1, eventHistory, firstStep, effectHistory };
 }
+
+/* 
+
+	ordenar abilities pra loopar no step (qual a logica de prioridade?)
+	multistrike gera no step mesmo (levando em conta as regras de ordem e mandando todo o multistrike pra ability 1)
+	ai gera passando flag true pra gerar subEvent removendo multistrike na ability
+	no game loop de steps:
+	separa os eventos de cada unit, criando uma pilha pra cada unit com os eventos sequencialmente
+	step normal: inclui tick_effect se houver, e 1 entre trigger / ability
+	*prioriza tick -> trigger -> ability
+	remove primeiro elemento das pilhas, se tiver algum ainda loopa subSteps, removendo a cada loop
+	no começo de cada loop, checar por death events e adicionar nas pilhas, ordenando novamente
+	*faint pode ser usado junto de trigger self_faint
+	*no caso de faint, ele vai pro topo da pilha e depois de usado a pilha é esvaziada (como se as ações deixassem de existir)
+
+	*como passar os eventos pro stepEvents no caso de multiplas abilities?
+	 precisa indicar q tem multistrike mas ter a opção de gerar o target novamente
+
+ */
 
 /* 
 Ideia:

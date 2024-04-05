@@ -1,9 +1,12 @@
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Class } from "../Class/Class";
+import { DISABLE } from "../Disable/DisableTypes";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { Effect, INSTANT_EFFECT_TYPE } from "../Event/EventTypes";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { MOD_TYPE } from "../Mods/ModsTypes";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Weapons, Classes } from "../data";
 import { Unit } from "./Unit";
 
@@ -152,7 +155,7 @@ describe("Unit", () => {
 				unit.step(i);
 			}
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			expect(ability.progress).toBe(0);
 			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
@@ -175,7 +178,7 @@ describe("Unit", () => {
 			}
 
 			expect(ability.progress).toBe(0);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 
 			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
 		});
@@ -289,6 +292,101 @@ describe("Unit", () => {
 					.filter(mod => mod.type === MOD_TYPE.GRANT_PERK)
 					.map(perkMod => perkMod.payload),
 			);
+		});
+	});
+
+	describe("applyEffect", () => {
+		it("apply DAMAGE effect", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const effectDamage = {
+				type: INSTANT_EFFECT_TYPE.DAMAGE,
+				payload: {
+					value: 10,
+				},
+			} as Effect<INSTANT_EFFECT_TYPE.DAMAGE>;
+
+			unit.applyEffect(effectDamage);
+
+			expect(unit.stats.hp).toBe(unit.stats.maxHp - effectDamage.payload.value);
+		});
+
+		it("apply HEAL effect", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const effectDamage = {
+				type: INSTANT_EFFECT_TYPE.DAMAGE,
+				payload: {
+					value: 10,
+				},
+			} as Effect<INSTANT_EFFECT_TYPE.DAMAGE>;
+
+			const effectHeal = {
+				type: INSTANT_EFFECT_TYPE.HEAL,
+				payload: {
+					value: 10,
+				},
+			} as Effect<INSTANT_EFFECT_TYPE.HEAL>;
+
+			unit.applyEffect(effectDamage);
+			unit.applyEffect(effectHeal);
+
+			expect(unit.stats.hp).toBe(unit.stats.maxHp);
+		});
+
+		it("apply SHIELD effect", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const effectShield = {
+				type: INSTANT_EFFECT_TYPE.SHIELD,
+				payload: {
+					value: 10,
+				},
+			} as Effect<INSTANT_EFFECT_TYPE.SHIELD>;
+
+			unit.applyEffect(effectShield);
+
+			expect(unit.stats.shield).toBe(effectShield.payload.value);
+		});
+
+		it("apply STATUS_EFFECT effect", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const effectStatusEffect = {
+				type: INSTANT_EFFECT_TYPE.STATUS_EFFECT,
+				payload: [
+					{
+						name: STATUS_EFFECT.FAST,
+						quantity: 10,
+					},
+					{
+						name: STATUS_EFFECT.ATTACK_POWER,
+						quantity: 10,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+
+			unit.applyEffect(effectStatusEffect);
+
+			expect(unit.statusEffects).toEqual(effectStatusEffect.payload);
+		});
+
+		it("apply DISABLE effect", () => {
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
+
+			const effectDisable = {
+				type: INSTANT_EFFECT_TYPE.DISABLE,
+				payload: [
+					{
+						name: DISABLE.STUN,
+						duration: 10,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.DISABLE>;
+
+			unit.applyEffect(effectDisable);
+
+			expect(unit.disables).toEqual(effectDisable.payload);
 		});
 	});
 });

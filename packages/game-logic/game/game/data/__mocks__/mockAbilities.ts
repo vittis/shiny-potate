@@ -396,4 +396,31 @@ export const MockAbilities = {
 			},
 		],
 	},
+	BalancedStrike: {
+		name: "Balanced Strike",
+		type: "ATTACK",
+		tags: ["WEAPON_ABILITY"],
+		target: "STANDARD",
+		cooldown: 40,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 30,
+				},
+			},
+			{
+				type: "SHIELD",
+				trigger: "ON_HIT",
+				target: "SELF",
+				conditions: [],
+				payload: {
+					value: 30,
+				},
+			},
+		],
+	},
 };

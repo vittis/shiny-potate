@@ -2,8 +2,8 @@ import { Ability } from "../Ability/Ability";
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { EVENT_TYPE, INSTANT_EFFECT_TYPE, SubEvent, TickEffectEvent } from "../Event/EventTypes";
-import { sortAndExecuteEvents } from "../Event/EventUtils";
+import { EVENT_TYPE, Effect, INSTANT_EFFECT_TYPE, TickEffectEvent } from "../Event/EventTypes";
+import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
 import { Unit } from "../Unit/Unit";
 import { useAbility } from "../_tests_/testsUtils";
 import { Abilities, Weapons } from "../data";
@@ -121,7 +121,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit2.statusEffects).toEqual([
 				{
@@ -141,7 +141,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit2.stats.damageReductionModifier).toBe(-15);
 		});
@@ -158,7 +158,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit2);
 
 			useAbility(unit1);
-			sortAndExecuteEvents(bm, unit1.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit1.serializeEvents()));
 
 			expect(unit1.statusEffects).toEqual([
 				{
@@ -198,17 +198,17 @@ describe("StatusEffect", () => {
 				type: EVENT_TYPE.TICK_EFFECT,
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 10 - 9 - 8);
 		});
 
@@ -242,22 +242,22 @@ describe("StatusEffect", () => {
 				type: EVENT_TYPE.TICK_EFFECT,
 			});
 
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(9);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 20 + 10 + 9);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(8);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp);
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 			expect((unit.stepEvents[0] as TickEffectEvent).payload?.payload.value).toBe(7);
-			sortAndExecuteEvents(bm, unit.serializeEvents());
+			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
 			expect(unit.stats.hp).toBe(unit.stats.maxHp);
 		});
 
@@ -305,28 +305,26 @@ describe("StatusEffect", () => {
 
 			const fastQuantity = 10;
 
-			const fastSubEvent = {
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit.id,
-					payload: [
-						{
-							name: "FAST",
-							quantity: fastQuantity,
-						},
-					],
-				},
-			} as SubEvent;
+			const fastEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "FAST",
+						quantity: fastQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-			unit.applySubEvents([fastSubEvent]);
+			unit.applyEffect(fastEffect);
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
 				Math.round(Abilities.Stab.cooldown - Abilities.Stab.cooldown * ((15 + fastQuantity) / 100)),
 			);
 
-			unit.applySubEvents([fastSubEvent, fastSubEvent]);
+			unit.applyEffect(fastEffect);
+			unit.applyEffect(fastEffect);
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -348,21 +346,18 @@ describe("StatusEffect", () => {
 
 			const focusQuantity = 10;
 
-			const focusSubEvent = {
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit.id,
-					payload: [
-						{
-							name: "FOCUS",
-							quantity: focusQuantity,
-						},
-					],
-				},
-			} as SubEvent;
+			const focusEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "FOCUS",
+						quantity: focusQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-			unit.applySubEvents([focusSubEvent]);
+			unit.applyEffect(focusEffect);
 
 			expect(unit.stats.spellCooldownModifier).toBe(focusQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -371,7 +366,8 @@ describe("StatusEffect", () => {
 				),
 			);
 
-			unit.applySubEvents([focusSubEvent, focusSubEvent]);
+			unit.applyEffect(focusEffect);
+			unit.applyEffect(focusEffect);
 
 			expect(unit.stats.spellCooldownModifier).toBe(focusQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -398,21 +394,18 @@ describe("StatusEffect", () => {
 
 			const slowQuantity = 10;
 
-			const slowSubEvent = {
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit.id,
-					payload: [
-						{
-							name: "SLOW",
-							quantity: slowQuantity,
-						},
-					],
-				},
-			} as SubEvent;
+			const slowEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "SLOW",
+						quantity: slowQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-			unit.applySubEvents([slowSubEvent]);
+			unit.applyEffect(slowEffect);
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -427,7 +420,8 @@ describe("StatusEffect", () => {
 				),
 			);
 
-			unit.applySubEvents([slowSubEvent, slowSubEvent]);
+			unit.applyEffect(slowEffect);
+			unit.applyEffect(slowEffect);
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -460,41 +454,35 @@ describe("StatusEffect", () => {
 			const slowQuantity = 25;
 			const fastQuantity = 10;
 
-			const slowSubEvent = {
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit.id,
-					payload: [
-						{
-							name: "SLOW",
-							quantity: slowQuantity,
-						},
-					],
-				},
-			} as SubEvent;
-			const fastSubEvent = {
-				type: "INSTANT_EFFECT",
-				payload: {
-					type: "STATUS_EFFECT",
-					targetId: unit.id,
-					payload: [
-						{
-							name: "FAST",
-							quantity: fastQuantity,
-						},
-					],
-				},
-			} as SubEvent;
+			const slowEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "SLOW",
+						quantity: slowQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+			const fastEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "FAST",
+						quantity: fastQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-			unit.applySubEvents([slowSubEvent]);
+			unit.applyEffect(slowEffect);
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
 				Math.round(Abilities.Stab.cooldown - Abilities.Stab.cooldown * ((15 - slowQuantity) / 100)),
 			);
 
-			unit.applySubEvents([fastSubEvent]);
+			unit.applyEffect(fastEffect);
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity + fastQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
@@ -567,7 +555,7 @@ describe("StatusEffect", () => {
 					},
 				});
 
-				sortAndExecuteEvents(bm, [event]);
+				executeStepEffects(bm, getStepEffects([event]));
 
 				expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeFalsy();
 			});
