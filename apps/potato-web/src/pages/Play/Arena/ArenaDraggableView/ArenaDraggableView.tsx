@@ -35,15 +35,34 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 
 	function handleDragEnd(event: DragEndEvent) {
 		const overPosition = event.over?.data.current?.position;
-		if (!!overPosition) {
-			const unit = event.active.data.current?.unit;
+		const unit = event.active.data.current?.unit;
 
+		if (!!overPosition) {
 			if (unit) {
+				const isAlreadyOnBoard = !!board.find(space => space.unit?.id === unit.id);
+				const unitOver = event.over?.data?.current?.unit;
+				console.log(event.over?.data.current);
+
 				const newBoard = board.map(space => {
+					// add unit to new position
 					if (space.position === overPosition) {
 						return {
 							...space,
 							unit: { ...unit, position: space.position },
+						};
+					}
+					// remove unit from previous position if dropped outside of board
+					if (!unitOver && isAlreadyOnBoard && space.unit?.id === unit.id) {
+						return {
+							...space,
+							unit: null,
+						};
+					}
+					// swap units if dropped on another unit
+					if (unitOver && isAlreadyOnBoard && space.position === unit.position) {
+						return {
+							...space,
+							unit: { ...unitOver, position: space.position },
 						};
 					}
 
@@ -51,7 +70,24 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 				});
 
 				setBoard(newBoard);
+				return;
 			}
+		}
+		// dragged outside of board
+		const isFromBoard = !!board.find(space => space.unit?.id === unit?.id);
+		if (isFromBoard) {
+			const newBoard = board.map(space => {
+				if (space.unit?.id === unit?.id) {
+					return {
+						...space,
+						unit: null,
+					};
+				}
+
+				return space;
+			});
+
+			setBoard(newBoard);
 		}
 	}
 
