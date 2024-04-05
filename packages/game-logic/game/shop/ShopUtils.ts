@@ -10,6 +10,7 @@ import {
 } from "../game/Equipment/EquipmentTypes";
 import { ShopUnit, ShopUnitInstance } from "./ShopUnit";
 import { ShopEquipment, ShopEquipmentInstance } from "./ShopEquipment";
+import { UnitInfo } from "../game/Unit/UnitTypes";
 
 export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
 	const items: EquipmentInstance[] = [];
@@ -95,7 +96,8 @@ export function generateRandomItem(tier: number, type: EQUIPMENT_TYPE) {
 	return new Equipment(randomItem, tier);
 }
 
-export function generateRandomUnitWithEquipment(tier: number) {
+// todo equip stuff?
+export function generateRandomUnitWithEquipment(tier: number): UnitInfo {
 	const keys = Object.keys(Classes);
 	const randomIndex = Math.floor(Math.random() * keys.length);
 	const randomClassKey = keys[randomIndex];
@@ -103,7 +105,12 @@ export function generateRandomUnitWithEquipment(tier: number) {
 
 	return {
 		className: randomClassKey as keyof typeof Classes,
-		equipment: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON),
+		equipment: [
+			{
+				slot: EQUIPMENT_SLOT.MAIN_HAND,
+				equip: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON).serialize(),
+			},
+		],
 	};
 }
 
@@ -161,9 +168,7 @@ export function generateShop(round: number) {
 	for (let i = 0; i < unitsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const unit = generateRandomUnitWithEquipment(tier);
-		const unitEquipments = [{ slot: EQUIPMENT_SLOT.MAIN_HAND, equip: unit.equipment }];
-		// todo equip unit?
-		shop.units.push(new ShopUnit(unit.className, unitEquipments).serialize());
+		shop.units.push(new ShopUnit(unit).serialize());
 	}
 	for (let i = 0; i < weaponsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);

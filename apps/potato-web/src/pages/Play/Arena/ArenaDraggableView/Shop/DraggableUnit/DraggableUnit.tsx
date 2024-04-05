@@ -2,17 +2,23 @@ import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { UnitInstance } from "game-logic";
+import { UnitInfo } from "game-logic";
 import { UnitTooltip } from "./UnitTooltip";
 
 interface DraggableUnitInterface {
-	unit: UnitInstance;
+	id: string;
+	unit: UnitInfo;
 }
 
-function DraggableUnit({ unit }: DraggableUnitInterface) {
+function DraggableUnit({ id, unit }: DraggableUnitInterface) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-		id: unit.id,
-		data: { unit },
+		id: id,
+		data: {
+			unit: {
+				id,
+				...unit,
+			},
+		},
 	});
 
 	const style = transform

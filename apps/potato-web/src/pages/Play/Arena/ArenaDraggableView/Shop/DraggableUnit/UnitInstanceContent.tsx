@@ -1,6 +1,6 @@
-import { Unit, UnitInstance } from "game-logic";
-import { Badge } from "../../../../../../components/ui/badge";
-import { Separator } from "../../../../../../components/ui/separator";
+import { Unit } from "game-logic";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface MarkdownContentProps {
 	unit: Unit;

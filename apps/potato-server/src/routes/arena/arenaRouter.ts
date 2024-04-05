@@ -17,18 +17,23 @@ export const arenaRouter = router({
 	new: authProcedure.mutation(async ({ ctx }) => {
 		const { supabase, user } = ctx;
 
-		const shop = generateShop(1);
+		try {
+			const shop = generateShop(1);
 
-		const { data, error } = await supabase
-			.from("arena")
-			.insert([{ player_id: user.id, shop }])
-			.select();
+			const { data, error } = await supabase
+				.from("arena")
+				.insert([{ player_id: user.id, shop }])
+				.select();
 
-		if (error) {
-			throw error;
+			if (error) {
+				console.error(error);
+				throw error;
+			}
+			return data;
+		} catch (e) {
+			console.error(e);
+			throw e;
 		}
-
-		return data;
 	}),
 	abandon: authProcedure.mutation(async ({ ctx }) => {
 		const { supabase, user } = ctx;

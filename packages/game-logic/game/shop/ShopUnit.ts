@@ -1,40 +1,33 @@
 import { nanoid } from "nanoid";
-import { Classes, EquipmentInstance } from "..";
-import { Equipment } from "../game/Equipment/Equipment";
-import { EquippedItem, EquippedItemInstance } from "../game/Equipment/EquipmentManager";
+import { UnitInfo } from "../game/Unit/UnitTypes";
 
 export interface ShopUnitInstance {
 	id: string;
 	price: number;
-	className: keyof typeof Classes;
-	equipment: EquippedItemInstance[];
+	unit: UnitInfo;
 }
 
-// todo shared base ShopEntity?
 export class ShopUnit {
 	id: string;
 	price: number;
-	equipment: EquippedItem[];
-	className: keyof typeof Classes;
+	unit: UnitInfo;
 
-	constructor(className: keyof typeof Classes, equipment: EquippedItem[]) {
-		this.equipment = equipment;
+	constructor(unit: UnitInfo) {
+		this.unit = unit;
 		this.price = this.calculatePrice();
-		this.className = className;
 		this.id = nanoid(8);
 	}
 
 	calculatePrice() {
-		// todo take in account the other equip
-		return Math.max(2, this.equipment[0].equip.tier * 4) + 4 + Math.floor(Math.random() * 4);
+		// todo take in account other equips
+		return Math.max(2, this.unit.equipment[0].equip.tier * 4) + 4 + Math.floor(Math.random() * 4);
 	}
 
 	serialize(): ShopUnitInstance {
 		return {
 			id: this.id,
 			price: this.price,
-			className: this.className,
-			equipment: this.equipment.map(e => ({ slot: e.slot, equip: e.equip.serialize() })),
+			unit: this.unit,
 		};
 	}
 }

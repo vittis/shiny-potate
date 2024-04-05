@@ -1,9 +1,12 @@
 import { POSITION } from "../BoardManager";
 import { EquippedItemInstance } from "../Equipment/EquipmentManager";
 
-export interface UnitInstance {
-	id: string;
+export interface UnitInfo {
 	className: string;
-	position: POSITION;
 	equipment: EquippedItemInstance[];
+}
+
+export interface BoardUnitInstance extends UnitInfo {
+	id: string;
+	position: POSITION;
 }

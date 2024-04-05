@@ -1,4 +1,4 @@
-import { Shop, ShopUnitInstance } from "game-logic";
+import { Shop } from "game-logic";
 import { ShopView } from "./Shop/ShopView";
 import {
 	DndContext,
@@ -9,40 +9,16 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { DroppableBoardSpace } from "./Board/DroppableBoardSpace";
-import { useState } from "react";
 import { DraggableUnit } from "./Shop/DraggableUnit/DraggableUnit";
+import { useArenaStore } from "@/services/features/Arena/useArenaStore";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
 }
 
 function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
-	const [board, setBoard] = useState<{ position: string; unit: ShopUnitInstance | null }[]>([
-		{
-			position: "2",
-			unit: null,
-		},
-		{
-			position: "1",
-			unit: null,
-		},
-		{
-			position: "0",
-			unit: null,
-		},
-		{
-			position: "5",
-			unit: null,
-		},
-		{
-			position: "4",
-			unit: null,
-		},
-		{
-			position: "3",
-			unit: null,
-		},
-	]);
+	const { board, setBoard } = useArenaStore();
+
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
 			distance: 1,
@@ -67,7 +43,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 					if (space.position === overPosition) {
 						return {
 							...space,
-							unit,
+							unit: { ...unit, position: space.position },
 						};
 					}
 
@@ -87,7 +63,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 				<div className="w-fit h-fit grid grid-cols-3 gap-5">
 					{board.map(space => (
 						<DroppableBoardSpace key={space.position} boardSpace={space}>
-							{space.unit && <DraggableUnit unit={space.unit} />}
+							{space.unit && <DraggableUnit id={space.unit.id} unit={space.unit} />}
 						</DroppableBoardSpace>
 					))}
 				</div>

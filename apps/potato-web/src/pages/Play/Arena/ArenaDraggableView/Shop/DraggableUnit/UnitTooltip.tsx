@@ -1,20 +1,20 @@
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
-import { EquippedItemInstance, UnitInstance, getUnitData } from "game-logic";
+import { UnitInfo, getUnitData } from "game-logic";
 import { UnitInstanceContent } from "./UnitInstanceContent";
 
 export interface UnitTooltipProps {
-	unit: UnitInstance;
+	unit: UnitInfo;
 	onOpenSubTooltip?: () => void;
 }
 
 function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
-	const { id, className, equipment } = unit;
+	const { className, equipment } = unit;
 	return (
 		<div className="relative">
 			<UnitInstanceContent
 				unit={
-					getUnitData({ id, name: className, equipment: equipment.map(e => e.equip) }, 0, id) // todo: refactor getUnitData to equip with slot
+					getUnitData({ id: "a", name: className, equipment: equipment.map(e => e.equip) }, 0, "0") // todo: refactor getUnitData to equip with slot
 				}
 			/>
 			<div className="absolute top-0 -right-[15px] h-full bg-transparent w-[15px]" />
