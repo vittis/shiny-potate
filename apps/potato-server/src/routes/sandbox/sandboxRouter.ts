@@ -36,12 +36,13 @@ export const sandboxRouter = router({
 			game.setTeam(0, team1);
 			game.setTeam(1, team2);
 
-			const { totalSteps, eventHistory, firstStep } = game.startGame();
+			const { totalSteps, eventHistory, firstStep, effectHistory } = game.startGame();
 
 			return {
 				firstStep,
 				totalSteps,
 				eventHistory,
+				effectHistory,
 			};
 		}),
 	rollShop: publicProcedure
