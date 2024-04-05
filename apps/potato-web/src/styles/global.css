@@ -19,7 +19,7 @@
 	}
 
 	.bg-pattern-gradient {
-		margin: 1px;
+		margin: 2px;
 		background-image: repeating-linear-gradient(
 			45deg,
 			var(--b1),

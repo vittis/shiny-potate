@@ -1,22 +1,23 @@
 import { nanoid } from "nanoid";
 import { Classes, EquipmentInstance } from "..";
 import { Equipment } from "../game/Equipment/Equipment";
+import { EquippedItem, EquippedItemInstance } from "../game/Equipment/EquipmentManager";
 
 export interface ShopUnitInstance {
 	id: string;
 	price: number;
 	className: keyof typeof Classes;
-	equipment: EquipmentInstance;
+	equipment: EquippedItemInstance[];
 }
 
 // todo shared base ShopEntity?
 export class ShopUnit {
 	id: string;
 	price: number;
-	equipment: Equipment;
+	equipment: EquippedItem[];
 	className: keyof typeof Classes;
 
-	constructor(className: keyof typeof Classes, equipment: Equipment) {
+	constructor(className: keyof typeof Classes, equipment: EquippedItem[]) {
 		this.equipment = equipment;
 		this.price = this.calculatePrice();
 		this.className = className;
@@ -24,7 +25,8 @@ export class ShopUnit {
 	}
 
 	calculatePrice() {
-		return Math.max(2, this.equipment.tier * 4) + 4 + Math.floor(Math.random() * 4);
+		// todo take in account the other equip
+		return Math.max(2, this.equipment[0].equip.tier * 4) + 4 + Math.floor(Math.random() * 4);
 	}
 
 	serialize(): ShopUnitInstance {
@@ -32,7 +34,7 @@ export class ShopUnit {
 			id: this.id,
 			price: this.price,
 			className: this.className,
-			equipment: this.equipment.serialize(),
+			equipment: this.equipment.map(e => ({ slot: e.slot, equip: e.equip.serialize() })),
 		};
 	}
 }

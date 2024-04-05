@@ -1,11 +1,16 @@
 import { Ability } from "../Ability/Ability";
 import { MOD_TYPE, Mod } from "../Mods/ModsTypes";
 import { Equipment } from "./Equipment";
-import { EQUIPMENT_SLOT } from "./EquipmentTypes";
+import { EQUIPMENT_SLOT, EquipmentInstance } from "./EquipmentTypes";
 
 export interface EquippedItem {
 	slot: EQUIPMENT_SLOT;
 	equip: Equipment;
+}
+
+export interface EquippedItemInstance {
+	slot: EQUIPMENT_SLOT;
+	equip: EquipmentInstance;
 }
 
 export class EquipmentManager {
@@ -67,5 +72,12 @@ export class EquipmentManager {
 		if (slot === EQUIPMENT_SLOT.TRINKET_2) slot = EQUIPMENT_SLOT.TRINKET;
 
 		return equip.data.slots.includes(slot);
+	}
+
+	serializeEquips(): EquippedItemInstance[] {
+		return this.equips.map(e => ({
+			slot: e.slot,
+			equip: e.equip.serialize(),
+		}));
 	}
 }

@@ -15,7 +15,7 @@ const MarkdownWrapper = ({ content, tier, tags, onOpenSubTooltip }: MarkdownWrap
 		return <Loader2 className="animate-spin mx-auto w-80 my-20" />;
 	}
 	return (
-		<div className="bg-pattern-gradient p-3">
+		<div className="bg-pattern-gradient p-3 text-sm">
 			<ReactMarkdown
 				remarkPlugins={[remarkGfm]}
 				className="flex flex-col gap-2.5"

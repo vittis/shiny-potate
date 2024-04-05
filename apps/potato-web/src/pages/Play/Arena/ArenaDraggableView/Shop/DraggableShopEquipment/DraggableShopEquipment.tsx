@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { ShopEquipmentInstance } from "game-logic";
 
-interface ShopEquipmentInterface {
+interface DraggableShopEquipmentInterface {
 	shopEquipment: ShopEquipmentInstance;
 }
 
-function DraggableEntity({ shopEquipment }: ShopEquipmentInterface) {
+function DraggableShopEquipment({ shopEquipment }: DraggableShopEquipmentInterface) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id: shopEquipment.id,
 		data: shopEquipment,
@@ -49,4 +49,4 @@ function DraggableEntity({ shopEquipment }: ShopEquipmentInterface) {
 	);
 }
 
-export { DraggableEntity };
+export { DraggableShopEquipment };

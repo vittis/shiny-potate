@@ -1,3 +1,4 @@
+import { EquippedItemInstance } from "./game/Equipment/EquipmentManager";
 // todo group exports
 /* 
 example:
@@ -18,3 +19,5 @@ export type { EquipmentInstance } from "./game/Equipment/EquipmentTypes";
 export type { Shop } from "./shop/ShopUtils";
 export type { ShopEquipmentInstance } from "./shop/ShopEquipment";
 export type { ShopUnitInstance } from "./shop/ShopUnit";
+export type { UnitInstance } from "./game/Unit/UnitTypes";
+export type { EquippedItemInstance } from "./game/Equipment/EquipmentManager";

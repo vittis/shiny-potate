@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 
-interface DroppableEntityProps {
+interface DroppableBoardSpaceProps {
+	children?: React.ReactNode;
 	boardSpace: { position: string; unit: any };
 }
 
-function DroppableEntity({ boardSpace }: DroppableEntityProps) {
+function DroppableBoardSpace({ children, boardSpace }: DroppableBoardSpaceProps) {
 	const { isOver, setNodeRef } = useDroppable({
 		id: boardSpace.position,
 		data: { position: boardSpace.position },
@@ -19,8 +20,10 @@ function DroppableEntity({ boardSpace }: DroppableEntityProps) {
 				isOver && "bg-zinc-800",
 				isOver && "scale-110",
 			)}
-		></div>
+		>
+			{children}
+		</div>
 	);
 }
 
-export { DroppableEntity };
+export { DroppableBoardSpace };

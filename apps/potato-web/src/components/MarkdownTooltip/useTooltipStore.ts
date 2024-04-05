@@ -8,7 +8,7 @@ interface TooltipState {
 }
 
 const useTooltipStore = create<TooltipState>()(set => ({
-	tooltipMode: (localStorage.getItem("tooltipMode") as "hover" | "click") ?? "hover",
+	tooltipMode: (localStorage.getItem("tooltipMode") as "hover" | "click") ?? "click",
 	hoverDelay: localStorage.getItem("hoverDelay")
 		? parseInt(localStorage.getItem("hoverDelay")!)
 		: 400,

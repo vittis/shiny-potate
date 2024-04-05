@@ -39,11 +39,12 @@ export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYP
 	return items;
 }
 
+// todo to receive EquippedItem with slot
 export function getUnitData(
 	boardUnit: { id: string; name: string; equipment?: EquipmentInstance[] },
 	owner: number,
 	position: string,
-) {
+): Unit {
 	const unit = new Unit(owner, parseInt(position));
 	unit.setClass(new Class(Classes[boardUnit.name as keyof typeof Classes]));
 
@@ -78,7 +79,7 @@ export function getUnitData(
 
 	const serializedUnit = unit.serialize();
 
-	return serializedUnit;
+	return unit;
 }
 
 export function generateRandomItem(tier: number, type: EQUIPMENT_TYPE) {
@@ -160,7 +161,9 @@ export function generateShop(round: number) {
 	for (let i = 0; i < unitsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const unit = generateRandomUnitWithEquipment(tier);
-		shop.units.push(new ShopUnit(unit.className, unit.equipment).serialize());
+		const unitEquipments = [{ slot: EQUIPMENT_SLOT.MAIN_HAND, equip: unit.equipment }];
+		// todo equip unit?
+		shop.units.push(new ShopUnit(unit.className, unitEquipments).serialize());
 	}
 	for (let i = 0; i < weaponsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);

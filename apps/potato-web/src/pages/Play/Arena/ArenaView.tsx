@@ -5,7 +5,7 @@ import { trpc } from "@/services/api/trpc";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/services/api/queryClient";
-import { ArenaWrapper } from "./ArenaDraggableWrapper";
+import { ArenaDraggableView } from "./ArenaDraggableView/ArenaDraggableView";
 import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 
 function ArenaView() {
@@ -100,7 +100,7 @@ function ArenaView() {
 							<div className="text-sky-300">XP: {data[0].xp}</div>
 						</div>
 					)}
-					{shop && <ArenaWrapper shop={shop} />}
+					{shop && <ArenaDraggableView shop={shop} />}
 				</div>
 			</ScrollArea>
 		</>

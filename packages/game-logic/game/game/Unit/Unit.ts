@@ -25,6 +25,7 @@ import { TriggerManager } from "../Trigger/TriggerManager";
 import { TRIGGER } from "../Trigger/TriggerTypes";
 import { DisableManager } from "../Disable/DisableManager";
 import { DISABLE } from "../Disable/DisableTypes";
+import { UnitInstance } from "./UnitTypes";
 
 // use for better perfomance
 /* export enum EVENT_TYPE {
@@ -363,20 +364,12 @@ export class Unit {
 		return `${this.owner}${this.position} ${this.classManager?.class?.data?.name}`;
 	};
 
-	serialize() {
+	serialize(): UnitInstance {
 		return {
 			id: this.id,
-			owner: this.owner,
-			name: this.getName(),
-			class: `${this.classManager?.class?.data?.name}`,
-			stats: {
-				...this.stats,
-			},
-			abilities: this.abilities,
-			equipment: this.equipment,
-			perks: this.perks,
+			className: `${this.classManager?.class?.data?.name}`,
+			equipment: this.equipmentManager.serializeEquips(),
 			position: this.position,
-			statusEffects: [...this.statusEffects],
 		};
 	}
 

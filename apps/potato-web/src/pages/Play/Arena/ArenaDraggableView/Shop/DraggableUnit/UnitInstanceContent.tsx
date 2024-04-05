@@ -1,14 +1,13 @@
-import { Unit } from "game-logic";
-import { Badge } from "../ui/badge";
-import { Separator } from "../ui/separator";
+import { Unit, UnitInstance } from "game-logic";
+import { Badge } from "../../../../../../components/ui/badge";
+import { Separator } from "../../../../../../components/ui/separator";
 
 interface MarkdownContentProps {
-	unit: Unit; // todo change to serialized unit type
+	unit: Unit;
 }
 
-const BoardUnitMarkdownContent = ({ unit }: MarkdownContentProps) => {
-	// @ts-expect-error todo: created SerializedUnit type
-	const className = unit.class;
+const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
+	const className = unit.classManager.class.data.name;
 
 	const allAbilities = unit.abilities;
 	const allPerks = unit.perks;
@@ -123,4 +122,4 @@ const BoardUnitMarkdownContent = ({ unit }: MarkdownContentProps) => {
 	);
 };
 
-export { BoardUnitMarkdownContent };
+export { UnitInstanceContent };
