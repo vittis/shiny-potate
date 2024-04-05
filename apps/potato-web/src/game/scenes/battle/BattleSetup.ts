@@ -92,3 +92,14 @@ function addTiles(scene: Phaser.Scene) {
 
 	return tileset;
 }
+
+export function setupVFXAnimations(scene: Phaser.Scene) {
+	scene.anims.create({
+		key: "slash2_attack",
+		frames: scene.anims.generateFrameNumbers("slash2", {
+			start: 0,
+			end: 3,
+		}),
+		frameRate: 12,
+	});
+}

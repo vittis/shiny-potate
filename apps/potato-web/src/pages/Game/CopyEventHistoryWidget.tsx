@@ -5,8 +5,6 @@ import { Copy, CopyCheck } from "lucide-react";
 const CopyEventHistoryWidget = () => {
 	const [copiedText, copy] = useCopyToClipboard();
 
-	console.log({ copiedText });
-
 	const handleCopy = async () => {
 		const gameHistory = localStorage.getItem("game") || "";
 

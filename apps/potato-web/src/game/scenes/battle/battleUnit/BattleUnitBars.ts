@@ -125,8 +125,6 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
 	}
 
 	onReceiveDamage(value: number) {
-		const damageTextColor = "#ff121d";
-
 		const damageReceived = value;
 
 		let newHp = this.unit.stats.hp;
@@ -145,10 +143,7 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
 		const hasTakenShieldDamage = newShield < this.unit.stats.shield;
 		const hasTakenHpDamage = newHp < this.unit.stats.hp;
 
-		const textTargets = [] as Phaser.GameObjects.Text[];
-
 		if (hasTakenShieldDamage) {
-			textTargets.push(this.shield.text);
 			this.shield.text.setText(`${newShield}`);
 
 			if (newShield === 0) {
@@ -169,7 +164,6 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
 		}
 
 		if (hasTakenHpDamage) {
-			textTargets.push(this.hp.text);
 			this.hp.text.setText(`${newHp}`);
 
 			if (newHp === 0) {
@@ -185,60 +179,6 @@ export class BattleUnitBars extends Phaser.GameObjects.Container {
 				});
 			}
 		}
-
-		// hp and shield text POP animation
-		this.unit.scene.tweens.add({
-			targets: textTargets,
-			scaleX: 1.25,
-			scaleY: 1.25,
-			duration: 150,
-			ease: "Bounce.easeOut",
-			yoyo: true,
-		});
-
-		const minDamage = 0;
-		const maxDamage = 75;
-		const minFontSize = 25;
-		const maxFontSize = 70;
-
-		const damage = damageReceived;
-		const fontSize =
-			((damage - minDamage) / (maxDamage - minDamage)) * (maxFontSize - minFontSize) + minFontSize;
-		const fontSizePx = `${fontSize.toFixed(0)}px`;
-
-		const damageText = this.scene.add.text(0, 30, "-" + damage, {
-			fontSize: fontSizePx,
-			color: damageTextColor,
-			fontFamily: "IM Fell DW Pica",
-			stroke: "#000000",
-			strokeThickness: 2,
-			fontStyle: "bold",
-			shadow: {
-				offsetX: 0,
-				offsetY: 3,
-				color: "#000",
-				blur: 0,
-				stroke: true,
-				fill: false,
-			},
-		});
-
-		damageText.setOrigin(0.5);
-
-		this.hp.container.add(damageText);
-
-		// damage text going up
-		this.unit.scene.tweens.add({
-			targets: damageText,
-			x: Phaser.Math.Between(-15, 15),
-			y: damageText.y - 38 - Phaser.Math.Between(0, 10),
-			alpha: 0,
-			duration: damage > 50 ? 1900 : 1200,
-			ease: "Linear",
-			onComplete: () => {
-				damageText?.destroy();
-			},
-		});
 
 		if (HIDE_TEXT_IF_ZERO && newShield <= 0) this.shield.text.alpha = 0;
 

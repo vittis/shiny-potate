@@ -123,42 +123,6 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 		});
 	}
 
-	highlightAbility(abilityUsed: Ability) {
-		if (!abilityUsed) return;
-		abilityUsed.shineFX?.setActive(true);
-		abilityUsed.overlay.setAlpha(0);
-		this.scene.tweens.add({
-			targets: abilityUsed?.container,
-			scale: 1.2,
-			duration: 200,
-			ease: "Bounce.easeOut",
-		});
-	}
-
-	unhighlightAbilities({ exclude }: { exclude?: Ability[] } = {}) {
-		this.abilities.forEach(ability => {
-			if (exclude?.includes(ability)) return;
-			this.scene.tweens.add({
-				targets: ability?.container,
-				scale: 0.7,
-				duration: 200,
-				ease: "Bounce.easeOut",
-			});
-		});
-	}
-
-	restoreAbilities() {
-		this.abilities.forEach(ability => {
-			ability?.shineFX?.setActive(false);
-			this.scene.tweens.add({
-				targets: ability?.container,
-				scale: 1,
-				duration: 200,
-				ease: "Bounce.easeOut",
-			});
-		});
-	}
-
 	resumeSkillCooldown() {
 		this.abilities.forEach(ability => {
 			if (ability.tween && ability.tween.isPaused()) {
@@ -176,7 +140,6 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 	}
 }
 
-// not using this yet
 export function highlightAbility(ability: Ability, scene: Phaser.Scene) {
 	if (!ability) {
 		throw Error("Couldnt find ability");
@@ -191,7 +154,6 @@ export function highlightAbility(ability: Ability, scene: Phaser.Scene) {
 	});
 }
 
-// not using this yet
 export function unhighlightAbilities(abilities: Ability[], scene: Phaser.Scene) {
 	abilities.forEach(ability => {
 		if (ability.hasUsed) {
@@ -207,11 +169,12 @@ export function unhighlightAbilities(abilities: Ability[], scene: Phaser.Scene) 
 	});
 }
 
-// not using this yet
 export function restoreAbilities(abilities: Ability[], scene: Phaser.Scene) {
 	abilities.forEach(ability => {
 		ability.hasUsed = false;
 		ability?.shineFX?.setActive(false);
+		/* ability.overlay.setAlpha(0.7);
+		ability.overlay.scaleY = 1; */
 		scene.tweens.add({
 			targets: ability?.container,
 			scale: 1,
@@ -219,4 +182,9 @@ export function restoreAbilities(abilities: Ability[], scene: Phaser.Scene) {
 			ease: "Bounce.easeOut",
 		});
 	});
+}
+
+export function resetOverlay(ability: Ability) {
+	ability.overlay.scaleY = 1;
+	ability.overlay.setAlpha(0.7);
 }

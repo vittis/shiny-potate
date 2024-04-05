@@ -13,6 +13,7 @@ import { BattleUnitStatusEffects } from "./BattleUnitStatusEffects";
 import { BattleUnitBars } from "./BattleUnitBars";
 import { addFadingText } from "../utils/text";
 import { BattleUnitDisables } from "./BattleUnitDisables";
+import { INSTANT_EFFECT_TYPE, PossibleEffect } from "game-logic";
 
 export class BattleUnit extends Phaser.GameObjects.Container {
 	public id: string;
@@ -100,23 +101,62 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		this.glow?.setActive(false);
 	}
 
+	public applyEffect(effect: PossibleEffect) {
+		if (effect.type === INSTANT_EFFECT_TYPE.DAMAGE) {
+			this.barsManager.onReceiveDamage(effect.payload.value);
+		}
+		if (effect.type === INSTANT_EFFECT_TYPE.STATUS_EFFECT) {
+			effect.payload.forEach(statusEffect => {
+				this.statusEffectsManager.addStatusEffect({
+					name: statusEffect.name,
+					quantity: statusEffect.quantity,
+				});
+			});
+		}
+		if (effect.type === INSTANT_EFFECT_TYPE.DISABLE) {
+			// this.disablesManager.addDisable(effect.payload, 0);
+		}
+		if (effect.type === INSTANT_EFFECT_TYPE.SHIELD) {
+			// this.barsManager.onReceiveShield(effect.payload.value);
+		}
+		if (effect.type === INSTANT_EFFECT_TYPE.HEAL) {
+			//  this.barsManager.onReceiveHeal(effect.payload.value);
+		}
+	}
+
 	public playEvent({
+		board,
 		event,
 		targets,
 		onEnd,
 		onStart,
+		onImpact,
 		allUnits,
 		step,
 	}: {
-		event: StepEvent;
+		board: any;
+		event: any;
 		targets?: BattleUnit[];
 		onEnd?: Function;
 		onAttack?: Function;
 		onStart?: Function;
+		onImpact?: Function;
 		allUnits?: BattleUnit[];
 		step?: number;
 	}) {
 		// console.log("playing ", event.type, event.trigger);
+		if (event.type === "TICK_EFFECT") {
+			const { payload } = event;
+			if (payload.type === "POISON") this.barsManager.onReceiveDamage(payload.payload.value);
+			if (payload.type === "REGEN") this.barsManager.onReceiveHeal(payload.payload.value);
+
+			this.statusEffectsManager.removeStatusEffect({
+				name: payload.type,
+				quantity: payload.payload.decrement,
+			});
+
+			if (onEnd) onEnd();
+		}
 
 		if (event.type === "FAINT") {
 			const onFinishAnimation = () => {
@@ -138,8 +178,12 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			}
 
 			const onImpactPoint = () => {
+				if (onImpact) {
+					onImpact();
+				}
+
 				const receiveDamageEvents =
-					(event.subEvents?.filter(
+					(event.payload?.subEvents?.filter(
 						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE",
 					) as StepEvent[]) || [];
 
@@ -150,47 +194,18 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 						const target = allUnits?.find(unit => unit.id === targetId);
 						if (!target) {
 							throw Error(
-								`Trying to apply damage on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
+								`Trying to apply damage on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
 
-						target.playEvent({ event: damageSubEvent, step });
-					});
-
-				const statusEffectEvents =
-					(event.subEvents?.filter(
-						e => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT",
-					) as StepEvent[]) || [];
-
-				statusEffectEvents &&
-					statusEffectEvents.forEach(statusEffectSubEvent => {
-						const targetId = statusEffectSubEvent.payload.targetId as string;
-
-						const target = allUnits?.find(unit => unit.id === targetId);
-						if (!target) {
-							throw Error(
-								`Trying to apply status effect on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
-							);
-						}
-						target.playEvent({ event: statusEffectSubEvent, step });
-					});
-
-				const disableEvents =
-					(event.subEvents?.filter(
-						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DISABLE",
-					) as StepEvent[]) || [];
-
-				disableEvents &&
-					disableEvents.forEach(disableSubEvent => {
-						const targetId = disableSubEvent.payload.targetId as string;
-
-						const target = allUnits?.find(unit => unit.id === targetId);
-						if (!target) {
-							throw Error(
-								`Trying to apply disable on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
-							);
-						}
-						target.playEvent({ event: disableSubEvent, step });
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `-${damageSubEvent.payload.payload.value}`,
+								color: "red",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 
 				const shieldEvents =
@@ -208,7 +223,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: shieldSubEvent, step });
+						// todo text
 					});
 
 				const healEvents =
@@ -226,7 +241,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: healEvent, step });
+						// todo text
 					});
 			};
 
@@ -272,11 +287,26 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			};
 
 			const onFinishAnimation = () => {
-				abilityUsed?.overlay?.setAlpha(0.6);
+				abilityUsed?.overlay?.setAlpha(0.7);
 				if (onEnd) onEnd();
 			};
 
-			const onImpactPoint = () => {
+			const onImpactPoint = ({ onVFXEnd }) => {
+				if (onImpact) {
+					onImpact();
+				}
+				const slash = this.scene.add.sprite(targets?.[0].x, targets?.[0].y, "slash2");
+				board.add(slash);
+				slash.setScale(2.6, 3.5);
+				slash.flipX = this.owner !== 0;
+				slash.play("slash2_attack").on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+					slash.destroy();
+					//resume
+					if (onVFXEnd) {
+						onVFXEnd();
+					}
+				});
+
 				const receiveDamageEvents =
 					(event.payload?.subEvents?.filter(
 						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DAMAGE",
@@ -293,43 +323,14 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 							);
 						}
 
-						target.playEvent({ event: damageSubEvent, step });
-					});
-
-				const statusEffectEvents =
-					(event.payload?.subEvents?.filter(
-						e => e.type === "INSTANT_EFFECT" && e.payload.type === "STATUS_EFFECT",
-					) as StepEvent[]) || [];
-
-				statusEffectEvents &&
-					statusEffectEvents.forEach(statusEffectSubEvent => {
-						const targetId = statusEffectSubEvent.payload.targetId as string;
-
-						const target = allUnits?.find(unit => unit.id === targetId);
-						if (!target) {
-							throw Error(
-								`Trying to apply status effect on USE_ABILITY: Couldn't find target with id: ${targetId}`,
-							);
-						}
-						target.playEvent({ event: statusEffectSubEvent, step });
-					});
-
-				const disableEvents =
-					(event.payload?.subEvents?.filter(
-						e => e.type === "INSTANT_EFFECT" && e.payload.type === "DISABLE",
-					) as StepEvent[]) || [];
-
-				disableEvents &&
-					disableEvents.forEach(disableSubEvent => {
-						const targetId = disableSubEvent.payload.targetId as string;
-
-						const target = allUnits?.find(unit => unit.id === targetId);
-						if (!target) {
-							throw Error(
-								`Trying to apply disable on USE_ABILITY: Couldn't find target with id: ${targetId}`,
-							);
-						}
-						target.playEvent({ event: disableSubEvent, step });
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `-${damageSubEvent.payload.payload.value}`,
+								color: "red",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 
 				const shieldEvents =
@@ -347,7 +348,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: shieldSubEvent, step });
+						// todo text
 					});
 
 				const healEvents =
@@ -365,7 +366,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						target.playEvent({ event: healEvent, step });
+						// todo text
 					});
 			};
 
@@ -382,53 +383,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			});
 
 			this.currentAnimation = attackTweenChain;
-		}
-
-		if (event.type === "INSTANT_EFFECT" && event.payload.type === "DAMAGE") {
-			this.barsManager.onReceiveDamage(event.payload.payload.value);
-		}
-
-		if (event.type === "INSTANT_EFFECT" && event.payload.type === "STATUS_EFFECT") {
-			event.payload.payload.forEach(statusEffect => {
-				if (statusEffect.quantity < 0) {
-					this.statusEffectsManager.removeStatusEffect({
-						name: statusEffect.name,
-						quantity: statusEffect.quantity * -1,
-					});
-				} else {
-					this.statusEffectsManager.addStatusEffect({
-						name: statusEffect.name,
-						quantity: statusEffect.quantity,
-					});
-				}
-			});
-		}
-
-		if (event.type === "INSTANT_EFFECT" && event.payload.type === "DISABLE") {
-			event.payload.payload.forEach(disable => {
-				this.disablesManager.addDisable(disable, step as number);
-			});
-		}
-
-		if (event.type === "INSTANT_EFFECT" && event.payload.type === "SHIELD") {
-			this.barsManager.onReceiveShield(event.payload.payload.value);
-		}
-
-		if (event.type === "INSTANT_EFFECT" && event.payload.type === "HEAL") {
-			this.barsManager.onReceiveHeal(event.payload.payload.value);
-		}
-
-		if (event.type === "TICK_EFFECT") {
-			const { payload } = event;
-			if (payload.type === "POISON") this.barsManager.onReceiveDamage(payload.payload.value);
-			if (payload.type === "REGEN") this.barsManager.onReceiveHeal(payload.payload.value);
-
-			this.statusEffectsManager.removeStatusEffect({
-				name: payload.type,
-				quantity: payload.payload.decrement,
-			});
-
-			if (onEnd) onEnd();
 		}
 	}
 

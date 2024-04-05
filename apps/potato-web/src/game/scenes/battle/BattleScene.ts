@@ -2,33 +2,15 @@ import Phaser from "phaser";
 import { BattleUnit } from "./battleUnit/BattleUnit";
 import { queryClient } from "../../../services/api/queryClient";
 import { useGameState } from "../../../services/state/useGameState";
-import { preloadBattle, setupBattle } from "./BattleSetup";
-import {
-	Ability,
-	highlightAbility,
-	restoreAbilities,
-	unhighlightAbilities,
-} from "./battleUnit/BattleUnitAbilities";
+import { preloadBattle, setupBattle, setupVFXAnimations } from "./BattleSetup";
+import { Ability, highlightAbility, restoreAbilities } from "./battleUnit/BattleUnitAbilities";
 import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
+import { EVENT_TYPE, PossibleEvent, StepEffects } from "game-logic";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
-// todo: reuse from server
-enum EVENT_TYPE {
-	USE_ABILITY = "USE_ABILITY",
-	TRIGGER_EFFECT = "TRIGGER_EFFECT",
-	TICK_EFFECT = "TICK_EFFECT",
-	INSTANT_EFFECT = "INSTANT_EFFECT", // todo better event/subevent type organization
-	FAINT = "FAINT",
-	ATTACK = "ATTACK",
-	IS_PREPARING_ATTACK = "IS_PREPARING_ATTACK",
-	RECEIVED_DAMAGE = "RECEIVED_DAMAGE",
-	HAS_DIED = "HAS_DIED",
-	CAST_SKILL = "CAST_SKILL",
-	RECEIVED_HEAL = "RECEIVED_HEAL",
-}
 export type SubStepEvent = Omit<StepEvent, "step" | "subEvents"> & {
 	sourceId?: string;
 };
@@ -67,7 +49,8 @@ export class Battle extends Phaser.Scene {
 	board!: Phaser.GameObjects.Container;
 	tiles!: Phaser.GameObjects.Sprite[];
 	units: BattleUnit[] = [];
-	eventHistory: StepEvent[] = [];
+	eventHistory: PossibleEvent[] = [];
+	effectHistory: StepEffects[] = [];
 	timeEventsHistory: Phaser.Time.TimerEvent[] = [];
 	static timeStarted: number;
 
@@ -83,17 +66,19 @@ export class Battle extends Phaser.Scene {
 	}
 
 	create() {
-		this.text = this.add.text(150, 200, "Move the mouse", {
+		setupVFXAnimations(this);
+
+		/* const slash = this.add.sprite(400, 400, "slash2");
+		slash.setDepth(1);
+		slash.play("slash2_attack").on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+			slash.destroy();
+		}); */
+
+		this.text = this.add.text(150, 200, "karpov", {
 			font: "16px Courier",
 			color: "white",
 		});
 		this.text.setOrigin(0.5);
-		// zuera de particula
-		const graphics = this.add.graphics();
-		graphics.fillStyle(0xffffff);
-		graphics.fillRect(0, 0, 10, 10);
-		graphics.generateTexture("square", 10, 10);
-		graphics.destroy();
 
 		const { board, tiles } = setupBattle(this);
 		this.board = board;
@@ -110,6 +95,7 @@ export class Battle extends Phaser.Scene {
 				this.firstStep = data.firstStep;
 				this.totalSteps = data.totalSteps;
 				this.eventHistory = data.eventHistory;
+				this.effectHistory = data.effectHistory;
 				this.initializeUnits(this.firstStep);
 			});
 
@@ -162,6 +148,7 @@ export class Battle extends Phaser.Scene {
 		useGameState.subscribe(
 			state => state.isGamePaused,
 			isGamePaused => {
+				console.log("ON CLICK START", isGamePaused);
 				this.isGamePaused = isGamePaused;
 
 				if (isGamePaused) {
@@ -190,180 +177,66 @@ export class Battle extends Phaser.Scene {
 
 	playEvents(step: number) {
 		const eventsOnThisStep = this.eventHistory.filter(e => e.step === step);
+		const effectsOnThisStep = this.effectHistory.find(e => e.step === step);
 
-		const eventPile: any[] = [];
+		this.isPlayingEventAnimation = true;
+		this.pauseTimeEvents();
+		let animationsEnded = 0;
+		let impactsEnded = 0;
 
-		const onEndAnimation = () => {
-			eventPile.shift();
+		const eventsWithoutSubsteps = eventsOnThisStep.filter(event => !event.subStep);
 
-			if (eventPile.length > 0 && eventPile.every(event => event.event.type === "FAINT")) {
-				eventPile.forEach(event => {
-					// todo better way to do this (maybe refactor this entire function)
-					const onEnd = () => {
-						if (event?.onEnd) {
-							event.onEnd();
-						}
-						const isLastStep = step === this.totalSteps;
-						if (isLastStep) {
-							useGameState.getState().setIsGamePaused(true);
-						}
-					};
-					event.unit.playEvent({ ...event, onEnd });
-				});
-				eventPile.splice(0, eventPile.length);
-			} else {
-				if (eventPile.length > 0) {
-					eventPile[0].unit.playEvent(eventPile[0]);
-				} else {
-					this.resumeTimeEvents();
-
-					const isLastStep = step === this.totalSteps;
-					if (isLastStep) {
-						useGameState.getState().setIsGamePaused(true);
-					}
+		eventsWithoutSubsteps.forEach(event => {
+			const unit = this.units.find(u => u.id === event.actorId);
+			if (unit) {
+				let targets;
+				if (event.type === EVENT_TYPE.USE_ABILITY) {
+					targets = this.units.filter(u => event.payload.targetsId.includes(u.id));
 				}
-			}
-		};
-
-		/* const hasFaintEvent = eventsOnThisStep.find(
-      (event) => event.type === "TRIGGER_EFFECT" && event.trigger === "SELF_FAINT"
-    ); */
-
-		eventsOnThisStep.forEach(event => {
-			const unit = this.units.find(unit => unit.id === event.actorId);
-			if (!unit) {
-				throw Error(`couldnt find unit id: ${event.actorId}`);
-			}
-
-			let targets;
-
-			let onEnd;
-			let onStart;
-
-			if (event.type === "USE_ABILITY") {
-				const useAbilityEventsOnThisStep = eventsOnThisStep.filter(
-					e => e.step === step && e.type === "USE_ABILITY",
-				);
-				const allAbilitiesOfAllUnits = this.units.reduce((acc, unit) => {
-					return [...acc, ...unit.abilitiesManager.abilities];
-				}, [] as Ability[]);
-
-				targets = this.units.filter(unit => event.payload?.targetsId?.includes(unit.id));
-
-				this.board.bringToTop(unit);
-
-				this.isPlayingEventAnimation = true;
-				this.pauseTimeEvents();
-				onEnd = () => {
-					if (useAbilityEventsOnThisStep.length === 1) {
-						this.units.forEach(unit => {
-							unit.abilitiesManager.restoreAbilities();
-						});
-					} else {
-						// more than one ability used in the step
-						const abilityUsed = allAbilitiesOfAllUnits.find(
-							ability => ability.id === event.payload.id,
-						) as Ability;
-						abilityUsed.hasUsed = true;
-						unhighlightAbilities([abilityUsed], this);
-						const allAbilitiesUsedIds = useAbilityEventsOnThisStep.map(e => e.payload.id);
-						const areAllAbilitiesUsed = allAbilitiesUsedIds.every(abilityId => {
-							const abilityUsed = allAbilitiesOfAllUnits.find(
-								ability => ability.id === abilityId,
-							) as Ability;
-							return abilityUsed.hasUsed;
-						});
-						if (areAllAbilitiesUsed) {
-							restoreAbilities(allAbilitiesOfAllUnits, this);
+				if (event.type === EVENT_TYPE.TRIGGER_EFFECT) {
+					targets = [unit];
+				}
+				unit.playEvent({
+					board: this.board,
+					event: event as any,
+					targets,
+					onImpact: () => {
+						impactsEnded++;
+						if (impactsEnded === eventsWithoutSubsteps.length) {
+							effectsOnThisStep?.units.forEach(unitEffect => {
+								const currentUnit = this.units.find(u => u.id === unitEffect.unitId);
+								unitEffect.effects.forEach(effect => {
+									currentUnit?.applyEffect(effect);
+								});
+							});
 						}
-					}
+					},
+					onEnd: () => {
+						animationsEnded++;
+						if (animationsEnded === eventsWithoutSubsteps.length) {
+							this.resumeTimeEvents();
+						}
 
-					onEndAnimation();
-				};
-				onStart = () => {
-					if (useAbilityEventsOnThisStep.length === 1) {
-						const abilityUsed = allAbilitiesOfAllUnits.find(
-							ability => ability.id === event.payload.id,
-						) as Ability;
-						highlightAbility(abilityUsed, this);
-						unhighlightAbilities(
-							allAbilitiesOfAllUnits.filter(a => a.id !== abilityUsed.id),
-							this,
-						);
-
-						this.units.forEach(unit => {
-							if (unit.id === event.actorId /* || event.payload?.targetsId?.includes(unit.id) */) {
-								return;
-							}
-							unit.abilitiesManager.unhighlightAbilities();
-						});
-					} else {
-						// more than one ability used in the step
-						const allAbilitiesUsedIds = useAbilityEventsOnThisStep.map(e => e.payload.id);
-
-						allAbilitiesUsedIds.forEach(abilityId => {
-							const abilityUsed = allAbilitiesOfAllUnits.find(
-								ability => ability.id === abilityId,
+						if (event.type === EVENT_TYPE.USE_ABILITY) {
+							const abilityUsed = unit?.abilitiesManager.abilities.find(
+								ability => ability.id === event.payload.id,
 							) as Ability;
-
-							if (!abilityUsed.hasUsed) {
-								highlightAbility(abilityUsed, this);
-							}
-						});
-
-						allAbilitiesOfAllUnits.forEach(ability => {
-							if (!allAbilitiesUsedIds.includes(ability.id)) {
-								unhighlightAbilities([ability], this);
-							}
-						});
-					}
-				};
+							restoreAbilities([abilityUsed], this);
+						}
+					},
+					onStart: () => {
+						if (event.type === EVENT_TYPE.USE_ABILITY) {
+							const abilityUsed = unit?.abilitiesManager.abilities.find(
+								ability => ability.id === event.payload.id,
+							) as Ability;
+							highlightAbility(abilityUsed, this);
+						}
+					},
+					allUnits: this.units,
+					step,
+				});
 			}
-
-			if (event.type === "TRIGGER_EFFECT") {
-				targets = [unit];
-
-				this.board.bringToTop(unit);
-
-				this.isPlayingEventAnimation = true;
-				this.pauseTimeEvents();
-
-				onEnd = () => {
-					onEndAnimation();
-				};
-			}
-
-			if (event.type === "TICK_EFFECT") {
-				targets = [unit];
-
-				this.board.bringToTop(unit);
-
-				this.isPlayingEventAnimation = true;
-				this.pauseTimeEvents();
-
-				onEnd = () => {
-					onEndAnimation();
-				};
-			}
-
-			// todo is this necessary: test with more than one death
-			if (event.type === "FAINT") {
-				this.board.bringToTop(unit);
-
-				this.isPlayingEventAnimation = true;
-
-				this.pauseTimeEvents();
-
-				onEnd = () => {
-					onEndAnimation();
-				};
-			}
-
-			//  "allUnits" is a hack to access all units from the event, need to think a better way in the future
-			eventPile.push({ unit, event, targets, onEnd, onStart, allUnits: this.units, step });
 		});
-		const unit: BattleUnit = eventPile[0].unit;
-		unit.playEvent(eventPile[0]);
 	}
 
 	shouldStartFromBeginning() {
@@ -421,7 +294,8 @@ export class Battle extends Phaser.Scene {
 
 	startFromBeggining() {
 		Battle.timeStarted = this.time.now;
-		const stepsThatHaveEvents = [...new Set(this.eventHistory.map(event => event.step))];
+		// const stepsThatHaveEvents = [...new Set(this.eventHistory.map(event => event.step))];
+		const stepsThatHaveEvents = [...new Set(this.effectHistory.map(event => event.step))];
 
 		this.units.forEach(unit => {
 			// todo initialize abilities?
@@ -441,6 +315,8 @@ export class Battle extends Phaser.Scene {
 
 			this.timeEventsHistory.push(timeEvent);
 		});
+		console.log(stepsThatHaveEvents);
+		console.log(this.timeEventsHistory);
 	}
 
 	update(/* time: number, delta: number */): void {

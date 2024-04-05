@@ -21,3 +21,5 @@ export type { ShopEquipmentInstance } from "./shop/ShopEquipment";
 export type { ShopUnitInstance } from "./shop/ShopUnit";
 export type { UnitInfo, BoardUnitInstance } from "./game/Unit/UnitTypes";
 export type { EquippedItemInstance } from "./game/Equipment/EquipmentManager";
+export type { StepEffects, PossibleEvent, PossibleEffect } from "./game/Event/EventTypes";
+export { EVENT_TYPE, INSTANT_EFFECT_TYPE } from "./game/Event/EventTypes";
