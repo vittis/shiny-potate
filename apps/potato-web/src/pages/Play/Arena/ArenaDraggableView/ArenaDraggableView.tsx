@@ -183,8 +183,8 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 						</DroppableBoardSpace>
 					))}
 
-					<div className="font-sm text-zinc-300 pt-3 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
-						<ArrowRightIcon size={16} />
+					<div className="font-sm text-zinc-200 pt-2.5 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
+						<ArrowRightIcon size={17} />
 					</div>
 				</div>
 
