@@ -334,14 +334,14 @@ export class Unit {
 	}
 
 	// not being used
-	serializeUnitInfo(): BoardUnitInstance {
+	/* serializeUnitInfo(): BoardUnitInstance {
 		return {
 			id: this.id,
 			className: `${this.classManager?.class?.data?.name}`,
 			equipment: this.equipmentManager.serializeEquips(),
 			position: this.position,
 		};
-	}
+	} */
 
 	serializeEvents() {
 		const events = [...this.stepEvents];

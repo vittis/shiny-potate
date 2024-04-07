@@ -1,11 +1,5 @@
 import { nanoid } from "nanoid";
-import { UnitInfo } from "../game/Unit/UnitTypes";
-
-export interface ShopUnitInstance {
-	id: string;
-	price: number;
-	unit: UnitInfo;
-}
+import { ShopUnitInstance, UnitInfo } from "../game/Unit/UnitTypes";
 
 export class ShopUnit {
 	id: string;

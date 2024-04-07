@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
+import { BoardUnitInstance } from "game-logic";
 
 interface DroppableBoardSpaceProps {
 	children?: React.ReactNode;
-	boardSpace: { position: string; unit: any };
+	boardSpace: { position: string; unit: BoardUnitInstance | null };
 }
 
 function DroppableBoardSpace({ children, boardSpace }: DroppableBoardSpaceProps) {

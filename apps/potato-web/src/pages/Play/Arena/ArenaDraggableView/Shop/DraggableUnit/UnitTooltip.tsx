@@ -39,7 +39,7 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 
 					{equipment.length > 1 && (
 						<RecursiveEquipmentMarkdownContent
-							equip={equipment[1]}
+							equip={equipment[1].equip}
 							otherEquips={equipment.slice(2)}
 							onOpenSubTooltip={onOpenSubTooltip}
 						/>
@@ -62,7 +62,7 @@ const RecursiveEquipmentMarkdownContent = ({ equip, onOpenSubTooltip, otherEquip
 						<div className="absolute -bottom-[15px] left-0 w-full bg-transparent h-[15px]"></div>
 						<RecursiveEquipmentMarkdownContent
 							otherEquips={otherEquips.slice(1)}
-							equip={otherEquips[0]}
+							equip={otherEquips[0].equip}
 							onOpenSubTooltip={onOpenSubTooltip}
 						/>
 					</>

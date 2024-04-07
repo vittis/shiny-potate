@@ -1,4 +1,4 @@
-import { Shop } from "game-logic";
+import { BoardUnitInstance, Shop, ShopEquipmentInstance, ShopUnitInstance } from "game-logic";
 import { ShopView } from "./Shop/ShopView";
 import {
 	DndContext,
@@ -9,15 +9,17 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { DroppableBoardSpace } from "./Board/DroppableBoardSpace";
-import { DraggableUnit } from "./Shop/DraggableUnit/DraggableUnit";
 import { useArenaStore } from "@/services/features/Arena/useArenaStore";
+import { DroppableStorage } from "./Storage/DroppableStorage";
+import { DraggableBoardUnit } from "./Shop/DraggableUnit/DraggableBoardUnit";
+import { ArrowRightIcon } from "lucide-react";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
 }
 
 function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
-	const { board, setBoard } = useArenaStore();
+	const { board, setBoard, storage, setStorage } = useArenaStore();
 
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
@@ -35,13 +37,73 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 
 	function handleDragEnd(event: DragEndEvent) {
 		const overPosition = event.over?.data.current?.position;
-		const unit = event.active.data.current?.unit;
+		const unit = event.active.data.current?.unit as ShopUnitInstance | BoardUnitInstance | null;
+
+		const shopEquip = event.active.data.current?.shopEquipment as ShopEquipmentInstance | null;
+
+		if (event.over?.id === "storage") {
+			const storageUnits = storage.units;
+			const storageEquips = storage.equips;
+
+			if (unit) {
+				const isAlreadyInStorage = !!storageUnits.find(storageUnit => storageUnit.id === unit.id);
+				if (!isAlreadyInStorage) {
+					setStorage({
+						units: [...storageUnits, unit],
+						equips: storageEquips,
+					});
+				}
+			}
+		}
 
 		if (!!overPosition) {
+			// dropped a shop equipment into a unit in board space
+			if (shopEquip) {
+				const newBoard = board.map(space => {
+					if (space.position === overPosition) {
+						const boardUnit = space.unit;
+						if (boardUnit) {
+							return {
+								...space,
+								unit: {
+									...boardUnit,
+									unit: {
+										...boardUnit.unit,
+										equipment: [
+											...(boardUnit?.unit?.equipment || []),
+											{ slot: "TRINKET" as any, equip: shopEquip.equipment },
+										],
+									},
+								},
+							};
+						}
+					}
+
+					return space;
+				});
+				setBoard(newBoard);
+				return;
+			}
+
+			// dropped a unit into a board space
 			if (unit) {
-				const isAlreadyOnBoard = !!board.find(space => space.unit?.id === unit.id);
 				const unitOver = event.over?.data?.current?.unit;
-				console.log(event.over?.data.current);
+				const isAlreadyOnBoard = !!board.find(space => space.unit?.id === unit.id);
+				const isFromStorage = !!storage.units.find(storageUnit => storageUnit.id === unit.id);
+
+				// from shop to already occupied board space: do nothing
+				if (unitOver && !isAlreadyOnBoard && !isFromStorage) {
+					return;
+				}
+
+				// from storage to board: remove from storage
+				if (isFromStorage) {
+					const storageUnits = storage.units.filter(storageUnit => storageUnit.id !== unit.id);
+					setStorage({
+						units: storageUnits,
+						equips: storage.equips,
+					});
+				}
 
 				const newBoard = board.map(space => {
 					// add unit to new position
@@ -59,7 +121,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 						};
 					}
 					// swap units if dropped on another unit
-					if (unitOver && isAlreadyOnBoard && space.position === unit.position) {
+					if (unitOver && isAlreadyOnBoard && space.position === (unit as any)?.position) {
 						return {
 							...space,
 							unit: { ...unitOver, position: space.position },
@@ -74,7 +136,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 			}
 		}
 		// dragged outside of board
-		const isFromBoard = !!board.find(space => space.unit?.id === unit?.id);
+		const isFromBoard = unit && !!board.find(space => space.unit?.id === unit?.id);
 		if (isFromBoard) {
 			const newBoard = board.map(space => {
 				if (space.unit?.id === unit?.id) {
@@ -88,6 +150,12 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 			});
 
 			setBoard(newBoard);
+
+			// add to storage
+			setStorage({
+				units: [...storage.units, unit],
+				equips: storage.equips,
+			});
 		}
 	}
 
@@ -95,14 +163,20 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
 			{shop && <ShopView shop={shop} />}
 
-			<div className="mt-10 flex justify-center">
-				<div className="w-fit h-fit grid grid-cols-3 gap-5">
+			<div className="mt-16 flex justify-center items-center gap-16">
+				<div className="relative w-fit h-fit grid grid-cols-3 gap-5">
 					{board.map(space => (
 						<DroppableBoardSpace key={space.position} boardSpace={space}>
-							{space.unit && <DraggableUnit id={space.unit.id} unit={space.unit} />}
+							{space.unit && <DraggableBoardUnit boardUnit={space.unit} />}
 						</DroppableBoardSpace>
 					))}
+
+					<div className="pt-2 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full">
+						Board <ArrowRightIcon size={16} />
+					</div>
 				</div>
+
+				<DroppableStorage storage={{ units: storage.units, equips: storage.equips }} />
 			</div>
 		</DndContext>
 	);

@@ -68,11 +68,7 @@ function ArenaView() {
 			<ScrollArea className="relative h-full w-full px-4">
 				<ScrollBar />
 
-				<div className="absolute top-4 right-4">
-					<TooltipSettigs />
-				</div>
-
-				<div className="mt-10">
+				<div className="absolute top-4 right-4 flex gap-2">
 					<div className="flex justify-center">
 						{!hasCurrentRun && (
 							<Button disabled={newRunIsPending} onClick={onClickNewRun}>
@@ -89,7 +85,10 @@ function ArenaView() {
 							</Button>
 						)}
 					</div>
+					<TooltipSettigs />
+				</div>
 
+				<div className="mt-4">
 					{/* {hasCurrentRun && <div>Current run: {data[0].id}</div>} */}
 					{hasCurrentRun && (
 						<div className="flex gap-4">

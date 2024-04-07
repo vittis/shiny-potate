@@ -8,9 +8,9 @@ import {
 	EquipmentData,
 	EquipmentInstance,
 } from "../game/Equipment/EquipmentTypes";
-import { ShopUnit, ShopUnitInstance } from "./ShopUnit";
+import { ShopUnit } from "./ShopUnit";
 import { ShopEquipment, ShopEquipmentInstance } from "./ShopEquipment";
-import { UnitInfo } from "../game/Unit/UnitTypes";
+import { ShopUnitInstance, UnitInfo } from "../game/Unit/UnitTypes";
 
 export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
 	const items: EquipmentInstance[] = [];
@@ -72,6 +72,7 @@ export function getUnitData(
 						unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
 					} else {
 						console.error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
+						throw new Error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
 					}
 				}
 			}

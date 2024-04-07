@@ -1,4 +1,4 @@
-import { BoardUnitInstance } from "game-logic";
+import { BoardUnitInstance, ShopEquipmentInstance, ShopUnitInstance } from "game-logic";
 import { create } from "zustand";
 
 const initialBoard: { position: string; unit: BoardUnitInstance | null }[] = [
@@ -31,12 +31,17 @@ const initialBoard: { position: string; unit: BoardUnitInstance | null }[] = [
 interface ArenaState {
 	board: { position: string; unit: BoardUnitInstance | null }[];
 	setBoard: (newBoard: { position: string; unit: BoardUnitInstance | null }[]) => void;
+	storage: { units: ShopUnitInstance[]; equips: ShopEquipmentInstance[] };
+	setStorage: (newStorage: { units: ShopUnitInstance[]; equips: ShopEquipmentInstance[] }) => void;
 }
 
 const useArenaStore = create<ArenaState>()(set => ({
 	board: initialBoard,
 	setBoard: (newBoard: { position: string; unit: BoardUnitInstance | null }[]) =>
 		set({ board: newBoard }),
+	storage: { units: [], equips: [] },
+	setStorage: (newStorage: { units: ShopUnitInstance[]; equips: ShopEquipmentInstance[] }) =>
+		set({ storage: newStorage }),
 }));
 
 export { useArenaStore };

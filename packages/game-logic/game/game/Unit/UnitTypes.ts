@@ -6,7 +6,12 @@ export interface UnitInfo {
 	equipment: EquippedItemInstance[];
 }
 
-export interface BoardUnitInstance extends UnitInfo {
-	id: string;
+export interface BoardUnitInstance extends ShopUnitInstance {
 	position: POSITION;
+}
+
+export interface ShopUnitInstance {
+	id: string;
+	price: number;
+	unit: UnitInfo;
 }

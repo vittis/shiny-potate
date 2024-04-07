@@ -12,7 +12,7 @@ interface DraggableShopEquipmentInterface {
 function DraggableShopEquipment({ shopEquipment }: DraggableShopEquipmentInterface) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id: shopEquipment.id,
-		data: shopEquipment,
+		data: { shopEquipment: shopEquipment },
 	});
 
 	const style = transform
