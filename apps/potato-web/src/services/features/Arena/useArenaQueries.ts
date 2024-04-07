@@ -1,32 +1,17 @@
-import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { api } from "../../api/http";
-import { useUserStore } from "../User/useUserStore";
-import { toast } from "react-toastify";
-import { supabase } from "@/services/supabase/supabase";
+import { trpc } from "@/services/api/trpc";
 
-async function checkArenaGame(playerId) {
-	const { data: games, error } = await supabase
-		.from("games")
-		.select("player_id", playerId)
-		.select();
+const useArenaQueries = () => {
+	const { client } = trpc.useUtils(); // todo fuck trpc-react, use vanilla client
 
-	return games;
-}
-
-const useArenaQueries = (): any => {
-	const user = useSupabaseUserStore(state => state.user);
-
-	const { data: arenaData, isLoading: arenaIsLoading } = useQuery({
-		queryKey: ["arena", "check"],
-		queryFn: () => checkArenaGame(user.id),
-		enabled: !!user,
+	const { data, ...rest } = useQuery({
+		queryKey: ["arena", "my"],
+		queryFn: () => client.arena.my.query(),
 	});
 
-	const hasGame = arenaData && arenaData?.length > 0;
-	const game = hasGame && arenaData[0];
-	return { arenaData, arenaIsLoading, hasGame, game };
+	const shop = data?.[0]?.shop;
+
+	return { currentRun: data?.[0], shop, ...rest };
 };
 
 export { useArenaQueries };

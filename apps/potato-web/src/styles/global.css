@@ -185,4 +185,269 @@
 			height: 0;
 		}
 	}
+
+	@keyframes amethyst-midnight {
+		0% {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 100% 100%;
+			background-position: 0 60%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+
+		20% {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 105% 105%;
+			background-position: 10% 50%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+
+		40% {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 110% 300%;
+			background-position: 20% 40%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+
+		60% {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 115% 115%;
+			background-position: 30% 30%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+
+		80% {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 250% 120%;
+			background-position: 40% 20%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+
+		to {
+			background: radial-gradient(100% 225% at 0 100%, #3a006b 0, #6c0098 100%),
+				linear-gradient(-100deg, #9c00ff 70%, #7500c4), linear-gradient(200deg, #4c4c4c, #a0d3b6),
+				linear-gradient(-3deg, #6c0098, #3a006b 50%);
+			background-size: 100% 100%;
+			background-position: 0 60%;
+			background-blend-mode: color-dodge, color-burn, color-burn, normal;
+		}
+	}
+
+	.animate-amethyst-midnight {
+		animation: amethyst-midnight 10s ease infinite;
+	}
+
+	@keyframes gray-fluff {
+		0% {
+			background-size: 500% 500%;
+			background-position: 0 0;
+			background-image: linear-gradient(to top, rgba(72, 72, 72, 0.9), rgba(0, 0, 0, 1));
+		}
+
+		50% {
+			background-size: 100% 100%;
+			background-position: 0 0;
+			background-image: linear-gradient(to top, rgba(72, 72, 72, 0.9), rgba(0, 0, 0, 1));
+		}
+
+		100% {
+			background-size: 500% 500%;
+			background-position: 0 0;
+			background-image: linear-gradient(to top, rgba(72, 72, 72, 0.9), rgba(0, 0, 0, 1));
+		}
+	}
+	.animate-gray-fluff {
+		animation: gray-fluff 5.5s ease infinite;
+	}
+
+	@keyframes black-swoosh {
+		0% {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8)
+			);
+		}
+
+		50% {
+			background-size: 600% 100%;
+			background-position: 100%;
+			background-image: linear-gradient(
+				90deg,
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8)
+			);
+		}
+
+		to {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8),
+				rgba(64, 64, 64, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				rgba(0, 0, 0, 0.8)
+			);
+		}
+	}
+
+	.hover\:animate-black-swoosh:hover {
+		animation: black-swoosh 2.5s ease infinite;
+	}
+
+	.animate-black-swoosh {
+		animation: black-swoosh 2.5s ease infinite;
+	}
+
+	@keyframes rainbow-river {
+		0% {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				rgba(128, 0, 0, 0.8),
+				rgba(255, 165, 0, 0.8),
+				rgba(255, 255, 0, 0.8),
+				rgba(0, 128, 0, 0.8),
+				rgba(0, 0, 255, 0.8),
+				rgba(75, 0, 130, 0.8),
+				rgba(238, 130, 238, 0.8)
+			);
+		}
+
+		50% {
+			background-size: 600% 100%;
+			background-position: 100%;
+			background-image: linear-gradient(
+				90deg,
+				rgba(128, 0, 0, 0.8),
+				rgba(255, 165, 0, 0.8),
+				rgba(255, 255, 0, 0.8),
+				rgba(0, 128, 0, 0.8),
+				rgba(0, 0, 255, 0.8),
+				rgba(75, 0, 130, 0.8),
+				rgba(238, 130, 238, 0.8)
+			);
+		}
+
+		to {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				rgba(128, 0, 0, 0.8),
+				rgba(255, 165, 0, 0.8),
+				rgba(255, 255, 0, 0.8),
+				rgba(0, 128, 0, 0.8),
+				rgba(0, 0, 255, 0.8),
+				rgba(75, 0, 130, 0.8),
+				rgba(238, 130, 238, 0.8)
+			);
+		}
+	}
+
+	.hover\:animate-rainbow-river:hover {
+		animation: rainbow-river 3s ease infinite;
+	}
+
+	.animate-rainbow-river {
+		animation: rainbow-river 3s ease infinite;
+	}
+
+	@keyframes misty-fade {
+		0% {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8)
+			);
+			filter: blur(0);
+		}
+
+		50% {
+			background-size: 600% 100%;
+			background-position: 100%;
+			background-image: linear-gradient(
+				90deg,
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8)
+			);
+			filter: blur(7px);
+		}
+
+		to {
+			background-size: 600% 100%;
+			background-position: 0;
+			background-image: linear-gradient(
+				90deg,
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8),
+				hsla(0, 0%, 75%, 0.8),
+				hsla(0, 0%, 88%, 0.8),
+				hsla(0, 0%, 50%, 0.8)
+			);
+			filter: blur(0);
+		}
+	}
+
+	.hover\:animate-misty-fade:hover {
+		animation: misty-fade 2s ease infinite;
+	}
+
+	.animate-misty-fade {
+		animation: misty-fade 2s ease infinite;
+	}
+
+	@keyframes fadeInTop {
+		from {
+			opacity: 0;
+			transform: translateY(-200px);
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.fadeInTop {
+		animation: fadeInTop 0.8s ease-in-out;
+	}
 }

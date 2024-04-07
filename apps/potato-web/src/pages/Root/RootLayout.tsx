@@ -12,9 +12,12 @@ const RootLayout = () => {
 	useEffect(() => {
 		// todo put this somewhere else
 		supabase.auth.onAuthStateChange((event, session) => {
+			console.log("onAuthStateChange: ", event);
+
 			if (event === "SIGNED_OUT") {
 				setUser(null);
 			}
+
 			if (session && session.user) {
 				setUser(session.user);
 			}
@@ -23,12 +26,15 @@ const RootLayout = () => {
 	}, []);
 
 	return (
-		<div className="relative h-full p-1 md:p-4">
-			<section className="flex flex-col h-full">
-				<Nav />
-				<Outlet />
-			</section>
-		</div>
+		<>
+			<div className="fixed w-full h-full -z-50" />
+			<div className="relative h-full p-1 md:p-4">
+				<section className="flex flex-col h-full">
+					<Nav />
+					<Outlet />
+				</section>
+			</div>
+		</>
 	);
 };
 

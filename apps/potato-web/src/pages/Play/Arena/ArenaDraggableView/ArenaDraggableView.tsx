@@ -12,7 +12,7 @@ import { DroppableBoardSpace } from "./Board/DroppableBoardSpace";
 import { useArenaStore } from "@/services/features/Arena/useArenaStore";
 import { DroppableStorage } from "./Storage/DroppableStorage";
 import { DraggableBoardUnit } from "./Shop/DraggableUnit/DraggableBoardUnit";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, SwordsIcon } from "lucide-react";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
@@ -71,6 +71,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 										...boardUnit.unit,
 										equipment: [
 											...(boardUnit?.unit?.equipment || []),
+											// todo dont hardcode TRINKET. do a equip() logic
 											{ slot: "TRINKET" as any, equip: shopEquip.equipment },
 										],
 									},
@@ -89,20 +90,30 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 			if (unit) {
 				const unitOver = event.over?.data?.current?.unit;
 				const isAlreadyOnBoard = !!board.find(space => space.unit?.id === unit.id);
-				const isFromStorage = !!storage.units.find(storageUnit => storageUnit.id === unit.id);
+				const storageUnit = storage.units.find(storageUnit => storageUnit.id === unit.id);
 
 				// from shop to already occupied board space: do nothing
-				if (unitOver && !isAlreadyOnBoard && !isFromStorage) {
+				if (unitOver && !isAlreadyOnBoard && !storageUnit) {
 					return;
 				}
 
-				// from storage to board: remove from storage
-				if (isFromStorage) {
-					const storageUnits = storage.units.filter(storageUnit => storageUnit.id !== unit.id);
-					setStorage({
-						units: storageUnits,
-						equips: storage.equips,
-					});
+				if (storageUnit) {
+					const storageUnits = storage.units.filter(storageU => storageU.id !== unit.id);
+					// from storage to empty board space: remove from storage
+					if (!unitOver) {
+						setStorage({
+							units: storageUnits,
+							equips: storage.equips,
+						});
+					}
+
+					// from storage to occupied board space: add unitOver to storage
+					if (unitOver && storageUnit) {
+						setStorage({
+							units: [...storage.units.filter(storageU => storageU.id !== unit.id), unitOver],
+							equips: storage.equips,
+						});
+					}
 				}
 
 				const newBoard = board.map(space => {
@@ -120,7 +131,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 							unit: null,
 						};
 					}
-					// swap units if dropped on another unit
+					// swap units if dropped on another unit from BOARD
 					if (unitOver && isAlreadyOnBoard && space.position === (unit as any)?.position) {
 						return {
 							...space,
@@ -130,7 +141,6 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 
 					return space;
 				});
-
 				setBoard(newBoard);
 				return;
 			}
@@ -159,11 +169,13 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 		}
 	}
 
+	console.log(board);
+
 	return (
 		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
 			{shop && <ShopView shop={shop} />}
 
-			<div className="mt-16 flex justify-center items-center gap-16">
+			<div className="mt-16 mb-40 flex justify-center items-center gap-16">
 				<div className="relative w-fit h-fit grid grid-cols-3 gap-5">
 					{board.map(space => (
 						<DroppableBoardSpace key={space.position} boardSpace={space}>
@@ -171,8 +183,8 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 						</DroppableBoardSpace>
 					))}
 
-					<div className="pt-2 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full">
-						Board <ArrowRightIcon size={16} />
+					<div className="font-sm text-zinc-300 pt-3 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
+						<ArrowRightIcon size={16} />
 					</div>
 				</div>
 

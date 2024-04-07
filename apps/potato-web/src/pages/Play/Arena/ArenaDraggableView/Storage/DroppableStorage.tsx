@@ -27,7 +27,7 @@ function DroppableStorage({ storage }: DroppableStorageProps) {
 					storage.units.map(unit => <DraggableStorageUnit key={unit.id} shopUnit={unit} />)}
 			</div>
 
-			<div className="pt-2 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full">
+			<div className="pt-2 text-zinc-300 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full">
 				Storage <BoxIcon size={16} />
 			</div>
 		</div>

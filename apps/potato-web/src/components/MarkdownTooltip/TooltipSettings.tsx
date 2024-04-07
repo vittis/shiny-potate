@@ -31,7 +31,7 @@ const TooltipSettigs = () => {
 						<TooltipTrigger asChild>
 							<PopoverTrigger asChild>
 								<Button size="icon" variant="ghost">
-									<Settings size="20px" />
+									<Settings size={18} />
 								</Button>
 							</PopoverTrigger>
 						</TooltipTrigger>

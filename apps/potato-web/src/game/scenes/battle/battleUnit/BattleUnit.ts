@@ -297,7 +297,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 				}
 				const slash = this.scene.add.sprite(targets?.[0].x, targets?.[0].y, "slash2");
 				board.add(slash);
-				slash.setScale(2.6, 3.5);
+				slash.setScale(2.2, 3.1);
 				slash.flipX = this.owner !== 0;
 				slash.play("slash2_attack").on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
 					slash.destroy();

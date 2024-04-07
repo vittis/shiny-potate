@@ -74,7 +74,7 @@ export function createAttackAnimation({
 
 	const RUN_DISTANCE = unit.owner === 0 ? 70 : -70;
 	const DISTANCE_TO_ENEMY = unit.owner === 0 ? 80 : -80;
-	const PUSHBACK_DISTANCE = unit.owner === 0 ? 15 : -15;
+	const PUSHBACK_DISTANCE = unit.owner === 0 ? 25 : -25;
 
 	const attackTweenChain = unit.scene.tweens.chain({
 		delay: 200 * animationSpeed,
@@ -84,19 +84,26 @@ export function createAttackAnimation({
 		},
 		tweens: [
 			{
-				delay: 10 * animationSpeed,
+				delay: 20 * animationSpeed,
 				x: unit.x + PUSHBACK_DISTANCE,
-				duration: 110,
+				duration: 120 * animationSpeed,
 				yoyo: true,
 				ease: Phaser.Math.Easing.Cubic.In,
 				onYoyo: () => {
-					targetsGlowFx.forEach(glowFx => {
-						glowFx?.destroy();
-					});
-					attackTweenChain.pause();
+					// attackTweenChain.pause();
 					onImpactPoint({
 						onVFXEnd: () => {
-							attackTweenChain.resume();
+							targetsGlowFx.forEach(glowFx => {
+								unit.scene.tweens.add({
+									targets: targetsGlowFx,
+									outerStrength: 0,
+									duration: 260 * animationSpeed,
+									onComplete: () => {
+										glowFx?.destroy();
+									},
+								});
+							});
+							// attackTweenChain.resume();
 						},
 					});
 				},

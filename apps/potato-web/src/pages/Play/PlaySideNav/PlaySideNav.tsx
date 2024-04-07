@@ -36,11 +36,14 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 				onCollapse={() => {
 					setIsCollapsed(true);
 				}}
-				className={cn(isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out")}
+				className={cn(
+					/* "animate-gray-fluff", */
+					isCollapsed && "min-w-[50px] transition-all duration-300 ease-in-out",
+				)}
 			>
 				<div
 					className={cn(
-						"flex h-[52px] items-center justify-start",
+						"flex h-[52px] items-center justify-start ",
 						isCollapsed ? "h-[52px]" : "px-2",
 					)}
 				>
