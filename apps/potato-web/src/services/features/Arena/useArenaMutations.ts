@@ -14,7 +14,22 @@ const useArenaMutations = () => {
 				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},
 		});
-	return { newRun, newRunIsPending, abandonRun, abandonRunIsPending };
+
+	const { mutateAsync: updateBoard, isPending: updateBoardIsPending } =
+		trpc.arena.updateBoard.useMutation({
+			onSuccess: () => {
+				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
+			},
+		});
+
+	return {
+		newRun,
+		newRunIsPending,
+		abandonRun,
+		abandonRunIsPending,
+		updateBoard,
+		updateBoardIsPending,
+	};
 };
 
 export { useArenaMutations };

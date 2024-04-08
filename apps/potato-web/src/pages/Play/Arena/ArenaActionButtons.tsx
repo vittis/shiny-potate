@@ -3,6 +3,7 @@ import { UnlockButton } from "@/components/ui/buttonUnlock";
 import { cn } from "@/lib/utils";
 import { useArenaMutations } from "@/services/features/Arena/useArenaMutations";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
+import { useArenaStore } from "@/services/features/Arena/useArenaStore";
 import { useInterval } from "@/utils/useInterval";
 import { ArrowRight, Loader2Icon, SwordsIcon } from "lucide-react";
 import { useState } from "react";
@@ -24,15 +25,39 @@ const CrazyButton = () => {
 };
 
 function ArenaActionButtons() {
-	const { currentRun } = useArenaQueries();
+	const { currentRun, storage, board } = useArenaQueries();
 
-	const { newRun, newRunIsPending, abandonRun, abandonRunIsPending } = useArenaMutations();
+	const {
+		newRun,
+		newRunIsPending,
+		abandonRun,
+		abandonRunIsPending,
+		updateBoard,
+		updateBoardIsPending,
+	} = useArenaMutations();
 
-	const [isBouncing, setIsBouncing] = useState(false);
+	const onClickUpdateBoard = () => {
+		if (!board || !storage) {
+			throw new Error("Board or storage is missing");
+		}
+		/* const boughtEntitiesId = board
+			.filter(space => space.unit)
+			.map(space => space.unit?.id as string); */
 
-	useInterval(() => {
-		setIsBouncing(!isBouncing);
-	}, 3000);
+		/* const newBoard = board?.map(space => {
+			return {
+				position: space.position,
+				unitId: space?.unit?.id ?? null,
+			};
+		});
+
+		const newStorage = {
+			unitsId: storage?.units.map(unit => unit.id) || [],
+			equipsId: storage?.equips.map(equip => equip.id) || [],
+		}; */
+
+		updateBoard({ board, storage });
+	};
 
 	return (
 		<div className="flex justify-center items-center gap-4">
@@ -43,7 +68,11 @@ function ArenaActionButtons() {
 			)} */}
 			{currentRun && (
 				<>
-					<UnlockButton onClick={() => abandonRun()} icon={<ArrowRight />}>
+					<UnlockButton
+						onClick={onClickUpdateBoard}
+						icon={<ArrowRight />}
+						isLoading={updateBoardIsPending}
+					>
 						Ready
 					</UnlockButton>
 					{/* <Button variant="outline">Ready</Button> */}

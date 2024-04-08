@@ -14,7 +14,11 @@ export class ShopUnit {
 
 	calculatePrice() {
 		// todo take in account other equips
-		return Math.max(2, this.unit.equipment[0].equip.tier * 4) + 4 + Math.floor(Math.random() * 4);
+		return (
+			Math.max(2, this.unit.shopEquipment[0].shopEquip.equip.tier * 4) +
+			4 +
+			Math.floor(Math.random() * 4)
+		);
 	}
 
 	serialize(): ShopUnitInstance {

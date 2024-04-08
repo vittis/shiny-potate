@@ -13,6 +13,8 @@ function DroppableBoardSpace({ children, boardSpace }: DroppableBoardSpaceProps)
 		data: { position: boardSpace.position, unit: boardSpace.unit },
 	});
 
+	console.log("board space");
+
 	return (
 		<div
 			ref={setNodeRef}

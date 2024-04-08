@@ -1,4 +1,11 @@
-import { BoardUnitInstance, Shop, ShopEquipmentInstance, ShopUnitInstance } from "game-logic";
+import {
+	Board,
+	BoardUnitInstance,
+	Shop,
+	ShopEquipInstance,
+	ShopUnitInstance,
+	Storage,
+} from "game-logic";
 import { ShopView } from "./Shop/ShopView";
 import {
 	DndContext,
@@ -13,13 +20,16 @@ import { useArenaStore } from "@/services/features/Arena/useArenaStore";
 import { DroppableStorage } from "./Storage/DroppableStorage";
 import { DraggableBoardUnit } from "./Shop/DraggableUnit/DraggableBoardUnit";
 import { ArrowLeftIcon, ArrowRightIcon, SwordsIcon } from "lucide-react";
+import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
+import { queryClient } from "@/services/api/queryClient";
+import { error } from "console";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
 }
 
 function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
-	const { board, setBoard, storage, setStorage } = useArenaStore();
+	const { storage, board } = useArenaQueries();
 
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
@@ -36,14 +46,36 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 	const sensors = useSensors(mouseSensor, touchSensor);
 
 	function handleDragEnd(event: DragEndEvent) {
-		const overPosition = event.over?.data.current?.position;
-		const unit = event.active.data.current?.unit as ShopUnitInstance | BoardUnitInstance | null;
+		if (!board) {
+			throw new Error("Board is not defined");
+		}
 
-		const shopEquip = event.active.data.current?.shopEquipment as ShopEquipmentInstance | null;
+		const overPosition = event.over?.data.current?.position;
+
+		const unit = event.active.data.current?.unit as ShopUnitInstance | BoardUnitInstance | null;
+		const shopEquip = event.active.data.current?.shopEquip as ShopEquipInstance | null;
+
+		const setStorage = (newStorage: Storage) => {
+			queryClient.setQueryData(["arena", "my"], (oldData: any) => {
+				return {
+					...oldData,
+					storage: newStorage,
+				};
+			});
+		};
+
+		const setBoard = (newBoard: Board) => {
+			queryClient.setQueryData(["arena", "my"], (oldData: any) => {
+				return {
+					...oldData,
+					board: newBoard,
+				};
+			});
+		};
 
 		if (event.over?.id === "storage") {
-			const storageUnits = storage.units;
-			const storageEquips = storage.equips;
+			const storageUnits = storage?.units || [];
+			const storageEquips = storage?.equips || [];
 
 			if (unit) {
 				const isAlreadyInStorage = !!storageUnits.find(storageUnit => storageUnit.id === unit.id);
@@ -54,11 +86,25 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 					});
 				}
 			}
+			if (shopEquip) {
+				const isAlreadyInStorage = !!storageEquips.find(
+					storageEquip => storageEquip.id === shopEquip.id,
+				);
+				if (!isAlreadyInStorage) {
+					setStorage({
+						units: storageUnits,
+						equips: [...storageEquips, shopEquip],
+					});
+				}
+			}
 		}
 
 		if (!!overPosition) {
-			// dropped a shop equipment into a unit in board space
+			// dropped a shop equip into a unit in board space
 			if (shopEquip) {
+				const isFromStorage = !!storage?.equips.find(
+					storageEquip => storageEquip.id === shopEquip.id,
+				);
 				const newBoard = board.map(space => {
 					if (space.position === overPosition) {
 						const boardUnit = space.unit;
@@ -69,10 +115,10 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 									...boardUnit,
 									unit: {
 										...boardUnit.unit,
-										equipment: [
-											...(boardUnit?.unit?.equipment || []),
+										shopEquipment: [
+											...boardUnit.unit.shopEquipment,
 											// todo dont hardcode TRINKET. do a equip() logic
-											{ slot: "TRINKET" as any, equip: shopEquip.equipment },
+											{ slot: "TRINKET" as any, shopEquip },
 										],
 									},
 								},
@@ -83,14 +129,23 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 					return space;
 				});
 				setBoard(newBoard);
-				return;
+				// dropped shop equip from storage to board unit
+				if (isFromStorage) {
+					const storageEquips = storage?.equips.filter(
+						storageEquip => storageEquip.id !== shopEquip.id,
+					);
+					setStorage({
+						units: storage?.units || [],
+						equips: storageEquips || [],
+					});
+				}
 			}
 
 			// dropped a unit into a board space
 			if (unit) {
 				const unitOver = event.over?.data?.current?.unit;
 				const isAlreadyOnBoard = !!board.find(space => space.unit?.id === unit.id);
-				const storageUnit = storage.units.find(storageUnit => storageUnit.id === unit.id);
+				const storageUnit = storage?.units.find(storageUnit => storageUnit.id === unit.id);
 
 				// from shop to already occupied board space: do nothing
 				if (unitOver && !isAlreadyOnBoard && !storageUnit) {
@@ -98,20 +153,23 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 				}
 
 				if (storageUnit) {
-					const storageUnits = storage.units.filter(storageU => storageU.id !== unit.id);
+					const storageUnits = storage?.units.filter(storageU => storageU.id !== unit.id);
 					// from storage to empty board space: remove from storage
 					if (!unitOver) {
 						setStorage({
-							units: storageUnits,
-							equips: storage.equips,
+							units: storageUnits || [],
+							equips: storage?.equips || [],
 						});
 					}
 
 					// from storage to occupied board space: add unitOver to storage
 					if (unitOver && storageUnit) {
 						setStorage({
-							units: [...storage.units.filter(storageU => storageU.id !== unit.id), unitOver],
-							equips: storage.equips,
+							units: [
+								...(storage?.units.filter(storageU => storageU.id !== unit.id) || []),
+								unitOver,
+							],
+							equips: storage?.equips || [],
 						});
 					}
 				}
@@ -163,13 +221,11 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 
 			// add to storage
 			setStorage({
-				units: [...storage.units, unit],
-				equips: storage.equips,
+				units: [...(storage?.units || []), unit],
+				equips: storage?.equips || [],
 			});
 		}
 	}
-
-	console.log(board);
 
 	return (
 		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -177,18 +233,19 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 
 			<div className="mt-16 mb-40 flex justify-center items-center gap-16">
 				<div className="relative w-fit h-fit grid grid-cols-3 gap-5">
-					{board.map(space => (
-						<DroppableBoardSpace key={space.position} boardSpace={space}>
-							{space.unit && <DraggableBoardUnit boardUnit={space.unit} />}
-						</DroppableBoardSpace>
-					))}
+					{board &&
+						board.map(space => (
+							<DroppableBoardSpace key={space.position} boardSpace={space}>
+								{space.unit && <DraggableBoardUnit boardUnit={space.unit} />}
+							</DroppableBoardSpace>
+						))}
 
 					<div className="font-sm text-zinc-200 pt-2.5 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
 						<ArrowRightIcon size={17} />
 					</div>
 				</div>
 
-				<DroppableStorage storage={{ units: storage.units, equips: storage.equips }} />
+				{storage && <DroppableStorage storage={{ units: storage.units, equips: storage.equips }} />}
 			</div>
 		</DndContext>
 	);

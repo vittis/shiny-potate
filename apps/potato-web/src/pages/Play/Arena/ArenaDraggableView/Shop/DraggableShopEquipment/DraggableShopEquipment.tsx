@@ -3,16 +3,17 @@ import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { MarkdownTooltip } from "@/components/MarkdownTooltip/MarkdownTooltip";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { ShopEquipmentInstance } from "game-logic";
+import { ShopEquipInstance } from "game-logic";
 
 interface DraggableShopEquipmentInterface {
-	shopEquipment: ShopEquipmentInstance;
+	shopEquip: ShopEquipInstance;
+	hidePrice?: boolean;
 }
 
-function DraggableShopEquipment({ shopEquipment }: DraggableShopEquipmentInterface) {
+function DraggableShopEquipment({ shopEquip, hidePrice = false }: DraggableShopEquipmentInterface) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-		id: shopEquipment.id,
-		data: { shopEquipment: shopEquipment },
+		id: shopEquip.id,
+		data: { shopEquip },
 	});
 
 	const style = transform
@@ -21,12 +22,11 @@ function DraggableShopEquipment({ shopEquipment }: DraggableShopEquipmentInterfa
 			}
 		: undefined;
 
-	const { equipment, price } = shopEquipment;
+	const { equip, price } = shopEquip;
 
-	return (
-		<div className="font-mono flex flex-col items-center">
-			<div className="text-yellow-300">{price}</div>
-			<MarkdownTooltip content={<EquipmentMarkdownContent equip={equipment} />}>
+	if (hidePrice) {
+		return (
+			<MarkdownTooltip content={<EquipmentMarkdownContent equip={equip} />}>
 				<div
 					ref={setNodeRef}
 					style={style}
@@ -35,13 +35,38 @@ function DraggableShopEquipment({ shopEquipment }: DraggableShopEquipmentInterfa
 					className={cn(
 						"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
 						"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
-						tierColorMap[equipment.tier],
+						tierColorMap[equip.tier],
 						isDragging && "z-30",
 					)}
 				>
 					<div>
-						{equipment.name}{" "}
-						<span className={cn("text-xs", tierColorMap[equipment.tier])}>T{equipment.tier}</span>
+						{equip.name}{" "}
+						<span className={cn("text-xs", tierColorMap[equip.tier])}>T{equip.tier}</span>
+					</div>
+				</div>
+			</MarkdownTooltip>
+		);
+	}
+
+	return (
+		<div className="font-mono flex flex-col items-center">
+			<div className="text-yellow-300">{price}</div>
+			<MarkdownTooltip content={<EquipmentMarkdownContent equip={equip} />}>
+				<div
+					ref={setNodeRef}
+					style={style}
+					{...listeners}
+					{...attributes}
+					className={cn(
+						"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
+						"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
+						tierColorMap[equip.tier],
+						isDragging && "z-30",
+					)}
+				>
+					<div>
+						{equip.name}{" "}
+						<span className={cn("text-xs", tierColorMap[equip.tier])}>T{equip.tier}</span>
 					</div>
 				</div>
 			</MarkdownTooltip>

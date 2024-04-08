@@ -19,9 +19,7 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 			}
 		: undefined;
 
-	const { className, equipment } = unit;
-
-	const unitEquips = equipment || [];
+	const { className, shopEquipment } = unit;
 
 	return (
 		<MarkdownTooltip content={<UnitTooltip unit={unit} />}>
@@ -31,30 +29,30 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 				{...listeners}
 				{...attributes}
 				className={cn(
-					"font-mono w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
+					"font-mono w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center group",
 					"border-green-900 hover:border-green-700",
 					isDragging && "z-30",
 				)}
 			>
-				<div>{className}</div>
-				{unitEquips.length > 0 && (
+				{shopEquipment.length > 0 && (
 					<div className="absolute top-0 right-0">
-						{unitEquips.map(equippedItem => (
+						{shopEquipment.map(({ shopEquip: { equip } }) => (
 							<div
-								key={equippedItem.equip.id}
+								key={equip.id}
 								className={cn(
 									"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
-									tierColorMap[equippedItem.equip.tier],
+									tierColorMap[equip.tier],
 								)}
 							>
-								{equippedItem.equip.name}{" "}
-								<span className={cn("text-xs", tierColorMap[equippedItem.equip.tier])}>
-									T{equippedItem.equip.tier}
-								</span>
+								{equip.name}{" "}
+								<span className={cn("text-xs", tierColorMap[equip.tier])}>T{equip.tier}</span>
 							</div>
 						))}
 					</div>
 				)}
+				<div className="bg-input rounded px-1 z-[2] group-hover:animate-black-swoosh text-md">
+					{className}
+				</div>
 			</div>
 		</MarkdownTooltip>
 	);

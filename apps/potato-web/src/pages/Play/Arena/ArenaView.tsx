@@ -13,6 +13,7 @@ import { useArenaMutations } from "@/services/features/Arena/useArenaMutations";
 import { cn } from "@/lib/utils";
 import { GiSwordsEmblem } from "react-icons/gi";
 import { UnlockButton } from "@/components/ui/buttonUnlock";
+import { ArenaInfo } from "./ArenaInfo";
 
 function ArenaView() {
 	const { currentRun, shop, isFetching, isRefetching, error, isPending } = useArenaQueries();
@@ -75,14 +76,7 @@ function ArenaView() {
 
 				{currentRun && (
 					<div className="mt-4">
-						{/* {hasCurrentRun && <div>Current run: {data[0].id}</div>} */}
-						<div className="flex gap-4">
-							<div>Round: {currentRun.round}</div>
-							<div className="text-green-300">Wins: {currentRun.wins}</div>
-							<div className="text-red-300">Losses: {currentRun.losses}</div>
-							<div className="text-yellow-300">Gold: {currentRun.gold}</div>
-							<div className="text-sky-300">XP: {currentRun.xp}</div>
-						</div>
+						<ArenaInfo />
 						{shop && <ArenaDraggableView shop={shop} />}
 					</div>
 				)}

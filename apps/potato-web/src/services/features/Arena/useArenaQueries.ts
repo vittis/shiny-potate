@@ -7,11 +7,21 @@ const useArenaQueries = () => {
 	const { data, ...rest } = useQuery({
 		queryKey: ["arena", "my"],
 		queryFn: () => client.arena.my.query(),
+		// staleTime: Infinity,
 	});
 
-	const shop = data?.[0]?.shop;
+	const shop = data?.shop;
+	const storage = data?.storage;
+	const board = data?.board;
 
-	return { currentRun: data?.[0], shop, ...rest };
+	/* useEffect(() => {
+		console.log(data?.storage);
+		if (data?.storage) {
+			setStorage(data?.storage);
+		}
+	}, [data]); */
+
+	return { currentRun: data, shop, storage, board, ...rest };
 };
 
 export { useArenaQueries };

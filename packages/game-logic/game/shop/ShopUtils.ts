@@ -9,8 +9,9 @@ import {
 	EquipmentInstance,
 } from "../game/Equipment/EquipmentTypes";
 import { ShopUnit } from "./ShopUnit";
-import { ShopEquipment, ShopEquipmentInstance } from "./ShopEquipment";
+import { ShopEquip, ShopEquipInstance } from "./ShopEquip";
 import { ShopUnitInstance, UnitInfo } from "../game/Unit/UnitTypes";
+import { Shop } from "./ArenaTypes";
 
 export function generateItemsFromTier(tier: number, { quantityPerItem = 3 }, type: EQUIPMENT_TYPE) {
 	const items: EquipmentInstance[] = [];
@@ -94,7 +95,9 @@ export function generateRandomItem(tier: number, type: EQUIPMENT_TYPE) {
 
 	const randomItem = itemDatabase[randomItemKey];
 
-	return new Equipment(randomItem, tier);
+	const equip = new Equipment(randomItem, tier);
+
+	return new ShopEquip(equip);
 }
 
 // todo equip stuff?
@@ -106,19 +109,13 @@ export function generateRandomUnitWithEquipment(tier: number): UnitInfo {
 
 	return {
 		className: randomClassKey as keyof typeof Classes,
-		equipment: [
+		shopEquipment: [
 			{
 				slot: EQUIPMENT_SLOT.MAIN_HAND,
-				equip: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON).serialize(),
+				shopEquip: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON).serialize(),
 			},
 		],
 	};
-}
-
-export interface Shop {
-	units: ShopUnitInstance[];
-	weapons: ShopEquipmentInstance[];
-	trinkets: ShopEquipmentInstance[];
 }
 
 export function generateShop(round: number) {
@@ -174,12 +171,12 @@ export function generateShop(round: number) {
 	for (let i = 0; i < weaponsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const item = generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON);
-		shop.weapons.push(new ShopEquipment(item).serialize());
+		shop.weapons.push(item.serialize());
 	}
 	for (let i = 0; i < trinketsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
 		const item = generateRandomItem(tier, EQUIPMENT_TYPE.TRINKET);
-		shop.trinkets.push(new ShopEquipment(item).serialize());
+		shop.trinkets.push(item.serialize());
 	}
 
 	return shop;

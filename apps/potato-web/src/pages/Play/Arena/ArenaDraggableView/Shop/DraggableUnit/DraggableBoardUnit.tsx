@@ -1,12 +1,13 @@
 import { BoardUnitInstance } from "game-logic";
 import { useDraggable } from "@dnd-kit/core";
 import { DraggableUnitInfo } from "./DraggableUnitInfo";
+import { memo } from "react";
 
 interface DraggableShopUnitInterface {
 	boardUnit: BoardUnitInstance;
 }
 
-function DraggableBoardUnit({ boardUnit }: DraggableShopUnitInterface) {
+const DraggableBoardUnit = memo(({ boardUnit }: DraggableShopUnitInterface) => {
 	const draggableData = useDraggable({
 		id: boardUnit.id,
 		data: {
@@ -15,6 +16,6 @@ function DraggableBoardUnit({ boardUnit }: DraggableShopUnitInterface) {
 	});
 
 	return <DraggableUnitInfo useDraggableData={draggableData} unit={boardUnit.unit} />;
-}
+});
 
 export { DraggableBoardUnit };

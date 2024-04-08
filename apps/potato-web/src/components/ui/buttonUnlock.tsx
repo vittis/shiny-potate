@@ -30,12 +30,12 @@ const UnlockButton = ({ children, isLoading = false, icon, onClick, size }: Unlo
 			variant="ghost"
 			className={cn(
 				unlockButtonVariants({ size }),
-				"hover:border-black border-2 border-b-4 border-input relative inline-flex items-center justify-center px-6 overflow-hidden font-medium text-black transition duration-300 ease-out rounded shadow-md group",
+				"border-2 border-b-4 border-input relative inline-flex items-center justify-center px-6 overflow-hidden font-medium text-black transition duration-300 ease-out rounded shadow-md group",
 			)}
 		>
 			<span
 				className={cn(
-					"absolute inset-0 duration-300 w-full h-full text-white -translate-x-[101%] group-hover:translate-x-0 ease",
+					"absolute inset-0 duration-300 w-full h-full text-white -translate-x-full group-hover:translate-x-0 ease",
 					isLoading && "!-translate-x-[101%] hidden",
 				)}
 			>
