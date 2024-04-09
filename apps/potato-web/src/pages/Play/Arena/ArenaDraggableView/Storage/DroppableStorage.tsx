@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
-import { ShopEquipInstance, ShopUnitInstance } from "game-logic";
+import { Storage } from "game-logic";
 import { DraggableStorageUnit } from "../Shop/DraggableUnit/DraggableStorageUnit";
 import { BoxIcon } from "lucide-react";
 import { DraggableShopEquipment } from "../Shop/DraggableShopEquipment/DraggableShopEquipment";
 
 interface DroppableStorageProps {
-	storage: { units: ShopUnitInstance[]; equips: ShopEquipInstance[] };
+	storage: Storage;
 }
 
 function DroppableStorage({ storage }: DroppableStorageProps) {

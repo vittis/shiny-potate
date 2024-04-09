@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import { BoardUnitInstance } from "game-logic";
+import { DraggableBoardUnit } from "../Shop/DraggableUnit/DraggableBoardUnit";
 
 interface DroppableBoardSpaceProps {
-	children?: React.ReactNode;
 	boardSpace: { position: string; unit: BoardUnitInstance | null };
 }
 
-function DroppableBoardSpace({ children, boardSpace }: DroppableBoardSpaceProps) {
+function DroppableBoardSpace({ boardSpace }: DroppableBoardSpaceProps) {
 	const { isOver, setNodeRef } = useDroppable({
 		id: boardSpace.position,
 		data: { position: boardSpace.position, unit: boardSpace.unit },
@@ -22,7 +22,7 @@ function DroppableBoardSpace({ children, boardSpace }: DroppableBoardSpaceProps)
 				isOver && "scale-110",
 			)}
 		>
-			{children}
+			{boardSpace.unit ? <DraggableBoardUnit boardUnit={boardSpace.unit} /> : null}
 		</div>
 	);
 }

@@ -8,12 +8,10 @@ import {
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
-import { DroppableBoardSpace } from "./Board/DroppableBoardSpace";
 import { DroppableStorage } from "./Storage/DroppableStorage";
-import { DraggableBoardUnit } from "./Shop/DraggableUnit/DraggableBoardUnit";
-import { ArrowRightIcon } from "lucide-react";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
-import { setBoard, setStorage, useArenaUpdate } from "@/services/features/Arena/useArenaUpdate";
+import { setBoard, setStorage } from "@/services/features/Arena/useArenaUpdate";
+import { BoardContainer } from "./Board/BoardContainer";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
@@ -205,20 +203,9 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 			{shop && <ShopView shop={shop} />}
 
 			<div className="mt-16 mb-40 flex justify-center items-center gap-16">
-				<div className="relative w-fit h-fit grid grid-cols-3 gap-5">
-					{board &&
-						board.map(space => (
-							<DroppableBoardSpace key={space.position} boardSpace={space}>
-								{space.unit && <DraggableBoardUnit boardUnit={space.unit} />}
-							</DroppableBoardSpace>
-						))}
+				<BoardContainer />
 
-					<div className="font-sm text-zinc-200 pt-2.5 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
-						<ArrowRightIcon size={17} />
-					</div>
-				</div>
-
-				{storage && <DroppableStorage storage={{ units: storage.units, equips: storage.equips }} />}
+				{storage && <DroppableStorage storage={storage} />}
 			</div>
 		</DndContext>
 	);
