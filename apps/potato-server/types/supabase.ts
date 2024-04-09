@@ -16,6 +16,7 @@ export type Database = {
 					round: number | null;
 					shop?: Shop | null;
 					storage?: Storage | null;
+					updated_at: string | null;
 					wins: number | null;
 					xp: number | null;
 				};
@@ -29,6 +30,7 @@ export type Database = {
 					round?: number | null;
 					shop?: Shop | null;
 					storage?: Storage | null;
+					updated_at?: string | null;
 					wins?: number | null;
 					xp?: number | null;
 				};
@@ -42,6 +44,7 @@ export type Database = {
 					round?: number | null;
 					shop?: Shop | null;
 					storage?: Storage | null;
+					updated_at?: string | null;
 					wins?: number | null;
 					xp?: number | null;
 				};

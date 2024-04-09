@@ -14,13 +14,6 @@ const useArenaQueries = () => {
 	const storage = data?.storage;
 	const board = data?.board;
 
-	/* useEffect(() => {
-		console.log(data?.storage);
-		if (data?.storage) {
-			setStorage(data?.storage);
-		}
-	}, [data]); */
-
 	return { currentRun: data, shop, storage, board, ...rest };
 };
 

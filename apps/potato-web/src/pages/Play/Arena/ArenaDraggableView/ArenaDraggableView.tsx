@@ -1,11 +1,4 @@
-import {
-	Board,
-	BoardUnitInstance,
-	Shop,
-	ShopEquipInstance,
-	ShopUnitInstance,
-	Storage,
-} from "game-logic";
+import { BoardUnitInstance, Shop, ShopEquipInstance, ShopUnitInstance } from "game-logic";
 import { ShopView } from "./Shop/ShopView";
 import {
 	DndContext,
@@ -16,13 +9,11 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { DroppableBoardSpace } from "./Board/DroppableBoardSpace";
-import { useArenaStore } from "@/services/features/Arena/useArenaStore";
 import { DroppableStorage } from "./Storage/DroppableStorage";
 import { DraggableBoardUnit } from "./Shop/DraggableUnit/DraggableBoardUnit";
-import { ArrowLeftIcon, ArrowRightIcon, SwordsIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
-import { queryClient } from "@/services/api/queryClient";
-import { error } from "console";
+import { setBoard, setStorage, useArenaUpdate } from "@/services/features/Arena/useArenaUpdate";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
@@ -46,32 +37,14 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 	const sensors = useSensors(mouseSensor, touchSensor);
 
 	function handleDragEnd(event: DragEndEvent) {
-		if (!board) {
-			throw new Error("Board is not defined");
+		if (!board || !storage) {
+			throw new Error("board or storage is not defined");
 		}
 
 		const overPosition = event.over?.data.current?.position;
 
 		const unit = event.active.data.current?.unit as ShopUnitInstance | BoardUnitInstance | null;
 		const shopEquip = event.active.data.current?.shopEquip as ShopEquipInstance | null;
-
-		const setStorage = (newStorage: Storage) => {
-			queryClient.setQueryData(["arena", "my"], (oldData: any) => {
-				return {
-					...oldData,
-					storage: newStorage,
-				};
-			});
-		};
-
-		const setBoard = (newBoard: Board) => {
-			queryClient.setQueryData(["arena", "my"], (oldData: any) => {
-				return {
-					...oldData,
-					board: newBoard,
-				};
-			});
-		};
 
 		if (event.over?.id === "storage") {
 			const storageUnits = storage?.units || [];

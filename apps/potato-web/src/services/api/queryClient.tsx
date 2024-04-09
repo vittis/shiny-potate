@@ -21,10 +21,9 @@ const queryClient = new QueryClient({
     }, */
 		onError: (error: any) => {
 			const trpcPath = error?.meta?.responseJSON?.[0]?.error?.data?.path;
-			const uppercaseTrpcPath = trpcPath && trpcPath.toUpperCase();
 
 			toast.error(
-				`Error at ${uppercaseTrpcPath || error?.config?.url}: ${
+				`Error at ${trpcPath || error?.config?.url}: ${
 					error?.response?.data?.message || error?.response?.data?.error || error?.message
 				}`,
 				{

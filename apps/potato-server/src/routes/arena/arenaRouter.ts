@@ -151,6 +151,10 @@ export const arenaRouter = router({
 				unitsBoughtFromShop.reduce((acc, unit) => acc + unit?.price, 0) +
 				equipsBoughtFromShop.reduce((acc, equip) => acc + equip.price, 0);
 
+			if (currentGold < goldSpent) {
+				throw new Error("Not enough gold.");
+			}
+
 			const { data: updatedData, error: updateError } = await supabase
 				.from("arena")
 				.update({
@@ -158,6 +162,7 @@ export const arenaRouter = router({
 					board,
 					storage,
 					shop: newShop,
+					updated_at: new Date().toISOString(),
 				})
 				.eq("player_id", user.id)
 				.select()

@@ -14,8 +14,11 @@ import { cn } from "@/lib/utils";
 import { GiSwordsEmblem } from "react-icons/gi";
 import { UnlockButton } from "@/components/ui/buttonUnlock";
 import { ArenaInfo } from "./ArenaInfo";
+import { useArenaUpdate } from "@/services/features/Arena/useArenaUpdate";
 
 function ArenaView() {
+	useArenaUpdate();
+
 	const { currentRun, shop, isFetching, isRefetching, error, isPending } = useArenaQueries();
 
 	const { newRun, newRunIsPending } = useArenaMutations();

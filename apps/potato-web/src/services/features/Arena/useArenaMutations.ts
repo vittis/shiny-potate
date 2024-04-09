@@ -18,6 +18,9 @@ const useArenaMutations = () => {
 	const { mutateAsync: updateBoard, isPending: updateBoardIsPending } =
 		trpc.arena.updateBoard.useMutation({
 			onSuccess: () => {
+				// queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
+			},
+			onError: error => {
 				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},
 		});

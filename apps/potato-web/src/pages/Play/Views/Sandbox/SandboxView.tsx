@@ -35,7 +35,6 @@ function SandboxView() {
 			<div className="relative">
 				<div className="w-full flex gap-4 p-4 items-center justify-center flex-wrap">
 					<div className="flex mb-1 font-semibold">Tier: </div>
-
 					<Select value={selectTier} onValueChange={setSelectTier}>
 						<SelectTrigger className="w-max">
 							<SelectValue placeholder="Item Tier" />
@@ -48,7 +47,6 @@ function SandboxView() {
 							))}
 						</SelectContent>
 					</Select>
-
 					<Button variant="secondary" onClick={onClickRollShop} disabled={isFetchingRollShop}>
 						Roll Shop
 					</Button>

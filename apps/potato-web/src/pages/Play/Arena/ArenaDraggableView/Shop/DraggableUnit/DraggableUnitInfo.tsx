@@ -50,7 +50,7 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 						))}
 					</div>
 				)}
-				<div className="bg-input rounded px-1 z-[2] group-hover:animate-black-swoosh text-md">
+				<div className="bg-input rounded px-1 z-[2] group-hover:animate-rainbow-river text-md">
 					{className}
 				</div>
 			</div>
