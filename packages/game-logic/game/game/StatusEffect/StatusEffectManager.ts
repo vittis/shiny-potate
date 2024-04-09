@@ -110,7 +110,7 @@ export class StatusEffectManager {
 					);
 
 					if (event) {
-						unit.stepEvents.push(event);
+						unit.stepIntents.push(event);
 					}
 				}
 			}

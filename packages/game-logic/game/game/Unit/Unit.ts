@@ -10,12 +10,8 @@ import {
 	EVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
 	PossibleEffect,
-	PossibleEvent,
-	SubEvent,
-	TICK_EFFECT_TYPE,
-	TickEffectEvent,
-	TriggerEffectEvent,
-	UseAbilityEvent,
+	PossibleIntent,
+	UseAbilityIntent,
 } from "../Event/EventTypes";
 import { PerkManager } from "../Perk/PerkManager";
 import { StatsManager } from "../Stats/StatsManager";
@@ -45,7 +41,8 @@ export class Unit {
 	isDead = false;
 
 	currentStep = 1;
-	stepEvents: PossibleEvent[] = [];
+
+	stepIntents: PossibleIntent[] = [];
 
 	public statsManager: StatsManager;
 	public equipmentManager: EquipmentManager;
@@ -181,7 +178,11 @@ export class Unit {
 	step(stepNumber: number) {
 		this.currentStep = stepNumber;
 
+		// Status Effects
+
 		this.statusEffectManager.tickEffectStep(this);
+
+		// Disables
 
 		if (this.disableManager.hasDisable(DISABLE.STUN)) {
 			this.disableManager.decreaseDurations();
@@ -190,28 +191,42 @@ export class Unit {
 
 		this.disableManager.decreaseDurations();
 
+		// Abilities
+
+		let multistrikeQuantity = 0;
+
+		if (this.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)) {
+			multistrikeQuantity = (
+				this.statusEffects.find(
+					statusEffect => statusEffect.name === STATUS_EFFECT.MULTISTRIKE,
+				) as ActiveStatusEffect
+			).quantity;
+		}
+
 		this.abilities.forEach(ability => {
 			ability.step();
 
 			if (ability.canActivate()) {
-				const event = ability.use(this);
+				const abilityIntent = {
+					actorId: this.id,
+					type: EVENT_TYPE.USE_ABILITY,
+					id: ability.id,
+					useMultistrike: false,
+				} as UseAbilityIntent;
 
-				if (event) {
-					this.stepEvents.push(event);
+				this.stepIntents.push(abilityIntent);
 
-					if (this.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)) {
-						const multistrikeQuantity = (
-							this.statusEffects.find(
-								statusEffect => statusEffect.name === STATUS_EFFECT.MULTISTRIKE,
-							) as ActiveStatusEffect
-						).quantity;
+				if (multistrikeQuantity > 0) {
+					const abilityIntentWithMultistrike = {
+						...abilityIntent,
+						useMultistrike: true,
+					} as UseAbilityIntent;
 
-						const eventWithMultistrike = ability.use(this, true);
-
-						for (let i = 0; i < multistrikeQuantity; i++) {
-							this.stepEvents.push(eventWithMultistrike);
-						}
+					for (let i = 0; i < multistrikeQuantity; i++) {
+						this.stepIntents.push(abilityIntentWithMultistrike);
 					}
+
+					multistrikeQuantity = 0;
 				}
 			}
 		});
@@ -293,7 +308,7 @@ export class Unit {
 
 		this.triggerManager.onTrigger(TRIGGER.SELF_FAINT, this, this.bm);
 
-		this.stepEvents.push({
+		this.stepIntents.push({
 			actorId: this.id,
 			type: EVENT_TYPE.FAINT,
 			step: this.currentStep,
@@ -343,9 +358,9 @@ export class Unit {
 		};
 	} */
 
-	serializeEvents() {
-		const events = [...this.stepEvents];
-		this.stepEvents = [];
-		return events;
+	serializeIntents() {
+		const intents = [...this.stepIntents];
+		this.stepIntents = [];
+		return intents;
 	}
 }

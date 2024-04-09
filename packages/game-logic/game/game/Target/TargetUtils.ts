@@ -313,6 +313,6 @@ function getFurthestColumnUnits(front: Unit[], mid: Unit[], back: Unit[]): Unit[
 
 export function getAllTargetUnits(targetUnits: TargetUnits): Unit[] {
 	return [targetUnits.mainTarget, ...targetUnits.secondaryTargets].filter(
-		target => target !== null,
+		target => target !== null && target !== undefined,
 	) as Unit[];
 }

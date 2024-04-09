@@ -155,3 +155,17 @@ export interface Effect<T extends INSTANT_EFFECT_TYPE>
 	then events of step X subStep 2 are played together
 	etc
 */
+
+// INTENT
+
+interface Intent<T extends EVENT_TYPE> {
+	type: T;
+}
+
+export type PossibleIntent = UseAbilityIntent | TriggerEffectEvent | FaintEvent | TickEffectEvent;
+
+export interface UseAbilityIntent extends Intent<EVENT_TYPE.USE_ABILITY> {
+	actorId: string;
+	id: string;
+	useMultistrike: boolean;
+}
