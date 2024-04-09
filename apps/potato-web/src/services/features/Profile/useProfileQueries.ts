@@ -25,7 +25,6 @@ const useProfileQueries = () => {
 			setUsername(username);
 		}
 	}, [username]);
-
 };
 
 export { useProfileQueries };

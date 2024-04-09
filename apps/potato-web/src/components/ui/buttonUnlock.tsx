@@ -30,18 +30,18 @@ const UnlockButton = ({ children, isLoading = false, icon, onClick, size }: Unlo
 			variant="ghost"
 			className={cn(
 				unlockButtonVariants({ size }),
-				"border-2 border-b-4 border-input relative inline-flex items-center justify-center px-6 overflow-hidden font-medium text-black transition duration-300 ease-out rounded shadow-md group",
+				"group relative inline-flex items-center justify-center overflow-hidden rounded border-2 border-b-4 border-input px-6 font-medium text-black shadow-md transition duration-300 ease-out",
 			)}
 		>
 			<span
 				className={cn(
-					"absolute inset-0 duration-300 w-full h-full text-white -translate-x-full group-hover:translate-x-0 ease",
-					isLoading && "!-translate-x-[101%] hidden",
+					"ease absolute inset-0 h-full w-full -translate-x-full text-white duration-300 group-hover:translate-x-0",
+					isLoading && "hidden !-translate-x-[101%]",
 				)}
 			>
 				<div
 					className={cn(
-						"w-full h-full flex items-center justify-center",
+						"flex h-full w-full items-center justify-center",
 						!isLoading && "animate-black-swoosh",
 					)}
 				>
@@ -50,15 +50,15 @@ const UnlockButton = ({ children, isLoading = false, icon, onClick, size }: Unlo
 			</span>
 			<span
 				className={cn(
-					"font-mono absolute flex items-center justify-center w-full h-full text-foreground",
+					"absolute flex h-full w-full items-center justify-center font-mono text-foreground",
 					!isLoading &&
-						"bg-background transition-all duration-300 transform group-hover:translate-x-full ease",
+						"ease transform bg-background transition-all duration-300 group-hover:translate-x-full",
 					isLoading && "",
 				)}
 			>
 				{isLoading ? <Loader2Icon size={32} className="animate-spin" /> : children}
 			</span>
-			<span className="relative invisible"></span>
+			<span className="invisible relative"></span>
 		</Button>
 	);
 };

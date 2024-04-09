@@ -76,7 +76,7 @@ const SupaRoomsView = () => {
 
 			<CollapsibleHeader
 				header={<h1 className="text-lg font-bold">Browse rooms</h1>}
-				rightElement={isFetching && <Loader2 className="animate-spin ml-3 w-4 mt-1" />}
+				rightElement={isFetching && <Loader2 className="ml-3 mt-1 w-4 animate-spin" />}
 				defaultIsOpen
 			>
 				<div className="grid-kk w-full pb-12">

@@ -17,7 +17,7 @@ function DraggableShopUnit({ shopUnit }: DraggableShopUnitInterface) {
 	const { price } = shopUnit;
 
 	return (
-		<div className="font-mono flex flex-col items-center">
+		<div className="flex flex-col items-center font-mono">
 			<div className="flex gap-1 text-yellow-300">{price}</div>
 			<DraggableUnitInfo useDraggableData={draggableData} unit={shopUnit.unit} />
 		</div>

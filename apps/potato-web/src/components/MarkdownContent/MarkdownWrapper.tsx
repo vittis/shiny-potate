@@ -12,7 +12,7 @@ interface MarkdownWrapperProps {
 
 const MarkdownWrapper = ({ content, tier, tags, onOpenSubTooltip }: MarkdownWrapperProps) => {
 	if (!content) {
-		return <Loader2 className="animate-spin mx-auto w-80 my-20" />;
+		return <Loader2 className="mx-auto my-20 w-80 animate-spin" />;
 	}
 	return (
 		<div className="bg-pattern-gradient p-3 text-sm">

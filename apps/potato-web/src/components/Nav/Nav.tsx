@@ -73,7 +73,7 @@ export function Nav() {
 	};
 
 	return (
-		<div className="relative flex z-20">
+		<div className="relative z-20 flex">
 			<ScrollArea className="max-w-[100%] lg:max-w-none">
 				<div className={cn("mb-4 flex items-center gap-2")}>
 					{navItems.map(navItem => (
@@ -86,7 +86,7 @@ export function Nav() {
 								variant={"ghost"}
 								disabled={navItem?.disabled}
 								className={cn(
-									"flex h-7 items-center justify-center rounded-md px-4 text-center text-lg transition-colors hover:text-primary py-6",
+									"flex h-7 items-center justify-center rounded-md px-4 py-6 text-center text-lg transition-colors hover:text-primary",
 									!!matchPath(`${navItem.path}/*`, pathname)
 										? "bg-muted font-medium text-primary"
 										: "text-muted-foreground",
@@ -99,11 +99,11 @@ export function Nav() {
 				</div>
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
-			<div className="grow flex justify-end gap-4 items-center">
+			<div className="flex grow items-center justify-end gap-4">
 				{user ? (
 					<>
 						<div className="text-muted-foreground">
-							Logged as <span className="text-primary mr-2">{username}</span>
+							Logged as <span className="mr-2 text-primary">{username}</span>
 						</div>
 						<Button onClick={() => supaBaselogout()} variant="outline">
 							Logout
@@ -118,11 +118,11 @@ export function Nav() {
 				<TooltipProvider delayDuration={0}>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<div className="flex gap-2 w-max !bg-pattern-gradient-error rounded-md text-muted-foreground">
+							<div className="!bg-pattern-gradient-error flex w-max gap-2 rounded-md text-muted-foreground">
 								<Icon
 									className={cn(
-										"pb-1 w-6",
-										notConnected ? "text-yellow-500 animate-pulse" : "text-green-500",
+										"w-6 pb-1",
+										notConnected ? "animate-pulse text-yellow-500" : "text-green-500",
 									)}
 								/>
 							</div>

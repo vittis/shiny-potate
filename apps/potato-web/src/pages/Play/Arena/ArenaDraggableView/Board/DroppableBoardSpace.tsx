@@ -17,7 +17,7 @@ function DroppableBoardSpace({ boardSpace }: DroppableBoardSpaceProps) {
 		<div
 			ref={setNodeRef}
 			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 transition-all duration-75",
+				"h-[100px] w-[100px] rounded-md border border-zinc-700 transition-all duration-75",
 				isOver && "bg-zinc-800",
 				isOver && "scale-110",
 			)}

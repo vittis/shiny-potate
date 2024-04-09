@@ -109,7 +109,7 @@ export const arenaRouter = router({
 				.maybeSingle();
 
 			if (error || !yourRun) {
-				throw error;
+				throw error || new Error("No run found");
 			}
 
 			const currentShop = yourRun?.shop;
@@ -174,4 +174,60 @@ export const arenaRouter = router({
 
 			return updatedData;
 		}),
+	findAndBattleOpponent: authProcedure.mutation(async ({ ctx }) => {
+		const { supabase, user } = ctx;
+
+		const { data: myRun, error: myRunError } = await supabase
+			.from("arena")
+			.select("*")
+			.eq("player_id", user.id)
+			.maybeSingle();
+
+		// todo fix round check
+		if (myRunError || !myRun || !myRun?.round) {
+			console.trace(myRunError || "No run found");
+			throw myRunError || new Error("No run found");
+		}
+
+		const { error: insertError } = await supabase.from("board").insert([
+			{
+				player_id: user.id,
+				round: myRun.round,
+				wins: myRun.wins,
+				losses: myRun.losses,
+				board: myRun.board,
+			},
+		]);
+
+		if (insertError) {
+			console.trace(insertError);
+			throw insertError;
+		}
+
+		const { error: updateError } = await supabase
+			.from("arena")
+			.update({
+				round: myRun?.round + 1,
+				updated_at: new Date().toISOString(),
+			})
+			.eq("player_id", user.id);
+
+		if (updateError) {
+			console.trace(updateError);
+			throw updateError;
+		}
+
+		const { data: opponentBoard, error: opponentBoardError } = await supabase
+			.from("board")
+			.select("*")
+			.eq("round", myRun.round)
+			.neq("player_id", user.id);
+
+		if (opponentBoardError || !opponentBoard) {
+			console.trace(opponentBoardError || "No opponent found");
+			throw opponentBoardError || new Error("No opponent found");
+		}
+
+		return opponentBoard;
+	}),
 });

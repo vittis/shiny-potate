@@ -33,8 +33,8 @@ function SandboxView() {
 		<ScrollArea className="h-full w-full px-4">
 			<ScrollBar />
 			<div className="relative">
-				<div className="w-full flex gap-4 p-4 items-center justify-center flex-wrap">
-					<div className="flex mb-1 font-semibold">Tier: </div>
+				<div className="flex w-full flex-wrap items-center justify-center gap-4 p-4">
+					<div className="mb-1 flex font-semibold">Tier: </div>
 					<Select value={selectTier} onValueChange={setSelectTier}>
 						<SelectTrigger className="w-max">
 							<SelectValue placeholder="Item Tier" />
@@ -51,7 +51,7 @@ function SandboxView() {
 						Roll Shop
 					</Button>
 				</div>
-				<div className="absolute top-4 right-4">
+				<div className="absolute right-4 top-4">
 					<TooltipSettigs />
 				</div>
 				{/* for testing stuff, ok to remove */}

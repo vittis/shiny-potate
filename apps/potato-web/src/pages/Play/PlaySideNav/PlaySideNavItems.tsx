@@ -60,7 +60,7 @@ function PlaySideNavItems({ links, isCollapsed }: PlaySideNavProps) {
 									buttonVariants({ variant: link.variant, size: "sm" }),
 									link.selected &&
 										"dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-									"justify-start w-full",
+									"w-full justify-start",
 								)}
 								{...link.props}
 							>

@@ -1,5 +1,6 @@
 import { queryClient } from "@/services/api/queryClient";
 import { trpc } from "@/services/api/trpc";
+import { toast } from "react-toastify";
 
 const useArenaMutations = () => {
 	const { mutateAsync: newRun, isPending: newRunIsPending } = trpc.arena.new.useMutation({
@@ -25,6 +26,15 @@ const useArenaMutations = () => {
 			},
 		});
 
+	const { mutateAsync: findAndBattleOpponent, isPending: findAndBattleOpponentIsPending } =
+		trpc.arena.findAndBattleOpponent.useMutation({
+			onSuccess: data => {
+				console.log(data);
+				toast.success("Opponent found");
+			},
+		});
+
+	// todo group?
 	return {
 		newRun,
 		newRunIsPending,
@@ -32,6 +42,8 @@ const useArenaMutations = () => {
 		abandonRunIsPending,
 		updateBoard,
 		updateBoardIsPending,
+		findAndBattleOpponent,
+		findAndBattleOpponentIsPending,
 	};
 };
 

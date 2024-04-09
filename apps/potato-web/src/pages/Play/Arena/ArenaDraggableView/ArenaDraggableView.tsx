@@ -202,7 +202,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
 			{shop && <ShopView shop={shop} />}
 
-			<div className="mt-16 mb-40 flex justify-center items-center gap-16">
+			<div className="mb-40 mt-16 flex items-center justify-center gap-16">
 				<BoardContainer />
 
 				{storage && <DroppableStorage storage={storage} />}

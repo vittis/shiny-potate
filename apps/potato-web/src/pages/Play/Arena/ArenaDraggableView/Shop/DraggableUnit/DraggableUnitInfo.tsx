@@ -29,18 +29,18 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 				{...listeners}
 				{...attributes}
 				className={cn(
-					"font-mono w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center group",
+					"group relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black font-mono transition-colors",
 					"border-green-900 hover:border-green-700",
 					isDragging && "z-30",
 				)}
 			>
 				{shopEquipment.length > 0 && (
-					<div className="absolute top-0 right-0">
+					<div className="absolute right-0 top-0">
 						{shopEquipment.map(({ shopEquip: { equip } }) => (
 							<div
 								key={equip.id}
 								className={cn(
-									"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+									"rounded border border-dashed border-yellow-700 p-0.5 text-xs",
 									tierColorMap[equip.tier],
 								)}
 							>
@@ -50,7 +50,7 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 						))}
 					</div>
 				)}
-				<div className="bg-input rounded px-1 z-[2] group-hover:animate-rainbow-river text-md">
+				<div className="group-hover:animate-rainbow-river text-md z-[2] rounded bg-input px-1">
 					{className}
 				</div>
 			</div>

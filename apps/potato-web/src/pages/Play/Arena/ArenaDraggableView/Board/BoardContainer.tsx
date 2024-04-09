@@ -10,12 +10,12 @@ function BoardContainer() {
 	}
 
 	return (
-		<div className="relative w-fit h-fit grid grid-cols-3 gap-5">
+		<div className="relative grid h-fit w-fit grid-cols-3 gap-5">
 			{board.map(space => (
 				<DroppableBoardSpace key={space.position} boardSpace={space} />
 			))}
 
-			<div className="font-sm text-zinc-200 pt-2.5 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full w-max">
+			<div className="font-sm absolute bottom-0 right-1/2 flex w-max translate-x-1/2 translate-y-full items-center gap-2 pt-2.5 font-mono text-zinc-200">
 				<ArrowRightIcon size={17} />
 			</div>
 		</div>

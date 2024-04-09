@@ -39,7 +39,7 @@ const TooltipSettigs = () => {
 					</Tooltip>
 				</TooltipProvider>
 				<PopoverContent>
-					<div className=" rounded-md text-sm flex flex-col gap-2.5 font-mono">
+					<div className=" flex flex-col gap-2.5 rounded-md font-mono text-sm">
 						<div className="flex gap-4">
 							<div>Tooltip Mode:</div>
 							<RadioGroup value={value} className="flex" onValueChange={onValueChange}>
@@ -63,7 +63,7 @@ const TooltipSettigs = () => {
 									className="max-w-[90px]"
 									onValueChange={onSliderValueChange}
 								/>
-								<div className="text-slate-300 w-[10px]">{`${sliderValue / 1000}s`}</div>
+								<div className="w-[10px] text-slate-300">{`${sliderValue / 1000}s`}</div>
 							</div>
 						)}
 					</div>

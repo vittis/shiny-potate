@@ -71,8 +71,8 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 			<ResizableHandle withHandle />
 
 			<ResizablePanel defaultSize={defaultSize}>
-				<div className="flex flex-col h-full bg-pattern-gradient">
-					<div className="flex h-[52px] items-center px-4 py-2 bg-background">
+				<div className="bg-pattern-gradient flex h-full flex-col">
+					<div className="flex h-[52px] items-center bg-background px-4 py-2">
 						<h1 className="text-xl font-bold">Messages</h1>
 
 						<div className="ml-auto">
@@ -83,12 +83,12 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 					</div>
 					<Separator />
 					{messagesLoading ? (
-						<Loader2 className="animate-spin mx-auto w-80 my-20 " />
+						<Loader2 className="mx-auto my-20 w-80 animate-spin " />
 					) : (
 						<>
 							<div className="h-[48px] bg-background">
 								<ScrollArea className="max-w-[100%]">
-									<div className={cn("px-1 pt-2 mb-2.5 flex items-center gap-2")}>
+									<div className={cn("mb-2.5 flex items-center gap-2 px-1 pt-2")}>
 										{mockChatNavItems.map((navItem, index) => (
 											<Button
 												id={index === 0 ? "" : ""}
@@ -96,13 +96,13 @@ const MessagesPanel = ({ defaultSize }: MessagesPanelProps) => {
 												variant={"ghost"}
 												key={navItem.name}
 												className={cn(
-													"bg-transparent h-[28px] flex items-center justify-center px-3 text-center  transition-colors hover:text-primary py-1",
+													"flex h-[28px] items-center justify-center bg-transparent px-3 py-1  text-center transition-colors hover:text-primary",
 													index === 0
 														? "bg-muted font-medium text-primary"
 														: "text-muted-foreground ",
 												)}
 											>
-												<span className="overflow-hidden text-ellipsis max-w-[100px] ">
+												<span className="max-w-[100px] overflow-hidden text-ellipsis ">
 													{navItem.name}
 												</span>
 											</Button>

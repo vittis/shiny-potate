@@ -25,7 +25,7 @@ export const LobbyRoomUserRow = ({
 		<Button
 			size="sm"
 			variant="ghost"
-			className="w-full justify-between relative flex space-x-2 items-center px-1.5 h-[30px]"
+			className="relative flex h-[30px] w-full items-center justify-between space-x-2 px-1.5"
 		>
 			<div className="flex items-center space-x-1">
 				{avatar ? (
@@ -35,12 +35,12 @@ export const LobbyRoomUserRow = ({
 						</div>
 					</div>
 				) : (
-					<div className="w-5 h-5 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground flex items-center justify-center text-xs">
+					<div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-800 text-xs text-primary-foreground dark:bg-stone-800 dark:text-accent-foreground">
 						{name?.[0]?.toUpperCase()}
 					</div>
 				)}
 
-				<div className={`${maxW} ${textColor} text-ellipsis overflow-hidden text-xs text-left`}>
+				<div className={`${maxW} ${textColor} overflow-hidden text-ellipsis text-left text-xs`}>
 					{name}
 				</div>
 			</div>

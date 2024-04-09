@@ -1,23 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/components/ui/buttonUnlock";
-import { cn } from "@/lib/utils";
 import { useArenaMutations } from "@/services/features/Arena/useArenaMutations";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
-import { useArenaStore } from "@/services/features/Arena/useArenaStore";
-import { useInterval } from "@/utils/useInterval";
-import { ArrowRight, Loader2Icon, SwordsIcon } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
-const CrazyButton = () => {
+export const CrazyButton = () => {
 	return (
-		<button className="w-[262px] cursor-pointer relative inline-block text-lg group">
-			<span className="relative bg-black z-10 block px-5 py-5 overflow-hidden font-medium leading-tight text-gray-200 transition-colors duration-300 ease-out border-2 border-input rounded-lg group-hover:text-gray-200">
-				<span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-background"></span>
-				<span className="absolute left-0 w-full h-48 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-16 bg-input group-hover:-rotate-180 ease"></span>
+		<button className="group relative inline-block w-[262px] cursor-pointer text-lg">
+			<span className="relative z-10 block overflow-hidden rounded-lg border-2 border-input bg-black px-5 py-5 font-medium leading-tight text-gray-200 transition-colors duration-300 ease-out group-hover:text-gray-200">
+				<span className="absolute inset-0 h-full w-full rounded-lg bg-background px-5 py-3"></span>
+				<span className="ease absolute left-0 h-48 w-full origin-top-right -translate-x-full translate-y-16 -rotate-90 bg-input transition-all duration-300 group-hover:-rotate-180"></span>
 				<span className="relative">Hammer</span>
 			</span>
 			<span
-				className="absolute bottom-0 right-0 w-full h-12 -mb-0.5 transition-all duration-200 ease-linear bg-input rounded-lg group-hover:mb-0 group-hover:mr-0"
+				className="absolute bottom-0 right-0 -mb-0.5 h-12 w-full rounded-lg bg-input transition-all duration-200 ease-linear group-hover:mb-0 group-hover:mr-0"
 				data-rounded="rounded-lg"
 			></span>
 		</button>
@@ -27,67 +23,33 @@ const CrazyButton = () => {
 function ArenaActionButtons() {
 	const { currentRun, storage, board } = useArenaQueries();
 
-	const {
-		newRun,
-		newRunIsPending,
-		abandonRun,
-		abandonRunIsPending,
-		updateBoard,
-		updateBoardIsPending,
-	} = useArenaMutations();
+	const { abandonRun, abandonRunIsPending, findAndBattleOpponent, findAndBattleOpponentIsPending } =
+		useArenaMutations();
 
-	const onClickUpdateBoard = () => {
+	const onClickUpdateBoard = async () => {
 		if (!board || !storage) {
 			throw new Error("Board or storage is missing");
 		}
-		/* const boughtEntitiesId = board
-			.filter(space => space.unit)
-			.map(space => space.unit?.id as string); */
 
-		/* const newBoard = board?.map(space => {
-			return {
-				position: space.position,
-				unitId: space?.unit?.id ?? null,
-			};
-		});
-
-		const newStorage = {
-			unitsId: storage?.units.map(unit => unit.id) || [],
-			equipsId: storage?.equips.map(equip => equip.id) || [],
-		}; */
-
-		updateBoard({ board, storage });
+		await findAndBattleOpponent();
 	};
 
 	return (
-		<div className="flex justify-center items-center gap-4">
-			{/* {!currentRun && (
-				<Button disabled={newRunIsPending} onClick={() => newRun()}>
-					Start New Run
-				</Button>
-			)} */}
+		<div className="flex items-center justify-center gap-4">
 			{currentRun && (
 				<>
 					<UnlockButton
 						onClick={onClickUpdateBoard}
 						icon={<ArrowRight />}
-						isLoading={updateBoardIsPending}
+						isLoading={findAndBattleOpponentIsPending}
 					>
 						Ready
 					</UnlockButton>
-					{/* <Button variant="outline">Ready</Button> */}
-					{/* <Button
-						disabled={abandonRunIsPending}
-						onClick={() => abandonRun()}
-						className={cn("transition-all", isBouncing && "animate-bounce")}
-					>
-						Ready
-					</Button> */}
 					<Button
 						disabled={abandonRunIsPending}
 						onClick={() => abandonRun()}
 						variant="ghost"
-						className="text-red-300 h-full"
+						className="h-full text-red-300"
 					>
 						Give Up
 					</Button>

@@ -29,23 +29,23 @@ const DraggableBoardUnit = ({ children, id, unit, isClass, weaponTier, removeEqu
 			{...finalListeners}
 			{...finalAttributes}
 			className={cn(
-				"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
+				"relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black transition-colors",
 				isDragging && "z-30",
 				isClass && "border-green-900 hover:border-green-700",
 				!isClass &&
 					!unit &&
-					"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
+					"h-auto w-auto border-dashed border-yellow-700 p-1 hover:border-yellow-600",
 				isWeapon && tierColorMap[weaponTier],
 			)}
 		>
 			<div>{children}</div>
 			{unitEquips.length > 0 && (
-				<div className="absolute top-0 right-0">
+				<div className="absolute right-0 top-0">
 					{unitEquips.map(equip => (
 						<div
 							key={equip.id}
 							className={cn(
-								"border border-yellow-700 border-dashed rounded p-0.5 text-xs",
+								"rounded border border-dashed border-yellow-700 p-0.5 text-xs",
 								tierColorMap[equip.tier],
 							)}
 						>

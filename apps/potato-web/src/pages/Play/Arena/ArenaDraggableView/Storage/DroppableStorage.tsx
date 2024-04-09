@@ -19,7 +19,7 @@ function DroppableStorage({ storage }: DroppableStorageProps) {
 		<div
 			ref={setNodeRef}
 			className={cn(
-				"relative min-w-[380px] w-fit h-[220px] rounded-md border border-zinc-700 transition-colors duration-150 p-2",
+				"relative h-[220px] w-fit min-w-[380px] rounded-md border border-zinc-700 p-2 transition-colors duration-150",
 				isOver && "bg-zinc-800",
 			)}
 		>
@@ -28,14 +28,14 @@ function DroppableStorage({ storage }: DroppableStorageProps) {
 					storage.units.map(unit => <DraggableStorageUnit key={unit.id} shopUnit={unit} />)}
 			</div>
 
-			<div className="flex gap-4 mt-4">
+			<div className="mt-4 flex gap-4">
 				{storage.equips.length > 0 &&
 					storage.equips.map(shopEquip => (
 						<DraggableShopEquipment key={shopEquip.id} shopEquip={shopEquip} hidePrice />
 					))}
 			</div>
 
-			<div className="pt-2 text-zinc-300 flex items-center gap-2 absolute font-mono bottom-0 right-1/2 translate-x-1/2 translate-y-full">
+			<div className="absolute bottom-0 right-1/2 flex translate-x-1/2 translate-y-full items-center gap-2 pt-2 font-mono text-zinc-300">
 				Storage <BoxIcon size={16} />
 			</div>
 		</div>

@@ -21,10 +21,10 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 					) // todo: refactor getUnitData to equip with slot
 				}
 			/>
-			<div className="absolute top-0 -right-[15px] h-full bg-transparent w-[15px]" />
-			<div className="absolute top-0 -left-[15px] h-full bg-transparent w-[15px]" />
+			<div className="absolute -right-[15px] top-0 h-full w-[15px] bg-transparent" />
+			<div className="absolute -left-[15px] top-0 h-full w-[15px] bg-transparent" />
 
-			<div className="translate-x-[-102%] w-max absolute top-0 left-0 z-50 rounded-md border border-green-900 bg-popover text-popover-foreground shadow-md outline-none">
+			<div className="absolute left-0 top-0 z-50 w-max translate-x-[-102%] rounded-md border border-green-900 bg-popover text-popover-foreground shadow-md outline-none">
 				<div className="relative">
 					<MarkdownContent
 						sourcePath={`Classes/${className}`}
@@ -33,13 +33,13 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 				</div>
 			</div>
 
-			<div className="translate-x-[102%] w-max absolute top-0 right-0 z-50 rounded-md border border-yellow-700 bg-popover text-popover-foreground shadow-md outline-none">
+			<div className="absolute right-0 top-0 z-50 w-max translate-x-[102%] rounded-md border border-yellow-700 bg-popover text-popover-foreground shadow-md outline-none">
 				<div className="relative">
 					<EquipmentMarkdownContent
 						equip={shopEquipment[0].shopEquip.equip} // todo allow slot (EquippedItemInstance)
 						onOpenSubTooltip={onOpenSubTooltip}
 					/>
-					<div className="absolute -bottom-[15px] left-0 w-full bg-transparent h-[15px]"></div>
+					<div className="absolute -bottom-[15px] left-0 h-[15px] w-full bg-transparent"></div>
 
 					{shopEquipment.length > 1 && (
 						<RecursiveEquipmentMarkdownContent
@@ -66,12 +66,12 @@ const RecursiveEquipmentMarkdownContent = ({
 	otherEquips: any[]; // todo dont have this type
 }) => {
 	return (
-		<div className="translate-y-[105%] w-max absolute bottom-0 left-0 z-50 rounded-md border border-yellow-700 bg-popover text-popover-foreground shadow-md outline-none">
+		<div className="absolute bottom-0 left-0 z-50 w-max translate-y-[105%] rounded-md border border-yellow-700 bg-popover text-popover-foreground shadow-md outline-none">
 			<div className="relative">
 				<EquipmentMarkdownContent equip={equip} onOpenSubTooltip={onOpenSubTooltip} />
 				{otherEquips.length > 0 && (
 					<>
-						<div className="absolute -bottom-[15px] left-0 w-full bg-transparent h-[15px]"></div>
+						<div className="absolute -bottom-[15px] left-0 h-[15px] w-full bg-transparent"></div>
 						<RecursiveEquipmentMarkdownContent
 							otherEquips={otherEquips.slice(1)}
 							equip={otherEquips[0].equip}

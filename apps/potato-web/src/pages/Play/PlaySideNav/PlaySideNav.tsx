@@ -51,24 +51,24 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 						<Button
 							variant="ghost"
 							className={cn(
-								"w-full flex items-center space-x-1 justify-start px-2",
-								isCollapsed && "px-1 justify-center",
+								"flex w-full items-center justify-start space-x-1 px-2",
+								isCollapsed && "justify-center px-1",
 							)}
 						>
-							<div className="w-5 h-5 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground flex items-center justify-center text-xs">
+							<div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-800 text-xs text-primary-foreground dark:bg-stone-800 dark:text-accent-foreground">
 								{username?.[0]?.toUpperCase()}
 							</div>
 
 							{!isCollapsed && (
 								<div
-									className={`flex text-ellipsis overflow-hidden text-sm text-left items-baseline gap-1`}
+									className={`flex items-baseline gap-1 overflow-hidden text-ellipsis text-left text-sm`}
 								>
 									{username} <span className="text-[10px] text-primary">In lobby</span>
 								</div>
 							)}
 						</Button>
 					) : (
-						<div className="text-xs text-muted-foreground text-center w-full">
+						<div className="w-full text-center text-xs text-muted-foreground">
 							You're not signed in
 						</div>
 					)}

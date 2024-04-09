@@ -10,15 +10,15 @@ const LobbyView = () => {
 	const user = useSupabaseUserStore(state => state.user);
 
 	return (
-		<div className="flex flex-col h-full">
+		<div className="flex h-full flex-col">
 			<div>
-				<div className="breadcrumbs h-[52px] flex items-center px-4">
+				<div className="breadcrumbs flex h-[52px] items-center px-4">
 					<ul>
 						<li>
 							<h1 className="text-lg font-bold">Lobby</h1>
 						</li>
 						<li>
-							<h2 className="text-md text-muted-foreground font-bold">Browse Rooms</h2>
+							<h2 className="text-md font-bold text-muted-foreground">Browse Rooms</h2>
 						</li>
 					</ul>
 				</div>
@@ -43,7 +43,7 @@ const LobbyView = () => {
 			</form>
 
 			{user && <SupaRoomsView />}
-			{!user && <h1 className="px-4 mt-2 text-muted-foreground">Sign in to browse rooms</h1>}
+			{!user && <h1 className="mt-2 px-4 text-muted-foreground">Sign in to browse rooms</h1>}
 		</div>
 	);
 };

@@ -7,9 +7,9 @@ export const ChatBubble = ({ sender, message, isFromMe, timestamp, avatar }) => 
 		<Tooltip>
 			<div className={`chat ${isFromMe ? "chat-end" : "chat-start"}`}>
 				<div className="chat-image ">
-					<div className="flex w-8 h-8 rounded-full dark:bg-stone-800 bg-zinc-800 dark:text-accent-foreground text-primary-foreground items-center justify-center text-xl text-center">
+					<div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-center text-xl text-primary-foreground dark:bg-stone-800 dark:text-accent-foreground">
 						{avatar ? (
-							<img src={avatar} className="w-8 h-8 rounded-full" />
+							<img src={avatar} className="h-8 w-8 rounded-full" />
 						) : (
 							sender?.[0]?.toUpperCase()
 						)}{" "}
@@ -19,7 +19,7 @@ export const ChatBubble = ({ sender, message, isFromMe, timestamp, avatar }) => 
 					<span className="opacity-50">{sender}</span>
 
 					<TooltipTrigger asChild>
-						<time className="text-xs opacity-50 ml-1 text-muted-foreground">
+						<time className="ml-1 text-xs text-muted-foreground opacity-50">
 							{formatDistanceToNow(new Date(timestamp))} ago
 						</time>
 					</TooltipTrigger>

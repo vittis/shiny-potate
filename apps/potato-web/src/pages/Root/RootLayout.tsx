@@ -27,9 +27,9 @@ const RootLayout = () => {
 
 	return (
 		<>
-			<div className="fixed w-full h-full -z-50" />
+			<div className="fixed -z-50 h-full w-full" />
 			<div className="relative h-full p-1 md:p-4">
-				<section className="flex flex-col h-full">
+				<section className="flex h-full flex-col">
 					<Nav />
 					<Outlet />
 				</section>

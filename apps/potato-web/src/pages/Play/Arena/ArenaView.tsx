@@ -39,13 +39,13 @@ function ArenaView() {
 				<div className="absolute right-2 top-1/2 -translate-y-1/2">
 					<TooltipSettigs />
 				</div>
-				<div className="breadcrumbs h-[52px] flex items-center px-4">
+				<div className="breadcrumbs flex h-[52px] items-center px-4">
 					<ul>
 						<li>
 							<h1 className="text-lg font-bold">Play</h1>
 						</li>
 						<li>
-							<h2 className="text-md text-muted-foreground font-bold">Arena</h2>
+							<h2 className="text-md font-bold text-muted-foreground">Arena</h2>
 						</li>
 					</ul>
 				</div>
@@ -58,14 +58,14 @@ function ArenaView() {
 			>
 				<ScrollBar />
 
-				{isPending && <Loader2 className="animate-spin mx-auto w-80 my-20" />}
+				{isPending && <Loader2 className="mx-auto my-20 w-80 animate-spin" />}
 
-				<div className="absolute top-4 right-4 flex gap-2">
+				<div className="absolute right-4 top-4 flex gap-2">
 					<ArenaActionButtons />
 				</div>
 
 				{!currentRun && !isPending && (
-					<div className="w-full mt-32 flex items-center justify-center fadeInTop ease-out">
+					<div className="fadeInTop mt-32 flex w-full items-center justify-center ease-out">
 						<UnlockButton
 							onClick={() => newRun()}
 							isLoading={isLoading}

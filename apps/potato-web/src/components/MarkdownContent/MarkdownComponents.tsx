@@ -18,10 +18,10 @@ export const tierColorMap = {
 const markdownComponents: Partial<Components> = {
 	table: ({ children }) => <table className="w-fit">{children}</table>,
 	td: ({ children }) => <td className="text-left">{children}</td>,
-	th: ({ children }) => <th className="text-left min-w-[50px]">{children}</th>,
+	th: ({ children }) => <th className="min-w-[50px] text-left">{children}</th>,
 	code: ({ children }) => <code className="font-mono text-lg text-amber-300">{children}</code>,
 	strong: ({ children }) => (
-		<span className="text-[10px] font-semibold font-mono text-stone-400">{children}</span>
+		<span className="font-mono text-[10px] font-semibold text-stone-400">{children}</span>
 	),
 	hr: () => <Separator />,
 	ul: ({ children }) => <ul className="flex flex-col gap-0.5">{children}</ul>,
@@ -47,7 +47,7 @@ const MarkdownAnchor = ({ children, href, onOpenSubTooltip }: MarkdownAnchorProp
 				}
 			}}
 		>
-			<span className="underline-offset-4 hover:underline font-mono text-primary cursor-pointer">
+			<span className="cursor-pointer font-mono text-primary underline-offset-4 hover:underline">
 				{children}
 			</span>
 		</MarkdownTooltip>
@@ -63,16 +63,16 @@ interface MarkdownH1Props {
 const MarkdownH1 = ({ children, tier, tags }: MarkdownH1Props) => {
 	return (
 		<div className={cn("flex flex-col")}>
-			<div className="text-3xl font-mono leading-6">
+			<div className="font-mono text-3xl leading-6">
 				{children}
 				{typeof tier === "number" && tier >= 0 && (
-					<span className={cn("text-[12px] font-semibold font-mono ml-2", tierColorMap[tier])}>
+					<span className={cn("ml-2 font-mono text-[12px] font-semibold", tierColorMap[tier])}>
 						T{tier}
 					</span>
 				)}
 			</div>
 			{tags && (
-				<div className="flex gap-1.5 -ml-0.5">
+				<div className="-ml-0.5 flex gap-1.5">
 					{tags?.map(tag => (
 						<Button key={tag} variant="unstyled">
 							<Badge variant="secondary" className="capitalize">

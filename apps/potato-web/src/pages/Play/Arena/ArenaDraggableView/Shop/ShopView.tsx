@@ -47,12 +47,12 @@ function ShopView({ shop }: ShopViewInterface) {
 
 			<div className="mt-6 flex justify-center">
 				<div className="flex gap-10">
-					<div className="flex gap-4 flex-wrap justify-center">
+					<div className="flex flex-wrap justify-center gap-4">
 						{filteredWeapons?.map(weapon => (
 							<DraggableShopEquipment key={weapon.id} shopEquip={weapon} />
 						))}
 					</div>
-					<div className="flex gap-4 flex-wrap justify-center">
+					<div className="flex flex-wrap justify-center gap-4">
 						{filteredTrinkets?.map(trinket => (
 							<DraggableShopEquipment key={trinket.id} shopEquip={trinket} />
 						))}

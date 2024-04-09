@@ -68,7 +68,7 @@ const LobbyRoom = ({
 		) : type === "Free for All" ? (
 			<UsersIcon className="mr-1 h-3 w-3 dark:fill-yellow-400 dark:text-yellow-400" />
 		) : (
-			<FlaskConical className="mr-1 h-3 w-3 dark:fill-black-800 dark:text-yellow-400" />
+			<FlaskConical className="dark:fill-black-800 mr-1 h-3 w-3 dark:text-yellow-400" />
 		);
 
 	async function onClickJoin() {
@@ -97,7 +97,7 @@ const LobbyRoom = ({
 			onClick={onClickJoin}
 			size="sm"
 			variant="outline"
-			className="text-emerald-300 hover:text-emerald-300 justify-between w-full relative flex space-x-2 items-center px-1.5 h-[30px]"
+			className="relative flex h-[30px] w-full items-center justify-between space-x-2 px-1.5 text-emerald-300 hover:text-emerald-300"
 		>
 			Join
 			{mutationIsLoading ? (
@@ -111,20 +111,20 @@ const LobbyRoom = ({
 	return (
 		<Card
 			className={cn(
-				"relative max-w-[420px] min-h-[180px] flex flex-col m-1 bg-pattern-gradient",
+				"bg-pattern-gradient relative m-1 flex min-h-[180px] max-w-[420px] flex-col",
 				!isInRoom && !isFull && "bg-pattern-gradient" /* glow-sm-success */,
 				!isInRoom && isFull && "bg-pattern-gradient-error" /* glow-sm-error */,
 			)}
 		>
 			<CardHeader className="flex flex-row space-y-0 px-0.5">
-				<div className="space-y-3 w-1/2 px-2.5">
+				<div className="w-1/2 space-y-3 px-2.5">
 					<CardTitle className="text-lg">{name}</CardTitle>
 					<CardDescription>{description}</CardDescription>
 				</div>
 				<div className="w-1/2">
 					<ScrollArea
 						className={cn(
-							"max-h-[100px] h-full w-full px-3.5",
+							"h-full max-h-[100px] w-full px-3.5",
 							isFull && members.length >= 3 && "max-h-[136px] ",
 						)}
 					>
@@ -138,14 +138,14 @@ const LobbyRoom = ({
 						</div>
 					</ScrollArea>
 					{shouldShowJoinButton && hasMoreThan3Members && (
-						<div className="pt-1 px-2.5">
+						<div className="px-2.5 pt-1">
 							<JoinButton />
 						</div>
 					)}
 				</div>
 			</CardHeader>
-			<CardContent className="flex flex-col-reverse flex-1 gap-2 mt-3">
-				<div className="flex space-x-4 text-sm text-muted-foreground items-center justify-between">
+			<CardContent className="mt-3 flex flex-1 flex-col-reverse gap-2">
+				<div className="flex items-center justify-between space-x-4 text-sm text-muted-foreground">
 					<div className="flex space-x-3">
 						<div className="flex items-center">
 							{icon}
@@ -156,14 +156,14 @@ const LobbyRoom = ({
 							<CircleIcon
 								className={cn(
 									"mr-1 h-3 w-3 fill-green-400 text-green-400",
-									isFull && "text-red-400 fill-red-400",
+									isFull && "fill-red-400 text-red-400",
 								)}
 							/>
 							{members.length}/{maxMembers}
 						</div>
 
 						{false && (
-							<div className="text-[12px] flex items-center gap-1 text-muted-foreground">
+							<div className="flex items-center gap-1 text-[12px] text-muted-foreground">
 								<ClockIcon className="h-3 w-3" />
 								<time dateTime="2008-02-14 20:00">{formatDistanceToNow(lastUpdated)} ago</time>
 							</div>
@@ -172,7 +172,7 @@ const LobbyRoom = ({
 
 					<div className="flex items-center gap-1">
 						{!isInRoom && (
-							<div className="text-[12px] flex items-center gap-1 text-muted-foreground">
+							<div className="flex items-center gap-1 text-[12px] text-muted-foreground">
 								<ClockIcon className="h-3 w-3" />
 								<time dateTime="2008-02-14 20:00">
 									{formatDistanceToNow(new Date(lastUpdated))} ago
@@ -188,7 +188,7 @@ const LobbyRoom = ({
 											onClick={onClickLeave}
 											size="sm"
 											variant="ghost"
-											className="justify-between relative flex items-center px-2 h-[30px]"
+											className="relative flex h-[30px] items-center justify-between px-2"
 										>
 											{mutationIsLoading ? (
 												<Loader2Icon className="w-4 animate-spin" />
@@ -204,7 +204,7 @@ const LobbyRoom = ({
 										<Button
 											size="sm"
 											variant="ghost"
-											className="justify-between relative flex items-center px-2 h-[30px]"
+											className="relative flex h-[30px] items-center justify-between px-2"
 										>
 											<MessageCircleIcon className="w-4 text-sky-400" />
 										</Button>
@@ -219,12 +219,12 @@ const LobbyRoom = ({
 												onClick={onClickStart}
 												size="sm"
 												variant="ghost"
-												className="justify-between relative flex items-center px-2 h-[30px]"
+												className="relative flex h-[30px] items-center justify-between px-2"
 											>
 												{mutationIsLoading ? (
 													<Loader2Icon className="w-4 animate-spin" />
 												) : (
-													<PlayIcon className="animate-pulse w-4 text-emerald-400" />
+													<PlayIcon className="w-4 animate-pulse text-emerald-400" />
 												)}
 											</Button>
 										</TooltipTrigger>

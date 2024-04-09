@@ -35,13 +35,13 @@ function App() {
 
 	return (
 		<>
-			<div className="fixed top-24 w-full flex justify-center">
+			<div className="fixed top-24 flex w-full justify-center">
 				<Button
 					variant="outline"
 					onClick={() => {
 						setIsGamePaused(!isGamePaused);
 					}}
-					className={cn("w-[180px] h-[48px]")}
+					className={cn("h-[48px] w-[180px]")}
 				>
 					{!isGamePaused ? "Stop" : "Start"}{" "}
 					{isGamePaused ? (
@@ -52,22 +52,22 @@ function App() {
 				</Button>
 			</div>
 
-			<div className="fixed bottom-10 w-full flex justify-center">
+			<div className="fixed bottom-10 flex w-full justify-center">
 				<div
 					tabIndex={0}
-					className="collapse collapse-plus bg-stone-800 absolute left-2 bottom-2 w-fit mr-auto ml-auto"
+					className="collapse collapse-plus absolute bottom-2 left-2 ml-auto mr-auto w-fit bg-stone-800"
 				>
 					<input type="checkbox" />
-					<div className="collapse-title text-xl font-medium text-white text-center">
+					<div className="collapse-title text-center text-xl font-medium text-white">
 						Show Units
 					</div>
 					<div className="collapse-content">
 						{firstState && (
-							<div className="w-fit flex justify-center inset-x-0 bg-stone-800 shadow-md p-4 rounded-lg mx-auto">
+							<div className="inset-x-0 mx-auto flex w-fit justify-center rounded-lg bg-stone-800 p-4 shadow-md">
 								<div className="overflow-x-auto">
 									<table className="table table-xs">
 										<thead>
-											<tr className="text-zinc-100 italic text-md uppercase">
+											<tr className="text-md uppercase italic text-zinc-100">
 												<th>Name</th>
 												<th>Hp</th>
 												<th>Shield</th>
@@ -91,7 +91,7 @@ function App() {
 															}
 														}}
 														tabIndex={0}
-														className={`border-none hover:brightness-125 cursor-pointer transition-all ${
+														className={`cursor-pointer border-none transition-all hover:brightness-125 ${
 															selectedEntity === `${unit.owner}${unit.position}`
 																? "bg-amber-400 text-zinc-900"
 																: `${unit.owner === 0 ? "bg-amber-950" : "bg-slate-800"}`

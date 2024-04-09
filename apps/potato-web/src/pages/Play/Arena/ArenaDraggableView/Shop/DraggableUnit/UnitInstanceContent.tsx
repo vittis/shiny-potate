@@ -15,7 +15,7 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 
 	return (
 		<div className="bg-pattern-gradient p-3 font-mono">
-			<div className="text-4xl text-center">{className}</div>
+			<div className="text-center text-4xl">{className}</div>
 			<Separator className="my-4" />
 
 			<div className="flex flex-col gap-4">
@@ -24,7 +24,7 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 						const damageEffect = ability.data.effects.find(effect => effect.type === "DAMAGE");
 						return (
 							<div key={ability.id} className="flex flex-col">
-								<div className="text-amber-300 mb-1 flex items-center gap-1">
+								<div className="mb-1 flex items-center gap-1 text-amber-300">
 									<span className="text-xl">{ability.data.name}</span>
 									{ability.data.tags.map(tag => (
 										<Badge key={tag} size="sm" variant="secondary" className="capitalize">

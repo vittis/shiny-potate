@@ -26,12 +26,12 @@ const CollapsibleHeader = ({
 
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen}>
-			<div className="flex items-center mb-4">
+			<div className="mb-4 flex items-center">
 				<CollapsibleTrigger asChild>
 					<Button
 						variant="ghost"
 						size="sm"
-						className="flex items-center w-fit gap-2 p-0 py-0 hover:bg-transparent hover:opacity-85 transition-all"
+						className="flex w-fit items-center gap-2 p-0 py-0 transition-all hover:bg-transparent hover:opacity-85"
 					>
 						<div>
 							{icon}

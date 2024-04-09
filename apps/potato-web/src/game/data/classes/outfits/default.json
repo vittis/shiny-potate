@@ -1,8 +1,8 @@
 {
-  "showHead": true,
-  "showNeck": true,
-  "showArms": true,
-  "helmet": "",
-  "chest": "leatherShirt",
-  "back": ""
+	"showHead": true,
+	"showNeck": true,
+	"showArms": true,
+	"helmet": "",
+	"chest": "leatherShirt",
+	"back": ""
 }

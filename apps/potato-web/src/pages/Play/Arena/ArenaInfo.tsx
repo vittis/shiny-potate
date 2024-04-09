@@ -9,7 +9,7 @@ function ArenaInfo() {
 	}
 
 	return (
-		<div className="flex gap-4 items-center">
+		<div className="flex items-center gap-4">
 			<div>Round: {currentRun.round}</div>
 			<div className="text-green-300">Wins: {currentRun.wins}</div>
 			<div className="text-red-300">Losses: {currentRun.losses}</div>

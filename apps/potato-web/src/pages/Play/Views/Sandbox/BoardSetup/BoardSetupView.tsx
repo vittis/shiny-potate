@@ -207,7 +207,7 @@ export function BoardSetupView() {
 	}
 
 	if (isFetching) {
-		return <Loader2 className="animate-spin mx-auto w-80 mt-20" />;
+		return <Loader2 className="mx-auto mt-20 w-80 animate-spin" />;
 	}
 
 	return (
@@ -219,9 +219,9 @@ export function BoardSetupView() {
 				onDragCancel={() => console.log("drag cancel")}
 				onDragMove={() => console.log("drag move")} */
 			>
-				<div className="flex p-6 gap-6 flex-col">
-					<div className="grow flex flex-col">
-						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
+				<div className="flex flex-col gap-6 p-6">
+					<div className="flex grow flex-col">
+						<div className="mt-4 flex min-h-[100px] w-full flex-wrap items-center justify-center gap-4">
 							{classes.map(unitClass => (
 								<MarkdownTooltip
 									key={unitClass.id}
@@ -236,7 +236,7 @@ export function BoardSetupView() {
 
 						<Separator className="mb-4 mt-8" />
 
-						<div className="w-full flex gap-4 mt-4 min-h-[100px] items-center justify-center flex-wrap">
+						<div className="mt-4 flex min-h-[100px] w-full flex-wrap items-center justify-center gap-4">
 							{weapons?.map(weapon => (
 								<MarkdownTooltip
 									key={weapon.id}
@@ -257,8 +257,8 @@ export function BoardSetupView() {
 
 					<Separator className="mt-2" />
 
-					<div className="flex items-center justify-center min-w-[500px] gap-20 mt-10">
-						<div className="w-fit h-fit grid grid-cols-3 gap-5">
+					<div className="mt-10 flex min-w-[500px] items-center justify-center gap-20">
+						<div className="grid h-fit w-fit grid-cols-3 gap-5">
 							{boardLeft.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
@@ -299,7 +299,7 @@ export function BoardSetupView() {
 								</React.Fragment>
 							))}
 						</div>
-						<div className="w-fit h-fit grid grid-cols-3 gap-5">
+						<div className="grid h-fit w-fit grid-cols-3 gap-5">
 							{boardRight.map(({ id, unit }) => (
 								<React.Fragment key={id}>
 									{unit ? (
@@ -343,9 +343,9 @@ export function BoardSetupView() {
 					</div>
 				</div>
 			</DndContext>
-			<div className="mt-2 mx-auto w-fit flex flex-col gap-4 pb-20">
+			<div className="mx-auto mt-2 flex w-fit flex-col gap-4 pb-20">
 				<Button onClick={onClickStartGame} disabled={isPending}>
-					Start game {isPending && <Loader2 className="animate-spin ml-1 w-[15px]" />}
+					Start game {isPending && <Loader2 className="ml-1 w-[15px] animate-spin" />}
 				</Button>
 				<Button variant="ghost" onClick={onClickReset}>
 					Reset

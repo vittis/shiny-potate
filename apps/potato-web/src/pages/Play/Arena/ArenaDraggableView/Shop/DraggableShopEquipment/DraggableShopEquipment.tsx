@@ -33,8 +33,8 @@ function DraggableShopEquipment({ shopEquip, hidePrice = false }: DraggableShopE
 					{...listeners}
 					{...attributes}
 					className={cn(
-						"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
-						"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
+						"relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black transition-colors",
+						"h-auto w-auto border-dashed border-yellow-700 p-1 hover:border-yellow-600",
 						tierColorMap[equip.tier],
 						isDragging && "z-30",
 					)}
@@ -49,7 +49,7 @@ function DraggableShopEquipment({ shopEquip, hidePrice = false }: DraggableShopE
 	}
 
 	return (
-		<div className="font-mono flex flex-col items-center">
+		<div className="flex flex-col items-center font-mono">
 			<div className="text-yellow-300">{price}</div>
 			<MarkdownTooltip content={<EquipmentMarkdownContent equip={equip} />}>
 				<div
@@ -58,8 +58,8 @@ function DraggableShopEquipment({ shopEquip, hidePrice = false }: DraggableShopE
 					{...listeners}
 					{...attributes}
 					className={cn(
-						"w-[100px] h-[100px] rounded-md border border-zinc-700 relative bg-black transition-colors flex items-center justify-center",
-						"border-dashed border-yellow-700 hover:border-yellow-600 w-auto h-auto p-1",
+						"relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black transition-colors",
+						"h-auto w-auto border-dashed border-yellow-700 p-1 hover:border-yellow-600",
 						tierColorMap[equip.tier],
 						isDragging && "z-30",
 					)}

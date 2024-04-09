@@ -4,26 +4,26 @@ export function DemoUI() {
 	return (
 		<>
 			{/* Online players count */}
-			<div className="fixed bottom-5 right-5 stats shadow">
-				<div className="stat py-2 px-5">
-					<div className="stat-value countdown">
+			<div className="stats fixed bottom-5 right-5 shadow">
+				<div className="stat px-5 py-2">
+					<div className="countdown stat-value">
 						<span style={{ "--value": 5 } as CSSProperties}></span>
 					</div>
 					<div className="stat-title">online</div>
 				</div>
 			</div>
 
-			<main className="shadow-md relative max-w-screen-md mx-auto bg-base-100 border-base-content/5 border rounded-box m-4 flex flex-col items-center px-6 pb-6">
+			<main className="relative m-4 mx-auto flex max-w-screen-md flex-col items-center rounded-box border border-base-content/5 bg-base-100 px-6 pb-6 shadow-md">
 				{/* navbar */}
 				<div className="navbar bg-base-100 p-0">
 					<div className="navbar-start">
-						<a href="/" className="text-3xl prose text-primary font-normal">
+						<a href="/" className="prose text-3xl font-normal text-primary">
 							🥦
 						</a>
 					</div>
 					<div className="navbar-center"></div>
 					<div className="navbar-end">
-						<button className="btn btn-ghost btn-circle">
+						<button className="btn btn-circle btn-ghost">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								className="h-5 w-5"
@@ -39,7 +39,7 @@ export function DemoUI() {
 								/>
 							</svg>
 						</button>
-						<button className="btn btn-ghost btn-circle">
+						<button className="btn btn-circle btn-ghost">
 							<div className="indicator">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -55,15 +55,15 @@ export function DemoUI() {
 										d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
 									/>
 								</svg>
-								<span className="badge badge-xs badge-primary indicator-item"></span>
+								<span className="badge indicator-item badge-primary badge-xs"></span>
 							</div>
 						</button>
 					</div>
 				</div>
 
 				{/* Members */}
-				<div className="fixed flex flex-col items-center top-5 right-5 px-5 py-2 bg-base-100 shadow rounded z-50">
-					<h1 className="text-primary border-b-[3px] border-primary mb-2">Members</h1>
+				<div className="fixed right-5 top-5 z-50 flex flex-col items-center rounded bg-base-100 px-5 py-2 shadow">
+					<h1 className="mb-2 border-b-[3px] border-primary text-primary">Members</h1>
 					{Object.keys([{ name: "kekw" }]).map(memberId => (
 						<div key={memberId} className={`font-bold text-slate-800`}>
 							{"Kekw"}{" "}
@@ -71,7 +71,7 @@ export function DemoUI() {
 					))}
 				</div>
 
-				<div className="flex w-full my-4 border-b-[3px] border-primary">
+				<div className="my-4 flex w-full border-b-[3px] border-primary">
 					<h1 className="text-primary">Play</h1>
 				</div>
 
@@ -83,7 +83,7 @@ export function DemoUI() {
 				</p>
 
 				{/* find match */}
-				<div className="max-w-fit flex flex-col items-center w-full border-opacity-50">
+				<div className="flex w-full max-w-fit flex-col items-center border-opacity-50">
 					<button className="btn btn-secondary btn-wide mt-14 shadow-sm" disabled>
 						Find Match
 					</button>
@@ -96,7 +96,7 @@ export function DemoUI() {
 						Create room
 					</button>
 				</div>
-				<div className="flex w-full border-b-[3px] border-primary mt-14 my-4">
+				<div className="my-4 mt-14 flex w-full border-b-[3px] border-primary">
 					<h1 className="text-primary">Manage deck</h1>
 				</div>
 				<p className="has-dropcap prose mt-4">
@@ -106,7 +106,7 @@ export function DemoUI() {
 					<span className="link link-primary">Learn more.</span>{" "}
 				</p>
 				{/* <ul className="menu bg-base-100 rounded-box absolute top-1/2 -left-8"> */}
-				<ul className="menu bg-base-100 shadow-md rounded-box absolute top-1/3 -left-8">
+				<ul className="menu absolute -left-8 top-1/3 rounded-box bg-base-100 shadow-md">
 					<li>
 						<a className="active">
 							<svg
