@@ -12,6 +12,7 @@ import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
 import { PossibleEvent, StepEffects, SubStepEffects } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
+import { Board } from "../shop/ArenaTypes";
 
 export interface UnitsDTO {
 	equipments: EquipmentInstance[];
@@ -44,6 +45,52 @@ export class Game {
 
 		this.boardManager.addToBoard(unit1);
 		this.boardManager.addToBoard(unit2);
+	}
+
+	// todo use this instead of setTeam
+	setBoard(team: OWNER, board: Board) {
+		board.forEach(boardSpace => {
+			const boardUnit = boardSpace?.unit;
+			if (!boardUnit) return;
+			const unit = boardUnit.unit;
+
+			const gameUnit = new Unit(team, parseInt(boardSpace.position), this.boardManager);
+			gameUnit.setClass(new Class(Classes[unit.className as keyof typeof Classes]));
+
+			// todo uncomment when not hardcoding SLOT in arena
+			/* unit.shopEquipment.forEach(equipment => {
+				gameUnit.equip(new Equipment(equipment.shopEquip.equip), equipment.slot);
+			}); */
+
+			unit.shopEquipment.forEach(equipment => {
+				const equipmentData = equipment.shopEquip.equip;
+				if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
+					if (gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
+						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
+					} else {
+						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
+					}
+				} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
+					gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
+				} else {
+					if (!gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
+						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+					} else {
+						if (
+							gameUnit.equipmentManager.canEquipOnSlot(
+								new Equipment(equipmentData),
+								EQUIPMENT_SLOT.OFF_HAND,
+							)
+						) {
+							gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
+						} else {
+							throw Error(`setTeams: Can't equip ${equipmentData.name} on offhand`);
+						}
+					}
+				}
+			});
+			this.boardManager.addToBoard(gameUnit);
+		});
 	}
 
 	setTeam(team: OWNER, units: UnitsDTO[]) {

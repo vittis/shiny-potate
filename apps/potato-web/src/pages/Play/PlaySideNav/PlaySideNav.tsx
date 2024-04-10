@@ -120,14 +120,13 @@ const PlaySideNav = ({ defaultCollapsed, defaultSize, navCollapsedSize }: PlaySi
 					links={[
 						{
 							title: "Profile",
-							label: "1",
 							icon: User,
 							variant: "ghost",
-							selected: false,
+							selected: !!matchPath("/play/profile", pathname),
 							props: {
-								disabled: true,
+								disabled: false,
 							},
-							path: "#",
+							path: "profile",
 						},
 						{
 							title: "Updates",

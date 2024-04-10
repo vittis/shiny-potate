@@ -5,6 +5,7 @@ import { fetchBattleSetup, fetchVanillaBattleSetup } from "./game/scenes/battle/
 import { Button } from "./components/ui/button";
 import { cn } from "./lib/utils";
 import { Flag, Swords } from "lucide-react";
+import { CrazyButton } from "./pages/Play/Arena/ArenaActionButtons";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
@@ -36,20 +37,20 @@ function App() {
 	return (
 		<>
 			<div className="fixed top-24 flex w-full justify-center">
-				<Button
-					variant="outline"
+				<CrazyButton
 					onClick={() => {
 						setIsGamePaused(!isGamePaused);
 					}}
-					className={cn("h-[48px] w-[180px]")}
 				>
-					{!isGamePaused ? "Stop" : "Start"}{" "}
-					{isGamePaused ? (
-						<Swords width={16} className="ml-2" fill="white" />
-					) : (
-						<Flag width={16} className="ml-2" fill="white" />
-					)}
-				</Button>
+					<span className="align-center flex justify-center">
+						{!isGamePaused ? "Stop" : "Start"}{" "}
+						{isGamePaused ? (
+							<Swords width={16} className="ml-2" fill="white" />
+						) : (
+							<Flag width={16} className="ml-2" fill="white" />
+						)}
+					</span>
+				</CrazyButton>
 			</div>
 
 			<div className="fixed bottom-10 flex w-full justify-center">

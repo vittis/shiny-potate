@@ -31,6 +31,7 @@ const useArenaMutations = () => {
 			onSuccess: data => {
 				console.log(data);
 				toast.success("Opponent found");
+				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},
 		});
 

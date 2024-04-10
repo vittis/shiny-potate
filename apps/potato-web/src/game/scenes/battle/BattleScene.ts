@@ -8,6 +8,8 @@ import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { EVENT_TYPE, PossibleEvent, StepEffects } from "game-logic";
+import { trpc } from "@/services/api/trpc";
+import { viewBattle } from "@/pages/Game/GameView";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
@@ -22,6 +24,14 @@ export interface StepEvent {
 	step: number;
 	trigger?: string;
 	subEvents?: SubStepEvent[];
+}
+
+export async function viewGameFromId() {
+	const gameFromLocalStorage = localStorage.getItem("gameIdHistory");
+
+	if (gameFromLocalStorage) {
+		return JSON.parse(gameFromLocalStorage);
+	}
 }
 
 export async function fetchBattleSetup() {
@@ -85,19 +95,37 @@ export class Battle extends Phaser.Scene {
 		this.tiles = tiles;
 		// board.add(this.text);
 
-		queryClient
-			.fetchQuery({
-				queryKey: ["game/battle/setup"],
-				queryFn: isVanillaBattleSetup === "true" ? fetchVanillaBattleSetup : fetchBattleSetup,
-				staleTime: Infinity,
-			})
-			.then(data => {
-				this.firstStep = data.firstStep;
-				this.totalSteps = data.totalSteps;
-				this.eventHistory = data.eventHistory;
-				this.effectHistory = data.effectHistory;
-				this.initializeUnits(this.firstStep);
-			});
+		const searchParams = new URLSearchParams(window.location.search);
+		const gameId = searchParams.get("id");
+		if (!gameId) {
+			queryClient
+				.fetchQuery({
+					queryKey: ["game/battle/setup"],
+					queryFn: isVanillaBattleSetup === "true" ? fetchVanillaBattleSetup : fetchBattleSetup,
+					staleTime: Infinity,
+				})
+				.then(data => {
+					this.firstStep = data.firstStep;
+					this.totalSteps = data.totalSteps;
+					this.eventHistory = data.eventHistory;
+					this.effectHistory = data.effectHistory;
+					this.initializeUnits(this.firstStep);
+				});
+		} else {
+			queryClient
+				.fetchQuery({
+					queryKey: ["view", "battle", gameId],
+					queryFn: () => viewBattle(gameId || ""),
+					staleTime: Infinity,
+				})
+				.then(data => {
+					this.firstStep = data.firstStep;
+					this.totalSteps = data.totalSteps;
+					this.eventHistory = data.eventHistory;
+					this.effectHistory = data.effectHistory;
+					this.initializeUnits(this.firstStep);
+				});
+		}
 
 		useGameState.subscribe(
 			state => state.isGameHidden,

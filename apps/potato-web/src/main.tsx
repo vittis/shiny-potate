@@ -18,6 +18,7 @@ import { GameView } from "./pages/Game/GameView";
 import { SandboxView } from "./pages/Play/Views/Sandbox/SandboxView";
 import { trpc, trpcClient } from "./services/api/trpc";
 import { ArenaView } from "./pages/Play/Arena/ArenaView";
+import { ProfileView } from "./pages/Play/Views/Profile/ProfileView";
 
 /* export const game = new Phaser.Game(
   Object.assign(PHASER_CONFIG, {
@@ -63,11 +64,16 @@ const router = createBrowserRouter([
 					{ path: "rooms", element: <LobbyView /> },
 					{ path: "sandbox", element: <SandboxView /> },
 					{ path: "arena", element: <ArenaView /> },
+					{ path: "profile", element: <ProfileView /> },
 				],
 			},
 			{
 				path: "game",
 				element: <GameView />,
+				/* children: [
+					// Add this line to include a parameterized route for game IDs
+					{ path: ":id", element: <GameView /> },
+				], */
 			},
 		],
 	},

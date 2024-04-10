@@ -5,6 +5,13 @@ import { useGameState } from "@/services/state/useGameState";
 import { useEffect } from "react";
 import { GameSpeedControls } from "./GameSpeedControls";
 import { CopyEventHistoryWidget } from "./CopyEventHistoryWidget";
+import { useQuery } from "@tanstack/react-query";
+import { trpc, vanillaTrpc } from "@/services/api/trpc";
+import { useSearchParams } from "react-router-dom";
+
+export function viewBattle(gameId: string) {
+	return vanillaTrpc.arena.viewBattle.query({ gameId });
+}
 
 const GameView = () => {
 	const gameInstance = useGameState(state => state.gameInstance);
@@ -12,6 +19,18 @@ const GameView = () => {
 	const hideGame = useGameState(state => state.hideGame);
 	const isGameHidden = useGameState(state => state.isGameHidden);
 	const showGame = useGameState(state => state.showGame);
+
+	const [searchParams] = useSearchParams();
+
+	const gameId = searchParams.get("id");
+
+	const { data } = useQuery({
+		queryKey: ["view", "battle", gameId],
+		queryFn: () => viewBattle(gameId || ""),
+		enabled: !!gameId,
+	});
+
+	console.log(data);
 
 	useEffect(() => {
 		if (!gameInstance && !isGameHidden) {
