@@ -62,15 +62,15 @@ export function createAttackAnimation({
 
 	//const targetGlowFx = target.sprite.preFX?.addGlow(0xff0000, 0);
 
-	const targetsGlowFx = targets.map(target => {
+	/* const targetsGlowFx = targets.map(target => {
 		return target.sprite.preFX?.addGlow(0xff0000, 0);
-	});
+	}); */
 
-	unit.scene.tweens.add({
+	/* unit.scene.tweens.add({
 		targets: targetsGlowFx,
 		outerStrength: 2,
 		duration: 260 * animationSpeed,
-	});
+	}); */
 
 	const RUN_DISTANCE = unit.owner === 0 ? 70 : -70;
 	const DISTANCE_TO_ENEMY = unit.owner === 0 ? 80 : -80;
@@ -90,10 +90,17 @@ export function createAttackAnimation({
 				yoyo: true,
 				ease: Phaser.Math.Easing.Cubic.In,
 				onYoyo: () => {
+					targets?.[0]?.sprite?.setTintFill(0xffffff);
+					unit.scene.time.delayedCall(50, () => {
+						targets?.[0]?.sprite?.clearTint();
+					});
+
+					// particle burst
+
 					// attackTweenChain.pause();
 					onImpactPoint({
 						onVFXEnd: () => {
-							targetsGlowFx.forEach(glowFx => {
+							/* targetsGlowFx.forEach(glowFx => {
 								unit.scene.tweens.add({
 									targets: targetsGlowFx,
 									outerStrength: 0,
@@ -102,7 +109,7 @@ export function createAttackAnimation({
 										glowFx?.destroy();
 									},
 								});
-							});
+							}); */
 							// attackTweenChain.resume();
 						},
 					});
@@ -156,7 +163,7 @@ export function createTriggerEffectAnimation({
 				onYoyo: () => {
 					onImpactPoint();
 
-					const triggerText = unit.scene.add.text(0, -30, trigger.replace(/_/g, " "), {
+					/* const triggerText = unit.scene.add.text(0, -30, trigger.replace(/_/g, " "), {
 						fontSize: 28,
 						color: "#10AB8C",
 						fontFamily: "IM Fell DW Pica",
@@ -173,23 +180,6 @@ export function createTriggerEffectAnimation({
 						},
 					});
 					triggerText.setOrigin(0.5);
-
-					allSourceNames.forEach(sourceName => {
-						unit.add(
-							addFadingText(
-								unit.scene,
-								Phaser.Math.Between(-50, 50),
-								Phaser.Math.Between(-50, 50),
-								{
-									text: sourceName,
-									color: "red",
-									fontSize: 22,
-									duration: 2000,
-								},
-							),
-						);
-					});
-
 					// damage text going up
 					unit.scene.tweens.add({
 						targets: triggerText,
@@ -201,9 +191,23 @@ export function createTriggerEffectAnimation({
 						onComplete: () => {
 							triggerText.destroy();
 						},
-					});
+					}); */
 
-					unit.add(triggerText);
+					allSourceNames.forEach(sourceName => {
+						unit.add(
+							addFadingText(
+								unit.scene,
+								Phaser.Math.Between(-50, 0),
+								Phaser.Math.Between(-75, -50),
+								{
+									text: sourceName,
+									color: "orange",
+									fontSize: 22,
+									duration: 2000,
+								},
+							),
+						);
+					});
 				},
 			},
 		],

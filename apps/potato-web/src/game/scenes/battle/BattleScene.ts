@@ -3,13 +3,12 @@ import { BattleUnit } from "./battleUnit/BattleUnit";
 import { queryClient } from "../../../services/api/queryClient";
 import { useGameState } from "../../../services/state/useGameState";
 import { preloadBattle, setupBattle, setupVFXAnimations } from "./BattleSetup";
-import { Ability, highlightAbility, restoreAbilities } from "./battleUnit/BattleUnitAbilities";
 import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { EVENT_TYPE, PossibleEvent, StepEffects } from "game-logic";
-import { trpc } from "@/services/api/trpc";
 import { viewBattle } from "@/pages/Game/GameView";
+import { loopStepEvents } from "./BattleSceneUtils";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
@@ -209,62 +208,31 @@ export class Battle extends Phaser.Scene {
 
 		this.isPlayingEventAnimation = true;
 		this.pauseTimeEvents();
-		let animationsEnded = 0;
-		let impactsEnded = 0;
 
-		const eventsWithoutSubsteps = eventsOnThisStep.filter(event => !event.subStep);
-
-		eventsWithoutSubsteps.forEach(event => {
-			const unit = this.units.find(u => u.id === event.actorId);
-			if (unit) {
-				let targets;
-				if (event.type === EVENT_TYPE.USE_ABILITY) {
-					targets = this.units.filter(u => event.payload.targetsId.includes(u.id));
-				}
-				if (event.type === EVENT_TYPE.TRIGGER_EFFECT) {
-					targets = [unit];
-				}
-				unit.playEvent({
-					board: this.board,
-					event: event as any,
-					targets,
-					onImpact: () => {
-						impactsEnded++;
-						if (impactsEnded === eventsWithoutSubsteps.length) {
-							effectsOnThisStep?.units.forEach(unitEffect => {
-								const currentUnit = this.units.find(u => u.id === unitEffect.unitId);
-								unitEffect.effects.forEach(effect => {
-									currentUnit?.applyEffect(effect);
-								});
-							});
-						}
-					},
-					onEnd: () => {
-						animationsEnded++;
-						if (animationsEnded === eventsWithoutSubsteps.length) {
-							this.resumeTimeEvents();
-						}
-
-						if (event.type === EVENT_TYPE.USE_ABILITY) {
-							const abilityUsed = unit?.abilitiesManager.abilities.find(
-								ability => ability.id === event.payload.id,
-							) as Ability;
-							restoreAbilities([abilityUsed], this);
-						}
-					},
-					onStart: () => {
-						if (event.type === EVENT_TYPE.USE_ABILITY) {
-							const abilityUsed = unit?.abilitiesManager.abilities.find(
-								ability => ability.id === event.payload.id,
-							) as Ability;
-							highlightAbility(abilityUsed, this);
-						}
-					},
-					allUnits: this.units,
-					step,
-				});
+		let eventsForSubStep;
+		const playSubStepEvents = subStep => {
+			if (subStep === 0) {
+				eventsForSubStep = eventsOnThisStep.filter(event => !event.subStep);
+			} else {
+				eventsForSubStep = eventsOnThisStep.filter(event => event?.subStep === subStep);
 			}
-		});
+			if (eventsForSubStep.length > 0) {
+				loopStepEvents({
+					scene: this,
+					loopEvents: eventsForSubStep,
+					effectsOnThisStep,
+					subStep,
+					onAllAnimationsEnd: () => {
+						playSubStepEvents(subStep + 1); // Recursively call for the next subStep
+					},
+				});
+			} else {
+				this.resumeTimeEvents();
+				this.isPlayingEventAnimation = false;
+			}
+		};
+
+		playSubStepEvents(0); // Start the recursive process
 	}
 
 	shouldStartFromBeginning() {

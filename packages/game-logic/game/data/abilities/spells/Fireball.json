@@ -2,8 +2,8 @@
 	"name": "Fireball",
 	"type": "SPELL",
 	"tags": [],
-	"target": "STANDARD",
-	"cooldown": 40,
+	"target": "STANDARD_BOX",
+	"cooldown": 140,
 	"effects": [
 		{
 			"type": "DAMAGE",
@@ -11,8 +11,20 @@
 			"target": "STANDARD_BOX",
 			"conditions": [],
 			"payload": {
-				"value": 30
+				"value": 40
 			}
+		},
+		{
+			"type": "DISABLE",
+			"trigger": "ON_HIT",
+			"target": "STANDARD_BOX",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "STUN",
+					"duration": 10
+				}
+			]
 		}
 	]
 }

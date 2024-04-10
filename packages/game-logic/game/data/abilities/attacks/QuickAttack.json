@@ -3,7 +3,7 @@
   "type": "ATTACK",
   "tags": [],
   "target": "STANDARD",
-  "cooldown": 15,
+  "cooldown": 17,
   "effects": [
     {
       "type": "DAMAGE",

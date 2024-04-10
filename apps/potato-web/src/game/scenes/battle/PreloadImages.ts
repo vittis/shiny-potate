@@ -26,9 +26,17 @@ export function loadAssets(scene: Phaser.Scene) {
 	scene.load.image("paul", "assets/paul.png");
 
 	// VFX
-	scene.load.spritesheet("slash2", "assets/VFX/small_slash_2.png", {
-		frameWidth: 65,
-		frameHeight: 27,
+	scene.load.spritesheet("slash2", "assets/VFX/slash_2.png", {
+		frameWidth: 192,
+		frameHeight: 192,
+	});
+	scene.load.spritesheet("shield1", "assets/VFX/shield_1.png", {
+		frameWidth: 192,
+		frameHeight: 192,
+	});
+	scene.load.spritesheet("heal1", "assets/VFX/heal_1.png", {
+		frameWidth: 192,
+		frameHeight: 192,
 	});
 
 	// Abilities

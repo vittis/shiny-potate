@@ -95,11 +95,18 @@ function addTiles(scene: Phaser.Scene) {
 
 export function setupVFXAnimations(scene: Phaser.Scene) {
 	scene.anims.create({
-		key: "slash2_attack",
-		frames: scene.anims.generateFrameNumbers("slash2", {
-			start: 0,
-			end: 3,
-		}),
-		frameRate: 12,
+		key: "slash2",
+		frames: scene.anims.generateFrameNumbers("slash2"),
+		frameRate: 22,
+	});
+	scene.anims.create({
+		key: "shield1",
+		frames: scene.anims.generateFrameNumbers("shield1"),
+		frameRate: 22,
+	});
+	scene.anims.create({
+		key: "heal1",
+		frames: scene.anims.generateFrameNumbers("heal1"),
+		frameRate: 14,
 	});
 }

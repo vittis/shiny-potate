@@ -52,6 +52,8 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 
 		const disableContainer = this.scene.add.container(this.dataUnit.owner === 0 ? -35 : 33, -30);
 
+		console.log(name);
+
 		const disableImage = this.scene.add.image(
 			0,
 			0,

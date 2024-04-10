@@ -14,6 +14,7 @@ import { BattleUnitBars } from "./BattleUnitBars";
 import { addFadingText } from "../utils/text";
 import { BattleUnitDisables } from "./BattleUnitDisables";
 import { INSTANT_EFFECT_TYPE, PossibleEffect } from "game-logic";
+import { VFX_MAP } from "../utils/vfx";
 
 export class BattleUnit extends Phaser.GameObjects.Container {
 	public id: string;
@@ -114,13 +115,16 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			});
 		}
 		if (effect.type === INSTANT_EFFECT_TYPE.DISABLE) {
-			// this.disablesManager.addDisable(effect.payload, 0);
+			effect.payload.forEach(disable => {
+				// TODO: why step 0 on addDisable
+				this.disablesManager.addDisable({ name: disable.name, duration: disable.duration }, 0);
+			});
 		}
 		if (effect.type === INSTANT_EFFECT_TYPE.SHIELD) {
-			// this.barsManager.onReceiveShield(effect.payload.value);
+			this.barsManager.onReceiveShield(effect.payload.value);
 		}
 		if (effect.type === INSTANT_EFFECT_TYPE.HEAL) {
-			//  this.barsManager.onReceiveHeal(effect.payload.value);
+			this.barsManager.onReceiveHeal(effect.payload.value);
 		}
 	}
 
@@ -132,7 +136,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		onStart,
 		onImpact,
 		allUnits,
-		step,
 	}: {
 		board: any;
 		event: any;
@@ -142,7 +145,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		onStart?: Function;
 		onImpact?: Function;
 		allUnits?: BattleUnit[];
-		step?: number;
 	}) {
 		// console.log("playing ", event.type, event.trigger);
 		if (event.type === "TICK_EFFECT") {
@@ -223,7 +225,15 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						// todo text
+
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `+${shieldSubEvent.payload.payload.value}`,
+								color: "blue",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 
 				const healEvents =
@@ -241,7 +251,15 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on TRIGGER_EFFECT: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						// todo text
+
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `+${healEvent.payload.payload.value}`,
+								color: "green",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 			};
 
@@ -272,7 +290,12 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		}
 
 		if (event.type === "USE_ABILITY") {
-			this.add(addFadingText(this.scene, 0, -50, { text: event.payload.name }));
+			this.add(
+				addFadingText(this.scene, 0, -50, {
+					text: event.payload.name,
+					duration: 1300,
+				}),
+			);
 
 			const abilityUsed = this.abilitiesManager.abilities.find(
 				ability => ability.id === event.payload.id,
@@ -295,16 +318,23 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 				if (onImpact) {
 					onImpact();
 				}
-				const slash = this.scene.add.sprite(targets?.[0].x, targets?.[0].y, "slash2");
-				board.add(slash);
-				slash.setScale(2.2, 3.1);
-				slash.flipX = this.owner !== 0;
-				slash.play("slash2_attack").on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-					slash.destroy();
-					//resume
-					if (onVFXEnd) {
-						onVFXEnd();
-					}
+
+				const vfx = VFX_MAP?.[abilityUsed.name] || VFX_MAP.Default;
+				targets.forEach(target => {
+					const vfxSprite = this.scene.add.sprite(target.x, target.y, vfx.key);
+					board.add(vfxSprite);
+					vfxSprite.setTint(vfx.tint || 0xffffff);
+					vfxSprite.setScale(vfx.scale || 1);
+					vfxSprite.setAlpha(vfx.alpha || 1);
+					vfxSprite.flipX = this.owner !== 0;
+					//vfxSprite.setOrigin(0.5, 0.5);
+					vfxSprite.play(vfx.key).on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+						vfxSprite.destroy();
+						//resume
+						if (onVFXEnd) {
+							onVFXEnd();
+						}
+					});
 				});
 
 				const receiveDamageEvents =
@@ -348,7 +378,14 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply shield on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						// todo text
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `+${shieldSubEvent.payload.payload.value}`,
+								color: "blue",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 
 				const healEvents =
@@ -366,7 +403,14 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 								`Trying to apply heal on USE_ABILITY: Couldn't find target with id: ${targetId}`,
 							);
 						}
-						// todo text
+						target.add(
+							addFadingText(this.scene, 0, -50, {
+								text: `+${healEvent.payload.payload.value}`,
+								color: "green",
+								duration: 1800,
+								fontSize: 38,
+							}),
+						);
 					});
 			};
 
