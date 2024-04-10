@@ -55,6 +55,7 @@ export class Ability {
 
 		// TODO fix abilities with no target
 		if (getAllTargetUnits(targetUnits).length == 0) {
+			this.progress = 0;
 			//@ts-expect-error
 			return;
 		}

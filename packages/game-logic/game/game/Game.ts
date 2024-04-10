@@ -4,13 +4,20 @@ import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT, EquipmentInstance } from "./Equipment/EquipmentTypes";
 import {
 	executeStepEffects,
+	getDeathIntents,
+	getEventsFromIntents,
 	getStepEffects,
-	getSubStepEvents,
 	sortEventsByType,
 } from "./Event/EventUtils";
 import { Class } from "./Class/Class";
 import { Classes, Trinkets, Weapons } from "./data";
-import { PossibleEvent, StepEffects, SubStepEffects } from "./Event/EventTypes";
+import {
+	EVENT_TYPE,
+	PossibleEvent,
+	PossibleIntent,
+	StepEffects,
+	SubStepEffects,
+} from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 import { Board } from "../shop/ArenaTypes";
 
@@ -155,14 +162,16 @@ export function runGame(bm: BoardManager) {
 	const firstStep = { units: serializedUnits };
 
 	// Get BATTLE_START trigger events
-	const battleStartEvents: PossibleEvent[] = [];
+	const battleStartIntents: PossibleIntent[] = [];
 	bm.getAllUnits().forEach(unit => {
 		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
-		battleStartEvents.push(...unit.serializeEvents());
+		battleStartIntents.push(...unit.serializeIntents());
 	});
 
+	const battleStartEvents: PossibleEvent[] = getEventsFromIntents(bm, battleStartIntents);
+
 	if (battleStartEvents.length > 0) {
-		const orderedEvents = sortEventsByType(battleStartEvents);
+		const orderedEvents = sortEventsByType(battleStartEvents) as PossibleEvent[];
 		orderedEvents.forEach(event => {
 			eventHistory.push(event);
 		});
@@ -178,14 +187,38 @@ export function runGame(bm: BoardManager) {
 			unit.step(currentStep);
 		});
 
-		// Get each stepEvents from each unit
+		// Get each stepIntent from each unit and store on stepIntentsMap
+		let stepIntentsMap = new Map<string, PossibleIntent[]>();
+		bm.getAllUnits().forEach(unit => {
+			stepIntentsMap.set(unit.id, unit.serializeIntents());
+		});
+
+		// Get the first intent of each unit and add it to stepEvents
 		const stepEvents: PossibleEvent[] = [];
 		bm.getAllUnits().forEach(unit => {
-			stepEvents.push(...unit.serializeEvents());
+			let stepIntents = stepIntentsMap.get(unit.id);
+			if (!stepIntents || stepIntents.length == 0) return;
+
+			// Get all intents of type TICK_EFFECT and add them to stepEvents as events (if exists)
+			const tickEffectIntents = stepIntents.filter(
+				intent => intent.type === EVENT_TYPE.TICK_EFFECT,
+			);
+			if (tickEffectIntents) {
+				stepEvents.push(...getEventsFromIntents(bm, tickEffectIntents));
+				stepIntents = stepIntents.filter(intent => intent.type !== EVENT_TYPE.TICK_EFFECT);
+			}
+
+			// Get first intent (excluding TICK_EFFECT) and add to stepEvents (if exists)
+			const firstIntent = stepIntents.shift();
+			if (firstIntent) {
+				stepEvents.push(...getEventsFromIntents(bm, [firstIntent]));
+			}
+
+			stepIntentsMap.set(unit.id, stepIntents);
 		});
 
 		// Order each stepEvents
-		const orderedEvents = sortEventsByType(stepEvents);
+		const orderedEvents = sortEventsByType(stepEvents) as PossibleEvent[];
 
 		if (orderedEvents.length > 0) {
 			// Add events to eventHistory
@@ -195,17 +228,39 @@ export function runGame(bm: BoardManager) {
 			let stepEffects = getStepEffects(orderedEvents);
 			executeStepEffects(bm, stepEffects);
 
-			// Check and execute subStep events
+			// Get death related intents and add them to stepIntentsMap, then order it
+			stepIntentsMap = getDeathIntents(bm, stepIntentsMap);
+			stepIntentsMap.forEach((intents, unitId) => {
+				stepIntentsMap.set(unitId, sortEventsByType(intents) as PossibleIntent[]);
+			});
+
 			let subStep: number = 1;
-			let subStepEvents: PossibleEvent[] = getSubStepEvents(bm, orderedEvents, subStep);
+			let subStepEvents: PossibleEvent[] = [];
 			let subSteps: SubStepEffects[] = [];
+
+			// Check for all units intents and get the first one (if exists)
+			bm.getAllUnits().forEach(unit => {
+				let stepIntents = stepIntentsMap.get(unit.id);
+				if (!stepIntents || stepIntents.length == 0) return;
+
+				const firstIntent = stepIntents.shift();
+				if (firstIntent) {
+					subStepEvents.push(...getEventsFromIntents(bm, [firstIntent]));
+				}
+
+				stepIntentsMap.set(unit.id, stepIntents);
+			});
+
+			// Loop subSteps
 			while (subStepEvents.length > 0) {
-				// Order and add subStepEvents to eventHistory
-				const sortedSubStepEvents = sortEventsByType(subStepEvents, "SUBSTEP");
-				eventHistory.push(...sortedSubStepEvents);
+				// Add subStep to events then add to eventHistory
+				subStepEvents.forEach(event => {
+					event.subStep = subStep;
+				});
+				eventHistory.push(...subStepEvents);
 
 				// Get subStepEffects from events and execute them
-				const subStepEffects = getStepEffects(sortedSubStepEvents);
+				let subStepEffects = getStepEffects(subStepEvents);
 				executeStepEffects(bm, subStepEffects);
 
 				// Add subStep to subStepEffects and add it to subSteps
@@ -218,7 +273,23 @@ export function runGame(bm: BoardManager) {
 
 				// Check for more subStep events to continue looping
 				subStep++;
-				subStepEvents = getSubStepEvents(bm, orderedEvents, subStep);
+				subStepEvents = [];
+				stepIntentsMap = getDeathIntents(bm, stepIntentsMap);
+				stepIntentsMap.forEach((intents, unitId) => {
+					stepIntentsMap.set(unitId, sortEventsByType(intents) as PossibleIntent[]);
+				});
+
+				bm.getAllUnits().forEach(unit => {
+					let stepIntents = stepIntentsMap.get(unit.id);
+					if (!stepIntents || stepIntents.length == 0) return;
+
+					const firstIntent = stepIntents.shift();
+					if (firstIntent) {
+						subStepEvents.push(...getEventsFromIntents(bm, [firstIntent]));
+					}
+
+					stepIntentsMap.set(unit.id, stepIntents);
+				});
 			}
 
 			// If there are subSteps, add them to stepEffects

@@ -123,7 +123,7 @@ export class TriggerManager {
 				subEvents,
 			};
 
-			unit.stepEvents.push(event);
+			unit.stepIntents.push(event);
 		}
 	}
 }

@@ -9,6 +9,7 @@ import {
 	INSTANT_EFFECT_TYPE,
 	PossibleEffect,
 	PossibleEvent,
+	PossibleIntent,
 	SUBEVENT_TYPE,
 	ShieldPayload,
 	StatusEffectPayload,
@@ -16,74 +17,58 @@ import {
 	SubEvent,
 	TickEffectEventPayload,
 	UnitEffects,
+	UseAbilityEvent,
 } from "./EventTypes";
 
-export function sortEventsByType(events: PossibleEvent[], orderType: string = "REGULAR") {
+export function sortEventsByType(events: PossibleEvent[] | PossibleIntent[]) {
 	return events.sort((a, b) => {
-		const order =
-			orderType == "SUBSTEP"
-				? {
-						// on SUBSTEP only FAINT, TRIGGER_EFFECT and USE_ABILITY (with MULTISTRIKE) are possible,
-						[EVENT_TYPE.FAINT]: 1,
-						[EVENT_TYPE.TRIGGER_EFFECT]: 2,
-						[EVENT_TYPE.USE_ABILITY]: 3,
-						[EVENT_TYPE.TICK_EFFECT]: 4,
-					}
-				: {
-						// on REGULAR only TICK_EFFECT and USE_ABILITY are possible,
-						// TRIGGER_EFFECT currently only possible on BATTLE_START
-						[EVENT_TYPE.TICK_EFFECT]: 1,
-						[EVENT_TYPE.USE_ABILITY]: 2,
-						[EVENT_TYPE.TRIGGER_EFFECT]: 3,
-						[EVENT_TYPE.FAINT]: 4,
-					};
+		const order = {
+			[EVENT_TYPE.TICK_EFFECT]: 1,
+			[EVENT_TYPE.FAINT]: 2,
+			[EVENT_TYPE.TRIGGER_EFFECT]: 3,
+			[EVENT_TYPE.USE_ABILITY]: 4,
+		};
 
 		return order[a.type] - order[b.type];
 	});
 }
 
-export function getSubStepEvents(
-	bm: BoardManager,
-	stepEvents: PossibleEvent[],
-	subStep: number,
-): PossibleEvent[] {
-	const events: PossibleEvent[] = [];
+export function getEventsFromIntents(bm: BoardManager, intents: PossibleIntent[]): PossibleEvent[] {
+	const events: PossibleEvent[] = intents.map(intent => {
+		if (intent.type === EVENT_TYPE.USE_ABILITY) {
+			const unit = bm.getUnitById(intent.actorId);
 
-	// Death events
+			const ability = unit.abilities.find(ability => ability.id === intent.id);
+			if (!ability) throw Error("getEventsFromIntents: Ability not found on use ability intent");
+
+			const useAbilityEvent = ability.use(unit, intent.useMultistrike) as UseAbilityEvent;
+
+			return useAbilityEvent;
+		} else {
+			return intent;
+		}
+	});
+
+	// FIX: deal with abilities with no target having no event
+	return events.filter(event => event !== undefined) as PossibleEvent[];
+}
+
+export function getDeathIntents(
+	bm: BoardManager,
+	intentsMap: Map<string, PossibleIntent[]>,
+): Map<string, PossibleIntent[]> {
 	bm.getAllAliveUnits().forEach(unit => {
 		if (!unit.isDead && unit.hasDied()) {
 			unit.onDeath();
 
-			// get events from death related triggers
+			// get intents from death related triggers
 			bm.getAllUnits().forEach(unit => {
-				events.push(...unit.serializeEvents());
+				intentsMap.set(unit.id, [...(intentsMap.get(unit.id) || []), ...unit.serializeIntents()]);
 			});
 		}
 	});
 
-	// Multistrike events
-	stepEvents.forEach(event => {
-		const unit = bm.getUnitById(event.actorId);
-
-		if (
-			event.type === EVENT_TYPE.USE_ABILITY &&
-			unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)
-		) {
-			//if (!unit.statusEffectManager.canUseMultistrike()) return;
-
-			const ability = unit.abilities.find(ability => ability.id === event.payload.id);
-
-			if (!ability) throw Error("getSubStepEvents: Ability not found on multistrike event");
-
-			const abilityEvent = ability.use(unit, true);
-
-			if (abilityEvent) events.push(abilityEvent);
-		}
-	});
-
-	const eventsWithSubStep = events.map(event => ({ ...event, subStep }));
-
-	return eventsWithSubStep;
+	return intentsMap;
 }
 
 export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {
