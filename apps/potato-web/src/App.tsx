@@ -2,10 +2,8 @@ import { useMemo } from "react";
 import { useGameState } from "./services/state/useGameState";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBattleSetup, fetchVanillaBattleSetup } from "./game/scenes/battle/BattleScene";
-import { Button } from "./components/ui/button";
-import { cn } from "./lib/utils";
 import { Flag, Swords } from "lucide-react";
-import { CrazyButton } from "./pages/Play/Arena/ArenaActionButtons";
+import { CrazyButton } from "./pages/Play/Views/Arena/ArenaActionButtons";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 

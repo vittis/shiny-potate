@@ -1,20 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { trpc } from "@/services/api/trpc";
-import { ArrowRight, ArrowRightIcon, Loader2, Loader2Icon, SwordsIcon } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "@/services/api/queryClient";
-import { ArenaDraggableView } from "./ArenaDraggableView/ArenaDraggableView";
+import { Loader2 } from "lucide-react";
 import { TooltipSettigs } from "@/components/MarkdownTooltip/TooltipSettings";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
-import { ArenaActionButtons } from "./ArenaActionButtons";
 import { useArenaMutations } from "@/services/features/Arena/useArenaMutations";
 import { cn } from "@/lib/utils";
 import { GiSwordsEmblem } from "react-icons/gi";
 import { UnlockButton } from "@/components/ui/buttonUnlock";
-import { ArenaInfo } from "./ArenaInfo";
 import { useArenaUpdate } from "@/services/features/Arena/useArenaUpdate";
+import { ArenaInfo } from "./ArenaInfo";
+import { ArenaDraggableView } from "./ArenaDraggableView/ArenaDraggableView";
+import { ArenaActionButtons } from "./ArenaActionButtons";
 
 function ArenaView() {
 	useArenaUpdate();

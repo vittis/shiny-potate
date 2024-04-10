@@ -4,7 +4,6 @@ import {
 	DragEndEvent,
 	MouseSensor,
 	TouchSensor,
-	useDroppable,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
@@ -24,7 +23,7 @@ import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsSto
 import { DraggableBoardUnit } from "./DraggableBoardUnit";
 import { trpc } from "@/services/api/trpc";
 import { DroppableTile } from "./DroppableTile";
-import { UnitInstanceContent } from "@/pages/Play/Arena/ArenaDraggableView/Shop/DraggableUnit/UnitInstanceContent";
+import { UnitInstanceContent } from "../../Arena/ArenaDraggableView/Shop/DraggableUnit/UnitInstanceContent";
 
 export interface UnitsDTO {
 	equipments: any[]; // ShopEquipmentData
