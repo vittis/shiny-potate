@@ -12,7 +12,7 @@ export const VFX_MAP = {
 	"Reinforce Allies": {
 		key: "shield1",
 		scale: 0.9,
-		alpha: 0.7,
+		alpha: 0.4,
 	},
 	"Blessed Beacon": {
 		key: "heal1",

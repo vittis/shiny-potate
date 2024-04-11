@@ -70,10 +70,6 @@ const router = createBrowserRouter([
 			{
 				path: "game",
 				element: <GameView />,
-				/* children: [
-					// Add this line to include a parameterized route for game IDs
-					{ path: ":id", element: <GameView /> },
-				], */
 			},
 		],
 	},

@@ -1,4 +1,4 @@
-import { toCamelCase } from "../../../../utils/formatString";
+import { toCamelCase } from "../../../../utils/string";
 import {
 	addEquipBackSprite,
 	addEquipChestSprite,

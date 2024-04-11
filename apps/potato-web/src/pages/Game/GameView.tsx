@@ -37,7 +37,13 @@ const GameView = () => {
 			setGameInstance(new Phaser.Game(Object.assign(PHASER_CONFIG, { scene: [Battle] })));
 		} else if (gameInstance && isGameHidden) {
 			if (gameInstance.scene.isActive("BattleScene")) {
+				console.log("show game");
 				showGame();
+
+				console.log("SHOW?");
+				const scene = gameInstance.scene.getScene("BattleScene");
+				// @ts-expect-error how to type this?
+				scene?.fetchBattle();
 				// gameInstance.scene.getScene("BattleScene").scene.restart(); // todo: fix battleunitsprite to make this work
 			}
 		}

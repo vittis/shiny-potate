@@ -9,10 +9,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { trpc } from "@/services/api/trpc";
 import { useGamesHistoryQueries } from "@/services/features/Profile/useGamesHistoryQueries";
-import { format, formatDistanceToNow, parseISO } from "date-fns";
+import { capitalizeFirstLetter } from "@/utils/string";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { Board } from "game-logic";
 import { ArrowRight, EyeIcon, Loader2Icon } from "lucide-react";
+import { Database } from "potato-server/types/supabase";
 import { useNavigate } from "react-router-dom";
 
 function ProfileView() {
@@ -21,15 +23,10 @@ function ProfileView() {
 	const navigate = useNavigate();
 
 	if (error) {
-		return <>deu ruim pai</>;
-	}
-
-	if (isPending || gameHistory === undefined) {
-		return <Loader2Icon className="w-4 animate-spin" />;
+		return <>Error</>;
 	}
 
 	const onClickViewGame = (gameId: string) => {
-		console.log("view game", gameId);
 		navigate(`/game?id=${gameId}`);
 	};
 
@@ -50,36 +47,73 @@ function ProfileView() {
 
 			<Separator />
 
-			<Table className="mx-auto mt-10 max-w-[400px]">
-				<TableCaption>Your game history</TableCaption>
-				<TableHeader>
-					<TableRow>
-						<TableHead className="w-[100px]">Id</TableHead>
-						<TableHead className="w-[100px]">Date</TableHead>
-						<TableHead>My Board Id</TableHead>
-						<TableHead>Opponent Board Id</TableHead>
-						<TableHead>Winner</TableHead>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{gameHistory?.map(game => (
-						<TableRow key={game.id}>
-							<TableCell className="">{game.id}</TableCell>
-							<TableCell className="flex h-full w-max items-center justify-center font-medium">
-								{formatDistanceToNow(parseISO(game.created_at))}
-							</TableCell>
-							<TableCell>{game.board_id}</TableCell>
-							<TableCell>{game.opponent_board_id}</TableCell>
-							<TableCell>{game.winner_id}</TableCell>
-							<TableCell className="text-right">
-								<UnlockButton onClick={() => onClickViewGame(game.id)} icon={<ArrowRight />}>
-									<EyeIcon />
-								</UnlockButton>
-							</TableCell>
+			{isPending && (
+				<div className="mt-10 flex justify-center">
+					<Loader2Icon className="flex w-12 animate-spin justify-center" />
+				</div>
+			)}
+			{!isPending && (
+				<Table className="mx-auto mt-10 max-w-[400px]">
+					<TableCaption>Your game history</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead>When</TableHead>
+							<TableHead>Round</TableHead>
+							<TableHead>Wins</TableHead>
+							<TableHead>Losses</TableHead>
+							<TableHead>Opponent</TableHead>
+							<TableHead>Winner</TableHead>
 						</TableRow>
-					))}
-				</TableBody>
-			</Table>
+					</TableHeader>
+					<TableBody>
+						{gameHistory?.map(game => {
+							const myBoard =
+								game.my_board as unknown as Database["public"]["Tables"]["board"]["Row"];
+
+							const opponentProfile =
+								game.opponent_profile as unknown as Database["public"]["Tables"]["profiles"]["Row"];
+
+							const winner =
+								game.winner as unknown as Database["public"]["Tables"]["profiles"]["Row"];
+							return (
+								<TableRow key={game.id}>
+									<TableCell>
+										<div className="w-max text-center">
+											{capitalizeFirstLetter(formatDistanceToNow(parseISO(game.created_at)))} ago
+										</div>
+									</TableCell>
+									<TableCell>
+										<div className="w-full text-center">{myBoard.round}</div>
+									</TableCell>
+									<TableCell>
+										<div className="w-full text-center">{myBoard.wins}</div>
+									</TableCell>
+									<TableCell>
+										<div className="w-full text-center">{myBoard.losses}</div>
+									</TableCell>
+									<TableCell>
+										<div className="w-max text-center">
+											{opponentProfile.username ?? "no_username"}
+										</div>
+									</TableCell>
+									<TableCell>
+										<div className="w-full text-center">{winner.username}</div>
+									</TableCell>
+									<TableCell>
+										<UnlockButton
+											size="sm"
+											onClick={() => onClickViewGame(game.id)}
+											icon={<ArrowRight />}
+										>
+											<EyeIcon />
+										</UnlockButton>
+									</TableCell>
+								</TableRow>
+							);
+						})}
+					</TableBody>
+				</Table>
+			)}
 
 			{/* <div>
 			{gameHistory.map(game => (

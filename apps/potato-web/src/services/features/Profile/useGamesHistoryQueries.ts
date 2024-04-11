@@ -9,6 +9,8 @@ const useGamesHistoryQueries = () => {
 		queryFn: () => client.profile.gamesHistory.query(),
 	});
 
+	console.log(result.data);
+
 	return result;
 };
 

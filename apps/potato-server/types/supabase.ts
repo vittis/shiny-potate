@@ -53,7 +53,7 @@ export type Database = {
 						foreignKeyName: "public_arena_player_id_fkey";
 						columns: ["player_id"];
 						isOneToOne: true;
-						referencedRelation: "users";
+						referencedRelation: "profiles";
 						referencedColumns: ["id"];
 					},
 				];
@@ -88,10 +88,10 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: "public_games_player_id_fkey";
+						foreignKeyName: "public_board_player_id_fkey";
 						columns: ["player_id"];
 						isOneToOne: false;
-						referencedRelation: "users";
+						referencedRelation: "profiles";
 						referencedColumns: ["id"];
 					},
 				];
@@ -102,24 +102,27 @@ export type Database = {
 					created_at: string;
 					id: string;
 					opponent_board_id: string;
+					opponent_id: string;
 					player_id: string;
-					winner_id: string | null;
+					winner_id: string;
 				};
 				Insert: {
 					board_id: string;
 					created_at?: string;
 					id?: string;
 					opponent_board_id: string;
+					opponent_id: string;
 					player_id: string;
-					winner_id?: string | null;
+					winner_id: string;
 				};
 				Update: {
 					board_id?: string;
 					created_at?: string;
 					id?: string;
 					opponent_board_id?: string;
+					opponent_id?: string;
 					player_id?: string;
-					winner_id?: string | null;
+					winner_id?: string;
 				};
 				Relationships: [
 					{
@@ -137,17 +140,31 @@ export type Database = {
 						referencedColumns: ["id"];
 					},
 					{
-						foreignKeyName: "public_game_history_player_id_fkey";
-						columns: ["player_id"];
+						foreignKeyName: "public_game_history_winner_id_fkey";
+						columns: ["winner_id"];
 						isOneToOne: false;
 						referencedRelation: "users";
 						referencedColumns: ["id"];
 					},
 					{
-						foreignKeyName: "public_game_history_winner_id_fkey";
+						foreignKeyName: "public_games_history_opponent_id_fkey";
+						columns: ["opponent_id"];
+						isOneToOne: false;
+						referencedRelation: "profiles";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "public_games_history_player_id_fkey";
+						columns: ["player_id"];
+						isOneToOne: false;
+						referencedRelation: "profiles";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "public_games_history_winner_id_fkey";
 						columns: ["winner_id"];
 						isOneToOne: false;
-						referencedRelation: "users";
+						referencedRelation: "profiles";
 						referencedColumns: ["id"];
 					},
 				];

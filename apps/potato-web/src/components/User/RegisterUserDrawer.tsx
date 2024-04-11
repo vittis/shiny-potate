@@ -34,9 +34,9 @@ const FormSchema = z.object({
 		.email("This is not a valid email."),
 });
 
-interface RegisterUserDrawer {}
+interface RegisterUserDrawerProps {}
 
-const RegisterUserDrawer = ({}: RegisterUserDrawer) => {
+const RegisterUserDrawer = ({}: RegisterUserDrawerProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const form = useForm<z.infer<typeof FormSchema>>({

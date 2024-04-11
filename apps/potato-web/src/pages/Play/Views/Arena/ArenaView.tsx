@@ -15,13 +15,9 @@ import { ArenaActionButtons } from "./ArenaActionButtons";
 function ArenaView() {
 	useArenaUpdate();
 
-	const { currentRun, shop, isFetching, isRefetching, error, isPending } = useArenaQueries();
+	const { currentRun, shop, isRefetching, error, isPending } = useArenaQueries();
 
 	const { newRun, newRunIsPending } = useArenaMutations();
-
-	/* if (isPending) {
-		return <Loader2 className="animate-spin mx-auto w-80 my-20" />;
-	} */
 
 	if (error) {
 		return <div>{error?.message || "Could not fetch arena run :("}</div>;

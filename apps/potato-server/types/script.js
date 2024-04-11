@@ -5,7 +5,6 @@ const customShopType = "Shop";
 const customStorageType = "Storage";
 const customBoardType = "Board";
 
-// todo ADD SEPARATE REGEX'S FOR OPTIONAL AND NON-OPTIONAL FIELDS (?)
 fs.readFile("./supabase.ts", "utf8", (err, data) => {
 	if (err) {
 		console.error("Error reading file:", err);
@@ -27,8 +26,7 @@ fs.readFile("./supabase.ts", "utf8", (err, data) => {
 		`storage?: ${customStorageType} | null`,
 	);
 
-	// todo fix this, not working for optional (I think)
-	const boardRegexPattern = /board\s*(:\?)*\s*:\s*Json\[\]\s*\|\s*null/g;
+	const boardRegexPattern = /board\??\s*:\s*Json\[\]\s*\|\s*null/g;
 	correctedData = correctedData.replace(boardRegexPattern, `board?: ${customBoardType} | null`);
 
 	// Insert the import statement at the beginning of the file

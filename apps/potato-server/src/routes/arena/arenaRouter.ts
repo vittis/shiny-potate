@@ -17,7 +17,14 @@ export const arenaRouter = router({
 
 		const { data, error } = await supabase
 			.from("arena")
-			.select("*")
+			.select(
+				`
+					*,
+					profiles(
+						username
+					)
+			`,
+			)
 			.eq("player_id", user.id)
 			.maybeSingle();
 
@@ -234,6 +241,7 @@ export const arenaRouter = router({
 		const { error: insertGamesHistoryError } = await supabase.from("games_history").insert([
 			{
 				player_id: user.id,
+				opponent_id: finalOpponentBoard.player_id,
 				board_id: boardData.id,
 				opponent_board_id: finalOpponentBoard.id,
 				winner_id: user.id, // todo get from Game
@@ -275,7 +283,13 @@ export const arenaRouter = router({
 
 			const { data, error } = await supabase
 				.from("games_history")
-				.select("*")
+				.select(
+					`
+					*,
+					my_board:board!board_id("*"),
+					opponent_board:board!opponent_board_id("*")
+				`,
+				)
 				.eq("id", gameId)
 				.maybeSingle();
 
@@ -284,26 +298,18 @@ export const arenaRouter = router({
 				throw error || new Error("No game found");
 			}
 
-			console.log(data.id);
-			const { data: board1Data } = await supabase
-				.from("board")
-				.select("*")
-				.eq("id", data.board_id)
-				.maybeSingle();
-
-			const { data: board2Data } = await supabase
-				.from("board")
-				.select("*")
-				.eq("id", data.opponent_board_id)
-				.maybeSingle();
+			const board1Data = data.my_board;
+			const board2Data = data.opponent_board;
 
 			if (!board1Data || !board2Data) {
 				console.trace("No board found");
 				throw new Error("No board found");
 			}
 
-			const board1 = board1Data.board as Board;
-			const board2 = board2Data.board as Board;
+			// @ts-expect-error supabase type
+			const board1 = board1Data.board;
+			// @ts-expect-error supabase type
+			const board2 = board2Data.board;
 
 			const game = new Game({ skipConstructor: true });
 			game.setBoard(0, board1);

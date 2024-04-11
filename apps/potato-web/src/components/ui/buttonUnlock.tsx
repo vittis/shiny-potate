@@ -8,11 +8,13 @@ interface UnlockButtonProps extends VariantProps<typeof unlockButtonVariants> {
 	isLoading?: boolean;
 	icon: React.ReactNode;
 	onClick?: () => void;
+	className?: string;
 }
 
 const unlockButtonVariants = cva("", {
 	variants: {
 		size: {
+			sm: "w-[48px] h-[48px] text-sm",
 			default: "w-[150px] h-[48px] text-lg",
 			lg: "w-[320px] h-[75px] text-2xl",
 		},
@@ -22,7 +24,14 @@ const unlockButtonVariants = cva("", {
 	},
 });
 
-const UnlockButton = ({ children, isLoading = false, icon, onClick, size }: UnlockButtonProps) => {
+const UnlockButton = ({
+	children,
+	isLoading = false,
+	icon,
+	onClick,
+	size,
+	className,
+}: UnlockButtonProps) => {
 	return (
 		<Button
 			disabled={isLoading}
@@ -31,6 +40,7 @@ const UnlockButton = ({ children, isLoading = false, icon, onClick, size }: Unlo
 			className={cn(
 				unlockButtonVariants({ size }),
 				"group relative inline-flex items-center justify-center overflow-hidden rounded border-2 border-b-4 border-input px-6 font-medium text-black shadow-md transition duration-300 ease-out",
+				className,
 			)}
 		>
 			<span

@@ -1,3 +1,4 @@
+import { Database, Tables } from "../../../types/supabase";
 import { router } from "../../services/trpc";
 import { authProcedure } from "../middlewares";
 
@@ -7,7 +8,22 @@ export const profileRouter = router({
 
 		const { data, error } = await supabase
 			.from("games_history")
-			.select("*")
+			.select(
+				`
+				*,
+				my_board:board!board_id(*),
+				opponent_board:board!opponent_board_id(*),
+				my_profile:profiles!player_id(
+					username
+				),
+				opponent_profile:profiles!opponent_id(
+					username
+				),
+				winner:profiles!winner_id(
+					username
+				)
+			`,
+			)
 			.eq("player_id", user.id)
 			.order("created_at", { ascending: false });
 
