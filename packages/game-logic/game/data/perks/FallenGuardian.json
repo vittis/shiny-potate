@@ -1,0 +1,30 @@
+{
+	"name": "Fallen Guardian",
+	"type": "TIER_SCALE",
+	"tags": [
+		{
+			"name": "MAGICAL",
+			"weight": 1
+		}
+	],
+	"tiers": [
+		{
+			"name": "SHIELD",
+			"values": [20, 30, 40, 50, 60]
+		}
+	],
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "SELF_FAINT",
+			"target": "ALL_ALLIES",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "STURDY",
+					"quantity": "DYNAMIC"
+				}
+			]
+		}
+	]
+}

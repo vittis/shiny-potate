@@ -1,0 +1,32 @@
+{
+	"name": "Demonic Presence",
+	"type": "UNIQUE",
+	"tags": [],
+	"tiers": [],
+	"effects": [
+		{
+			"type": "DISABLE",
+			"trigger": "SELF_FAINT",
+			"target": "ALL_ENEMIES",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "STUN",
+					"quantity": 5
+				}
+			]
+		},
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "SELF_FAINT",
+			"target": "ALL_ENEMIES",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "SLOW",
+					"quantity": 5
+				}
+			]
+		}
+	]
+}

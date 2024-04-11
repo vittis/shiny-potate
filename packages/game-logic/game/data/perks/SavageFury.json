@@ -1,5 +1,5 @@
 {
-	"name": "Focused Mind",
+	"name": "Savage Fury",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
@@ -11,13 +11,13 @@
 			"weight": 2
 		},
 		{
-			"name": "MAGICAL",
+			"name": "PHYSICAL",
 			"weight": 5
 		}
 	],
 	"tiers": [
 		{
-			"name": "FOCUS",
+			"name": "ATTACK_POWER",
 			"values": [5, 10, 15, 20, 30]
 		}
 	],
@@ -29,7 +29,7 @@
 			"conditions": [],
 			"payload": [
 				{
-					"name": "FOCUS",
+					"name": "ATTACK_POWER",
 					"quantity": "DYNAMIC"
 				}
 			]

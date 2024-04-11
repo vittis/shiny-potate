@@ -608,7 +608,7 @@ describe("Ability", () => {
 			expect(unit.stepIntents.length).toBe(multistrikeQuantity + 1);
 			expect(unit.stepIntents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
 			expect((unit.stepIntents[0] as UseAbilityIntent).id).toBe(unit.abilities[0].id);
-			console.log(unit.stepIntents);
+
 			for (let i = 1; i <= multistrikeQuantity; i++) {
 				expect(unit.stepIntents[i]).toStrictEqual({ ...unit.stepIntents[0], useMultistrike: true });
 			}

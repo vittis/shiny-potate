@@ -21,7 +21,7 @@
 			"values": [5, 10, 15, 20, 30]
 		},
 		{
-			"name": "STURDY",
+			"name": "SPELL_POTENCY",
 			"values": [5, 10, 15, 20, 30]
 		}
 	],

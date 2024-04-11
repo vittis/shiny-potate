@@ -132,6 +132,7 @@ describe("Triggers", () => {
 			bm.addToBoard(unit2);
 			unit.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
 
+			expect(unit.perks[0].data.effects[0].trigger).toBe(TRIGGER.ON_HIT);
 			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.VULNERABLE)).toBe(false);
 
 			const ability = unit.abilities[0];
@@ -140,6 +141,27 @@ describe("Triggers", () => {
 			executeStepEffects(bm, getStepEffects([event]));
 
 			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.VULNERABLE)).toBe(true);
+		});
+	});
+
+	describe("ON_ATTACK_HIT", () => {
+		it("should generate event and apply trigger effect on attack hit (Venomous Strikes)", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+			unit.equip(new Equipment(Weapons.VenomousDagger), EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.perks[0].data.effects[0].trigger).toBe(TRIGGER.ON_ATTACK_HIT);
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.POISON)).toBe(false);
+
+			const ability = unit.abilities[0];
+			const event = ability.use(unit);
+
+			executeStepEffects(bm, getStepEffects([event]));
+
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.POISON)).toBe(true);
 		});
 	});
 });

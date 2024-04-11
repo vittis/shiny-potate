@@ -198,4 +198,38 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	VenomousStrikes: {
+		name: "Venomous Strikes",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 3,
+			},
+		],
+		tiers: [
+			{
+				name: "POISON",
+				values: [2, 4, 6, 8, 10],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_ATTACK_HIT",
+				target: "HIT_TARGET",
+				conditions: [],
+				payload: [
+					{
+						name: "POISON",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
 };

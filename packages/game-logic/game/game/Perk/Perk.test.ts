@@ -7,6 +7,7 @@ import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { runGame } from "../Game";
 import { TriggerEffectEvent } from "../Event/EventTypes";
 import { Class } from "../Class/Class";
+import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 
 describe("Perk", () => {
 	it("should create", () => {
@@ -33,7 +34,7 @@ describe("Perk", () => {
 		]);
 	});
 
-	it("perk with condition works", () => {
+	it.skip("perk with condition works", () => {
 		const perk = new Perk(Perks.FocusedMind);
 
 		/* expect(perk.getTriggerEffects()).toEqual([
@@ -44,6 +45,18 @@ describe("Perk", () => {
         type: "STATUS_EFFECT",
       },
     ]); */
+	});
+
+	// TODO: also test with damage, heal, shield and disable
+	it("perks with dynamic quantity apply correct value", () => {
+		for (let tier = 1; tier <= 5; tier++) {
+			const perk = new Perk(Perks.PreyTheWeak, tier);
+
+			expect(
+				(perk.getTriggerEffects() as TriggerEffect<TRIGGER_EFFECT_TYPE.STATUS_EFFECT>[])[0]
+					.payload[0].quantity,
+			).toEqual(Perks.PreyTheWeak.tiers[0].values[tier - 1]);
+		}
 	});
 
 	describe("BERSERK", () => {

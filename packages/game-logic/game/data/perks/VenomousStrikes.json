@@ -1,5 +1,5 @@
 {
-	"name": "Prey The Weak",
+	"name": "Venomous Strikes",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
@@ -13,19 +13,19 @@
 	],
 	"tiers": [
 		{
-			"name": "VULNERABLE",
+			"name": "POISON",
 			"values": [2, 4, 6, 8, 10]
 		}
 	],
 	"effects": [
 		{
 			"type": "STATUS_EFFECT",
-			"trigger": "ON_HIT",
+			"trigger": "ON_ATTACK_HIT",
 			"target": "HIT_TARGET",
 			"conditions": [],
 			"payload": [
 				{
-					"name": "VULNERABLE",
+					"name": "POISON",
 					"quantity": "DYNAMIC"
 				}
 			]

@@ -64,27 +64,32 @@ export class Ability {
 		const onUseAbilityEffects = this.data.effects.filter(
 			effect => effect.trigger === TRIGGER.ON_USE,
 		);
-		const onUsePerkEffects = unit.triggerManager
-			.getAllEffectsForTrigger(TRIGGER.ON_USE)
-			.map(effect => effect.effect);
+		const onUsePerkEffects = [
+			...unit.triggerManager.getAllEffectsForTrigger(TRIGGER.ON_USE),
+			...unit.triggerManager.getAllEffectsForTrigger(
+				this.isAttack() ? TRIGGER.ON_ATTACK_USE : TRIGGER.ON_SPELL_USE,
+			),
+		].map(effect => effect.effect);
 
 		const onHitAbilityEffects = this.data.effects.filter(
 			effect => effect.trigger === TRIGGER.ON_HIT,
 		);
-		const onHitPerkEffects = unit.triggerManager
-			.getAllEffectsForTrigger(TRIGGER.ON_HIT)
-			.map(effect => {
-				let triggerEffect = effect.effect;
+		const onHitPerkEffects = [
+			...unit.triggerManager.getAllEffectsForTrigger(TRIGGER.ON_HIT),
+			...unit.triggerManager.getAllEffectsForTrigger(
+				this.isAttack() ? TRIGGER.ON_ATTACK_HIT : TRIGGER.ON_SPELL_HIT,
+			),
+		].map(effect => {
+			let triggerEffect = effect.effect;
 
-				if (effect.effect.target === TARGET_TYPE.HIT_TARGET) {
-					triggerEffect.target = this.data.target;
-				}
+			if (effect.effect.target === TARGET_TYPE.HIT_TARGET) {
+				triggerEffect.target = this.data.target;
+			}
 
-				return triggerEffect;
-			});
+			return triggerEffect;
+		});
 
 		const onUseSubEvents = this.onUse(unit, [...onUseAbilityEffects, ...onUsePerkEffects]);
-
 		const onHitSubEvents = this.onHit(unit, [...onHitAbilityEffects, ...onHitPerkEffects]);
 
 		const abilitySubEvents = [...onUseSubEvents, ...onHitSubEvents];
@@ -102,7 +107,6 @@ export class Ability {
 				],
 			},
 		} as SubEvent;
-
 		if (useMultistrike) abilitySubEvents.push(multistrikeSubEvent);
 
 		const useAbilityEvent: UseAbilityEvent = {

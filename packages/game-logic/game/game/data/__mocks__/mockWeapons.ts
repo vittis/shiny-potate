@@ -253,6 +253,30 @@ export const MockWeapons = {
 		],
 		effects: [],
 	} as EquipmentData,
+	VenomousDagger: {
+		name: "Venomous Dagger",
+		tags: ["WEAPON", "PHYSICAL"],
+		slots: ["MAIN_HAND", "OFF_HAND"],
+		mods: [
+			{
+				type: "GRANT_ABILITY",
+				payload: {
+					name: "Stab",
+					type: "ATTACK",
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_PERK",
+				payload: {
+					name: "Venomous Strikes",
+					tier: 1,
+				},
+				tier: "implicit",
+			},
+		],
+		effects: [],
+	} as EquipmentData,
 	Staff: {
 		name: "Staff",
 		tags: ["WEAPON", "MAGICAL", "RANGED"],

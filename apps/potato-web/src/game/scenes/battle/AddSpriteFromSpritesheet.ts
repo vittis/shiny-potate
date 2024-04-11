@@ -85,7 +85,7 @@ export function addEquipOffhandSprite(scene: Phaser.Scene, x: number, y: number,
 	else if (keyword === "map") sprite.setFrame(3);
 	else if (keyword === "woodenShield") sprite.setFrame(4);
 	else if (keyword === "book") sprite.setFrame(5);
-	else if (keyword === "dagger" || keyword === "sword") sprite.setFrame(6);
+	else if (keyword.includes("dagger") || keyword === "sword") sprite.setFrame(6);
 	else throw Error(`addEquipOffhandSprite: ${keyword} not found`);
 
 	return sprite;
@@ -111,7 +111,7 @@ export function addEquipWeaponSprite(scene: Phaser.Scene, x: number, y: number, 
 	else if (keyword === "pitchfork") sprite.setFrame(13);
 	else if (keyword === "axe") sprite.setFrame(15);
 	else if (keyword === "shortbow" || keyword === "longbow") sprite.setFrame(16);
-	else if (keyword === "dagger") sprite.setFrame(17);
+	else if (keyword.includes("dagger")) sprite.setFrame(17);
 	else if (keyword === "club") sprite.setFrame(18);
 	else throw Error(`addEquipWeaponSprite: ${keyword} not found`);
 
