@@ -20,7 +20,7 @@ function ArenaView() {
 	const { newRun, newRunIsPending } = useArenaMutations();
 
 	if (error) {
-		return <div>{error?.message || "Could not fetch arena run :("}</div>;
+		return <div>{error?.message || "Could not fetch arena run"}</div>;
 	}
 
 	const isLoading = isRefetching || newRunIsPending;

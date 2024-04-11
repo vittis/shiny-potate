@@ -3,6 +3,8 @@ import { UnlockButton } from "@/components/ui/buttonUnlock";
 import { useArenaMutations } from "@/services/features/Arena/useArenaMutations";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
 import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // todo componentize properly
 export const CrazyButton = ({ children, onClick }) => {
@@ -30,13 +32,18 @@ function ArenaActionButtons() {
 	const { abandonRun, abandonRunIsPending, findAndBattleOpponent, findAndBattleOpponentIsPending } =
 		useArenaMutations();
 
+	const navigate = useNavigate();
+
 	const onClickUpdateBoard = async () => {
 		if (!board || !storage) {
 			throw new Error("Board or storage is missing");
 		}
 
-		await findAndBattleOpponent();
+		const { gameId } = await findAndBattleOpponent();
+		navigate(`/game?id=${gameId}`);
 	};
+
+	const isReadyDisabled = !currentRun || !board || !storage || !board.some(b => b.unit);
 
 	return (
 		<div className="flex items-center justify-center gap-4">
@@ -46,8 +53,10 @@ function ArenaActionButtons() {
 						onClick={onClickUpdateBoard}
 						icon={<ArrowRight />}
 						isLoading={findAndBattleOpponentIsPending}
+						disabled={isReadyDisabled}
+						className="w-[200px]"
 					>
-						Ready
+						Find Opponent
 					</UnlockButton>
 					<Button
 						disabled={abandonRunIsPending}

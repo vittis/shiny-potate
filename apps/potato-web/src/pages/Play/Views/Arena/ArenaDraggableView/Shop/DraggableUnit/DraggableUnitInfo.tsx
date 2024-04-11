@@ -25,14 +25,14 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 		<MarkdownTooltip content={<UnitTooltip unit={unit} />}>
 			<div
 				ref={setNodeRef}
-				style={style}
-				{...listeners}
-				{...attributes}
 				className={cn(
 					"group relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black font-mono transition-colors",
 					"border-green-900 hover:border-green-700",
 					isDragging && "z-30",
 				)}
+				style={style}
+				{...listeners}
+				{...attributes}
 			>
 				{shopEquipment.length > 0 && (
 					<div className="absolute right-0 top-0">

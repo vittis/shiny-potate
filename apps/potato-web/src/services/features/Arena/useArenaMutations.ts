@@ -29,7 +29,6 @@ const useArenaMutations = () => {
 	const { mutateAsync: findAndBattleOpponent, isPending: findAndBattleOpponentIsPending } =
 		trpc.arena.findAndBattleOpponent.useMutation({
 			onSuccess: data => {
-				console.log(data);
 				toast.success("Opponent found");
 				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},

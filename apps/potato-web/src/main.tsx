@@ -43,11 +43,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				element: (
-					<>
-						<Navigate to="play" replace />
-					</>
-				),
+				element: <Navigate to="play/arena" replace />,
 			},
 			{
 				path: "play",
@@ -55,11 +51,7 @@ const router = createBrowserRouter([
 				children: [
 					{
 						index: true,
-						element: (
-							<>
-								<Navigate to="sandbox" replace />
-							</>
-						),
+						element: <Navigate to="arena" replace />,
 					},
 					{ path: "rooms", element: <LobbyView /> },
 					{ path: "sandbox", element: <SandboxView /> },

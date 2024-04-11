@@ -238,15 +238,19 @@ export const arenaRouter = router({
 			throw insertError || new Error("Board insert error");
 		}
 
-		const { error: insertGamesHistoryError } = await supabase.from("games_history").insert([
-			{
-				player_id: user.id,
-				opponent_id: finalOpponentBoard.player_id,
-				board_id: boardData.id,
-				opponent_board_id: finalOpponentBoard.id,
-				winner_id: user.id, // todo get from Game
-			},
-		]);
+		const { data: gameHistoryData, error: insertGamesHistoryError } = await supabase
+			.from("games_history")
+			.insert([
+				{
+					player_id: user.id,
+					opponent_id: finalOpponentBoard.player_id,
+					board_id: boardData.id,
+					opponent_board_id: finalOpponentBoard.id,
+					winner_id: user.id, // todo get from Game
+				},
+			])
+			.select("id")
+			.single();
 
 		if (insertGamesHistoryError) {
 			console.trace(insertGamesHistoryError);
@@ -269,7 +273,10 @@ export const arenaRouter = router({
 			throw updateError;
 		}
 
-		return { totalSteps, eventHistory, firstStep, effectHistory };
+		return {
+			gameId: gameHistoryData.id,
+			game: { totalSteps, eventHistory, firstStep, effectHistory },
+		};
 	}),
 	viewBattle: authProcedure
 		.input(

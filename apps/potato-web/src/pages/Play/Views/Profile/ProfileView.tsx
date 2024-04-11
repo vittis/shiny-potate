@@ -63,6 +63,7 @@ function ProfileView() {
 							<TableHead>Losses</TableHead>
 							<TableHead>Opponent</TableHead>
 							<TableHead>Winner</TableHead>
+							<TableHead></TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
