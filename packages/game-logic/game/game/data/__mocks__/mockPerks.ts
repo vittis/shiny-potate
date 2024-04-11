@@ -164,4 +164,38 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	PreyTheWeak: {
+		name: "Prey The Weak",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 3,
+			},
+		],
+		tiers: [
+			{
+				name: "VULNERABLE",
+				values: [4, 10, 18, 30, 45],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT",
+				target: "HIT_TARGET",
+				conditions: [],
+				payload: [
+					{
+						name: "VULNERABLE",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
 };

@@ -1,51 +1,39 @@
 {
-  "name": "Ranged Proficiency",
-  "type": "TIER_SCALE",
-  "tags": [
-    {
-      "name": "RANGED",
-      "weight": 5
-    }
-  ],
-  "tiers": [
-    {
-      "name": "FAST",
-      "values": [
-        5,
-        10,
-        15,
-        20,
-        30
-      ]
-    }
-  ],
-  "effects": [
-    {
-      "type": "STATUS_EFFECT",
-      "trigger": "BATTLE_START",
-      "target": "SELF",
-      "conditions": [
-        {
-          "type": "EQUIPMENT",
-          "payload": {
-            "target": "SELF",
-            "slots": [
-              "MAIN_HAND",
-              "OFF_HAND"
-            ],
-            "tags": [
-              "PHYSICAL",
-              "RANGED"
-            ]
-          }
-        }
-      ],
-      "payload": [
-        {
-          "name": "FAST",
-          "quantity": "DYNAMIC"
-        }
-      ]
-    }
-  ]
+	"name": "Ranged Proficiency",
+	"type": "TIER_SCALE",
+	"tags": [
+		{
+			"name": "RANGED",
+			"weight": 5
+		}
+	],
+	"tiers": [
+		{
+			"name": "FAST",
+			"values": [5, 10, 15, 20, 30]
+		}
+	],
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "BATTLE_START",
+			"target": "SELF",
+			"conditions": [
+				{
+					"type": "EQUIPMENT",
+					"payload": {
+						"target": "SELF",
+						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
+						"tags": ["PHYSICAL", "RANGED"]
+					}
+				}
+			],
+			"payload": [
+				{
+					"name": "FAST",
+					"quantity": "DYNAMIC"
+				}
+			]
+		}
+	]
 }

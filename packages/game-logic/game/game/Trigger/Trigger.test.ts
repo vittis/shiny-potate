@@ -122,4 +122,24 @@ describe("Triggers", () => {
 			expect(unit.stats.hp).toBe(unit.stats.maxHp - 50);
 		});
 	});
+
+	describe("ON_HIT", () => {
+		it("should generate event and apply trigger effect on hit (Prey The Weak)", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+			unit.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
+
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.VULNERABLE)).toBe(false);
+
+			const ability = unit.abilities[0];
+			const event = ability.use(unit);
+
+			executeStepEffects(bm, getStepEffects([event]));
+
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.VULNERABLE)).toBe(true);
+		});
+	});
 });

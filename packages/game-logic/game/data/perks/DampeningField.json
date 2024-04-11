@@ -1,5 +1,5 @@
 {
-	"name": "Desperate Will",
+	"name": "Dampening Field",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
@@ -17,27 +17,19 @@
 	],
 	"tiers": [
 		{
-			"name": "ATTACK_POWER",
-			"values": [5, 10, 15, 20, 30]
-		},
-		{
-			"name": "STURDY",
+			"name": "SLOW",
 			"values": [5, 10, 15, 20, 30]
 		}
 	],
 	"effects": [
 		{
 			"type": "STATUS_EFFECT",
-			"trigger": "ALLY_FAINT",
-			"target": "SELF",
+			"trigger": "BATTLE_START",
+			"target": "ALL_ENEMIES",
 			"conditions": [],
 			"payload": [
 				{
-					"name": "ATTACK_POWER",
-					"quantity": "DYNAMIC"
-				},
-				{
-					"name": "SPELL_POTENCY",
+					"name": "SLOW",
 					"quantity": "DYNAMIC"
 				}
 			]

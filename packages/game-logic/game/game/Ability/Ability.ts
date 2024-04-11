@@ -19,6 +19,7 @@ import {
 } from "../Event/EventFactory";
 import { getAllTargetUnits } from "../Target/TargetUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 
 export class Ability {
 	id: string;
@@ -60,15 +61,31 @@ export class Ability {
 			return;
 		}
 
-		const onUseSubEvents = this.onUse(
-			unit,
-			this.data.effects.filter(effect => effect.trigger === TRIGGER.ON_USE),
+		const onUseAbilityEffects = this.data.effects.filter(
+			effect => effect.trigger === TRIGGER.ON_USE,
 		);
+		const onUsePerkEffects = unit.triggerManager
+			.getAllEffectsForTrigger(TRIGGER.ON_USE)
+			.map(effect => effect.effect);
 
-		const onHitSubEvents = this.onHit(
-			unit,
-			this.data.effects.filter(effect => effect.trigger === TRIGGER.ON_HIT),
+		const onHitAbilityEffects = this.data.effects.filter(
+			effect => effect.trigger === TRIGGER.ON_HIT,
 		);
+		const onHitPerkEffects = unit.triggerManager
+			.getAllEffectsForTrigger(TRIGGER.ON_HIT)
+			.map(effect => {
+				let triggerEffect = effect.effect;
+
+				if (effect.effect.target === TARGET_TYPE.HIT_TARGET) {
+					triggerEffect.target = this.data.target;
+				}
+
+				return triggerEffect;
+			});
+
+		const onUseSubEvents = this.onUse(unit, [...onUseAbilityEffects, ...onUsePerkEffects]);
+
+		const onHitSubEvents = this.onHit(unit, [...onHitAbilityEffects, ...onHitPerkEffects]);
 
 		const abilitySubEvents = [...onUseSubEvents, ...onHitSubEvents];
 
