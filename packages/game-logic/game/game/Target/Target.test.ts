@@ -1,7 +1,7 @@
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
+import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Unit } from "../Unit/Unit";
 import { Weapons } from "../data";
@@ -49,7 +49,7 @@ describe("Target", () => {
 	for (let i = 0; i < ability.data.cooldown; i++) {
 		unit00.step(i);
 	}
-	executeStepEffects(bm, getStepEffects(unit00.serializeEvents()));
+	executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit00.serializeIntents())));
 
 	// create board with only one unit
 	const bmEmpty = new BoardManager();

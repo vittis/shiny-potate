@@ -7,7 +7,7 @@ import { Unit } from "../Unit/Unit";
 import { Weapons } from "../data";
 import { TriggerManager } from "./TriggerManager";
 import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "./TriggerTypes";
-import { executeStepEffects, getStepEffects } from "../Event/EventUtils";
+import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../Event/EventUtils";
 
 const effectsMock: PossibleTriggerEffect[] = [
 	{
@@ -115,7 +115,7 @@ describe("Triggers", () => {
 
 			unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
 
-			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
+			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
 
 			expect(unit.statusEffects).toHaveLength(2);
 
