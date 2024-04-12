@@ -2,19 +2,28 @@ import { Button } from "@/components/ui/button";
 import { useCopyToClipboard } from "@/utils/useCopyToClipboard";
 import { Copy, CopyCheck } from "lucide-react";
 
-const CopyEventHistoryWidget = () => {
+interface CopyEventHistoryWidgetProps {
+	gameData?: any;
+}
+
+const CopyEventHistoryWidget = ({ gameData }: CopyEventHistoryWidgetProps) => {
 	const [copiedText, copy] = useCopyToClipboard();
 
 	const handleCopy = async () => {
-		const gameHistory = localStorage.getItem("game") || "";
+		if (!gameData) {
+			const gameHistory = localStorage.getItem("game") || "";
 
-		await copy(gameHistory);
+			await copy(gameHistory);
+			return;
+		}
+
+		await copy(JSON.stringify(gameData));
 	};
 
 	const text = copiedText ? "Copied!" : "Event History";
 
 	return (
-		<div className="fixed bottom-1/2 right-4">
+		<div className="fixed right-4 top-24">
 			<Button variant="outline" onClick={handleCopy}>
 				{text}{" "}
 				{copiedText ? (

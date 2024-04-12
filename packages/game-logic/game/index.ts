@@ -18,7 +18,12 @@ export { Weapons, Abilities, Classes, Perks } from "./game/data";
 export type { EquipmentInstance } from "./game/Equipment/EquipmentTypes";
 export type { Shop, Storage, Board } from "./shop/ArenaTypes";
 export type { ShopEquipInstance } from "./shop/ShopEquip";
-export type { UnitInfo, BoardUnitInstance, ShopUnitInstance } from "./game/Unit/UnitTypes";
+export type {
+	UnitInfo,
+	BoardUnitInstance,
+	ShopUnitInstance,
+	EquippedShopEquip,
+} from "./game/Unit/UnitTypes";
 export type { EquippedItemInstance } from "./game/Equipment/EquipmentManager";
 export type { StepEffects, PossibleEvent, PossibleEffect } from "./game/Event/EventTypes";
 export { EVENT_TYPE, INSTANT_EFFECT_TYPE } from "./game/Event/EventTypes";

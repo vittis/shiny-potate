@@ -9,15 +9,17 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { useGamesHistoryQueries } from "@/services/features/Profile/useGamesHistoryQueries";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 import { capitalizeFirstLetter } from "@/utils/string";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { Board } from "game-logic";
 import { ArrowRight, EyeIcon, Loader2Icon } from "lucide-react";
 import { Database } from "potato-server/types/supabase";
 import { useNavigate } from "react-router-dom";
 
 function ProfileView() {
+	const { username } = useSupabaseUserStore();
 	const { data: gameHistory, isPending, error } = useGamesHistoryQueries();
 
 	const navigate = useNavigate();
@@ -87,18 +89,28 @@ function ProfileView() {
 										<div className="w-full text-center">{myBoard.round}</div>
 									</TableCell>
 									<TableCell>
-										<div className="w-full text-center">{myBoard.wins}</div>
+										<div className="w-full text-center text-green-300">{myBoard.wins}</div>
 									</TableCell>
 									<TableCell>
-										<div className="w-full text-center">{myBoard.losses}</div>
+										<div className="w-full text-center text-red-300">{myBoard.losses}</div>
 									</TableCell>
 									<TableCell>
-										<div className="w-max text-center">
+										<div className="w-max text-center ">
 											{opponentProfile.username ?? "no_username"}
 										</div>
 									</TableCell>
 									<TableCell>
-										<div className="w-full text-center">{winner.username}</div>
+										<div
+											className={cn(
+												"w-max text-center",
+												username === winner.username ? "text-green-300" : "text-red-400",
+											)}
+										>
+											{winner.username}{" "}
+											{username === winner.username && (
+												<span className="text-xs text-neutral-300">(you)</span>
+											)}
+										</div>
 									</TableCell>
 									<TableCell>
 										<UnlockButton

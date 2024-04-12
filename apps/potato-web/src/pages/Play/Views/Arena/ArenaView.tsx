@@ -11,6 +11,7 @@ import { useArenaUpdate } from "@/services/features/Arena/useArenaUpdate";
 import { ArenaInfo } from "./ArenaInfo";
 import { ArenaDraggableView } from "./ArenaDraggableView/ArenaDraggableView";
 import { ArenaActionButtons } from "./ArenaActionButtons";
+import { ArenaDevMenu } from "./ArenaDevMenu";
 
 function ArenaView() {
 	useArenaUpdate();
@@ -29,8 +30,10 @@ function ArenaView() {
 		<>
 			<div className="relative">
 				<div className="absolute right-2 top-1/2 -translate-y-1/2">
+					<ArenaDevMenu />
 					<TooltipSettigs />
 				</div>
+
 				<div className="breadcrumbs flex h-[52px] items-center px-4">
 					<ul>
 						<li>

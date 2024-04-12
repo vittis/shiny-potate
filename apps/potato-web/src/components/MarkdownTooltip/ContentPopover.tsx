@@ -5,7 +5,12 @@ import { MarkdownTooltipProps } from "./MarkdownTooltip";
 import { PopoverPortal } from "@radix-ui/react-popover";
 import { useState } from "react";
 
-const ContentPopover = ({ children, content, onOpenCallback }: MarkdownTooltipProps) => {
+const ContentPopover = ({
+	children,
+	content,
+	onOpenCallback,
+	forceClose,
+}: MarkdownTooltipProps) => {
 	const [open, setOpen] = useState(false);
 
 	function onOpenHandler(open) {
@@ -15,9 +20,13 @@ const ContentPopover = ({ children, content, onOpenCallback }: MarkdownTooltipPr
 		}
 	}
 
+	const finalOpen = forceClose ? false : open;
+
 	return (
-		<Popover open={open} onOpenChange={onOpenHandler}>
+		<Popover open={finalOpen} onOpenChange={onOpenHandler}>
 			<PopoverTrigger
+				className="group"
+				// asChild // todo this breaks sandbox view
 				onClick={e => {
 					e.stopPropagation();
 				}}

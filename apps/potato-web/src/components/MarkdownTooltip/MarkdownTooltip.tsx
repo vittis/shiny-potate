@@ -8,6 +8,7 @@ export interface MarkdownTooltipProps {
 	onOpenSubTooltip?: () => void;
 	content: React.ReactElement;
 	onOpenCallback?: (open: boolean) => void;
+	forceClose?: boolean;
 }
 
 const MarkdownTooltip = (props: MarkdownTooltipProps) => {

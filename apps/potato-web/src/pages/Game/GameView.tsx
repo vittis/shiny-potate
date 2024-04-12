@@ -6,8 +6,9 @@ import { useEffect } from "react";
 import { GameSpeedControls } from "./GameSpeedControls";
 import { CopyEventHistoryWidget } from "./CopyEventHistoryWidget";
 import { useQuery } from "@tanstack/react-query";
-import { trpc, vanillaTrpc } from "@/services/api/trpc";
+import { vanillaTrpc } from "@/services/api/trpc";
 import { useSearchParams } from "react-router-dom";
+import { PlayersInfo } from "./PlayersInfo";
 
 export function viewBattle(gameId: string) {
 	return vanillaTrpc.arena.viewBattle.query({ gameId });
@@ -21,7 +22,6 @@ const GameView = () => {
 	const showGame = useGameState(state => state.showGame);
 
 	const [searchParams] = useSearchParams();
-
 	const gameId = searchParams.get("id");
 
 	const { data } = useQuery({
@@ -30,17 +30,13 @@ const GameView = () => {
 		enabled: !!gameId,
 	});
 
-	console.log(data);
-
 	useEffect(() => {
 		if (!gameInstance && !isGameHidden) {
 			setGameInstance(new Phaser.Game(Object.assign(PHASER_CONFIG, { scene: [Battle] })));
 		} else if (gameInstance && isGameHidden) {
 			if (gameInstance.scene.isActive("BattleScene")) {
-				console.log("show game");
 				showGame();
 
-				console.log("SHOW?");
 				const scene = gameInstance.scene.getScene("BattleScene");
 				// @ts-expect-error how to type this?
 				scene?.fetchBattle();
@@ -59,7 +55,9 @@ const GameView = () => {
 
 			<GameSpeedControls />
 
-			<CopyEventHistoryWidget />
+			<CopyEventHistoryWidget gameData={data} />
+
+			<PlayersInfo />
 		</>
 	);
 };

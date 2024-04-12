@@ -3,7 +3,7 @@
 	"type": "SPELL",
 	"tags": [],
 	"target": "STANDARD_BOX",
-	"cooldown": 140,
+	"cooldown": 95,
 	"effects": [
 		{
 			"type": "DAMAGE",

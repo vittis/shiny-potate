@@ -10,6 +10,7 @@ import {
 } from "game-logic";
 import { router } from "../../services/trpc";
 import { authProcedure } from "../middlewares";
+import { Database } from "../../types";
 
 export const arenaRouter = router({
 	my: authProcedure.query(async ({ ctx }) => {
@@ -125,7 +126,7 @@ export const arenaRouter = router({
 			const currentBoard = yourRun?.board;
 			const currentStorage = yourRun?.storage;
 
-			if (!currentShop || !currentGold || !currentBoard || !currentStorage) {
+			if (!currentShop || currentGold === null || !currentBoard || !currentStorage) {
 				throw new Error("Wrong data structure in database");
 			}
 
@@ -191,8 +192,7 @@ export const arenaRouter = router({
 			.eq("player_id", user.id)
 			.maybeSingle();
 
-		// todo fix null checks
-		if (myRunError || !myRun || !myRun?.round || !myRun?.board || !myRun?.gold) {
+		if (myRunError || !myRun) {
 			console.trace(myRunError || "No run found");
 			throw myRunError || new Error("No run found");
 		}
@@ -213,9 +213,8 @@ export const arenaRouter = router({
 
 		const game = new Game({ skipConstructor: true });
 		game.setBoard(0, myRun.board);
-		// @ts-expect-error fix auto-generated
 		game.setBoard(1, finalOpponentBoard.board);
-		const { totalSteps, eventHistory, firstStep, effectHistory } = game.startGame();
+		const { totalSteps, eventHistory, firstStep, effectHistory, winner } = game.startGame();
 
 		const { data: boardData, error: insertError } = await supabase
 			.from("board")
@@ -246,7 +245,7 @@ export const arenaRouter = router({
 					opponent_id: finalOpponentBoard.player_id,
 					board_id: boardData.id,
 					opponent_board_id: finalOpponentBoard.id,
-					winner_id: user.id, // todo get from Game
+					winner_id: winner === 0 ? user.id : finalOpponentBoard.player_id,
 				},
 			])
 			.select("id")
@@ -264,7 +263,8 @@ export const arenaRouter = router({
 				gold: myRun?.gold + 10,
 				updated_at: new Date().toISOString(),
 				shop: generateShop(myRun?.round + 1),
-				// todo wins and losses
+				wins: winner === 0 ? myRun?.wins + 1 : myRun?.wins,
+				losses: winner === 1 ? myRun?.losses + 1 : myRun?.losses,
 			})
 			.eq("player_id", user.id);
 
@@ -294,7 +294,13 @@ export const arenaRouter = router({
 					`
 					*,
 					my_board:board!board_id("*"),
-					opponent_board:board!opponent_board_id("*")
+					opponent_board:board!opponent_board_id("*"),
+					my_profile:profiles!player_id(
+						username
+					),
+					opponent_profile:profiles!opponent_id(
+						username
+					)
 				`,
 				)
 				.eq("id", gameId)
@@ -305,25 +311,38 @@ export const arenaRouter = router({
 				throw error || new Error("No game found");
 			}
 
-			const board1Data = data.my_board;
-			const board2Data = data.opponent_board;
+			// todo move somwhere else
+			type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+			type DbBoard = Database["public"]["Tables"]["board"]["Row"];
 
-			if (!board1Data || !board2Data) {
-				console.trace("No board found");
-				throw new Error("No board found");
-			}
+			const myProfile = data.my_profile as unknown as Profile;
+			const opponentProfile = data.opponent_profile as unknown as Profile;
 
-			// @ts-expect-error supabase type
-			const board1 = board1Data.board;
-			// @ts-expect-error supabase type
-			const board2 = board2Data.board;
+			const myBoard = data.my_board as unknown as DbBoard;
+			const opponentBoard = data.opponent_board as unknown as DbBoard;
+
+			const myInfo = {
+				username: myProfile.username,
+				round: myBoard.round,
+				wins: myBoard.wins,
+				losses: myBoard.losses,
+				createdAt: myBoard.created_at,
+			};
+
+			const opponentInfo = {
+				username: opponentProfile.username,
+				round: opponentBoard.round,
+				wins: opponentBoard.wins,
+				losses: opponentBoard.losses,
+				createdAt: opponentBoard.created_at,
+			};
 
 			const game = new Game({ skipConstructor: true });
-			game.setBoard(0, board1);
-			game.setBoard(1, board2);
+			game.setBoard(0, myBoard.board);
+			game.setBoard(1, opponentBoard.board);
 
 			const gameShit = game.startGame();
 
-			return gameShit;
+			return { game: gameShit, myInfo, opponentInfo };
 		}),
 });

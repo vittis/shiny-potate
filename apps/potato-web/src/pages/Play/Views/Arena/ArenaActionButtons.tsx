@@ -29,16 +29,26 @@ export const CrazyButton = ({ children, onClick }) => {
 function ArenaActionButtons() {
 	const { currentRun, storage, board } = useArenaQueries();
 
-	const { abandonRun, abandonRunIsPending, findAndBattleOpponent, findAndBattleOpponentIsPending } =
-		useArenaMutations();
+	const {
+		abandonRun,
+		abandonRunIsPending,
+		findAndBattleOpponent,
+		findAndBattleOpponentIsPending,
+		updateBoard,
+	} = useArenaMutations();
 
 	const navigate = useNavigate();
 
-	const onClickUpdateBoard = async () => {
+	const [localIsUpdating, setLocalIsUpdating] = useState(false);
+
+	const onClickFindOpponent = async () => {
 		if (!board || !storage) {
 			throw new Error("Board or storage is missing");
 		}
 
+		setLocalIsUpdating(true);
+		const updatedData = await updateBoard.mutateAsync({ board, storage });
+		setLocalIsUpdating(false);
 		const { gameId } = await findAndBattleOpponent();
 		navigate(`/game?id=${gameId}`);
 	};
@@ -50,9 +60,9 @@ function ArenaActionButtons() {
 			{currentRun && (
 				<>
 					<UnlockButton
-						onClick={onClickUpdateBoard}
+						onClick={onClickFindOpponent}
 						icon={<ArrowRight />}
-						isLoading={findAndBattleOpponentIsPending}
+						isLoading={findAndBattleOpponentIsPending || localIsUpdating}
 						disabled={isReadyDisabled}
 						className="w-[200px]"
 					>

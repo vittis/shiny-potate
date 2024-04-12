@@ -136,9 +136,9 @@ export class Game {
 	}
 
 	startGame() {
-		const { totalSteps, eventHistory, firstStep, effectHistory } = runGame(this.boardManager);
+		const result = runGame(this.boardManager);
 
-		return { totalSteps, eventHistory, firstStep, effectHistory };
+		return result;
 	}
 }
 
@@ -147,6 +147,14 @@ function hasGameEnded(bm: BoardManager) {
 		bm.getAllUnitsOfOwner(OWNER.TEAM_ONE).every(unit => unit.isDead) ||
 		bm.getAllUnitsOfOwner(OWNER.TEAM_TWO).every(unit => unit.isDead)
 	);
+}
+
+function getWinner(bm: BoardManager) {
+	if (bm.getAllUnitsOfOwner(OWNER.TEAM_ONE).every(unit => unit.isDead)) {
+		return OWNER.TEAM_TWO;
+	} else {
+		return OWNER.TEAM_ONE;
+	}
 }
 
 function reachTimeLimit(currentStep: number) {
@@ -304,7 +312,13 @@ export function runGame(bm: BoardManager) {
 		currentStep++;
 	} while (!hasGameEnded(bm) && !reachTimeLimit(currentStep));
 
-	return { totalSteps: currentStep - 1, eventHistory, firstStep, effectHistory };
+	return {
+		totalSteps: currentStep - 1,
+		eventHistory,
+		firstStep,
+		effectHistory,
+		winner: getWinner(bm),
+	};
 }
 
 /* 

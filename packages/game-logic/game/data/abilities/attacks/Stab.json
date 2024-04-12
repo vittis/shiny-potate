@@ -5,7 +5,7 @@
     "WEAPON_ABILITY"
   ],
   "target": "STANDARD",
-  "cooldown": 20,
+  "cooldown": 24,
   "effects": [
     {
       "type": "DAMAGE",
@@ -13,7 +13,7 @@
       "target": "STANDARD",
       "conditions": [],
       "payload": {
-        "value": 15
+        "value": 18
       }
     }
   ]

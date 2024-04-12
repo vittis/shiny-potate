@@ -3,6 +3,9 @@ import { Board, Storage } from "game-logic";
 import { useArenaMutations } from "./useArenaMutations";
 import { useEffect, useRef } from "react";
 import { useArenaQueries } from "./useArenaQueries";
+import { useMutationState } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+import { trpc } from "@/services/api/trpc";
 
 export function setBoard(newBoard: Board) {
 	queryClient.setQueryData(["arena", "my"], (oldData: any) => {
@@ -40,7 +43,7 @@ const useArenaUpdate = () => {
 			if (!data || !board || !storage) return;
 
 			if (hasChange) {
-				const updatedData = await updateBoard({ board, storage });
+				const updatedData = await updateBoard.mutateAsync({ board, storage });
 				queryClient.setQueryData(["arena", "my"], (oldData: typeof data) => updatedData);
 			}
 		}
@@ -49,15 +52,26 @@ const useArenaUpdate = () => {
 			if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
 			updateTimeoutRef.current = setTimeout(() => {
 				triggerUpdate();
-			}, 1000);
+			}, 3000);
 		}
 
 		return () => {
-			if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
+			if (updateTimeoutRef.current) {
+				clearTimeout(updateTimeoutRef.current);
+			}
 		};
 	}, [data, board, storage, updateBoard]);
 
 	return null;
 };
 
-export { useArenaUpdate };
+const useArenaIsUpdating = () => {
+	const status = useMutationState({
+		filters: { mutationKey: getQueryKey(trpc.arena.updateBoard) },
+		select: mutation => mutation.state.status,
+	});
+
+	return status.some(s => s === "pending");
+};
+
+export { useArenaUpdate, useArenaIsUpdating };

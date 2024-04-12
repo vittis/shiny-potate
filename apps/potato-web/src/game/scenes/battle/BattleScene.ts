@@ -75,6 +75,14 @@ export class Battle extends Phaser.Scene {
 	}
 
 	fetchBattle() {
+		// reset everything
+		this.timeEventsHistory.forEach(event => {
+			event.destroy();
+		});
+		this.timeEventsHistory = [];
+		this.isGamePaused = true;
+		this.isPlayingEventAnimation = false;
+
 		const searchParams = new URLSearchParams(window.location.search);
 		const gameId = searchParams.get("id");
 
@@ -84,7 +92,6 @@ export class Battle extends Phaser.Scene {
 		this.units = [];
 
 		if (!gameId) {
-			console.log("fetching here!! !gameId");
 			queryClient
 				.fetchQuery({
 					queryKey: ["game/battle/setup"],
@@ -99,8 +106,6 @@ export class Battle extends Phaser.Scene {
 					this.initializeUnits(this.firstStep);
 				});
 		} else {
-			console.log("else fetching gameId");
-
 			queryClient
 				.fetchQuery({
 					queryKey: ["view", "battle", gameId],
@@ -108,10 +113,10 @@ export class Battle extends Phaser.Scene {
 					staleTime: Infinity,
 				})
 				.then(data => {
-					this.firstStep = data.firstStep;
-					this.totalSteps = data.totalSteps;
-					this.eventHistory = data.eventHistory;
-					this.effectHistory = data.effectHistory;
+					this.firstStep = data.game.firstStep;
+					this.totalSteps = data.game.totalSteps;
+					this.eventHistory = data.game.eventHistory;
+					this.effectHistory = data.game.effectHistory;
 					this.initializeUnits(this.firstStep);
 				});
 		}
@@ -120,17 +125,11 @@ export class Battle extends Phaser.Scene {
 	create() {
 		setupVFXAnimations(this);
 
-		/* const slash = this.add.sprite(400, 400, "slash2");
-		slash.setDepth(1);
-		slash.play("slash2_attack").on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-			slash.destroy();
-		}); */
-
-		this.text = this.add.text(150, 200, "karpov", {
+		/* this.text = this.add.text(150, 200, "karpov", {
 			font: "16px Courier",
 			color: "white",
 		});
-		this.text.setOrigin(0.5);
+		this.text.setOrigin(0.5); */
 
 		const { board, tiles } = setupBattle(this);
 		this.board = board;
@@ -329,10 +328,10 @@ export class Battle extends Phaser.Scene {
 	}
 
 	update(/* time: number, delta: number */): void {
-		if (this.units.length === 0) return;
+		/* if (this.units.length === 0) return;
 		this.text.setText([
 			`isGamePaused: ${this.isGamePaused}`,
 			`isPlayingEventAnimation: ${this.isPlayingEventAnimation}`,
-		]);
+		]); */
 	}
 }

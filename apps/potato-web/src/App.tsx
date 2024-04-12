@@ -51,7 +51,7 @@ function App() {
 				</CrazyButton>
 			</div>
 
-			<div className="fixed bottom-10 flex w-full justify-center">
+			{/* <div className="fixed bottom-10 flex w-full justify-center">
 				<div
 					tabIndex={0}
 					className="collapse collapse-plus absolute bottom-2 left-2 ml-auto mr-auto w-fit bg-stone-800"
@@ -115,7 +115,7 @@ function App() {
 						)}
 					</div>
 				</div>
-			</div>
+			</div> */}
 		</>
 	);
 }

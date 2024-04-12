@@ -2,15 +2,19 @@ import { cn } from "@/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import { BoardUnitInstance } from "game-logic";
 import { DraggableBoardUnit } from "../Shop/DraggableUnit/DraggableBoardUnit";
+import { useArenaIsUpdating } from "@/services/features/Arena/useArenaUpdate";
 
 interface DroppableBoardSpaceProps {
 	boardSpace: { position: string; unit: BoardUnitInstance | null };
 }
 
 function DroppableBoardSpace({ boardSpace }: DroppableBoardSpaceProps) {
+	const disabled = useArenaIsUpdating();
+
 	const { isOver, setNodeRef } = useDroppable({
 		id: boardSpace.position,
 		data: { position: boardSpace.position, unit: boardSpace.unit },
+		disabled,
 	});
 
 	return (

@@ -1,6 +1,12 @@
 import { EquipmentMarkdownContent } from "@/components/MarkdownContent/EquipmentMarkdownContent";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
-import { EquipmentInstance, ShopEquipInstance, UnitInfo, getUnitData } from "game-logic";
+import {
+	EquipmentInstance,
+	EquippedShopEquip,
+	ShopEquipInstance,
+	UnitInfo,
+	getUnitData,
+} from "game-logic";
 import { UnitInstanceContent } from "./UnitInstanceContent";
 import { Button } from "@/components/ui/button";
 import { X, XCircle, XSquare } from "lucide-react";
@@ -10,9 +16,10 @@ import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
 export interface UnitTooltipProps {
 	unit: UnitInfo;
 	onOpenSubTooltip?: () => void;
+	allowRemoveEquip?: boolean;
 }
 
-function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
+function UnitTooltip({ unit, onOpenSubTooltip, allowRemoveEquip = true }: UnitTooltipProps) {
 	const { board, storage } = useArenaQueries();
 	const { className, shopEquipment } = unit;
 
@@ -25,7 +32,10 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 			const boardUnit = space.unit;
 
 			if (boardUnit) {
-				shopEquip = boardUnit?.unit.shopEquipment.find(e => e.shopEquip.equip.id === id)?.shopEquip;
+				const targetEquip = boardUnit.unit.shopEquipment.find(e => e.shopEquip.equip.id === id);
+				if (targetEquip) {
+					shopEquip = targetEquip.shopEquip;
+				}
 				return {
 					...space,
 					unit: {
@@ -43,7 +53,9 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 		});
 		setBoard(newBoard);
 
-		if (!shopEquip) return;
+		if (!shopEquip) {
+			return;
+		}
 
 		setStorage({
 			units: storage.units,
@@ -80,7 +92,7 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 						<EquipmentMarkdownContent
 							equip={shopEquipment[0].shopEquip.equip} // todo allow slot (EquippedItemInstance)
 							onOpenSubTooltip={onOpenSubTooltip}
-							onRemoveEquip={onRemoveEquip}
+							onRemoveEquip={allowRemoveEquip ? onRemoveEquip : undefined}
 						/>
 					)}
 
@@ -90,7 +102,7 @@ function UnitTooltip({ unit, onOpenSubTooltip }: UnitTooltipProps) {
 							equip={shopEquipment[1].shopEquip.equip}
 							otherEquips={shopEquipment.slice(2)}
 							onOpenSubTooltip={onOpenSubTooltip}
-							onRemoveEquip={onRemoveEquip}
+							onRemoveEquip={allowRemoveEquip ? onRemoveEquip : undefined}
 						/>
 					)}
 				</div>
@@ -109,8 +121,8 @@ const RecursiveEquipmentMarkdownContent = ({
 }: {
 	equip: EquipmentInstance;
 	onOpenSubTooltip?: () => void;
-	otherEquips: any[]; // todo dont have this type
-	onRemoveEquip: (id: string) => void;
+	otherEquips: EquippedShopEquip[];
+	onRemoveEquip?: (id: string) => void;
 }) => {
 	return (
 		<div className="absolute bottom-0 left-0 z-50 w-max translate-y-[105%] rounded-md border border-yellow-700 bg-popover text-popover-foreground shadow-md outline-none">
@@ -125,7 +137,7 @@ const RecursiveEquipmentMarkdownContent = ({
 						<div className="absolute -bottom-[15px] left-0 h-[15px] w-full bg-transparent"></div>
 						<RecursiveEquipmentMarkdownContent
 							otherEquips={otherEquips.slice(1)}
-							equip={otherEquips[0].equip}
+							equip={otherEquips[0].shopEquip.equip}
 							onOpenSubTooltip={onOpenSubTooltip}
 							onRemoveEquip={onRemoveEquip}
 						/>

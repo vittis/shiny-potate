@@ -8,10 +8,11 @@ import { useDraggable } from "@dnd-kit/core";
 interface UnitInfoProps {
 	unit: UnitInfo;
 	useDraggableData: ReturnType<typeof useDraggable>;
+	allowRemoveEquip?: boolean;
 }
 
-const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
-	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggableData;
+const DraggableUnitInfo = ({ useDraggableData, unit, allowRemoveEquip }: UnitInfoProps) => {
+	const { attributes, listeners, setNodeRef, transform, isDragging, node } = useDraggableData;
 
 	const style = transform
 		? {
@@ -21,14 +22,20 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 
 	const { className, shopEquipment } = unit;
 
+	const isDisabled = node.current?.ariaDisabled === "true";
+
 	return (
-		<MarkdownTooltip content={<UnitTooltip unit={unit} />}>
+		<MarkdownTooltip
+			forceClose={isDragging}
+			content={<UnitTooltip allowRemoveEquip={allowRemoveEquip} unit={unit} />}
+		>
 			<div
 				ref={setNodeRef}
 				className={cn(
-					"group relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black font-mono transition-colors",
-					"border-green-900 hover:border-green-700",
+					"group relative flex h-[100px] w-[100px] items-center justify-center rounded-md border border-zinc-700 bg-black font-mono transition-opacity",
+					"border-green-900 aria-disabled:cursor-default aria-disabled:opacity-50",
 					isDragging && "z-30",
+					!isDisabled && "hover:border-green-700",
 				)}
 				style={style}
 				{...listeners}
@@ -50,7 +57,12 @@ const DraggableUnitInfo = ({ useDraggableData, unit }: UnitInfoProps) => {
 						))}
 					</div>
 				)}
-				<div className="group-hover:animate-rainbow-river text-md z-[2] rounded bg-input px-1">
+				<div
+					className={cn(
+						"text-md z-[2] rounded bg-input px-1",
+						!isDisabled && "group-aria-expanded:animate-rainbow-river",
+					)}
+				>
 					{className}
 				</div>
 			</div>

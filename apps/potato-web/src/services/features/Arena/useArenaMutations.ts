@@ -1,6 +1,12 @@
 import { queryClient } from "@/services/api/queryClient";
-import { trpc } from "@/services/api/trpc";
+import { trpc, vanillaTrpc } from "@/services/api/trpc";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+
+async function updateBoardFn(payload) {
+	const data = await vanillaTrpc.arena.updateBoard.mutate(payload);
+	return data;
+}
 
 const useArenaMutations = () => {
 	const { mutateAsync: newRun, isPending: newRunIsPending } = trpc.arena.new.useMutation({
@@ -16,23 +22,50 @@ const useArenaMutations = () => {
 			},
 		});
 
-	const { mutateAsync: updateBoard, isPending: updateBoardIsPending } =
-		trpc.arena.updateBoard.useMutation({
-			onSuccess: () => {
-				// queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
-			},
-			onError: error => {
-				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
-			},
-		});
+	/* const updateBoard = useMutation({
+		mutationKey: ["arena", "updateBoard"],
+		mutationFn: updateBoardFn,
+		onSuccess: data => {
+			updateBoard.reset();
+		},
+	});
+	console.log({ status: updateBoard.status }); */
+
+	const updateBoard = trpc.arena.updateBoard.useMutation({
+		onError: error => {
+			queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
+		},
+	});
 
 	const { mutateAsync: findAndBattleOpponent, isPending: findAndBattleOpponentIsPending } =
 		trpc.arena.findAndBattleOpponent.useMutation({
 			onSuccess: data => {
-				toast.success("Opponent found");
+				toast.success("Opponent found!");
 				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
 			},
 		});
+
+	const { mutateAsync: saveRoundSnapshot, isPending: saveRoundSnapshotIsPending } =
+		trpc.dev.saveRoundSnapshot.useMutation({
+			onSuccess: data => {
+				toast.success("Round saved!");
+				queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
+			},
+		});
+
+	const clearAllData = trpc.dev.clearAllData.useMutation({
+		onSuccess: data => {
+			toast.success("Cleared all data!");
+			queryClient.invalidateQueries({ queryKey: ["arena", "my"] });
+			queryClient.invalidateQueries({ queryKey: ["profile", "history"] });
+		},
+	});
+
+	const seedData = trpc.dev.seedData.useMutation({
+		onSuccess: data => {
+			toast.success("Seeded rounds!");
+		},
+	});
 
 	// todo group?
 	return {
@@ -41,9 +74,12 @@ const useArenaMutations = () => {
 		abandonRun,
 		abandonRunIsPending,
 		updateBoard,
-		updateBoardIsPending,
 		findAndBattleOpponent,
 		findAndBattleOpponentIsPending,
+		saveRoundSnapshot,
+		saveRoundSnapshotIsPending,
+		clearAllData,
+		seedData,
 	};
 };
 

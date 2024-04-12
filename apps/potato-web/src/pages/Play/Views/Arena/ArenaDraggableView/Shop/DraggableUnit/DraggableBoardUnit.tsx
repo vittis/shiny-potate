@@ -1,21 +1,25 @@
 import { BoardUnitInstance } from "game-logic";
 import { useDraggable } from "@dnd-kit/core";
 import { DraggableUnitInfo } from "./DraggableUnitInfo";
-import { memo } from "react";
+import { useArenaIsUpdating } from "@/services/features/Arena/useArenaUpdate";
 
 interface DraggableShopUnitInterface {
 	boardUnit: BoardUnitInstance;
 }
 
-const DraggableBoardUnit = memo(({ boardUnit }: DraggableShopUnitInterface) => {
+const DraggableBoardUnit = ({ boardUnit }: DraggableShopUnitInterface) => {
+	// todo consider making a shared useArenaMutations to avoid having to do this
+	const disabled = useArenaIsUpdating();
+
 	const draggableData = useDraggable({
 		id: boardUnit.id,
 		data: {
 			unit: boardUnit,
 		},
+		disabled,
 	});
 
 	return <DraggableUnitInfo useDraggableData={draggableData} unit={boardUnit.unit} />;
-});
+};
 
 export { DraggableBoardUnit };
