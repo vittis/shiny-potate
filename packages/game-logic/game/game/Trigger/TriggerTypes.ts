@@ -78,7 +78,8 @@ export type TriggerEffectPayloadMap = {
 export interface TriggerEffect<T extends TRIGGER_EFFECT_TYPE> {
 	type: T;
 	trigger: TRIGGER;
-	target?: TARGET_TYPE;
+	target: TARGET_TYPE;
+	specific?: boolean;
 	conditions: PossibleEffectConditions[];
 	payload: TriggerEffectPayloadMap[T];
 }

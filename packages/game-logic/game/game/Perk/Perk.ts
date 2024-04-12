@@ -34,6 +34,7 @@ export class Perk {
 	}
 
 	getTriggerEffects() {
+		// PERK_TYPE = UNIQUE
 		if (this.data.type === PERK_TYPE.UNIQUE) {
 			return this.data.effects;
 		}
@@ -43,17 +44,23 @@ export class Perk {
 			if (effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
 				return {
 					...effect,
-					payload: this.getTierValue("DAMAGE"),
+					payload: {
+						value: this.getTierValue("DAMAGE"),
+					},
 				};
 			} else if (effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
 				return {
 					...effect,
-					payload: this.getTierValue("HEAL"),
+					payload: {
+						value: this.getTierValue("HEAL"),
+					},
 				};
 			} else if (effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
 				return {
 					...effect,
-					payload: this.getTierValue("SHIELD"),
+					payload: {
+						value: this.getTierValue("SHIELD"),
+					},
 				};
 			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
 				return {

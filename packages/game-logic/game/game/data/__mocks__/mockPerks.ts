@@ -274,4 +274,47 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	OpenFieldTactics: {
+		name: "Open Field Tactics",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "RANGED",
+				weight: 5,
+			},
+		],
+		tiers: [
+			{
+				name: "FAST",
+				values: [5, 10, 15, 20, 25],
+			},
+			{
+				name: "ATTACK_POWER",
+				values: [5, 10, 15, 20, 25],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "BATTLE_START",
+				target: "SELF",
+				specific: true,
+				conditions: [],
+				payload: [
+					{
+						name: "FAST",
+						quantity: "DYNAMIC",
+					},
+					{
+						name: "ATTACK_POWER",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
 };

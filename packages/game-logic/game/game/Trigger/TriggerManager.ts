@@ -7,6 +7,7 @@ import {
 	createStatusEffectSubEvent,
 } from "../Event/EventFactory";
 import { EVENT_TYPE, SubEvent, TriggerEffectEvent } from "../Event/EventTypes";
+import { getSpecificPerkEffect } from "../Perk/PerkUtils";
 import { Unit } from "../Unit/Unit";
 import { canUseEffect } from "./ConditionUtils";
 import {
@@ -47,9 +48,26 @@ export class TriggerManager {
 
 		let subEvents: SubEvent[] = [];
 
-		triggerEffects.forEach(activeEffect => {
+		triggerEffects.forEach(triggerEffect => {
+			let activeEffect = triggerEffect;
+
 			if (!canUseEffect(activeEffect.effect, unit, bm)) {
 				return;
+			}
+
+			if (activeEffect.effect.specific) {
+				const perk = unit.perks.find(perk => perk.id === activeEffect.sourceId);
+				if (!perk) {
+					throw new Error(`onTrigger: Specific Perk not found: ${activeEffect.sourceId}`);
+				}
+
+				const effect = getSpecificPerkEffect(perk, unit)[0];
+				if (!effect) return;
+
+				activeEffect = {
+					...activeEffect,
+					effect,
+				};
 			}
 
 			let newSubEvents: SubEvent[] = [];
