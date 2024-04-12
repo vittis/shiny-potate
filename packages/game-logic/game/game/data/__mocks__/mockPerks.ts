@@ -232,4 +232,46 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	SoloStrength: {
+		name: "Solo Strength",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "TRINKET",
+				weight: 2,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 1,
+			},
+		],
+		tiers: [
+			{
+				name: "ATTACK_POWER",
+				values: [2, 4, 6, 8, 10],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT_TAKEN",
+				target: "SELF",
+				conditions: [
+					{
+						type: "POSITION",
+						payload: {
+							target: "SELF",
+							position: "ISOLATED",
+						},
+					},
+				],
+				payload: [
+					{
+						name: "ATTACK_POWER",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
 };

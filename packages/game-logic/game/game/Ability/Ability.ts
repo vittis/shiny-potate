@@ -10,16 +10,11 @@ import {
 } from "../Event/EventTypes";
 import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
-import {
-	createDamageSubEvent,
-	createDisableSubEvent,
-	createHealSubEvent,
-	createShieldSubEvent,
-	createStatusEffectSubEvent,
-} from "../Event/EventFactory";
+import { createOnHitTakenSubEvents, generateSubEvents } from "../Event/EventFactory";
 import { getAllTargetUnits } from "../Target/TargetUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
+import { canUseEffect } from "../Trigger/ConditionUtils";
 
 export class Ability {
 	id: string;
@@ -69,7 +64,9 @@ export class Ability {
 			...unit.triggerManager.getAllEffectsForTrigger(
 				this.isAttack() ? TRIGGER.ON_ATTACK_USE : TRIGGER.ON_SPELL_USE,
 			),
-		].map(effect => effect.effect);
+		]
+			.map(effect => effect.effect)
+			.filter(effect => canUseEffect(effect, unit, unit.bm));
 
 		const onHitAbilityEffects = this.data.effects.filter(
 			effect => effect.trigger === TRIGGER.ON_HIT,
@@ -79,15 +76,17 @@ export class Ability {
 			...unit.triggerManager.getAllEffectsForTrigger(
 				this.isAttack() ? TRIGGER.ON_ATTACK_HIT : TRIGGER.ON_SPELL_HIT,
 			),
-		].map(effect => {
-			let triggerEffect = effect.effect;
+		]
+			.map(effect => {
+				let triggerEffect = effect.effect;
 
-			if (effect.effect.target === TARGET_TYPE.HIT_TARGET) {
-				triggerEffect.target = this.data.target;
-			}
+				if (effect.effect.target === TARGET_TYPE.HIT_TARGET) {
+					triggerEffect.target = this.data.target;
+				}
 
-			return triggerEffect;
-		});
+				return triggerEffect;
+			})
+			.filter(effect => canUseEffect(effect, unit, unit.bm));
 
 		const onUseSubEvents = this.onUse(unit, [...onUseAbilityEffects, ...onUsePerkEffects]);
 		const onHitSubEvents = this.onHit(unit, [...onHitAbilityEffects, ...onHitPerkEffects]);
@@ -152,49 +151,20 @@ export class Ability {
 	}
 
 	onUse(unit: Unit, effects: PossibleTriggerEffect[]) {
-		let subEvents: SubEvent[] = [];
-
-		effects.forEach(effect => {
-			let newSubEvents: SubEvent[] = [];
-
-			if (effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
-				newSubEvents = createDamageSubEvent(unit, effect, this.getDamageModifier(unit));
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
-				newSubEvents = createHealSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
-				newSubEvents = createShieldSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
-				newSubEvents = createStatusEffectSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
-				newSubEvents = createDisableSubEvent(unit, effect);
-			}
-
-			subEvents = [...subEvents, ...newSubEvents];
-		});
+		const subEvents: SubEvent[] = generateSubEvents(unit, effects, this.getDamageModifier(unit));
 
 		return subEvents;
 	}
 
 	onHit(unit: Unit, effects: PossibleTriggerEffect[]) {
-		let subEvents: SubEvent[] = [];
+		const onHitSubEvents: SubEvent[] = generateSubEvents(
+			unit,
+			effects,
+			this.getDamageModifier(unit),
+		);
+		const onHitTakenSubEvents: SubEvent[] = createOnHitTakenSubEvents(unit, onHitSubEvents);
 
-		effects.forEach(effect => {
-			let newSubEvents: SubEvent[] = [];
-
-			if (effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
-				newSubEvents = createDamageSubEvent(unit, effect, this.getDamageModifier(unit));
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
-				newSubEvents = createHealSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
-				newSubEvents = createShieldSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
-				newSubEvents = createStatusEffectSubEvent(unit, effect);
-			} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
-				newSubEvents = createDisableSubEvent(unit, effect);
-			}
-
-			subEvents = [...subEvents, ...newSubEvents];
-		});
+		const subEvents = [...onHitSubEvents, ...onHitTakenSubEvents];
 
 		return subEvents;
 	}

@@ -220,7 +220,7 @@ function getBackAllyTarget(bm: BoardManager, unit: Unit): Unit[] {
 	return backAlly as Unit[];
 }
 
-function getAdjacentAlliesTarget(bm: BoardManager, unit: Unit): Unit[] {
+export function getAdjacentAlliesTarget(bm: BoardManager, unit: Unit): Unit[] {
 	const adjacentAllies = [
 		...getFrontAllyTarget(bm, unit),
 		...getBackAllyTarget(bm, unit),

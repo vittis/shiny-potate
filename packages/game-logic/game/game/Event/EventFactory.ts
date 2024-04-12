@@ -1,6 +1,12 @@
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { getAllTargetUnits } from "../Target/TargetUtils";
-import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
+import { canUseEffect } from "../Trigger/ConditionUtils";
+import {
+	PossibleTriggerEffect,
+	TRIGGER,
+	TRIGGER_EFFECT_TYPE,
+	TriggerEffect,
+} from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import {
 	EVENT_TYPE,
@@ -191,4 +197,58 @@ export function createTickEffectEvent(unit: Unit, effect: TICK_EFFECT_TYPE, valu
 	};
 
 	return tickEffectEvent as TickEffectEvent;
+}
+
+export function generateSubEvents(
+	unit: Unit,
+	effects: PossibleTriggerEffect[],
+	damageModifier = 0,
+): SubEvent[] {
+	let subEvents: SubEvent[] = [];
+
+	effects.forEach(effect => {
+		let newSubEvents: SubEvent[] = [];
+
+		if (effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
+			newSubEvents = createDamageSubEvent(unit, effect, damageModifier);
+		} else if (effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
+			newSubEvents = createHealSubEvent(unit, effect);
+		} else if (effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
+			newSubEvents = createShieldSubEvent(unit, effect);
+		} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
+			newSubEvents = createStatusEffectSubEvent(unit, effect);
+		} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
+			newSubEvents = createDisableSubEvent(unit, effect);
+		}
+
+		subEvents = [...subEvents, ...newSubEvents];
+	});
+
+	return subEvents;
+}
+
+export function createOnHitTakenSubEvents(unit: Unit, onHitSubEvents: SubEvent[]): SubEvent[] {
+	let subEvents: SubEvent[] = [];
+
+	const unitsWithDamageSubEvents: string[] = onHitSubEvents
+		.filter(onHitSubEvent => onHitSubEvent.payload.type === INSTANT_EFFECT_TYPE.DAMAGE)
+		.map(onHitSubEvent => onHitSubEvent.payload.targetId) as string[];
+	const unitsThatTookHit: string[] = unitsWithDamageSubEvents.filter(
+		(unitId, index) => unitsWithDamageSubEvents.indexOf(unitId) === index,
+	);
+
+	unitsThatTookHit.forEach(unitId => {
+		const unitHit = unit.bm.getUnitById(unitId);
+		const onHitTakenEffects = [
+			...unitHit.triggerManager.getAllEffectsForTrigger(TRIGGER.ON_HIT_TAKEN),
+		]
+			.map(effect => effect.effect)
+			.filter(effect => canUseEffect(effect, unitHit, unitHit.bm));
+
+		const onHitTakenSubEvents = generateSubEvents(unitHit, onHitTakenEffects);
+
+		subEvents = [...subEvents, ...onHitTakenSubEvents];
+	});
+
+	return subEvents;
 }

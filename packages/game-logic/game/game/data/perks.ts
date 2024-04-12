@@ -12,6 +12,7 @@ import * as IronHeart from "../../data/perks/IronHeart.json";
 import * as SavageFury from "../../data/perks/SavageFury.json";
 import * as VengefulLegacy from "../../data/perks/VengefulLegacy.json";
 import * as VenomousStrikes from "../../data/perks/VenomousStrikes.json";
+import * as SoloStrength from "../../data/perks/SoloStrength.json";
 import { PerkData } from "../Perk/PerkTypes";
 
 type PerksMap = {
@@ -33,6 +34,7 @@ const Perks = {
 	SavageFury: SavageFury as PerkData,
 	VengefulLegacy: VengefulLegacy as PerkData,
 	VenomousStrikes: VenomousStrikes as PerkData,
+	SoloStrength: SoloStrength as PerkData,
 };
 
 export default Perks as typeof Perks & PerksMap;

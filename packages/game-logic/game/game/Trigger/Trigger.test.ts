@@ -4,10 +4,11 @@ import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { Unit } from "../Unit/Unit";
-import { Weapons } from "../data";
+import { Abilities, Trinkets, Weapons } from "../data";
 import { TriggerManager } from "./TriggerManager";
 import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "./TriggerTypes";
 import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../Event/EventUtils";
+import { Ability } from "../Ability/Ability";
 
 const effectsMock: PossibleTriggerEffect[] = [
 	{
@@ -162,6 +163,48 @@ describe("Triggers", () => {
 			executeStepEffects(bm, getStepEffects([event]));
 
 			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.POISON)).toBe(true);
+		});
+	});
+
+	describe("ON_HIT_TAKEN", () => {
+		it("should generate event and apply trigger effect on hit taken (Solo Strength)", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+			unit.equip(new Equipment(Trinkets.SagesBrandNewHat), EQUIPMENT_SLOT.TRINKET);
+
+			expect(unit.perks[0].data.effects[0].trigger).toBe(TRIGGER.ON_HIT_TAKEN);
+			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.ATTACK_POWER)).toBe(false);
+
+			const ability = new Ability(Abilities.Stab);
+			const event = ability.use(unit2);
+
+			executeStepEffects(bm, getStepEffects([event]));
+
+			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.ATTACK_POWER)).toBe(true);
+		});
+
+		it("should not generate event and apply trigger effect when not isolated (Solo Strength)", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
+			const unit3 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_MID, bm);
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+			bm.addToBoard(unit3);
+			unit.equip(new Equipment(Trinkets.SagesBrandNewHat), EQUIPMENT_SLOT.TRINKET);
+
+			expect(unit.perks[0].data.effects[0].trigger).toBe(TRIGGER.ON_HIT_TAKEN);
+			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.ATTACK_POWER)).toBe(false);
+
+			const ability = new Ability(Abilities.Stab);
+			const event = ability.use(unit2);
+
+			executeStepEffects(bm, getStepEffects([event]));
+
+			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.ATTACK_POWER)).toBe(false);
 		});
 	});
 });

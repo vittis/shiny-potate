@@ -15,6 +15,7 @@ export enum TRIGGER {
 	ON_SPELL_HIT = "ON_SPELL_HIT",
 	ON_ATTACK_USE = "ON_ATTACK_USE",
 	ON_SPELL_USE = "ON_SPELL_USE",
+	ON_HIT_TAKEN = "ON_HIT_TAKEN",
 }
 
 export enum TRIGGER_EFFECT_TYPE {
@@ -88,3 +89,8 @@ export type PossibleTriggerEffect =
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.SHIELD>
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.HEAL>
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>;
+
+export interface ActiveTriggerEffect {
+	effect: PossibleTriggerEffect;
+	sourceId: string;
+}
