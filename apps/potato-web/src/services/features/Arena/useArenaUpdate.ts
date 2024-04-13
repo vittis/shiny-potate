@@ -34,6 +34,7 @@ const useArenaUpdate = () => {
 	const { updateBoard } = useArenaMutations();
 	const { currentRun: data, board, storage } = useArenaQueries();
 	const updateTimeoutRef = useRef<any>(null);
+	const isUpdating = useArenaIsUpdating();
 
 	useEffect(() => {
 		// @ts-expect-error this is a client-only field that we use to track changes
@@ -55,12 +56,18 @@ const useArenaUpdate = () => {
 			}, 3000);
 		}
 
+		if (isUpdating) {
+			if (updateTimeoutRef.current) {
+				clearTimeout(updateTimeoutRef.current);
+			}
+		}
+
 		return () => {
 			if (updateTimeoutRef.current) {
 				clearTimeout(updateTimeoutRef.current);
 			}
 		};
-	}, [data, board, storage, updateBoard]);
+	}, [data, board, storage, updateBoard, isUpdating]);
 
 	return null;
 };
