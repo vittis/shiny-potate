@@ -58,3 +58,14 @@ export interface ClassData {
 		talents: TalentNode[];
 	}[];
 }
+
+interface TalentNodeInstance extends ClassNode, TalentNode {
+	id: string;
+	obtained: boolean;
+}
+
+// this will be sent to the client
+export interface TalentTreeInstance {
+	name: string;
+	talents: TalentNodeInstance[];
+}

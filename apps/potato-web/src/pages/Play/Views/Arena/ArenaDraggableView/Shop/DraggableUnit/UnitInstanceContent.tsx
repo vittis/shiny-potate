@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { ChevronUp, NetworkIcon, Plus, PlusSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TalentTreePopover } from "./TalentTreePopover";
 
 interface MarkdownContentProps {
 	unit: Unit;
@@ -32,25 +33,18 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 						</span>
 					</div>
 					<div className="relative flex items-center">
-						<Progress value={50} className="h-[12px] w-[60px]" />
-						{/* <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[10px] text-sky-300">
-							1/2
-						</div> */}
-
+						<Progress value={-1} className="h-[12px] w-[60px]" />
 						<div className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 text-[10px] text-zinc-200">
-							1/2
+							0/2
 						</div>
 					</div>
 
-					<Button variant="ghost" size="smIcon" className="mr-1 hover:bg-neutral-600">
-						{/* <NetworkIcon className="text-sky-100" size={20} /> */}
-						<Plus className="text-sky-100" size={20} />
+					<Button disabled variant="ghost" size="smIcon" className="mr-1 hover:bg-neutral-600">
+						<Plus className="text-sky-300" size={20} />
 					</Button>
 				</div>
 
-				<Button variant="ghost" size="sm">
-					<NetworkIcon className="text-sky-100" size={20} />
-				</Button>
+				<TalentTreePopover talentTrees={unit.classManager.class.talentTreesInstance} />
 			</div>
 
 			<Separator className="my-4" />

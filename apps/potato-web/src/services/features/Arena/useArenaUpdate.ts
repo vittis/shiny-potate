@@ -65,10 +65,10 @@ const useArenaUpdate = () => {
 		return () => {
 			if (updateTimeoutRef.current) {
 				clearTimeout(updateTimeoutRef.current);
-				triggerUpdate();
+				// triggerUpdate(); // TODO investigate why this is running frequently
 			}
 		};
-	}, [data, board, storage, updateBoard, isUpdating]);
+	}, [data, board, storage, isUpdating]);
 
 	return null;
 };

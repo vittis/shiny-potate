@@ -105,10 +105,13 @@ export function generateRandomUnitWithEquipment(tier: number): UnitInfo {
 	const keys = Object.keys(Classes);
 	const randomIndex = Math.floor(Math.random() * keys.length);
 	const randomClassKey = keys[randomIndex];
-	/* const randomClass = Classes[randomItemKey as keyof typeof Classes]; */
+
+	const unit = new Unit(0, 0);
+	unit.setClass(new Class(Classes[randomClassKey as keyof typeof Classes]));
 
 	return {
 		className: randomClassKey as keyof typeof Classes,
+		talentTree: unit.classManager.class.serialize().talentTree,
 		shopEquipment: [
 			{
 				slot: EQUIPMENT_SLOT.MAIN_HAND,

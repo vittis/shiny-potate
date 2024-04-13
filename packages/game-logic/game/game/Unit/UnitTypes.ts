@@ -1,5 +1,6 @@
 import { ShopEquipInstance } from "../../shop/ShopEquip";
 import { POSITION } from "../BoardManager";
+import { TalentTreeInstance } from "../Class/ClassTypes";
 import { EquippedItemInstance } from "../Equipment/EquipmentManager";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 
@@ -10,6 +11,7 @@ export interface EquippedShopEquip {
 
 export interface UnitInfo {
 	className: string;
+	talentTree: TalentTreeInstance[];
 	shopEquipment: EquippedShopEquip[];
 }
 
