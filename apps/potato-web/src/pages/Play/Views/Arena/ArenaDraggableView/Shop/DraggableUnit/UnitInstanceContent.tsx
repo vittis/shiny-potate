@@ -1,6 +1,10 @@
 import { Unit } from "game-logic";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
+import { ChevronUp, NetworkIcon, Plus, PlusSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface MarkdownContentProps {
 	unit: Unit;
@@ -15,7 +19,40 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 
 	return (
 		<div className="bg-pattern-gradient p-3 font-mono">
-			<div className="text-center text-4xl">{className}</div>
+			<div className="flex items-center justify-between gap-6">
+				<div className="text-left text-4xl">
+					{className}
+					<span className={cn("ml-1 font-mono text-xs font-semibold text-neutral-100")}>T{1}</span>
+				</div>
+
+				<div className="flex gap-2 rounded bg-input py-0.5">
+					<div className="flex items-center">
+						<span className={cn("ml-2 font-mono text-[12px] font-semibold text-neutral-100")}>
+							Lv 1
+						</span>
+					</div>
+					<div className="relative flex items-center">
+						<Progress value={50} className="h-[12px] w-[60px]" />
+						{/* <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 text-[10px] text-sky-300">
+							1/2
+						</div> */}
+
+						<div className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 text-[10px] text-zinc-200">
+							0/2
+						</div>
+					</div>
+
+					<Button variant="ghost" size="smIcon" className="mr-1 hover:bg-neutral-600">
+						{/* <NetworkIcon className="text-sky-100" size={20} /> */}
+						<Plus className="text-sky-100" size={20} />
+					</Button>
+				</div>
+
+				<Button variant="ghost" size="sm">
+					<NetworkIcon className="text-sky-100" size={20} />
+				</Button>
+			</div>
+
 			<Separator className="my-4" />
 
 			<div className="flex flex-col gap-4">

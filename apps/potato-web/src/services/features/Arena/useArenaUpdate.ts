@@ -65,6 +65,7 @@ const useArenaUpdate = () => {
 		return () => {
 			if (updateTimeoutRef.current) {
 				clearTimeout(updateTimeoutRef.current);
+				triggerUpdate();
 			}
 		};
 	}, [data, board, storage, updateBoard, isUpdating]);

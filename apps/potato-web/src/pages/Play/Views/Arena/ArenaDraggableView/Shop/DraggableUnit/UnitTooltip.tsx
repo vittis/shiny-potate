@@ -8,8 +8,6 @@ import {
 	getUnitData,
 } from "game-logic";
 import { UnitInstanceContent } from "./UnitInstanceContent";
-import { Button } from "@/components/ui/button";
-import { X, XCircle, XSquare } from "lucide-react";
 import { setBoard, setStorage } from "@/services/features/Arena/useArenaUpdate";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
 
