@@ -193,32 +193,34 @@ function getSameColumnAlliesTarget(bm: BoardManager, unit: Unit): Unit[] {
 function getSideAllyTarget(bm: BoardManager, unit: Unit): Unit[] {
 	const unitsInColumn = bm.getAllAliveUnitsInColumn(unit.owner, bm.getUnitColumn(unit));
 
-	const alliedUnitInColumn = unitsInColumn.filter(alliedUnit => alliedUnit.id !== unit.id);
+	const alliedUnitInColumn = unitsInColumn
+		.filter(alliedUnit => alliedUnit.id !== unit.id)
+		.filter(alliedUnit => alliedUnit.isDead === false);
 
 	return alliedUnitInColumn as Unit[];
 }
 
 function getFrontAllyTarget(bm: BoardManager, unit: Unit): Unit[] {
-	if (bm.getUnitColumn(unit) === COLUMN.FRONT) {
-		return [];
-	}
+	if (bm.getUnitColumn(unit) === COLUMN.FRONT) return [];
 
-	const frontAlly = bm.getUnitByPosition(unit.owner, unit.position - 1);
+	const frontAlly = bm
+		.getUnitByPosition(unit.owner, unit.position - 1)
+		.filter(allyUnit => allyUnit.isDead === false);
 
 	return frontAlly as Unit[];
 }
 
 function getBackAllyTarget(bm: BoardManager, unit: Unit): Unit[] {
-	if (bm.getUnitColumn(unit) === COLUMN.BACK) {
-		return [];
-	}
+	if (bm.getUnitColumn(unit) === COLUMN.BACK) return [];
 
-	const backAlly = bm.getUnitByPosition(unit.owner, unit.position + 1);
+	const backAlly = bm
+		.getUnitByPosition(unit.owner, unit.position + 1)
+		.filter(allyUnit => allyUnit.isDead === false);
 
 	return backAlly as Unit[];
 }
 
-function getAdjacentAlliesTarget(bm: BoardManager, unit: Unit): Unit[] {
+export function getAdjacentAlliesTarget(bm: BoardManager, unit: Unit): Unit[] {
 	const adjacentAllies = [
 		...getFrontAllyTarget(bm, unit),
 		...getBackAllyTarget(bm, unit),

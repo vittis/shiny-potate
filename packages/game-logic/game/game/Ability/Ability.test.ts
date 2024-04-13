@@ -2,8 +2,18 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Class } from "../Class/Class";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { EVENT_TYPE, INSTANT_EFFECT_TYPE, UseAbilityEvent } from "../Event/EventTypes";
-import { applyEvents, executeStepEffects, getStepEffects } from "../Event/EventUtils";
+import {
+	EVENT_TYPE,
+	INSTANT_EFFECT_TYPE,
+	UseAbilityEvent,
+	UseAbilityIntent,
+} from "../Event/EventTypes";
+import {
+	applyEvents,
+	executeStepEffects,
+	getEventsFromIntents,
+	getStepEffects,
+} from "../Event/EventUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
@@ -595,16 +605,15 @@ describe("Ability", () => {
 
 			for (let i = 0; i < unit.abilities[0].cooldown; i++) unit.step(i);
 
-			expect(unit.stepEvents.length).toBe(multistrikeQuantity + 1);
-			expect(unit.stepEvents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
-			expect((unit.stepEvents[0] as UseAbilityEvent).payload.name).toBe(
-				unit.abilities[0].data.name,
-			);
+			expect(unit.stepIntents.length).toBe(multistrikeQuantity + 1);
+			expect(unit.stepIntents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+			expect((unit.stepIntents[0] as UseAbilityIntent).id).toBe(unit.abilities[0].id);
+
 			for (let i = 1; i <= multistrikeQuantity; i++) {
-				expect(unit.stepEvents[0]).toStrictEqual(unit.stepEvents[i]);
+				expect(unit.stepIntents[i]).toStrictEqual({ ...unit.stepIntents[0], useMultistrike: true });
 			}
 
-			executeStepEffects(bm, getStepEffects(unit.stepEvents));
+			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
 
 			expect(unit.statusEffectManager.hasStatusEffect(STATUS_EFFECT.MULTISTRIKE)).toBeFalsy();
 		});
@@ -655,8 +664,9 @@ describe("Ability", () => {
 
 			for (let i = 0; i < unit.abilities[0].cooldown - 10; i++) unit.step(i);
 
-			expect(unit.stepEvents.length).toBe(1);
-			expect(unit.stepEvents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+			expect(unit.stepIntents.length).toBe(1);
+			expect(unit.stepIntents[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
 
 			const ability = new Ability(Abilities.SummonBoar);
 			const event = ability.use(unit2);

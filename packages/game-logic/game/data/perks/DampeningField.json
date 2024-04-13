@@ -1,23 +1,23 @@
 {
-	"name": "Focused Mind",
+	"name": "Dampening Field",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
 			"name": "WEAPON",
-			"weight": 2
+			"weight": 1
 		},
 		{
 			"name": "TRINKET",
-			"weight": 2
+			"weight": 1
 		},
 		{
 			"name": "MAGICAL",
-			"weight": 5
+			"weight": 2
 		}
 	],
 	"tiers": [
 		{
-			"name": "FOCUS",
+			"name": "SLOW",
 			"values": [5, 10, 15, 20, 30]
 		}
 	],
@@ -25,11 +25,11 @@
 		{
 			"type": "STATUS_EFFECT",
 			"trigger": "BATTLE_START",
-			"target": "SELF",
+			"target": "ALL_ENEMIES",
 			"conditions": [],
 			"payload": [
 				{
-					"name": "FOCUS",
+					"name": "SLOW",
 					"quantity": "DYNAMIC"
 				}
 			]

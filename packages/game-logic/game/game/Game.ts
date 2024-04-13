@@ -236,10 +236,11 @@ export function runGame(bm: BoardManager) {
 			let stepEffects = getStepEffects(orderedEvents);
 			executeStepEffects(bm, stepEffects);
 
-			// Get death related intents and add them to stepIntentsMap, then order it
-			stepIntentsMap = getDeathIntents(bm, stepIntentsMap);
+			// Get death related intents, add them to stepIntentsMap and order them
+			const deathIntentsMap = getDeathIntents(bm);
 			stepIntentsMap.forEach((intents, unitId) => {
-				stepIntentsMap.set(unitId, sortEventsByType(intents) as PossibleIntent[]);
+				const allIntents = [...(deathIntentsMap.get(unitId) || []), ...intents];
+				stepIntentsMap.set(unitId, sortEventsByType(allIntents) as PossibleIntent[]);
 			});
 
 			let subStep: number = 1;
@@ -282,9 +283,10 @@ export function runGame(bm: BoardManager) {
 				// Check for more subStep events to continue looping
 				subStep++;
 				subStepEvents = [];
-				stepIntentsMap = getDeathIntents(bm, stepIntentsMap);
+				const deathIntentsMap = getDeathIntents(bm);
 				stepIntentsMap.forEach((intents, unitId) => {
-					stepIntentsMap.set(unitId, sortEventsByType(intents) as PossibleIntent[]);
+					const allIntents = [...(deathIntentsMap.get(unitId) || []), ...intents];
+					stepIntentsMap.set(unitId, sortEventsByType(allIntents) as PossibleIntent[]);
 				});
 
 				bm.getAllUnits().forEach(unit => {

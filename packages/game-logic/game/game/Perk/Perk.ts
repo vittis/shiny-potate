@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { PerkDataSchema } from "./PerkSchema";
 import { PERK_TYPE, PerkData } from "./PerkTypes";
-import { TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
+import { PossibleTriggerEffect, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 
 export class Perk {
 	id: string;
@@ -23,28 +23,62 @@ export class Perk {
 		this.id = nanoid(8);
 	}
 
+	getTierValue(name: string) {
+		const tierMatch = this.data.tiers.find(tier => tier.name === name);
+		const tierMatchValue = tierMatch?.values?.[this.tier - 1];
+		if (tierMatchValue === undefined) {
+			throw Error(`Tier match not found for perk: ${this.data.name}`);
+		}
+
+		return tierMatchValue;
+	}
+
 	getTriggerEffects() {
+		// PERK_TYPE = UNIQUE
+		if (this.data.type === PERK_TYPE.UNIQUE) {
+			return this.data.effects;
+		}
+
+		// PERK_TYPE = TIER_SCALE
 		return this.data.effects.map(effect => {
-			// todo suit for all cases
-			if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
+			if (effect.type === TRIGGER_EFFECT_TYPE.DAMAGE) {
 				return {
 					...effect,
-					payload: effect.payload.map(statusPayload => {
-						const tierMatch = this.data.tiers.find(tier => tier.name === statusPayload.name);
-						const tierMatchValue = tierMatch?.values?.[this.tier - 1];
-						if (tierMatchValue === undefined) {
-							throw Error(`Tier match not found for perk: ${this.data.name}`);
-						}
-
-						return {
-							...statusPayload,
-							quantity:
-								statusPayload.quantity === "DYNAMIC" ? tierMatchValue : statusPayload.quantity,
-						};
-					}),
+					payload: {
+						value: this.getTierValue("DAMAGE"),
+					},
+				};
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.HEAL) {
+				return {
+					...effect,
+					payload: {
+						value: this.getTierValue("HEAL"),
+					},
+				};
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.SHIELD) {
+				return {
+					...effect,
+					payload: {
+						value: this.getTierValue("SHIELD"),
+					},
+				};
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.STATUS_EFFECT) {
+				return {
+					...effect,
+					payload: effect.payload.map(statusPayload => ({
+						...statusPayload,
+						quantity: this.getTierValue(statusPayload.name),
+					})),
+				};
+			} else if (effect.type === TRIGGER_EFFECT_TYPE.DISABLE) {
+				return {
+					...effect,
+					payload: effect.payload.map(disablePayload => ({
+						...disablePayload,
+						quantity: this.getTierValue(disablePayload.name),
+					})),
 				};
 			}
-			return effect;
-		});
+		}) as PossibleTriggerEffect[];
 	}
 }

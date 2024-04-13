@@ -42,6 +42,7 @@ const StatusTriggerEffect = z.object({
 	type: z.literal(TRIGGER_EFFECT_TYPE.STATUS_EFFECT),
 	trigger: z.nativeEnum(TRIGGER),
 	target: z.nativeEnum(TARGET_TYPE),
+	specific: z.optional(z.boolean()),
 	conditions: EffectConditionsSchema,
 	payload: z.array(
 		z.object({
@@ -55,6 +56,7 @@ const DamageTriggerEffect = z.object({
 	type: z.literal(TRIGGER_EFFECT_TYPE.DAMAGE),
 	trigger: z.nativeEnum(TRIGGER),
 	target: z.nativeEnum(TARGET_TYPE),
+	specific: z.optional(z.boolean()),
 	conditions: EffectConditionsSchema,
 	payload: z.object({ value: z.number() }),
 });
@@ -63,6 +65,7 @@ const ShieldTriggerEffect = z.object({
 	type: z.literal(TRIGGER_EFFECT_TYPE.SHIELD),
 	trigger: z.nativeEnum(TRIGGER),
 	target: z.nativeEnum(TARGET_TYPE),
+	specific: z.optional(z.boolean()),
 	conditions: EffectConditionsSchema,
 	payload: z.object({ value: z.number() }),
 });
@@ -71,6 +74,7 @@ const HealTriggerEffect = z.object({
 	type: z.literal(TRIGGER_EFFECT_TYPE.HEAL),
 	trigger: z.nativeEnum(TRIGGER),
 	target: z.nativeEnum(TARGET_TYPE),
+	specific: z.optional(z.boolean()),
 	conditions: EffectConditionsSchema,
 	payload: z.object({ value: z.number() }),
 });
@@ -79,6 +83,7 @@ const DisableEffect = z.object({
 	type: z.literal(TRIGGER_EFFECT_TYPE.DISABLE),
 	trigger: z.nativeEnum(TRIGGER),
 	target: z.nativeEnum(TARGET_TYPE),
+	specific: z.optional(z.boolean()),
 	conditions: EffectConditionsSchema,
 	payload: z.array(
 		z.object({

@@ -1,36 +1,39 @@
 {
-	"name": "Ranged Proficiency",
+	"name": "Solo Strength",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
-			"name": "RANGED",
-			"weight": 5
+			"name": "TRINKET",
+			"weight": 2
+		},
+		{
+			"name": "PHYSICAL",
+			"weight": 1
 		}
 	],
 	"tiers": [
 		{
-			"name": "FAST",
-			"values": [5, 10, 15, 20, 30]
+			"name": "ATTACK_POWER",
+			"values": [2, 4, 6, 8, 10]
 		}
 	],
 	"effects": [
 		{
 			"type": "STATUS_EFFECT",
-			"trigger": "BATTLE_START",
+			"trigger": "ON_HIT_TAKEN",
 			"target": "SELF",
 			"conditions": [
 				{
-					"type": "EQUIPMENT",
+					"type": "POSITION",
 					"payload": {
 						"target": "SELF",
-						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
-						"tags": ["PHYSICAL", "RANGED"]
+						"position": "ISOLATED"
 					}
 				}
 			],
 			"payload": [
 				{
-					"name": "FAST",
+					"name": "ATTACK_POWER",
 					"quantity": "DYNAMIC"
 				}
 			]

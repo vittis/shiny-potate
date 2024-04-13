@@ -4,7 +4,6 @@ import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { DISABLE } from "../Disable/DisableTypes";
 import { TICK_COOLDOWN } from "../StatusEffect/StatusEffectManager";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 import {
 	DamagePayload,
 	DisablePayload,
@@ -23,7 +22,8 @@ import {
 	aggregateEffects,
 	calculateEffects,
 	executeStepEffects,
-	getDeathEvents,
+	getDeathIntents,
+	getEventsFromIntents,
 	getStepEffects,
 	getSubEventsFromTickEffects,
 } from "./EventUtils";
@@ -262,7 +262,7 @@ describe("Event", () => {
 		});
 	});
 
-	describe("getDeathEvents", () => {
+	describe("getDeathIntents", () => {
 		it("should get FAINT event", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
@@ -271,7 +271,7 @@ describe("Event", () => {
 
 			unit.receiveDamage(unit.stats.maxHp);
 			expect(unit.stats.hp).toEqual(0);
-			expect(getDeathEvents(bm)).toEqual([
+			expect(getDeathIntents(bm).get(unit.id)).toEqual([
 				{
 					step: 1,
 					type: EVENT_TYPE.FAINT,
@@ -294,7 +294,7 @@ describe("Event", () => {
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
-			let tickEffect = (unit.stepEvents[0] as TickEffectEvent).payload as TickEffectEventPayload;
+			let tickEffect = (unit.stepIntents[0] as TickEffectEvent).payload as TickEffectEventPayload;
 
 			expect(getSubEventsFromTickEffects(tickEffect)).toHaveLength(2);
 			expect(getSubEventsFromTickEffects(tickEffect)[0]).toEqual({
@@ -321,11 +321,11 @@ describe("Event", () => {
 				},
 			});
 
-			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
+			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
-			tickEffect = (unit.stepEvents[0] as TickEffectEvent).payload as TickEffectEventPayload;
+			tickEffect = (unit.stepIntents[0] as TickEffectEvent).payload as TickEffectEventPayload;
 
 			expect(getSubEventsFromTickEffects(tickEffect)).toHaveLength(2);
 			expect(
@@ -349,7 +349,7 @@ describe("Event", () => {
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
-			let tickEffect = (unit.stepEvents[0] as TickEffectEvent).payload as TickEffectEventPayload;
+			let tickEffect = (unit.stepIntents[0] as TickEffectEvent).payload as TickEffectEventPayload;
 
 			expect(getSubEventsFromTickEffects(tickEffect)).toHaveLength(2);
 			expect(getSubEventsFromTickEffects(tickEffect)[0]).toEqual({
@@ -376,11 +376,11 @@ describe("Event", () => {
 				},
 			});
 
-			executeStepEffects(bm, getStepEffects(unit.serializeEvents()));
+			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
 
 			for (let i = 0; i < TICK_COOLDOWN; i++) unit.step(i);
 
-			tickEffect = (unit.stepEvents[0] as TickEffectEvent).payload as TickEffectEventPayload;
+			tickEffect = (unit.stepIntents[0] as TickEffectEvent).payload as TickEffectEventPayload;
 
 			expect(getSubEventsFromTickEffects(tickEffect)).toHaveLength(2);
 			expect(

@@ -1,27 +1,23 @@
 {
-	"name": "Prey The Weak",
+	"name": "Vengeful Legacy",
 	"type": "TIER_SCALE",
 	"tags": [
 		{
-			"name": "WEAPON",
+			"name": "MAGICAL",
 			"weight": 1
-		},
-		{
-			"name": "PHYSICAL",
-			"weight": 3
 		}
 	],
 	"tiers": [
 		{
 			"name": "VULNERABLE",
-			"values": [2, 4, 6, 8, 10]
+			"values": [20, 25, 30, 35, 45]
 		}
 	],
 	"effects": [
 		{
 			"type": "STATUS_EFFECT",
-			"trigger": "ON_HIT",
-			"target": "HIT_TARGET",
+			"trigger": "SELF_FAINT",
+			"target": "ALL_ENEMIES",
 			"conditions": [],
 			"payload": [
 				{

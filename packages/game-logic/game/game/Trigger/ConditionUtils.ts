@@ -1,9 +1,36 @@
 import { BoardManager } from "../BoardManager";
 import { EQUIPMENT_SLOT, EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
-import { getAllTargetUnits } from "../Target/TargetUtils";
+import { getAdjacentAlliesTarget, getAllTargetUnits } from "../Target/TargetUtils";
 import { Unit } from "../Unit/Unit";
-import { BOARD_POSITION } from "./TriggerTypes";
+import { BOARD_POSITION, EFFECT_CONDITION_TYPE, PossibleTriggerEffect } from "./TriggerTypes";
+
+export function canUseEffect(effect: PossibleTriggerEffect, unit: Unit, bm: BoardManager): boolean {
+	let canUseEffect = true;
+
+	if (effect.conditions.length > 0) {
+		canUseEffect = effect.conditions.every(condition => {
+			if (condition.type === EFFECT_CONDITION_TYPE.POSITION) {
+				return isPositionConditionValid(
+					bm,
+					unit,
+					condition.payload.target,
+					condition.payload.position,
+				);
+			} else if (condition.type === EFFECT_CONDITION_TYPE.EQUIPMENT) {
+				return isEquipmentConditionValid(
+					bm,
+					unit,
+					condition.payload.target,
+					condition.payload.slots,
+					condition.payload.tags,
+				);
+			}
+		});
+	}
+
+	return canUseEffect;
+}
 
 export function isPositionConditionValid(
 	bm: BoardManager,
@@ -25,6 +52,10 @@ export function isPositionConditionValid(
 
 	if (position === BOARD_POSITION.BACK) {
 		return bm.getUnitColumn(targetUnit) === 2;
+	}
+
+	if (position === BOARD_POSITION.ISOLATED) {
+		return getAdjacentAlliesTarget(bm, targetUnit).length === 0;
 	}
 
 	return true;

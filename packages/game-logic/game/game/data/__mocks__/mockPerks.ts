@@ -164,4 +164,157 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	PreyTheWeak: {
+		name: "Prey The Weak",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 3,
+			},
+		],
+		tiers: [
+			{
+				name: "VULNERABLE",
+				values: [4, 10, 18, 30, 45],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT",
+				target: "HIT_TARGET",
+				conditions: [],
+				payload: [
+					{
+						name: "VULNERABLE",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
+	VenomousStrikes: {
+		name: "Venomous Strikes",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 3,
+			},
+		],
+		tiers: [
+			{
+				name: "POISON",
+				values: [2, 4, 6, 8, 10],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_ATTACK_HIT",
+				target: "HIT_TARGET",
+				conditions: [],
+				payload: [
+					{
+						name: "POISON",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
+	SoloStrength: {
+		name: "Solo Strength",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "TRINKET",
+				weight: 2,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 1,
+			},
+		],
+		tiers: [
+			{
+				name: "ATTACK_POWER",
+				values: [2, 4, 6, 8, 10],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT_TAKEN",
+				target: "SELF",
+				conditions: [
+					{
+						type: "POSITION",
+						payload: {
+							target: "SELF",
+							position: "ISOLATED",
+						},
+					},
+				],
+				payload: [
+					{
+						name: "ATTACK_POWER",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
+	OpenFieldTactics: {
+		name: "Open Field Tactics",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "RANGED",
+				weight: 5,
+			},
+		],
+		tiers: [
+			{
+				name: "FAST",
+				values: [5, 10, 15, 20, 25],
+			},
+			{
+				name: "ATTACK_POWER",
+				values: [5, 10, 15, 20, 25],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "BATTLE_START",
+				target: "SELF",
+				specific: true,
+				conditions: [],
+				payload: [
+					{
+						name: "FAST",
+						quantity: "DYNAMIC",
+					},
+					{
+						name: "ATTACK_POWER",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	} as PerkData,
 };

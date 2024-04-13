@@ -194,14 +194,15 @@ export const MockWeapons = {
 		tags: ["WEAPON", "PHYSICAL", "RANGED"],
 		slots: ["TWO_HANDS"],
 		mods: [
-			/* {
+			{
 				type: "GRANT_ABILITY",
 				payload: {
 					name: "Long Shot",
+					type: "ATTACK",
 				},
 				tier: "implicit",
 			},
-			{
+			/* {
 				type: "GRANT_PERK",
 				payload: {
 					name: "Open Field Tactics",
@@ -209,6 +210,14 @@ export const MockWeapons = {
 				},
 				tier: "implicit",
 			}, */
+			{
+				type: "GRANT_PERK",
+				payload: {
+					name: "Prey The Weak",
+					tier: 1,
+				},
+				tier: "implicit",
+			},
 		],
 		effects: [],
 	} as EquipmentData,
@@ -238,6 +247,30 @@ export const MockWeapons = {
 				payload: {
 					stat: "ATTACK_DAMAGE",
 					value: 15,
+				},
+				tier: "implicit",
+			},
+		],
+		effects: [],
+	} as EquipmentData,
+	VenomousDagger: {
+		name: "Venomous Dagger",
+		tags: ["WEAPON", "PHYSICAL"],
+		slots: ["MAIN_HAND", "OFF_HAND"],
+		mods: [
+			{
+				type: "GRANT_ABILITY",
+				payload: {
+					name: "Stab",
+					type: "ATTACK",
+				},
+				tier: "implicit",
+			},
+			{
+				type: "GRANT_PERK",
+				payload: {
+					name: "Venomous Strikes",
+					tier: 1,
 				},
 				tier: "implicit",
 			},

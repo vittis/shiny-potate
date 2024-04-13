@@ -6,26 +6,16 @@ import {
 	createShieldSubEvent,
 	createStatusEffectSubEvent,
 } from "../Event/EventFactory";
-import {
-	EVENT_TYPE,
-	INSTANT_EFFECT_TYPE,
-	SUBEVENT_TYPE,
-	SubEvent,
-	TriggerEffectEvent,
-} from "../Event/EventTypes";
+import { EVENT_TYPE, SubEvent, TriggerEffectEvent } from "../Event/EventTypes";
+import { getSpecificPerkEffect } from "../Perk/PerkUtils";
 import { Unit } from "../Unit/Unit";
-import { isEquipmentConditionValid, isPositionConditionValid } from "./ConditionUtils";
+import { canUseEffect } from "./ConditionUtils";
 import {
-	EFFECT_CONDITION_TYPE,
+	ActiveTriggerEffect,
 	PossibleTriggerEffect,
 	TRIGGER,
 	TRIGGER_EFFECT_TYPE,
 } from "./TriggerTypes";
-
-export interface ActiveTriggerEffect {
-	effect: PossibleTriggerEffect;
-	sourceId: string;
-}
 
 export class TriggerManager {
 	triggerEffects: ActiveTriggerEffect[] = [];
@@ -58,32 +48,26 @@ export class TriggerManager {
 
 		let subEvents: SubEvent[] = [];
 
-		triggerEffects.forEach(activeEffect => {
-			let canUseEffect = true;
+		triggerEffects.forEach(triggerEffect => {
+			let activeEffect = triggerEffect;
 
-			if (activeEffect.effect.conditions.length > 0) {
-				activeEffect.effect.conditions.forEach(condition => {
-					if (condition.type === EFFECT_CONDITION_TYPE.POSITION) {
-						canUseEffect = isPositionConditionValid(
-							bm,
-							unit,
-							condition.payload.target,
-							condition.payload.position,
-						);
-					} else if (condition.type === EFFECT_CONDITION_TYPE.EQUIPMENT) {
-						canUseEffect = isEquipmentConditionValid(
-							bm,
-							unit,
-							condition.payload.target,
-							condition.payload.slots,
-							condition.payload.tags,
-						);
-					}
-				});
+			if (!canUseEffect(activeEffect.effect, unit, bm)) {
+				return;
 			}
 
-			if (!canUseEffect) {
-				return;
+			if (activeEffect.effect.specific) {
+				const perk = unit.perks.find(perk => perk.id === activeEffect.sourceId);
+				if (!perk) {
+					throw new Error(`onTrigger: Specific Perk not found: ${activeEffect.sourceId}`);
+				}
+
+				const effect = getSpecificPerkEffect(perk, unit)[0];
+				if (!effect) return;
+
+				activeEffect = {
+					...activeEffect,
+					effect,
+				};
 			}
 
 			let newSubEvents: SubEvent[] = [];

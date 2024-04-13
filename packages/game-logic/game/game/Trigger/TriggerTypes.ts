@@ -11,6 +11,11 @@ export enum TRIGGER {
 	ALLY_FAINT = "ALLY_FAINT",
 	ENEMY_FAINT = "ENEMY_FAINT",
 	SELF_FAINT = "SELF_FAINT",
+	ON_ATTACK_HIT = "ON_ATTACK_HIT",
+	ON_SPELL_HIT = "ON_SPELL_HIT",
+	ON_ATTACK_USE = "ON_ATTACK_USE",
+	ON_SPELL_USE = "ON_SPELL_USE",
+	ON_HIT_TAKEN = "ON_HIT_TAKEN",
 }
 
 export enum TRIGGER_EFFECT_TYPE {
@@ -73,7 +78,8 @@ export type TriggerEffectPayloadMap = {
 export interface TriggerEffect<T extends TRIGGER_EFFECT_TYPE> {
 	type: T;
 	trigger: TRIGGER;
-	target?: TARGET_TYPE;
+	target: TARGET_TYPE;
+	specific?: boolean;
 	conditions: PossibleEffectConditions[];
 	payload: TriggerEffectPayloadMap[T];
 }
@@ -84,3 +90,8 @@ export type PossibleTriggerEffect =
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.SHIELD>
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.HEAL>
 	| TriggerEffect<TRIGGER_EFFECT_TYPE.DISABLE>;
+
+export interface ActiveTriggerEffect {
+	effect: PossibleTriggerEffect;
+	sourceId: string;
+}

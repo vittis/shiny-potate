@@ -53,22 +53,24 @@ export function getEventsFromIntents(bm: BoardManager, intents: PossibleIntent[]
 	return events.filter(event => event !== undefined) as PossibleEvent[];
 }
 
-export function getDeathIntents(
-	bm: BoardManager,
-	intentsMap: Map<string, PossibleIntent[]>,
-): Map<string, PossibleIntent[]> {
+export function getDeathIntents(bm: BoardManager): Map<string, PossibleIntent[]> {
+	const deathIntentsMap: Map<string, PossibleIntent[]> = new Map();
+
 	bm.getAllAliveUnits().forEach(unit => {
 		if (!unit.isDead && unit.hasDied()) {
 			unit.onDeath();
 
 			// get intents from death related triggers
 			bm.getAllUnits().forEach(unit => {
-				intentsMap.set(unit.id, [...(intentsMap.get(unit.id) || []), ...unit.serializeIntents()]);
+				deathIntentsMap.set(unit.id, [
+					...(deathIntentsMap.get(unit.id) || []),
+					...unit.serializeIntents(),
+				]);
 			});
 		}
 	});
 
-	return intentsMap;
+	return deathIntentsMap;
 }
 
 export function executeStepEffects(bm: BoardManager, stepEffects: StepEffects) {

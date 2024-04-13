@@ -423,4 +423,22 @@ export const MockAbilities = {
 			},
 		],
 	},
+	LongShot: {
+		name: "Long Shot",
+		type: "ATTACK",
+		tags: ["WEAPON_ABILITY"],
+		target: "STANDARD",
+		cooldown: 50,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 40,
+				},
+			},
+		],
+	},
 };

@@ -21,7 +21,7 @@
 			"values": [5, 10, 15, 20, 30]
 		},
 		{
-			"name": "STURDY",
+			"name": "SPELL_POTENCY",
 			"values": [5, 10, 15, 20, 30]
 		}
 	],
@@ -29,7 +29,7 @@
 		{
 			"type": "STATUS_EFFECT",
 			"trigger": "ALLY_FAINT",
-			"target": "ALL_ALLIES",
+			"target": "SELF",
 			"conditions": [],
 			"payload": [
 				{
@@ -37,7 +37,7 @@
 					"quantity": "DYNAMIC"
 				},
 				{
-					"name": "STURDY",
+					"name": "SPELL_POTENCY",
 					"quantity": "DYNAMIC"
 				}
 			]
