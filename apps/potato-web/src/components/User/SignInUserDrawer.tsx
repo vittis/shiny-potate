@@ -23,6 +23,8 @@ import { useState } from "react";
 import { supabase } from "@/services/supabase/supabase";
 import { Github } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
+import { Separator } from "../ui/separator";
 
 const FormSchema = z.object({
 	/* username: z.string().min(4, { message: "Name must be at least 4 characters" }).max(16, {
@@ -35,9 +37,9 @@ const FormSchema = z.object({
 		.email("This is not a valid email."),
 });
 
-interface LoginUserDrawer {}
+interface SignInUserDrawerProps {}
 
-const LoginUserDrawer = ({}: LoginUserDrawer) => {
+const SignInUserDrawer = ({}: SignInUserDrawerProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { pathname } = useLocation();
 
@@ -85,37 +87,30 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<Button onClick={() => setIsOpen(true)} type="button">
-				Login
+				Sign In
 			</Button>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Login</DialogTitle>
-					<DialogDescription>Fill your info</DialogDescription>
+					<DialogTitle>Sign In</DialogTitle>
 				</DialogHeader>
-				<div className="w-100 flex justify-center gap-4">
-					<Button variant="outline" size="icon" onClick={signInWithGithub}>
-						<Github />
+
+				<div className="mt-4 flex w-full justify-center gap-4">
+					<Button className="flex gap-2 px-8" variant="secondary" onClick={signInWithGithub}>
+						<Github /> GitHub
 					</Button>
-					<Button variant="outline" size="icon" onClick={signInWithGoogle}>
-						G
+					<Button className="flex gap-2 px-8" variant="secondary" onClick={signInWithGoogle}>
+						<FaGoogle /> Google
 					</Button>
 				</div>
+
+				<div className="mt-2 flex items-center gap-4">
+					<Separator className="flex-1" />
+					<div>or</div>
+					<Separator className="flex-1" />
+				</div>
+
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-						{/* <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
 						<FormField
 							control={form.control}
 							name="email"
@@ -138,7 +133,7 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 								<FormItem>
 									<FormLabel>Password</FormLabel>
 									<FormControl>
-										<Input placeholder="********" type="password" {...field} />
+										<Input placeholder="*******" type="password" {...field} />
 									</FormControl>
 
 									<FormMessage />
@@ -147,7 +142,7 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 						/>
 
 						<DialogFooter>
-							<Button type="submit">Login</Button>
+							<Button type="submit">Sign In</Button>
 						</DialogFooter>
 					</form>
 				</Form>
@@ -156,4 +151,4 @@ const LoginUserDrawer = ({}: LoginUserDrawer) => {
 	);
 };
 
-export { LoginUserDrawer };
+export { SignInUserDrawer };

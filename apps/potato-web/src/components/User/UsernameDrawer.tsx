@@ -32,8 +32,8 @@ const FormSchema = z.object({
 
 const UsernameDrawer = () => {
 	const username = useSupabaseUserStore(state => state.username);
-
 	const user = useSupabaseUserStore(state => state.user);
+	const userIsPending = useSupabaseUserStore(state => state.userIsPending);
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -57,13 +57,17 @@ const UsernameDrawer = () => {
 		toast.success("Username created (:");
 	}
 
-	if (username || username === undefined) {
+	console.log({ user, username, userIsPending });
+	const shouldShow = user && !username && !userIsPending;
+	console.log(shouldShow);
+
+	if (!shouldShow) {
 		return null;
 	}
 
 	return (
 		<Dialog open={!username}>
-			<DialogContent>
+			<DialogContent hideClose>
 				<DialogHeader>
 					<DialogTitle>Create a new username</DialogTitle>
 					<DialogDescription>Fill the form with the necessary information</DialogDescription>

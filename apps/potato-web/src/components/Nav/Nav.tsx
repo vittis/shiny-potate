@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/
 import { RegisterUserDrawer } from "../User/RegisterUserDrawer";
 import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 import { supabase } from "@/services/supabase/supabase";
-import { LoginUserDrawer } from "../User/LoginUserDrawer";
+import { SignInUserDrawer } from "../User/SignInUserDrawer";
 import { Link, matchPath, useLocation } from "react-router-dom";
 
 const navItems = [
@@ -111,7 +111,7 @@ export function Nav() {
 					</>
 				) : (
 					<>
-						<LoginUserDrawer />
+						<SignInUserDrawer />
 						<RegisterUserDrawer />
 					</>
 				)}

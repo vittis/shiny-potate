@@ -12,9 +12,11 @@ import { ArenaInfo } from "./ArenaInfo";
 import { ArenaDraggableView } from "./ArenaDraggableView/ArenaDraggableView";
 import { ArenaActionButtons } from "./ArenaActionButtons";
 import { ArenaDevMenu } from "./ArenaDevMenu";
+import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserStore";
 
 function ArenaView() {
 	useArenaUpdate();
+	const username = useSupabaseUserStore(state => state.username);
 
 	const { currentRun, shop, isRefetching, error, isPending } = useArenaQueries();
 
@@ -53,7 +55,14 @@ function ArenaView() {
 			>
 				<ScrollBar />
 
-				{isPending && <Loader2 className="mx-auto my-20 w-80 animate-spin" />}
+				{!username && (
+					<div className="pt-10 text-center text-lg text-neutral-200">
+						Sign in to enter the{" "}
+						<span className="font-mono text-2xl font-bold text-yellow-500">Arena</span>
+					</div>
+				)}
+
+				{username && isPending && <Loader2 className="mx-auto my-20 w-80 animate-spin" />}
 
 				<div className="absolute right-4 top-4 flex gap-2">
 					<ArenaActionButtons />

@@ -74,7 +74,7 @@ const RegisterUserDrawer = ({}: RegisterUserDrawerProps) => {
 			</Button>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Register as a new user</DialogTitle>
+					<DialogTitle>Sign Up</DialogTitle>
 					<DialogDescription>Fill the form with the necessary information</DialogDescription>
 				</DialogHeader>
 
@@ -87,7 +87,7 @@ const RegisterUserDrawer = ({}: RegisterUserDrawerProps) => {
 								<FormItem>
 									<FormLabel>Username</FormLabel>
 									<FormControl>
-										<Input placeholder="username" {...field} />
+										<Input placeholder="Username" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

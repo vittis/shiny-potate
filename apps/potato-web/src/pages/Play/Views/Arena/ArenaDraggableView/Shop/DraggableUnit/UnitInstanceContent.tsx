@@ -38,7 +38,7 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 						</div> */}
 
 						<div className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 text-[10px] text-zinc-200">
-							0/2
+							1/2
 						</div>
 					</div>
 

@@ -7,6 +7,7 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
 	const setUser = useSupabaseUserStore(state => state.setUser);
+
 	const utils = trpc.useUtils();
 
 	useEffect(() => {
@@ -21,6 +22,7 @@ const RootLayout = () => {
 			if (session && session.user) {
 				setUser(session.user);
 			}
+
 			utils.arena.invalidate(); // todo better way to refresh everything
 		});
 	}, []);

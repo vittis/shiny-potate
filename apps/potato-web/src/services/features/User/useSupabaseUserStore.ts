@@ -6,6 +6,8 @@ interface SupabaseUserState {
 	setUser: (user: any) => void;
 	removeUser: () => void;
 	setUsername: (username: string) => void;
+	userIsPending: boolean;
+	setUserIsPending: (isPending: boolean) => void;
 }
 
 const useSupabaseUserStore = create<SupabaseUserState>()(set => ({
@@ -14,6 +16,8 @@ const useSupabaseUserStore = create<SupabaseUserState>()(set => ({
 	setUser: (user: any) => set({ user }),
 	removeUser: () => set({ user: null }),
 	setUsername: (username: string) => set({ username }),
+	userIsPending: true,
+	setUserIsPending: (isPending: boolean) => set({ userIsPending: isPending }),
 }));
 
 export { useSupabaseUserStore };
