@@ -10,28 +10,6 @@ const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 function App() {
 	const { selectedEntity, isGamePaused, setSelectedEntity, setIsGamePaused } = useGameState();
 
-	const { data } = useQuery({
-		queryKey: ["game/battle/setup"],
-		queryFn: isVanillaBattleSetup === "true" ? fetchVanillaBattleSetup : fetchBattleSetup,
-		staleTime: Infinity,
-	});
-
-	const firstState = data?.firstStep;
-
-	const teamOneUnits = useMemo<any[]>(() => {
-		if (!firstState) return [];
-		return firstState?.units.filter(unit => unit.owner === 0);
-	}, [firstState]);
-
-	const teamTwoUnits = useMemo<any[]>(() => {
-		if (!firstState) return [];
-		return firstState?.units.filter(unit => unit.owner === 1);
-	}, [firstState]);
-
-	const allUnits = useMemo<any[]>(() => {
-		return [...teamOneUnits, ...teamTwoUnits];
-	}, [teamOneUnits, teamTwoUnits]);
-
 	return (
 		<>
 			<div className="fixed top-24 flex w-full justify-center">
