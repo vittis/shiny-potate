@@ -15,9 +15,10 @@ export class ShopUnit {
 	calculatePrice() {
 		// todo take in account other equips
 		return (
-			Math.max(2, this.unit.shopEquipment[0].shopEquip.equip.tier * 4) +
-			4 +
-			Math.floor(Math.random() * 4)
+			Math.max(2, this.unit.shopEquipment[0].shopEquip.equip.tier * 2) +
+			9 +
+			Math.floor(Math.random() * 3) +
+			Math.floor(Math.random() * 3)
 		);
 	}
 
