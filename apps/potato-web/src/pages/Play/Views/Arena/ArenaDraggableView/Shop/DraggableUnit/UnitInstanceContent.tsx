@@ -44,7 +44,10 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 					</Button>
 				</div>
 
-				<TalentTreePopover talentTrees={unit.classManager.class.talentTreesInstance} />
+				<TalentTreePopover
+					utiliyNodes={unit.classManager.class.utilityNodes}
+					talentTrees={unit.classManager.class.talentTreesInstance}
+				/>
 			</div>
 
 			<Separator className="my-4" />
@@ -94,16 +97,13 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 					<>
 						<Separator />
 
-						<div>
+						<div className="grid grid-cols-2 gap-2">
 							{allPerks.map(perk => {
 								return (
-									<div key={perk.id} className="flex flex-col">
-										<div className="flex items-center">
-											<span className="font-mono text-green-300">
-												{perk.tier} <span className="text-primary">{perk.data.name}</span>
-											</span>
-										</div>
-										<div className="flex gap-1"></div>
+									<div key={perk.id} className="flex ">
+										<span className="font-mono text-green-300">
+											{perk.tier} <span className="text-primary">{perk.data.name}</span>
+										</span>
 									</div>
 								);
 							})}

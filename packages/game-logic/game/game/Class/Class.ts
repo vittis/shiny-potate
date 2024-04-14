@@ -1,4 +1,4 @@
-import { ClassData, TalentTreeInstance } from "./ClassTypes";
+import { ClassData, ClassNodeInstance, TalentTreeInstance } from "./ClassTypes";
 import { ClassDataSchema } from "./ClassSchema";
 import { getAbilitiesInstancesFromMods } from "../Ability/AbilityUtils";
 import { Ability } from "../Ability/Ability";
@@ -7,10 +7,12 @@ import { filterStatsMods } from "../Stats/StatsUtils";
 import { getPerksInstancesFromMods } from "../Perk/PerkUtils";
 import { Perk } from "../Perk/Perk";
 import { nanoid } from "nanoid";
+import { util } from "zod";
 
 export class Class {
 	data: ClassData;
 	talentTreesInstance: TalentTreeInstance[]; // adds 'id' and 'obtained' to nodes
+	utilityNodes: ClassNodeInstance[];
 
 	constructor(data: ClassData) {
 		try {
@@ -19,6 +21,14 @@ export class Class {
 		} catch (e: any) {
 			throw Error(`Class: ${data.name} data is invalid. ${e?.message}`);
 		}
+
+		this.utilityNodes = data.utility.map(node => {
+			return {
+				...node,
+				id: nanoid(8),
+				obtained: false,
+			};
+		});
 
 		this.talentTreesInstance = data.tree.map(tree => {
 			return {
@@ -30,7 +40,7 @@ export class Class {
 						obtained: false,
 					};
 				}),
-			} as TalentTreeInstance;
+			};
 		});
 	}
 
@@ -80,6 +90,7 @@ export class Class {
 		return {
 			data: this.data,
 			talentTree: this.talentTreesInstance,
+			utilityNodes: this.utilityNodes,
 		};
 	}
 }

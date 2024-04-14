@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { TalentTreeInstance } from "game-logic";
+import { ClassNodeInstance, TalentTreeInstance } from "game-logic";
 import { NetworkIcon } from "lucide-react";
 
 interface TalentTreePopoverProps {
 	talentTrees: TalentTreeInstance[];
+	utiliyNodes: ClassNodeInstance[];
 }
 
-const TalentTreePopover = ({ talentTrees }: TalentTreePopoverProps) => {
+const TalentTreePopover = ({ talentTrees, utiliyNodes }: TalentTreePopoverProps) => {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -16,16 +17,27 @@ const TalentTreePopover = ({ talentTrees }: TalentTreePopoverProps) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent>
-				{talentTrees.map(tree => (
-					<div key={tree.name} className="flex flex-col gap-2">
-						<div className="text-lg font-semibold text-red-300">{tree.name}</div>
-						{tree.talents.map(node => (
+				<div className="flex w-full gap-4">
+					{talentTrees.map(tree => (
+						<div key={tree.name} className="flex flex-col gap-2 text-center">
+							<div className="text-lg font-semibold text-red-300">{tree.name}</div>
+							{tree.talents.map(node => (
+								<div key={node.id} className="flex flex-col gap-1">
+									{node.description}
+								</div>
+							))}
+						</div>
+					))}
+
+					<div className="flex flex-col gap-2 text-center">
+						<div className="text-lg font-semibold text-red-300">Utility</div>
+						{utiliyNodes.map(node => (
 							<div key={node.id} className="flex flex-col gap-1">
 								{node.description}
 							</div>
 						))}
 					</div>
-				))}
+				</div>
 			</PopoverContent>
 		</Popover>
 	);

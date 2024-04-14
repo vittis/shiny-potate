@@ -168,7 +168,7 @@ export function generateShop(round: number) {
 
 	for (let i = 0; i < unitsOffered; i++) {
 		const tier = RNG.between(roundTierMap[round].min, roundTierMap[round].max);
-		const unit = generateRandomUnitWithEquipment(tier);
+		const unit = generateRandomUnitWithEquipment(0);
 		shop.units.push(new ShopUnit(unit).serialize());
 	}
 	for (let i = 0; i < weaponsOffered; i++) {

@@ -260,7 +260,7 @@ export const arenaRouter = router({
 			.from("arena")
 			.update({
 				round: myRun?.round + 1,
-				gold: myRun?.gold + 10,
+				gold: myRun?.gold + 15,
 				updated_at: new Date().toISOString(),
 				shop: generateShop(myRun?.round + 1),
 				wins: winner === 0 ? myRun?.wins + 1 : myRun?.wins,
