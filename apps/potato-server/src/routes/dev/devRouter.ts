@@ -52,7 +52,8 @@ export const devRouter = router({
 				.from("arena")
 				.update({
 					round: myRun?.round + 1,
-					gold: myRun?.gold + 10,
+					gold: myRun?.gold + 15,
+					xp: myRun?.xp + 3,
 					updated_at: new Date().toISOString(),
 					shop: generateShop(myRun?.round + 1),
 					wins: countAsWin ? myRun?.wins + 1 : myRun.wins,

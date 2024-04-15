@@ -64,7 +64,7 @@ export interface ClassNodeInstance extends ClassNode {
 	obtained: boolean;
 }
 
-interface TalentNodeInstance extends ClassNodeInstance, TalentNode {}
+export interface TalentNodeInstance extends ClassNodeInstance, TalentNode {}
 
 // this will be sent to the client
 export interface TalentTreeInstance {

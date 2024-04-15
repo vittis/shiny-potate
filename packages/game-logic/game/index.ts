@@ -27,4 +27,8 @@ export type {
 export type { EquippedItemInstance } from "./game/Equipment/EquipmentManager";
 export type { StepEffects, PossibleEvent, PossibleEffect } from "./game/Event/EventTypes";
 export { EVENT_TYPE, INSTANT_EFFECT_TYPE } from "./game/Event/EventTypes";
-export type { TalentTreeInstance, ClassNodeInstance } from "./game/Class/ClassTypes";
+export type {
+	TalentTreeInstance,
+	ClassNodeInstance,
+	TalentNodeInstance,
+} from "./game/Class/ClassTypes";
