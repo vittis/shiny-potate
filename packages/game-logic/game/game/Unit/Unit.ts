@@ -40,7 +40,7 @@ export class Unit {
 
 	isDead = false;
 
-	currentStep = 1;
+	currentStep = 0;
 
 	stepIntents: PossibleIntent[] = [];
 

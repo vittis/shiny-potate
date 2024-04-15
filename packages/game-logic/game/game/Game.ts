@@ -183,7 +183,9 @@ export function runGame(bm: BoardManager) {
 		orderedEvents.forEach(event => {
 			eventHistory.push(event);
 		});
-		effectHistory.push(getStepEffects(orderedEvents));
+		const stepEffects = getStepEffects(orderedEvents);
+		executeStepEffects(bm, stepEffects);
+		effectHistory.push(stepEffects);
 	}
 
 	let currentStep = 1;
