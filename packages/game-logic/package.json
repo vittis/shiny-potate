@@ -6,7 +6,6 @@
 		".": "./game/index.ts"
 	},
 	"scripts": {
-		"build": "tsup game/index.ts --format cjs,esm --dts",
 		"test": "vitest run",
 		"test:watch": "vitest watch"
 	},

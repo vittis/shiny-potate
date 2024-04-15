@@ -4,5 +4,6 @@ export default defineConfig((options: Options) => ({
 	entryPoints: ["src/server.ts"],
 	clean: true,
 	format: ["cjs"],
+	noExternal: ["game-logic"],
 	...options,
 }));
