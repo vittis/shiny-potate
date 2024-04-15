@@ -15,7 +15,7 @@ import { useSupabaseUserStore } from "@/services/features/User/useSupabaseUserSt
 import { capitalizeFirstLetter } from "@/utils/string";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { ArrowRight, EyeIcon, Loader2Icon } from "lucide-react";
-import { Database } from "potato-server/types/supabase";
+import { Database } from "potato-server";
 import { useNavigate } from "react-router-dom";
 
 function ProfileView() {

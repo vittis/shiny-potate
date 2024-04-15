@@ -2,16 +2,11 @@
 	"name": "game-logic",
 	"version": "1.0.0",
 	"description": "",
-	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.ts",
-	"files": [
-		"dist/**"
-	],
-	"sideEffects": false,
+	"exports": {
+		".": "./game/index.ts"
+	},
 	"scripts": {
 		"build": "tsup game/index.ts --format cjs,esm --dts",
-		"dev": "tsup game/index.ts --format cjs,esm --dts --watch",
 		"test": "vitest run",
 		"test:watch": "vitest watch"
 	},

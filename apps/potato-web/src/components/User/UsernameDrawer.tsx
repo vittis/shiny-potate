@@ -57,9 +57,7 @@ const UsernameDrawer = () => {
 		toast.success("Username created (:");
 	}
 
-	console.log({ user, username, userIsPending });
 	const shouldShow = user && !username && !userIsPending;
-	console.log(shouldShow);
 
 	if (!shouldShow) {
 		return null;

@@ -13,7 +13,7 @@ const RootLayout = () => {
 	useEffect(() => {
 		// todo put this somewhere else
 		supabase.auth.onAuthStateChange((event, session) => {
-			console.log("onAuthStateChange: ", event);
+			// console.log("onAuthStateChange: ", event);
 
 			if (event === "SIGNED_OUT") {
 				setUser(null);

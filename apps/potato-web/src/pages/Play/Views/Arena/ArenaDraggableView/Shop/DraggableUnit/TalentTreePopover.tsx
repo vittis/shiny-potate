@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ClassNodeInstance, TalentNodeInstance, TalentTreeInstance } from "game-logic";
-import { AwardIcon, NetworkIcon } from "lucide-react";
+import { NetworkIcon } from "lucide-react";
 import { TalentNode } from "./TalentNode";
 
 interface TalentTreePopoverProps {

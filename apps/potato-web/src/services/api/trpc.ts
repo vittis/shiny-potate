@@ -1,4 +1,4 @@
-import type { AppRouter } from "potato-server/src/types";
+import type { AppRouter } from "potato-server";
 import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
 import { createTRPCClient, httpBatchLink as vanillaHttpBatchLink } from "@trpc/client";
 

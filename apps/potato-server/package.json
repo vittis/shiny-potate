@@ -1,5 +1,8 @@
 {
 	"name": "potato-server",
+	"exports": {
+		".": "./src/types.ts"
+	},
 	"scripts": {
 		"start": "node dist/server.js",
 		"build": "tsup",
