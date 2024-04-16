@@ -1,5 +1,11 @@
-import { ABILITY_CATEGORY, AbilityData } from "./AbilityTypes";
-import { AbilityDataSchema } from "./AbilitySchema";
+import {
+	ABILITY_CATEGORY,
+	ABILITY_MOD_TYPES,
+	AbilityData,
+	AbilityModifier,
+	AbilityModifierWithEffects,
+	UniqueAbilityModifier,
+} from "./AbilityTypes";
 import { Unit } from "../Unit/Unit";
 import {
 	EVENT_TYPE,
@@ -8,19 +14,23 @@ import {
 	SUBEVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
 } from "../Event/EventTypes";
-import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
+import { PossibleTriggerEffect, TRIGGER } from "../Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
 import { createOnHitTakenSubEvents, generateSubEvents } from "../Event/EventFactory";
 import { getAllTargetUnits } from "../Target/TargetUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { canUseEffect } from "../Trigger/ConditionUtils";
+import { getEffectsFromModifiers, isUniqueAbilityModifier } from "./AbilityUtils";
 
 export class Ability {
 	id: string;
 	data: AbilityData;
+	target: TARGET_TYPE;
+	type: ABILITY_CATEGORY;
 	progress = 0;
 	cooldown = 0;
+	modifiers: AbilityModifierWithEffects[] = [];
 
 	constructor(data?: AbilityData) {
 		if (!data) {
@@ -28,10 +38,14 @@ export class Ability {
 				"Ability is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
-		const parsedData = AbilityDataSchema.parse(data);
-		this.data = parsedData;
-		this.cooldown = parsedData.cooldown;
+		// TODO: create schema
+		/* const parsedData = AbilityDataSchema.parse(data); */
+		this.data = data;
 		this.id = nanoid(8);
+		this.cooldown = data.cooldown;
+
+		this.target = data.target;
+		this.type = data.type;
 	}
 
 	step() {
@@ -125,11 +139,11 @@ export class Ability {
 	}
 
 	isAttack() {
-		return this.data.type === ABILITY_CATEGORY.ATTACK;
+		return this.type === ABILITY_CATEGORY.ATTACK;
 	}
 
 	isSpell() {
-		return this.data.type === ABILITY_CATEGORY.SPELL;
+		return this.type === ABILITY_CATEGORY.SPELL;
 	}
 
 	getDamageModifier(unit: Unit) {
@@ -141,7 +155,7 @@ export class Ability {
 	}
 
 	getTargets(unit: Unit) {
-		const targetUnits = unit.bm.getTarget(unit, this.data.target);
+		const targetUnits = unit.bm.getTarget(unit, this.target);
 
 		if (getAllTargetUnits(targetUnits).length == 0) {
 			console.log(`Couldnt find target for ${this.data.name}`);
@@ -167,5 +181,64 @@ export class Ability {
 		const subEvents = [...onHitSubEvents, ...onHitTakenSubEvents];
 
 		return subEvents;
+	}
+
+	addModifier(name: string) {
+		const modifier = this.data.abilityModifier?.find(mod => mod.name === name);
+
+		if (!modifier) {
+			throw Error(`addModifier: modifier ${name} for ability ${this.data.name} not found`);
+		}
+
+		if (isUniqueAbilityModifier(modifier)) {
+			// deal with unique modifiers
+		} else {
+			const effects = getEffectsFromModifiers(
+				modifier.modifiers.filter(
+					mod =>
+						mod.type !== ABILITY_MOD_TYPES.TRIGGER &&
+						mod.type !== ABILITY_MOD_TYPES.TARGET &&
+						mod.type !== ABILITY_MOD_TYPES.CATEGORY,
+				),
+			);
+
+			const modifierWithEffects = {
+				name: modifier.name,
+				modifiers: modifier.modifiers,
+				effects,
+			};
+
+			this.modifiers.push(modifierWithEffects);
+
+			const triggerModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TRIGGER,
+			);
+
+			// todo: add trigger modifiers
+
+			const targetModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TARGET,
+			);
+
+			// todo: add target modifiers
+			// change default target to new target, change default effects with default target to new target
+
+			const categoryModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.CATEGORY,
+			);
+
+			// todo: add category modifiers
+			// change category to new category
+		}
+	}
+
+	removeModifier(name: string) {
+		const modifier = this.modifiers.findIndex(mod => mod.name === name);
+
+		if (modifier === -1) {
+			throw Error(`removeModifier: modifier ${name} for ability ${this.data.name} not found`);
+		}
+
+		this.modifiers.splice(modifier, 1);
 	}
 }

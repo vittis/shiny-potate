@@ -1,5 +1,4 @@
 import { ABILITY_CATEGORY } from "../Ability/AbilityTypes";
-import { AbilityModifier } from "../Class/ClassTypes";
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
 import { STAT } from "../Stats/StatsTypes";
 
@@ -25,20 +24,10 @@ export interface GrantBaseStatPayload {
 	value: number;
 }
 
-export interface GrantDefaultAbilityModifierPayload {
+export interface GrantAbilityModifierPayload {
 	name: string;
-	modifiers: AbilityModifier;
+	modifier: string;
 }
-
-export interface GrantUniqueAbilityModifierPayload {
-	name: string;
-	nodeName: string;
-	unique: boolean;
-}
-
-export type GrantAbilityModifierPayload =
-	| GrantDefaultAbilityModifierPayload
-	| GrantUniqueAbilityModifierPayload;
 
 export type ModPayloadMap = {
 	[MOD_TYPE.GRANT_ABILITY]: GrantAbilityPayload;

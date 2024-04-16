@@ -1,7 +1,14 @@
 import { MOD_TYPE, Mod, PossibleMods } from "../Mods/ModsTypes";
 import { filterModsByType } from "../Mods/ModsUtils";
+import { PossibleTriggerEffect } from "../Trigger/TriggerTypes";
 import { Abilities } from "../data";
 import { Ability } from "./Ability";
+import {
+	AbilityModifier,
+	AbilityModifierPossibleMods,
+	DefaultAbilityModifier,
+	UniqueAbilityModifier,
+} from "./AbilityTypes";
 
 function filterAbilityMods(mods: PossibleMods): Mod<MOD_TYPE.GRANT_ABILITY>[] {
 	return filterModsByType(mods, MOD_TYPE.GRANT_ABILITY);
@@ -22,4 +29,20 @@ export function getAbilitiesInstancesFromMods(mods: PossibleMods) {
 
 		return new Ability(Abilities[nameWithoutSpaces] as any);
 	});
+}
+
+export function isUniqueAbilityModifier(
+	modifier: AbilityModifier,
+): modifier is UniqueAbilityModifier {
+	return (modifier as UniqueAbilityModifier).unique === true;
+}
+
+export function getEffectsFromModifiers(
+	modifiers: AbilityModifierPossibleMods[],
+): PossibleTriggerEffect[] {
+	const effects = modifiers.map(mod => {
+		//todo
+	});
+
+	return [];
 }

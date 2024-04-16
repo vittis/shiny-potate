@@ -9,69 +9,8 @@ import {
 	PossibleMods,
 } from "./ModsTypes";
 import { STAT } from "../Stats/StatsTypes";
-import { AbilityModifier } from "../Class/ClassTypes";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { EQUIPMENT_TAG } from "../Equipment/EquipmentTypes";
-import { TARGET_TYPE } from "../Target/TargetTypes";
 import { ABILITY_CATEGORY } from "../Ability/AbilityTypes";
-
-// todo better type
-const AbilityModifierSchema = z.object({
-	trigger: z
-		.array(
-			z.object({
-				name: z.string(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-	target: z
-		.array(
-			z.object({
-				name: z.string(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-	status_effect: z
-		.array(
-			z.object({
-				name: z.nativeEnum(STATUS_EFFECT),
-				target: z.nativeEnum(TARGET_TYPE),
-				value: z.number(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-	stats: z
-		.array(
-			z.object({
-				name: z.nativeEnum(STAT),
-				target: z.nativeEnum(TARGET_TYPE),
-				value: z.number(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-	heal: z
-		.array(
-			z.object({
-				target: z.nativeEnum(TARGET_TYPE),
-				value: z.number(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-	shield: z
-		.array(
-			z.object({
-				target: z.nativeEnum(TARGET_TYPE),
-				value: z.number(),
-				remove: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-}) satisfies z.ZodType<AbilityModifier>;
 
 const GrantAbilityPayloadSchema = z.object({
 	name: z.string(),
@@ -88,17 +27,10 @@ const GrantBaseStatPayloadSchema = z.object({
 	value: z.number(),
 }) satisfies z.ZodType<GrantBaseStatPayload>;
 
-const GrantAbilityModifierPayload = z.union([
-	z.object({
-		name: z.string(),
-		modifiers: AbilityModifierSchema,
-	}),
-	z.object({
-		name: z.string(),
-		nodeName: z.string(),
-		unique: z.boolean(),
-	}),
-]) satisfies z.ZodType<GrantAbilityModifierPayload>;
+const GrantAbilityModifierPayloadSchema = z.object({
+	name: z.string(),
+	modifier: z.string(),
+}) satisfies z.ZodType<GrantAbilityModifierPayload>;
 
 export const PossibleModsSchema = z.array(
 	z.union([
@@ -119,7 +51,7 @@ export const PossibleModsSchema = z.array(
 		}),
 		z.object({
 			type: z.literal(MOD_TYPE.GRANT_ABILITY_MODIFIER),
-			payload: GrantAbilityModifierPayload,
+			payload: GrantAbilityModifierPayloadSchema,
 			tier: z.union([z.number(), z.literal("implicit")]).optional(),
 		}),
 	]),

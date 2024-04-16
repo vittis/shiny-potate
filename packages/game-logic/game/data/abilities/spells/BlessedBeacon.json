@@ -1,32 +1,87 @@
 {
-  "name": "Blessed Beacon",
-  "type": "SPELL",
-  "tags": [
-    "BUFF"
-  ],
-  "target": "ADJACENT_ALLIES",
-  "cooldown": 60,
-  "effects": [
-    {
-      "type": "STATUS_EFFECT",
-      "trigger": "ON_USE",
-      "target": "ADJACENT_ALLIES",
-      "conditions": [],
-      "payload": [
-        {
-          "name": "REGEN",
-          "quantity": 5
-        }
-      ]
-    },
-    {
-      "type": "HEAL",
-      "trigger": "ON_USE",
-      "target": "ADJACENT_ALLIES",
-      "conditions": [],
-      "payload": {
-        "value": 20
-      }
-    }
-  ]
+	"name": "Blessed Beacon",
+	"type": "SPELL",
+	"tags": ["BUFF"],
+	"target": "ADJACENT_ALLIES",
+	"cooldown": 60,
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"trigger": "ON_USE",
+			"target": "ADJACENT_ALLIES",
+			"conditions": [],
+			"payload": [
+				{
+					"name": "REGEN",
+					"quantity": 5
+				}
+			]
+		},
+		{
+			"type": "HEAL",
+			"trigger": "ON_USE",
+			"target": "ADJACENT_ALLIES",
+			"conditions": [],
+			"payload": {
+				"value": 20
+			}
+		}
+	],
+	"abilityModifiers": [
+		{
+			"name": "Agile Beacon",
+			"modifiers": [
+				{
+					"type": "STATUS_EFFECT",
+					"payload": {
+						"name": "FAST",
+						"target": "SELF",
+						"value": 2
+					}
+				},
+				{
+					"type": "STATUS_EFFECT",
+					"payload": {
+						"name": "FOCUS",
+						"target": "SELF",
+						"value": 25
+					}
+				}
+			]
+		},
+		{
+			"name": "Sturdy Beacon",
+			"modifiers": [
+				{
+					"type": "STATUS_EFFECT",
+					"payload": {
+						"name": "STURDY",
+						"target": "FRONT_ALLY",
+						"value": 10
+					}
+				}
+			]
+		},
+		{
+			"name": "Power Beacon",
+			"modifiers": [
+				{
+					"type": "STATUS_EFFECT",
+					"payload": {
+						"name": "ATTACK_POWER",
+						"target": "BACK_ALLY",
+						"value": 5
+					}
+				},
+				{
+					"type": "STATUS_EFFECT",
+					"payload": {
+						"name": "SPELL_POTENCY",
+						"target": "BACK_ALLY",
+						"value": 5
+					}
+				}
+			]
+		}
+	]
 }
