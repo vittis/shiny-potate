@@ -64,6 +64,7 @@ function UnitTooltip({ unit, onOpenSubTooltip, allowRemoveEquip = true }: UnitTo
 	return (
 		<div className="relative">
 			<UnitInstanceContent
+				// unitInfo={unit}
 				unit={
 					getUnitData(
 						{ id: "a", name: className, equipment: shopEquipment.map(e => e.shopEquip.equip) },

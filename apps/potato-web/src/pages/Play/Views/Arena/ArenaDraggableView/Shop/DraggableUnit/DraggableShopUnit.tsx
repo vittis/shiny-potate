@@ -26,7 +26,7 @@ function DraggableShopUnit({ shopUnit }: DraggableShopUnitInterface) {
 			<DraggableUnitInfo
 				allowRemoveEquip={false}
 				useDraggableData={draggableData}
-				unit={shopUnit.unit}
+				unitInfo={shopUnit.unit}
 			/>
 		</div>
 	);

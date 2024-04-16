@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
 
 interface UnitInfoProps {
-	unit: UnitInfo;
+	unitInfo: UnitInfo;
 	useDraggableData: ReturnType<typeof useDraggable>;
 	allowRemoveEquip?: boolean;
 }
 
-const DraggableUnitInfo = ({ useDraggableData, unit, allowRemoveEquip }: UnitInfoProps) => {
+const DraggableUnitInfo = ({ useDraggableData, unitInfo, allowRemoveEquip }: UnitInfoProps) => {
 	const { attributes, listeners, setNodeRef, transform, isDragging, node } = useDraggableData;
 
 	const style = transform
@@ -20,14 +20,14 @@ const DraggableUnitInfo = ({ useDraggableData, unit, allowRemoveEquip }: UnitInf
 			}
 		: undefined;
 
-	const { className, shopEquipment } = unit;
+	const { className, shopEquipment } = unitInfo;
 
 	const isDisabled = node.current?.ariaDisabled === "true";
 
 	return (
 		<MarkdownTooltip
 			forceClose={isDragging}
-			content={<UnitTooltip allowRemoveEquip={allowRemoveEquip} unit={unit} />}
+			content={<UnitTooltip allowRemoveEquip={allowRemoveEquip} unit={unitInfo} />}
 		>
 			<div
 				ref={setNodeRef}

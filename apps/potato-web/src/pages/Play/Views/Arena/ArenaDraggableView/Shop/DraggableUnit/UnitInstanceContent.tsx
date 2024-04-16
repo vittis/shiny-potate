@@ -2,14 +2,11 @@ import { Unit } from "game-logic";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
-import { ChevronUp, NetworkIcon, Plus, PlusSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TalentTreePopover } from "./TalentTreePopover";
 import { LevelUnitControls } from "./LevelUnitControls";
 
 interface MarkdownContentProps {
-	unit: Unit;
+	unit: Unit; // unit here is weird
 }
 
 const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {

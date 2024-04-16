@@ -4,10 +4,9 @@ import { getAbilitiesInstancesFromMods } from "../Ability/AbilityUtils";
 import { Ability } from "../Ability/Ability";
 import { Mod, MOD_TYPE } from "../Mods/ModsTypes";
 import { filterStatsMods } from "../Stats/StatsUtils";
-import { getPerksInstancesFromMods } from "../Perk/PerkUtils";
+import { filterAndInstantiatePerksFromMods } from "../Perk/PerkUtils";
 import { Perk } from "../Perk/Perk";
 import { nanoid } from "nanoid";
-import { util } from "zod";
 
 export class Class {
 	data: ClassData;
@@ -64,9 +63,23 @@ export class Class {
 	}
 
 	getPerks() {
-		return this.data.base.reduce((acc, node) => {
-			return [...acc, ...getPerksInstancesFromMods(node.mods)];
+		const basePerks = this.data.base.reduce((acc, node) => {
+			return [...acc, ...filterAndInstantiatePerksFromMods(node.mods)];
 		}, [] as Perk[]);
+
+		const talentPerks = this.talentTreesInstance.reduce((acc, tree) => {
+			return [
+				...acc,
+				...tree.talents.reduce((acc, talent) => {
+					if (talent.obtained) {
+						return [...acc, ...filterAndInstantiatePerksFromMods(talent.mods)];
+					}
+					return acc;
+				}, [] as Perk[]),
+			];
+		}, [] as Perk[]);
+
+		return [...basePerks, ...talentPerks];
 	}
 
 	obtainTalentNode(talentId: string) {

@@ -7,15 +7,16 @@ import { AwardIcon, CheckIcon } from "lucide-react";
 interface TalentNodeProps {
 	node: TalentNodeInstance;
 	spentPointsInTree?: number;
+	onObtainNode: (id: string) => void;
 }
 
-const TalentNode = ({ node, spentPointsInTree }: TalentNodeProps) => {
+const TalentNode = ({ node, spentPointsInTree, onObtainNode }: TalentNodeProps) => {
 	const disabled = spentPointsInTree !== undefined ? node.req > spentPointsInTree : false;
 
 	function onClickObtainNode() {
 		if (node.obtained) return;
 
-		console.log("obtain ", node.id);
+		onObtainNode(node.id);
 	}
 
 	return (

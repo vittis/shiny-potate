@@ -3,7 +3,7 @@ import { Ability } from "../Ability/Ability";
 import { getAbilitiesInstancesFromMods } from "../Ability/AbilityUtils";
 import { MOD_TYPE, Mod, PossibleMods, ShopItemMod } from "../Mods/ModsTypes";
 import { Perk } from "../Perk/Perk";
-import { getPerksInstancesFromMods } from "../Perk/PerkUtils";
+import { filterAndInstantiatePerksFromMods } from "../Perk/PerkUtils";
 import { filterStatsMods } from "../Stats/StatsUtils";
 import { EquipmentDataSchema } from "./EquipmentSchema";
 import { EquipmentData, EquipmentInstance } from "./EquipmentTypes";
@@ -58,7 +58,7 @@ export class Equipment {
 	}
 
 	getGrantedPerks(): Perk[] {
-		return getPerksInstancesFromMods(this.getMods());
+		return filterAndInstantiatePerksFromMods(this.getMods());
 	}
 
 	getTriggerEffects() {

@@ -7,6 +7,19 @@ import { useMutationState } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import { trpc } from "@/services/api/trpc";
 
+// todo do it this way
+export function setCrazyBoard(argFn: (prevBoard: Board) => Board) {
+	queryClient.setQueryData(["arena", "my"], (oldData: any) => {
+		const newBoard = argFn(oldData.board);
+		return {
+			...oldData,
+			board: newBoard,
+			updated_at: new Date().toISOString(),
+			hasChange: true,
+		};
+	});
+}
+
 export function setBoard(newBoard: Board) {
 	queryClient.setQueryData(["arena", "my"], (oldData: any) => {
 		return {

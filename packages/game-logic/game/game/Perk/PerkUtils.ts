@@ -21,7 +21,7 @@ function filterPerkMods(mods: PossibleMods): Mod<MOD_TYPE.GRANT_PERK>[] {
 	return filterModsByType(mods, MOD_TYPE.GRANT_PERK);
 }
 
-export function getPerksInstancesFromMods(mods: PossibleMods) {
+export function filterAndInstantiatePerksFromMods(mods: PossibleMods) {
 	const perkMods = filterPerkMods(mods);
 
 	return perkMods.map(mod => {
