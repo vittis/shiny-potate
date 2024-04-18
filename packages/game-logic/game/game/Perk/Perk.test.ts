@@ -7,7 +7,7 @@ import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { runGame } from "../Game";
 import { TriggerEffectEvent } from "../Event/EventTypes";
 import { Class } from "../Class/Class";
-import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
+import { StatusEffectPayload, TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 
 describe("Perk", () => {
 	it("should create", () => {
@@ -149,6 +149,54 @@ describe("Perk", () => {
 			) as TriggerEffectEvent;
 
 			expect(event).not.toBeDefined();
+		});
+	});
+
+	describe("OPEN FIELD TACTICS", () => {
+		it("generate event correctly for every position", () => {
+			const bm = new BoardManager();
+			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_MID, bm);
+			const unit3 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_BACK, bm);
+			const unit4 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
+			const unit5 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_FRONT, bm);
+			unit1.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
+			unit2.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
+			unit3.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
+			unit4.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
+			bm.addToBoard(unit1);
+			bm.addToBoard(unit2);
+			bm.addToBoard(unit3);
+			bm.addToBoard(unit4);
+			bm.addToBoard(unit5);
+
+			const baseQuantity = unit1.perks[0].data.tiers[0].values[0];
+
+			const { eventHistory } = runGame(bm);
+
+			const events = eventHistory.filter(
+				e => e.type === "TRIGGER_EFFECT" && e.trigger === "BATTLE_START",
+			) as TriggerEffectEvent[];
+
+			expect(events.find(e => e.actorId === unit1.id)).not.toBeDefined();
+			expect(
+				(
+					events.find(e => e.actorId === unit2.id)?.subEvents[0].payload
+						.payload as StatusEffectPayload[]
+				)[0].quantity,
+			).toEqual(baseQuantity);
+			expect(
+				(
+					events.find(e => e.actorId === unit3.id)?.subEvents[0].payload
+						.payload as StatusEffectPayload[]
+				)[0].quantity,
+			).toEqual(baseQuantity * 2);
+			expect(
+				(
+					events.find(e => e.actorId === unit4.id)?.subEvents[0].payload
+						.payload as StatusEffectPayload[]
+				)[0].quantity,
+			).toEqual(baseQuantity);
 		});
 	});
 });

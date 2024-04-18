@@ -149,8 +149,30 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		// console.log("playing ", event.type, event.trigger);
 		if (event.type === "TICK_EFFECT") {
 			const { payload } = event;
-			if (payload.type === "POISON") this.barsManager.onReceiveDamage(payload.payload.value);
-			if (payload.type === "REGEN") this.barsManager.onReceiveHeal(payload.payload.value);
+			if (payload.type === "POISON") {
+				this.barsManager.onReceiveDamage(payload.payload.value);
+
+				this.add(
+					addFadingText(this.scene, 0, -50, {
+						text: `-${payload.payload.value}`,
+						color: "red",
+						duration: 1800,
+						fontSize: 38,
+					}),
+				);
+			}
+			if (payload.type === "REGEN") {
+				this.barsManager.onReceiveHeal(payload.payload.value);
+
+				this.add(
+					addFadingText(this.scene, 0, -50, {
+						text: `+${payload.payload.value}`,
+						color: "green",
+						duration: 1800,
+						fontSize: 38,
+					}),
+				);
+			}
 
 			this.statusEffectsManager.removeStatusEffect({
 				name: payload.type,

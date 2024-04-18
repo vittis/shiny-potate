@@ -1,18 +1,31 @@
 {
-  "name": "Quick Attack",
-  "type": "ATTACK",
-  "tags": [],
-  "target": "STANDARD",
-  "cooldown": 17,
-  "effects": [
-    {
-      "type": "DAMAGE",
-      "trigger": "ON_HIT",
-      "target": "STANDARD",
-      "conditions": [],
-      "payload": {
-        "value": 10
-      }
-    }
-  ]
+	"name": "Quick Attack",
+	"type": "ATTACK",
+	"tags": [],
+	"target": "STANDARD",
+	"cooldown": 17,
+	"effects": [
+		{
+			"type": "DAMAGE",
+			"trigger": "ON_HIT",
+			"target": "STANDARD",
+			"conditions": [],
+			"payload": {
+				"value": 10
+			}
+		}
+	],
+	"abilityModifiers": [
+		{
+			"name": "Quick Spell",
+			"modifiers": [
+				{
+					"type": "CATEGORY",
+					"payload": {
+						"name": "SPELL"
+					}
+				}
+			]
+		}
+	]
 }

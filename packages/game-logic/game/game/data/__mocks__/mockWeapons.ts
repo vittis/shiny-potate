@@ -202,14 +202,14 @@ export const MockWeapons = {
 				},
 				tier: "implicit",
 			},
-			/* {
+			{
 				type: "GRANT_PERK",
 				payload: {
 					name: "Open Field Tactics",
 					tier: 1,
 				},
 				tier: "implicit",
-			}, */
+			},
 			{
 				type: "GRANT_PERK",
 				payload: {

@@ -133,7 +133,7 @@ describe("Triggers", () => {
 			bm.addToBoard(unit2);
 			unit.equip(new Equipment(Weapons.Longbow), EQUIPMENT_SLOT.TWO_HANDS);
 
-			expect(unit.perks[0].data.effects[0].trigger).toBe(TRIGGER.ON_HIT);
+			expect(unit.perks[1].data.effects[0].trigger).toBe(TRIGGER.ON_HIT);
 			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.VULNERABLE)).toBe(false);
 
 			const ability = unit.abilities[0];

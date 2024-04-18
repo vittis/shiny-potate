@@ -1,5 +1,11 @@
-import { ABILITY_CATEGORY, AbilityData } from "./AbilityTypes";
-import { AbilityDataSchema } from "./AbilitySchema";
+import {
+	ABILITY_CATEGORY,
+	ABILITY_MOD_TYPES,
+	AbilityData,
+	AbilityModifierMod,
+	AbilityModifierPossibleEffectMods,
+	AbilityModifierWithEffects,
+} from "./AbilityTypes";
 import { Unit } from "../Unit/Unit";
 import {
 	EVENT_TYPE,
@@ -7,20 +13,27 @@ import {
 	SubEvent,
 	SUBEVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
+	UseAbilityIntent,
 } from "../Event/EventTypes";
-import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
+import { PossibleTriggerEffect, TRIGGER } from "../Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
 import { createOnHitTakenSubEvents, generateSubEvents } from "../Event/EventFactory";
 import { getAllTargetUnits } from "../Target/TargetUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { canUseEffect } from "../Trigger/ConditionUtils";
+import { getEffectsFromModifiers, isUniqueAbilityModifier } from "./AbilityUtils";
 
 export class Ability {
 	id: string;
 	data: AbilityData;
+	target: TARGET_TYPE;
+	type: ABILITY_CATEGORY;
 	progress = 0;
 	cooldown = 0;
+	effects: PossibleTriggerEffect[] = [];
+	modifiers: AbilityModifierWithEffects[] = [];
+	triggers: TRIGGER[] = [];
 
 	constructor(data?: AbilityData) {
 		if (!data) {
@@ -28,10 +41,14 @@ export class Ability {
 				"Ability is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
-		const parsedData = AbilityDataSchema.parse(data);
-		this.data = parsedData;
-		this.cooldown = parsedData.cooldown;
+		// TODO: create schema
+		/* const parsedData = AbilityDataSchema.parse(data); */
+		this.data = data;
 		this.id = nanoid(8);
+		this.cooldown = data.cooldown;
+		this.effects = data.effects;
+		this.target = data.target;
+		this.type = data.type;
 	}
 
 	step() {
@@ -56,9 +73,7 @@ export class Ability {
 			return;
 		}
 
-		const onUseAbilityEffects = this.data.effects.filter(
-			effect => effect.trigger === TRIGGER.ON_USE,
-		);
+		const onUseAbilityEffects = this.effects.filter(effect => effect.trigger === TRIGGER.ON_USE);
 		const onUsePerkEffects = [
 			...unit.triggerManager.getAllEffectsForTrigger(TRIGGER.ON_USE),
 			...unit.triggerManager.getAllEffectsForTrigger(
@@ -68,9 +83,7 @@ export class Ability {
 			.map(effect => effect.effect)
 			.filter(effect => canUseEffect(effect, unit, unit.bm));
 
-		const onHitAbilityEffects = this.data.effects.filter(
-			effect => effect.trigger === TRIGGER.ON_HIT,
-		);
+		const onHitAbilityEffects = this.effects.filter(effect => effect.trigger === TRIGGER.ON_HIT);
 		const onHitPerkEffects = [
 			...unit.triggerManager.getAllEffectsForTrigger(TRIGGER.ON_HIT),
 			...unit.triggerManager.getAllEffectsForTrigger(
@@ -88,7 +101,13 @@ export class Ability {
 			})
 			.filter(effect => canUseEffect(effect, unit, unit.bm));
 
-		const onUseSubEvents = this.onUse(unit, [...onUseAbilityEffects, ...onUsePerkEffects]);
+		const modifiersEffects = this.modifiers.map(modifier => modifier.effects).flat();
+
+		const onUseSubEvents = this.onUse(unit, [
+			...onUseAbilityEffects,
+			...onUsePerkEffects,
+			...modifiersEffects,
+		]);
 		const onHitSubEvents = this.onHit(unit, [...onHitAbilityEffects, ...onHitPerkEffects]);
 
 		const abilitySubEvents = [...onUseSubEvents, ...onHitSubEvents];
@@ -125,11 +144,11 @@ export class Ability {
 	}
 
 	isAttack() {
-		return this.data.type === ABILITY_CATEGORY.ATTACK;
+		return this.type === ABILITY_CATEGORY.ATTACK;
 	}
 
 	isSpell() {
-		return this.data.type === ABILITY_CATEGORY.SPELL;
+		return this.type === ABILITY_CATEGORY.SPELL;
 	}
 
 	getDamageModifier(unit: Unit) {
@@ -141,10 +160,10 @@ export class Ability {
 	}
 
 	getTargets(unit: Unit) {
-		const targetUnits = unit.bm.getTarget(unit, this.data.target);
+		const targetUnits = unit.bm.getTarget(unit, this.target);
 
 		if (getAllTargetUnits(targetUnits).length == 0) {
-			console.log(`Couldnt find target for ${this.data.name}`);
+			console.log(`getTargets: Couldnt find target for ${this.data.name}`);
 		}
 
 		return targetUnits;
@@ -167,5 +186,120 @@ export class Ability {
 		const subEvents = [...onHitSubEvents, ...onHitTakenSubEvents];
 
 		return subEvents;
+	}
+
+	addModifier(name: string) {
+		const modifier = this.data.abilityModifiers?.find(mod => mod.name === name);
+
+		if (!modifier) {
+			throw Error(`addModifier: modifier ${name} for ability ${this.data.name} not found`);
+		}
+
+		if (isUniqueAbilityModifier(modifier)) {
+			// TODO: deal with unique modifiers
+		} else {
+			const effectModifiers = modifier.modifiers.filter(
+				mod =>
+					mod.type !== ABILITY_MOD_TYPES.TRIGGER &&
+					mod.type !== ABILITY_MOD_TYPES.TARGET &&
+					mod.type !== ABILITY_MOD_TYPES.CATEGORY,
+			) as AbilityModifierPossibleEffectMods[];
+
+			if (effectModifiers.length > 0) {
+				const effects = getEffectsFromModifiers(effectModifiers);
+
+				const modifierWithEffects = {
+					name: modifier.name,
+					modifiers: modifier.modifiers,
+					effects,
+				};
+
+				this.modifiers = [...this.modifiers, modifierWithEffects];
+			}
+
+			const triggerModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TRIGGER,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.TRIGGER>[];
+
+			if (triggerModifiers.length > 0) {
+				this.triggers = [...this.triggers, ...triggerModifiers.map(mod => mod.payload.name)];
+			}
+
+			const targetModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TARGET,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>[];
+
+			if (targetModifiers.length > 0) {
+				this.target = targetModifiers[0].payload.name;
+
+				this.effects = this.effects.map(effect => {
+					return { ...effect, target: this.target };
+				});
+			}
+
+			const categoryModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.CATEGORY,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.CATEGORY>[];
+
+			if (categoryModifiers.length > 0) {
+				this.type = categoryModifiers[0].payload.name;
+			}
+		}
+	}
+
+	removeModifier(name: string) {
+		const modifier = this.data.abilityModifiers?.find(mod => mod.name === name);
+
+		if (!modifier) {
+			throw Error(`removeModifier: modifier ${name} for ability ${this.data.name} not found`);
+		}
+
+		if (isUniqueAbilityModifier(modifier)) {
+			// TODO: deal with unique modifiers
+		} else {
+			const modifierIndex = this.modifiers.findIndex(mod => mod.name === name);
+			this.modifiers.splice(modifierIndex, 1);
+
+			const triggerModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TRIGGER,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.TRIGGER>[];
+
+			if (triggerModifiers.length > 0) {
+				this.triggers = this.triggers.filter(trigger =>
+					triggerModifiers.some(triggerModifier => triggerModifier.payload.name !== trigger),
+				);
+			}
+
+			const targetModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.TARGET,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>[];
+
+			if (targetModifiers.length > 0) {
+				this.target = this.data.target;
+
+				this.effects = this.effects.map(effect => {
+					return { ...effect, target: this.data.target };
+				});
+			}
+
+			const categoryModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.CATEGORY,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.CATEGORY>[];
+
+			if (categoryModifiers.length > 0) {
+				this.type = this.data.type;
+			}
+		}
+	}
+
+	createAbilityIntent(unit: Unit, useMultistrike: boolean = false): UseAbilityIntent {
+		const abilityIntent = {
+			actorId: unit.id,
+			type: EVENT_TYPE.USE_ABILITY,
+			id: this.id,
+			useMultistrike,
+		} as UseAbilityIntent;
+
+		return abilityIntent;
 	}
 }

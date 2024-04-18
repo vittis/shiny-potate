@@ -40,7 +40,7 @@ export class Unit {
 
 	isDead = false;
 
-	currentStep = 1;
+	currentStep = 0;
 
 	stepIntents: PossibleIntent[] = [];
 
@@ -207,23 +207,11 @@ export class Unit {
 			ability.step();
 
 			if (ability.canActivate()) {
-				const abilityIntent = {
-					actorId: this.id,
-					type: EVENT_TYPE.USE_ABILITY,
-					id: ability.id,
-					useMultistrike: false,
-				} as UseAbilityIntent;
-
-				this.stepIntents.push(abilityIntent);
+				this.stepIntents.push(ability.createAbilityIntent(this));
 
 				if (multistrikeQuantity > 0) {
-					const abilityIntentWithMultistrike = {
-						...abilityIntent,
-						useMultistrike: true,
-					} as UseAbilityIntent;
-
 					for (let i = 0; i < multistrikeQuantity; i++) {
-						this.stepIntents.push(abilityIntentWithMultistrike);
+						this.stepIntents.push(ability.createAbilityIntent(this, true));
 					}
 
 					multistrikeQuantity = 0;
@@ -297,17 +285,24 @@ export class Unit {
 		}
 		this.isDead = true;
 
-		// todo add other death triggers
-
 		const teamUnits = this.bm.getAllUnitsOfOwner(this.owner);
 		teamUnits.forEach(teamUnit => {
 			if (!teamUnit.isDead && teamUnit.id !== this.id) {
 				teamUnit.triggerManager.onTrigger(TRIGGER.ALLY_FAINT, teamUnit, this.bm);
+				teamUnit.abilities.forEach(ability => {
+					if (ability.triggers.includes(TRIGGER.ALLY_FAINT)) {
+						teamUnit.stepIntents.push(ability.createAbilityIntent(teamUnit));
+					}
+				});
 			}
 		});
 
 		this.triggerManager.onTrigger(TRIGGER.SELF_FAINT, this, this.bm);
-
+		this.abilities.forEach(ability => {
+			if (ability.triggers.includes(TRIGGER.SELF_FAINT)) {
+				this.stepIntents.push(ability.createAbilityIntent(this));
+			}
+		});
 		this.stepIntents.push({
 			actorId: this.id,
 			type: EVENT_TYPE.FAINT,

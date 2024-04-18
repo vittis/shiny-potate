@@ -169,10 +169,18 @@ export function runGame(bm: BoardManager) {
 	const serializedUnits = bm.getAllUnits().map(unit => unit.serialize());
 	const firstStep = { units: serializedUnits };
 
+	// TODO: refactor game loop logic to include battle start events with rest
+
 	// Get BATTLE_START trigger events
 	const battleStartIntents: PossibleIntent[] = [];
 	bm.getAllUnits().forEach(unit => {
 		unit.triggerManager.onTrigger(TRIGGER.BATTLE_START, unit, bm);
+		unit.abilities.forEach(ability => {
+			if (ability.triggers.includes(TRIGGER.BATTLE_START)) {
+				unit.stepIntents.push(ability.createAbilityIntent(unit));
+			}
+		});
+
 		battleStartIntents.push(...unit.serializeIntents());
 	});
 
@@ -183,7 +191,9 @@ export function runGame(bm: BoardManager) {
 		orderedEvents.forEach(event => {
 			eventHistory.push(event);
 		});
-		effectHistory.push(getStepEffects(orderedEvents));
+		const stepEffects = getStepEffects(orderedEvents);
+		executeStepEffects(bm, stepEffects);
+		effectHistory.push(stepEffects);
 	}
 
 	let currentStep = 1;
