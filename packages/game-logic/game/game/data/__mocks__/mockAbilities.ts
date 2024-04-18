@@ -112,7 +112,7 @@ export const MockAbilities = {
 		type: "SPELL",
 		tags: [],
 		target: "ADJACENT_ALLIES",
-		cooldown: 100,
+		cooldown: 45,
 		effects: [
 			{
 				type: "SHIELD",
@@ -120,8 +120,144 @@ export const MockAbilities = {
 				target: "ADJACENT_ALLIES",
 				conditions: [],
 				payload: {
-					value: 20,
+					value: 30,
 				},
+			},
+		],
+		abilityModifiers: [
+			{
+				name: "Reinforce Self",
+				unique: true,
+			},
+			{
+				name: "Reinforce on Battle Start",
+				modifiers: [
+					{
+						type: "TRIGGER",
+						payload: {
+							name: "BATTLE_START",
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce on Faint",
+				modifiers: [
+					{
+						type: "TRIGGER",
+						payload: {
+							name: "SELF_FAINT",
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Speed",
+				modifiers: [
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "FAST",
+							target: "ADJACENT_ALLIES",
+							value: 5,
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Front Offense",
+				modifiers: [
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "ATTACK_POWER",
+							target: "FRONT_ALLY",
+							value: 10,
+						},
+					},
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "SPELL_POTENCY",
+							target: "FRONT_ALLY",
+							value: 10,
+						},
+					},
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "FAST",
+							target: "FRONT_ALLY",
+							value: 10,
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Front Offense 2",
+				modifiers: [
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "MULTISTRIKE",
+							target: "FRONT_ALLY",
+							value: 1,
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Shield",
+				modifiers: [
+					{
+						type: "SHIELD",
+						payload: {
+							target: "ADJACENT_ALLIES",
+							value: 15,
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Defense",
+				modifiers: [
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "STURDY",
+							target: "FRONT_ALLY",
+							value: 10,
+						},
+					},
+					{
+						type: "SHIELD",
+						payload: {
+							target: "FRONT_ALLY",
+							value: 20,
+						},
+					},
+				],
+			},
+			{
+				name: "Reinforce Defense 2",
+				modifiers: [
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "TAUNT",
+							target: "FRONT_ALLY",
+							value: 2,
+						},
+					},
+					{
+						type: "STATUS_EFFECT",
+						payload: {
+							name: "THORN",
+							target: "FRONT_ALLY",
+							value: 25,
+						},
+					},
+				],
 			},
 		],
 	},
@@ -189,6 +325,19 @@ export const MockAbilities = {
 					{
 						name: "POISON",
 						quantity: 5,
+					},
+				],
+			},
+		],
+		abilityModifiers: [
+			{
+				name: "Decay Row Strike",
+				modifiers: [
+					{
+						type: "TARGET",
+						payload: {
+							name: "STANDARD_ROW",
+						},
 					},
 				],
 			},
@@ -438,6 +587,37 @@ export const MockAbilities = {
 				payload: {
 					value: 40,
 				},
+			},
+		],
+	},
+	QuickAttack: {
+		name: "Quick Attack",
+		type: "ATTACK",
+		tags: [],
+		target: "STANDARD",
+		cooldown: 17,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "STANDARD",
+				conditions: [],
+				payload: {
+					value: 10,
+				},
+			},
+		],
+		abilityModifiers: [
+			{
+				name: "Quick Spell",
+				modifiers: [
+					{
+						type: "CATEGORY",
+						payload: {
+							name: "SPELL",
+						},
+					},
+				],
 			},
 		],
 	},

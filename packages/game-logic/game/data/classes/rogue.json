@@ -92,17 +92,7 @@
 							"type": "GRANT_ABILITY_MODIFIER",
 							"payload": {
 								"name": "Decay Strike",
-								"modifiers": {
-									"target": [
-										{
-											"name": "ROW"
-										},
-										{
-											"name": "STANDARD",
-											"remove": true
-										}
-									]
-								}
+								"modifier": "Decay Row Strike"
 							}
 						}
 					],
@@ -176,13 +166,7 @@
 							"type": "GRANT_ABILITY_MODIFIER",
 							"payload": {
 								"name": "Opening Gambit",
-								"modifiers": {
-									"trigger": [
-										{
-											"name": "STANDARD"
-										}
-									]
-								}
+								"modifier": "Constant Gambit"
 							}
 						}
 					],

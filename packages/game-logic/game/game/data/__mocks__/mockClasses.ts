@@ -211,7 +211,7 @@ export const MockClasses = {
 	},
 	Blacksmith: {
 		name: "Blacksmith",
-		hp: 110,
+		hp: 210,
 		base: [
 			{
 				mods: [
@@ -245,8 +245,7 @@ export const MockClasses = {
 						type: "GRANT_ABILITY_MODIFIER",
 						payload: {
 							name: "Reinforce Allies",
-							nodeName: "Reinforce Self",
-							unique: true,
+							modifier: "Reinforce Self",
 						},
 					},
 				],
@@ -259,13 +258,7 @@ export const MockClasses = {
 						type: "GRANT_ABILITY_MODIFIER",
 						payload: {
 							name: "Reinforce Allies",
-							modifiers: {
-								trigger: [
-									{
-										name: "BATTLE_START",
-									},
-								],
-							},
+							modifier: "Reinforce on Battle Start",
 						},
 					},
 				],
@@ -277,17 +270,11 @@ export const MockClasses = {
 						type: "GRANT_ABILITY_MODIFIER",
 						payload: {
 							name: "Reinforce Allies",
-							modifiers: {
-								trigger: [
-									{
-										name: "DEATH",
-									},
-								],
-							},
+							modifier: "Reinforce on Faint",
 						},
 					},
 				],
-				description: "DEATH: Trigger Reinforce Allies",
+				description: "FAINT: Trigger Reinforce Allies",
 			},
 		],
 		tree: [
@@ -302,15 +289,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										status_effect: [
-											{
-												name: "FAST",
-												target: "ADJACENT_ALLIES",
-												value: 5,
-											},
-										],
-									},
+									modifier: "Reinforce Speed",
 								},
 							},
 						],
@@ -324,25 +303,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										status_effect: [
-											{
-												name: "ATTACK_POWER",
-												target: "FRONT_ALLY",
-												value: 10,
-											},
-											{
-												name: "SPELL_POTENCY",
-												target: "FRONT_ALLY",
-												value: 10,
-											},
-											{
-												name: "FAST",
-												target: "FRONT_ALLY",
-												value: 10,
-											},
-										],
-									},
+									modifier: "Reinforce Front Offense",
 								},
 							},
 						],
@@ -357,15 +318,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										status_effect: [
-											{
-												name: "MULTISTRIKE",
-												target: "FRONT_ALLY",
-												value: 1,
-											},
-										],
-									},
+									modifier: "Reinforce Front Offense 2",
 								},
 							},
 						],
@@ -384,14 +337,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										shield: [
-											{
-												target: "ADJACENT_ALLIES",
-												value: 15,
-											},
-										],
-									},
+									modifier: "Reinforce Shield",
 								},
 							},
 						],
@@ -405,21 +351,7 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										status_effect: [
-											{
-												name: "STURDY",
-												target: "FRONT_ALLY",
-												value: 10,
-											},
-										],
-										shield: [
-											{
-												target: "FRONT_ALLY",
-												value: 20,
-											},
-										],
-									},
+									modifier: "Reinforce Defense",
 								},
 							},
 						],
@@ -433,24 +365,190 @@ export const MockClasses = {
 								type: "GRANT_ABILITY_MODIFIER",
 								payload: {
 									name: "Reinforce Allies",
-									modifiers: {
-										status_effect: [
-											{
-												name: "TAUNT",
-												target: "FRONT_ALLY",
-												value: 2,
-											},
-											{
-												name: "THORN",
-												target: "FRONT_ALLY",
-												value: 25,
-											},
-										],
-									},
+									modifier: "Reinforce Defense 2",
 								},
 							},
 						],
 						description: "Reinforce Allies: Give 2 TAUNT and 25 THORN to FRONT ally",
+					},
+				],
+			},
+		],
+	},
+	Rogue: {
+		name: "Rogue",
+		hp: 180,
+		base: [
+			{
+				mods: [
+					{
+						type: "GRANT_ABILITY",
+						payload: {
+							name: "Quick Attack",
+							type: "ATTACK",
+						},
+					},
+				],
+				description: "Gain the Quick Attack attack",
+			},
+			{
+				mods: [
+					{
+						type: "GRANT_BASE_STAT",
+						payload: {
+							stat: "ATTACK_DAMAGE",
+							value: 15,
+						},
+					},
+				],
+				description: "TODO should be perk? -> If isolated +15% Attack Damage Modifier",
+			},
+		],
+		utility: [
+			{
+				mods: [
+					{
+						type: "GRANT_ABILITY_MODIFIER",
+						payload: {
+							name: "Quick Attack",
+							modifier: "Quick Spell",
+						},
+					},
+				],
+				description: "Quick attack is a spell now",
+			},
+			{
+				mods: [
+					{
+						type: "GRANT_PERK",
+						payload: {
+							name: "Dead Man Tells No Tales",
+						},
+					},
+				],
+				description: "Gain Dead Man Tells No Tales",
+			},
+		],
+		tree: [
+			{
+				name: "Master Poisoner",
+				talents: [
+					{
+						tier: 1,
+						req: 0,
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Prey The Weak",
+									tier: 1,
+								},
+							},
+						],
+						description: "Gain 1 Prey The Weak",
+					},
+					{
+						tier: 1,
+						req: 0,
+						mods: [
+							{
+								type: "GRANT_ABILITY",
+								payload: {
+									name: "Decay Strike",
+									type: "SPELL",
+								},
+							},
+						],
+						description: "Gain Decay Strike Spell",
+					},
+					{
+						tier: 2,
+						req: 1,
+						mods: [
+							{
+								type: "GRANT_ABILITY_MODIFIER",
+								payload: {
+									name: "Decay Strike",
+									modifier: "Decay Row Strike",
+								},
+							},
+						],
+						description: "Decay Strike applies to all enemies in row",
+					},
+					{
+						tier: 2,
+						req: 1,
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Twin Toxins",
+								},
+							},
+						],
+						description: "Gain Twin Toxins",
+					},
+				],
+			},
+			{
+				name: "Trickster",
+				talents: [
+					{
+						tier: 1,
+						req: 0,
+						mods: [
+							{
+								type: "GRANT_ABILITY",
+								payload: {
+									name: "Careful Preparation",
+									type: "ATTACK",
+								},
+							},
+						],
+						description: "Gain Careful Preparation Spell",
+					},
+					{
+						tier: 1,
+						req: 0,
+						mods: [
+							{
+								type: "GRANT_ABILITY",
+								payload: {
+									name: "Opening Gambit",
+									type: "ATTACK",
+								},
+							},
+						],
+						description: "Gain Opening Gambit attack",
+					},
+					{
+						tier: 2,
+						req: 1,
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Savage Fury",
+									tier: 2,
+								},
+							},
+						],
+						description: "Gain 2 Savage Fury",
+					},
+					{
+						tier: 2,
+						req: 1,
+						mods: [
+							{
+								type: "GRANT_ABILITY_MODIFIER",
+								payload: {
+									name: "Opening Gambit",
+									modifier: "Constant Gambit",
+								},
+							},
+						],
+						description:
+							"TODO should be modifier or unique perk? -> Opening Gambit now has a cooldown of X seconds",
 					},
 				],
 			},

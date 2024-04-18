@@ -67,10 +67,7 @@
 							"type": "GRANT_ABILITY_MODIFIER",
 							"payload": {
 								"name": "Blessed Beacon",
-								"payload": {
-									"name": "Blessed Beacon",
-									"modifier": "Agile Beacon"
-								}
+								"modifier": "Agile Beacon"
 							}
 						}
 					],

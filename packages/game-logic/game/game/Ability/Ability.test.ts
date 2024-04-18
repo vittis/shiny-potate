@@ -5,6 +5,7 @@ import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import {
 	EVENT_TYPE,
 	INSTANT_EFFECT_TYPE,
+	InstantEffectPayload,
 	UseAbilityEvent,
 	UseAbilityIntent,
 } from "../Event/EventTypes";
@@ -14,11 +15,15 @@ import {
 	getEventsFromIntents,
 	getStepEffects,
 } from "../Event/EventUtils";
+import { runGame } from "../Game";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
+import { StatusEffectPayload } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import { Abilities, Classes, Weapons } from "../data";
 import { Ability } from "./Ability";
+import { ABILITY_CATEGORY } from "./AbilityTypes";
 
 function setupBoard() {
 	const bm = new BoardManager();
@@ -681,6 +686,110 @@ describe("Ability", () => {
 			for (let i = 0; i < durationStun; i++) unit.step(i);
 
 			expect(unit.abilities[0].progress).toBe(0);
+		});
+	});
+
+	describe("Ability Modifier", () => {
+		it("should add and remove STATUS_EFFECT modifier (Reinforce Front Offense 2 => Reinforce Allies with MULTISTRIKE to FRONT_ALLY)", () => {
+			const { unit1, unit3, unit4 } = setupBoard();
+
+			const ability = new Ability(Abilities.ReinforceAllies);
+			ability.addModifier("Reinforce Front Offense 2");
+
+			const event = ability.use(unit3);
+
+			expect(event.payload.subEvents.length).toBe(3);
+
+			const subEventPayload = event.payload.subEvents[2]
+				.payload as InstantEffectPayload<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+
+			expect(subEventPayload.targetId).toBe(unit1.id);
+			expect(subEventPayload.type).toBe(TRIGGER_EFFECT_TYPE.STATUS_EFFECT);
+			expect(subEventPayload.payload[0].name).toBe(STATUS_EFFECT.MULTISTRIKE);
+			expect(subEventPayload.payload[0].quantity).toBe(1);
+
+			ability.removeModifier("Reinforce Front Offense 2");
+
+			const event2 = ability.use(unit3);
+
+			expect(event2.payload.subEvents.length).toBe(2);
+		});
+
+		it("should add TRIGGER modifier (Reinforce on Battle Start => Reinforce Allies when BATTLE_START)", () => {
+			const { bm, unit1, unit2, unit3 } = setupBoard();
+
+			unit1.setClass(new Class(Classes.Blacksmith));
+
+			const ability = unit1.abilities[0];
+			expect(ability.data.name).toBe("Reinforce Allies");
+
+			ability.addModifier("Reinforce on Battle Start");
+
+			const { eventHistory } = runGame(bm);
+
+			const events = eventHistory.filter(e => e.step === 0) as UseAbilityEvent[];
+
+			expect(events).toHaveLength(1);
+			expect(events[0].actorId).toBe(unit1.id);
+			expect(events[0].type).toBe(EVENT_TYPE.USE_ABILITY);
+			expect(events[0].payload.name).toBe("Reinforce Allies");
+			expect(events[0].payload.targetsId[0]).toBe(unit3.id);
+		});
+
+		it("should remove TRIGGER modifier (Reinforce on Battle Start => Reinforce Allies when BATTLE_START)", () => {
+			const { bm, unit1, unit2, unit3 } = setupBoard();
+
+			unit1.setClass(new Class(Classes.Blacksmith));
+
+			const ability = unit1.abilities[0];
+			expect(ability.data.name).toBe("Reinforce Allies");
+
+			ability.addModifier("Reinforce on Battle Start");
+			ability.removeModifier("Reinforce on Battle Start");
+
+			const { eventHistory } = runGame(bm);
+
+			const events = eventHistory.filter(e => e.step === 0) as UseAbilityEvent[];
+
+			expect(events).toHaveLength(0);
+		});
+
+		it("should add and remove TARGET modifier (Decay Row Strike => Decay Strike on STANDARD_ROW target)", () => {
+			const { unit1, unit2, unit3, unit4 } = setupBoard();
+
+			const ability = new Ability(Abilities.DecayStrike);
+
+			ability.addModifier("Decay Row Strike");
+
+			expect(ability.target).toBe(TARGET_TYPE.STANDARD_ROW);
+
+			const event = ability.use(unit2);
+
+			expect(event.payload.targetsId).toEqual([unit1.id, unit3.id, unit4.id]);
+			expect(event.payload.subEvents).toHaveLength(3);
+
+			ability.removeModifier("Decay Row Strike");
+
+			expect(ability.target).toBe(TARGET_TYPE.STANDARD);
+
+			const event2 = ability.use(unit2);
+
+			expect(event2.payload.targetsId).toEqual([unit1.id]);
+			expect(event2.payload.subEvents).toHaveLength(1);
+		});
+
+		it("should add and remove CATEGORY modifier (Quick Spell => Quick Attack with SPELL type)", () => {
+			const ability = new Ability(Abilities.QuickAttack);
+
+			expect(ability.type).toBe(ABILITY_CATEGORY.ATTACK);
+
+			ability.addModifier("Quick Spell");
+
+			expect(ability.type).toBe(ABILITY_CATEGORY.SPELL);
+
+			ability.removeModifier("Quick Spell");
+
+			expect(ability.type).toBe(ABILITY_CATEGORY.ATTACK);
 		});
 	});
 });

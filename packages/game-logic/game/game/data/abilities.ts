@@ -9,6 +9,7 @@ import * as BreakWill from "../../data/abilities/attacks/BreakWill.json";
 import * as DisarmingShot from "../../data/abilities/attacks/DisarmingShot.json";
 import * as EmpoweringStrike from "../../data/abilities/attacks/EmpoweringStrike.json";
 import * as LongShot from "../../data/abilities/attacks/LongShot.json";
+import * as OpeningGambit from "../../data/abilities/attacks/OpeningGambit.json";
 import * as PhalanxFury from "../../data/abilities/attacks/PhalanxFury.json";
 import * as Powershot from "../../data/abilities/attacks/Powershot.json";
 import * as QuickAttack from "../../data/abilities/attacks/QuickAttack.json";
@@ -45,6 +46,7 @@ const Abilities = {
 	EmpoweringStrike: EmpoweringStrike as AbilityData,
 	Fireball: Fireball as AbilityData,
 	LongShot: LongShot as AbilityData,
+	OpeningGambit: OpeningGambit as AbilityData,
 	PhalanxFury: PhalanxFury as AbilityData,
 	Powershot: Powershot as AbilityData,
 	QuickAttack: QuickAttack as AbilityData,

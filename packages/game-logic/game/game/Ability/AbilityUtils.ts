@@ -1,12 +1,13 @@
 import { MOD_TYPE, Mod, PossibleMods } from "../Mods/ModsTypes";
 import { filterModsByType } from "../Mods/ModsUtils";
-import { PossibleTriggerEffect } from "../Trigger/TriggerTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
+import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 import { Abilities } from "../data";
 import { Ability } from "./Ability";
 import {
+	ABILITY_MOD_TYPES,
 	AbilityModifier,
-	AbilityModifierPossibleMods,
-	DefaultAbilityModifier,
+	AbilityModifierPossibleEffectMods,
 	UniqueAbilityModifier,
 } from "./AbilityTypes";
 
@@ -38,11 +39,43 @@ export function isUniqueAbilityModifier(
 }
 
 export function getEffectsFromModifiers(
-	modifiers: AbilityModifierPossibleMods[],
+	modifiers: AbilityModifierPossibleEffectMods[],
 ): PossibleTriggerEffect[] {
+	// TODO: implement remove
 	const effects = modifiers.map(mod => {
-		//todo
+		let payload;
+
+		if (mod.type == ABILITY_MOD_TYPES.STATUS_EFFECT) {
+			payload = [
+				{
+					name: mod.payload.name,
+					quantity: mod.payload.value,
+				},
+			];
+		} else if (mod.type == ABILITY_MOD_TYPES.DISABLE) {
+			payload = [
+				{
+					name: mod.payload.name,
+					duration: mod.payload.value,
+				},
+			];
+		} else {
+			payload = {
+				value: mod.payload.value,
+			};
+		}
+
+		const effect = {
+			// @ts-ignore
+			type: mod.type as TRIGGER_EFFECT_TYPE,
+			trigger: TRIGGER.ON_USE, // TODO: using on use for now, maybe change later
+			target: mod.payload.target as TARGET_TYPE,
+			conditions: [],
+			payload,
+		} as PossibleTriggerEffect;
+
+		return effect;
 	});
 
-	return [];
+	return effects;
 }

@@ -36,7 +36,7 @@ export interface AbilityData {
 	target: TARGET_TYPE;
 	cooldown: number;
 	effects: PossibleTriggerEffect[];
-	abilityModifier?: AbilityModifier[];
+	abilityModifiers?: AbilityModifier[];
 }
 
 export type AbilityModifier = UniqueAbilityModifier | DefaultAbilityModifier;
@@ -52,14 +52,17 @@ export interface DefaultAbilityModifier {
 }
 
 export type AbilityModifierPossibleMods =
+	| AbilityModifierPossibleEffectMods
+	| AbilityModifierMod<ABILITY_MOD_TYPES.TRIGGER>
+	| AbilityModifierMod<ABILITY_MOD_TYPES.CATEGORY>
+	| AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>;
+
+export type AbilityModifierPossibleEffectMods =
 	| AbilityModifierMod<ABILITY_MOD_TYPES.DAMAGE>
 	| AbilityModifierMod<ABILITY_MOD_TYPES.HEAL>
 	| AbilityModifierMod<ABILITY_MOD_TYPES.SHIELD>
 	| AbilityModifierMod<ABILITY_MOD_TYPES.DISABLE>
-	| AbilityModifierMod<ABILITY_MOD_TYPES.STATUS_EFFECT>
-	| AbilityModifierMod<ABILITY_MOD_TYPES.TRIGGER>
-	| AbilityModifierMod<ABILITY_MOD_TYPES.CATEGORY>
-	| AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>;
+	| AbilityModifierMod<ABILITY_MOD_TYPES.STATUS_EFFECT>;
 
 export interface AbilityModifierMod<T extends ABILITY_MOD_TYPES> {
 	type: T;
@@ -119,7 +122,7 @@ export interface AbilityModifierShieldPayload {
 }
 
 export interface AbilityModifierCategoryPayload {
-	name: string;
+	name: ABILITY_CATEGORY;
 }
 
 export type AbilityModifierWithEffects = AbilityModifier & {

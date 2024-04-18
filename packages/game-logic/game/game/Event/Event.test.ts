@@ -42,7 +42,7 @@ describe("Event", () => {
 			const event = ability.use(unit);
 
 			expect(getStepEffects([event])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -73,7 +73,7 @@ describe("Event", () => {
 			const event2 = ability.use(unit2);
 
 			expect(getStepEffects([event1])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -100,7 +100,7 @@ describe("Event", () => {
 				],
 			});
 			expect(getStepEffects([event1, event2])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -146,7 +146,7 @@ describe("Event", () => {
 			const event2 = ability.use(unit2);
 
 			expect(getStepEffects([event1])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -173,7 +173,7 @@ describe("Event", () => {
 				],
 			});
 			expect(getStepEffects([event1, event2])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -197,7 +197,7 @@ describe("Event", () => {
 			const event = ability.use(unit);
 
 			expect(getStepEffects([event])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit.id,
@@ -235,7 +235,7 @@ describe("Event", () => {
 			const event = ability.use(unit);
 
 			expect(getStepEffects([event])).toEqual({
-				step: 1,
+				step: 0,
 				units: [
 					{
 						unitId: unit2.id,
@@ -273,7 +273,7 @@ describe("Event", () => {
 			expect(unit.stats.hp).toEqual(0);
 			expect(getDeathIntents(bm).get(unit.id)).toEqual([
 				{
-					step: 1,
+					step: 0,
 					type: EVENT_TYPE.FAINT,
 					actorId: unit.id,
 				},
