@@ -4,6 +4,7 @@ import { MarkdownWrapper } from "./MarkdownWrapper";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { useArenaIsUpdating } from "@/services/features/Arena/useArenaUpdate";
+import { Separator } from "@radix-ui/react-separator";
 
 interface MarkdownContentProps {
 	onOpenSubTooltip?: () => void;
@@ -39,6 +40,13 @@ const EquipmentMarkdownContent = ({
 				tags={equip?.tags}
 				onOpenSubTooltip={onOpenSubTooltip}
 			/>
+
+			<Separator />
+
+			{equip?.slots &&
+				equip?.slots?.map(slot => {
+					return <div key={slot}> {slot}</div>;
+				})}
 		</>
 	);
 };

@@ -80,30 +80,7 @@ export class Game {
 
 			unit.shopEquipment.forEach(equipment => {
 				const equipmentData = equipment.shopEquip.equip;
-				if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
-					if (gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
-						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
-					} else {
-						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
-					}
-				} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
-					gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
-				} else {
-					if (!gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
-						gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
-					} else {
-						if (
-							gameUnit.equipmentManager.canEquipOnSlot(
-								new Equipment(equipmentData),
-								EQUIPMENT_SLOT.OFF_HAND,
-							)
-						) {
-							gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
-						} else {
-							throw Error(`setTeams: Can't equip ${equipmentData.name} on offhand`);
-						}
-					}
-				}
+				gameUnit.equip(new Equipment(equipmentData), equipment.slot);
 			});
 			this.boardManager.addToBoard(gameUnit);
 		});
