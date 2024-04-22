@@ -10,46 +10,54 @@ import {
 import { UnitInstanceContent } from "./UnitInstanceContent";
 import { setBoard, setStorage } from "@/services/features/Arena/useArenaUpdate";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
+import { useMemo } from "react";
 
 export interface UnitTooltipProps {
-	unit: UnitInfo;
+	unitId: string;
+	unitInfo: UnitInfo;
 	onOpenSubTooltip?: () => void;
 	allowRemoveEquip?: boolean;
 }
 
-function UnitTooltip({ unit, onOpenSubTooltip, allowRemoveEquip = true }: UnitTooltipProps) {
+function UnitTooltip({
+	unitInfo,
+	unitId,
+	onOpenSubTooltip,
+	allowRemoveEquip = true,
+}: UnitTooltipProps) {
 	const { board, storage } = useArenaQueries();
-	const { className, shopEquipment } = unit;
+	const { className, shopEquipment } = unitInfo;
 
 	const onRemoveEquip = (id: string) => {
 		if (!board || !storage) return;
 
 		let shopEquip: ShopEquipInstance | undefined = undefined;
 
-		const newBoard = board.map(space => {
-			const boardUnit = space.unit;
+		setBoard(prevBoard =>
+			prevBoard.map(space => {
+				const boardUnit = space.unit;
 
-			if (boardUnit) {
-				const targetEquip = boardUnit.unit.shopEquipment.find(e => e.shopEquip.equip.id === id);
-				if (targetEquip) {
-					shopEquip = targetEquip.shopEquip;
-				}
-				return {
-					...space,
-					unit: {
-						...boardUnit,
+				if (boardUnit) {
+					const targetEquip = boardUnit.unit.shopEquipment.find(e => e.shopEquip.equip.id === id);
+					if (targetEquip) {
+						shopEquip = targetEquip.shopEquip;
+					}
+					return {
+						...space,
 						unit: {
-							...boardUnit.unit,
-							shopEquipment: [
-								...boardUnit.unit.shopEquipment.filter(e => e.shopEquip.equip.id !== id),
-							],
+							...boardUnit,
+							unit: {
+								...boardUnit.unit,
+								shopEquipment: [
+									...boardUnit.unit.shopEquipment.filter(e => e.shopEquip.equip.id !== id),
+								],
+							},
 						},
-					},
-				};
-			}
-			return space;
-		});
-		setBoard(newBoard);
+					};
+				}
+				return space;
+			}),
+		);
 
 		if (!shopEquip) {
 			return;
@@ -61,18 +69,14 @@ function UnitTooltip({ unit, onOpenSubTooltip, allowRemoveEquip = true }: UnitTo
 		});
 	};
 
+	const unitData = useMemo(() => {
+		// todo: refactor getUnitData to equip with slot
+		return getUnitData(unitInfo);
+	}, [unitInfo]);
+
 	return (
 		<div className="relative">
-			<UnitInstanceContent
-				// unitInfo={unit}
-				unit={
-					getUnitData(
-						{ id: "a", name: className, equipment: shopEquipment.map(e => e.shopEquip.equip) },
-						0,
-						"0",
-					) // todo: refactor getUnitData to equip with slot
-				}
-			/>
+			<UnitInstanceContent unitId={unitId} unitInfo={unitInfo} unit={unitData} />
 			<div className="absolute -right-[15px] top-0 h-full w-[15px] bg-transparent" />
 			<div className="absolute -left-[15px] top-0 h-full w-[15px] bg-transparent" />
 

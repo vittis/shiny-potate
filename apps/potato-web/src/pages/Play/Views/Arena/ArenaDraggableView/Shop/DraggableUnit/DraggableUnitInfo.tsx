@@ -4,14 +4,21 @@ import { UnitTooltip } from "./UnitTooltip";
 import { tierColorMap } from "@/components/MarkdownContent/MarkdownComponents";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
+import { useMemo } from "react";
 
 interface UnitInfoProps {
+	unitId: string;
 	unitInfo: UnitInfo;
 	useDraggableData: ReturnType<typeof useDraggable>;
 	allowRemoveEquip?: boolean;
 }
 
-const DraggableUnitInfo = ({ useDraggableData, unitInfo, allowRemoveEquip }: UnitInfoProps) => {
+const DraggableUnitInfo = ({
+	unitId,
+	useDraggableData,
+	unitInfo,
+	allowRemoveEquip,
+}: UnitInfoProps) => {
 	const { attributes, listeners, setNodeRef, transform, isDragging, node } = useDraggableData;
 
 	const style = transform
@@ -24,11 +31,8 @@ const DraggableUnitInfo = ({ useDraggableData, unitInfo, allowRemoveEquip }: Uni
 
 	const isDisabled = node.current?.ariaDisabled === "true";
 
-	return (
-		<MarkdownTooltip
-			forceClose={isDragging}
-			content={<UnitTooltip allowRemoveEquip={allowRemoveEquip} unit={unitInfo} />}
-		>
+	const unitContent = useMemo(() => {
+		return (
 			<div
 				ref={setNodeRef}
 				className={cn(
@@ -47,7 +51,7 @@ const DraggableUnitInfo = ({ useDraggableData, unitInfo, allowRemoveEquip }: Uni
 							<div
 								key={equip.id}
 								className={cn(
-									"rounded border border-dashed border-yellow-700 p-0.5 text-xs",
+									"rounded border border-dashed border-yellow-700 p-0.5 text-center text-xs",
 									tierColorMap[equip.tier],
 								)}
 							>
@@ -59,13 +63,29 @@ const DraggableUnitInfo = ({ useDraggableData, unitInfo, allowRemoveEquip }: Uni
 				)}
 				<div
 					className={cn(
-						"text-md z-[2] rounded bg-input px-1",
+						"text-md relative z-[2] flex flex-col items-center justify-center rounded bg-input px-1",
 						!isDisabled && "group-aria-expanded:animate-rainbow-river",
 					)}
 				>
-					{className}
+					<div>{className}</div>
+					<div className="text-xs text-sky-300">Lv {unitInfo.level}</div>
 				</div>
 			</div>
+		);
+	}, [setNodeRef, style, listeners, attributes, isDragging, isDisabled, shopEquipment, className]);
+
+	if (isDragging) {
+		return <div>{unitContent}</div>;
+	}
+
+	return (
+		<MarkdownTooltip
+			forceClose={isDragging}
+			content={
+				<UnitTooltip unitId={unitId} allowRemoveEquip={allowRemoveEquip} unitInfo={unitInfo} />
+			}
+		>
+			{unitContent}
 		</MarkdownTooltip>
 	);
 };

@@ -62,7 +62,16 @@ export class Game {
 			const unit = boardUnit.unit;
 
 			const gameUnit = new Unit(team, parseInt(boardSpace.position), this.boardManager);
-			gameUnit.setClass(new Class(Classes[unit.className as keyof typeof Classes]));
+			const unitClass = new Class(Classes[unit.className as keyof typeof Classes]);
+
+			// Not sure if this is the best way to do it but its quick and works for now
+			if (unit.talentTrees) {
+				unitClass.setTalentTrees(unit.talentTrees);
+			}
+			if (unit.utilityNodes) {
+				unitClass.setUtilityNodes(unit.utilityNodes);
+			}
+			gameUnit.setClass(unitClass);
 
 			// todo uncomment when not hardcoding SLOT in arena
 			/* unit.shopEquipment.forEach(equipment => {

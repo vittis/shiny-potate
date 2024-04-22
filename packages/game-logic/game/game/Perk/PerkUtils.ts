@@ -26,7 +26,8 @@ export function filterAndInstantiatePerksFromMods(mods: PossibleMods) {
 
 	return perkMods.map(mod => {
 		const PerkData = getPerkData(mod.payload.name);
-		const tier = mod.tier === "implicit" ? undefined : mod.tier;
+		const tier = mod.tier === "implicit" ? undefined : mod.tier || mod.payload.tier; // todo mod.tier or mod.payload.tier?
+		console.log(tier);
 		return new Perk(PerkData, tier);
 	});
 }

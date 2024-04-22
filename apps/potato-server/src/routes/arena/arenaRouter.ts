@@ -6,6 +6,7 @@ import {
 	ShopEquipInstance,
 	ShopUnitInstance,
 	Storage,
+	TalentNodeInstance,
 	generateShop,
 } from "game-logic";
 import { router } from "../../services/trpc";
@@ -130,12 +131,16 @@ export const arenaRouter = router({
 				throw new Error("Wrong data structure in database");
 			}
 
-			const yourUnits = [...storage.units, ...board.map(space => space.unit).filter(u => u)];
+			const currentUnits = [
+				...currentStorage.units,
+				...currentBoard.map(space => space.unit).filter(u => u),
+			];
+			const newUnits = [...storage.units, ...board.map(space => space.unit).filter(u => u)];
 			const unitsBoughtFromShop = currentShop.units.filter(shopUnit =>
-				yourUnits.find(unit => unit?.id === shopUnit.id),
+				newUnits.find(unit => unit?.id === shopUnit.id),
 			);
 
-			const shopEquipsFromUnits = yourUnits.reduce((acc, unit) => {
+			const shopEquipsFromUnits = newUnits.reduce((acc, unit) => {
 				if (!unit) {
 					return acc;
 				}
@@ -164,13 +169,80 @@ export const arenaRouter = router({
 				throw new Error("Not enough gold.");
 			}
 
+			const totalCurrentXp = currentUnits.reduce((acc, unit) => {
+				if (!unit) {
+					return acc;
+				}
+				return acc + unit.unit.xp;
+			}, 0);
+
+			const totalNewXp = newUnits.reduce((acc, unit) => {
+				if (!unit) {
+					return acc;
+				}
+				return acc + unit.unit.xp;
+			}, 0);
+
+			const xpSpent = totalNewXp - totalCurrentXp;
+
+			if (xpSpent > yourRun.xp) {
+				throw new Error("Not enough xp.");
+			}
+
+			const newBoard = board.map(space => {
+				const unit = space.unit;
+				if (!unit) {
+					return space;
+				}
+
+				const currentUnit = currentUnits.find(u => u?.id === unit.id);
+
+				if (!currentUnit) {
+					return space;
+				}
+
+				const newTalents = unit.unit.talentTrees.reduce((acc, tree) => {
+					return [...acc, ...tree.talents.filter(talent => talent.obtained)];
+				}, [] as TalentNodeInstance[]);
+
+				const currentTalents = currentUnit.unit.talentTrees.reduce((acc, tree) => {
+					return [...acc, ...tree.talents.filter(talent => talent.obtained)];
+				}, [] as TalentNodeInstance[]);
+
+				console.log(currentUnit.unit.xp);
+				if (newTalents.length > currentTalents.length) {
+					// todo hardcoded 2 max_xp
+					if (currentUnit.unit.xp < 2) {
+						throw new Error("Not enough xp to obtain talent");
+					}
+
+					return {
+						...space,
+						unit: {
+							...unit,
+							unit: {
+								...unit.unit,
+								level: unit.unit.level + 1,
+								xp: 0,
+							},
+						},
+					};
+				}
+
+				return {
+					...space,
+					unit,
+				};
+			});
+
 			const { data: updatedData, error: updateError } = await supabase
 				.from("arena")
 				.update({
 					gold: currentGold - goldSpent,
-					board,
+					board: newBoard,
 					storage,
 					shop: newShop,
+					xp: yourRun.xp - xpSpent,
 					updated_at: new Date().toISOString(),
 				})
 				.eq("player_id", user.id)
@@ -185,99 +257,101 @@ export const arenaRouter = router({
 		}),
 	findAndBattleOpponent: authProcedure.mutation(async ({ ctx }) => {
 		const { supabase, user } = ctx;
+		try {
+			const { data: myRun, error: myRunError } = await supabase
+				.from("arena")
+				.select("*")
+				.eq("player_id", user.id)
+				.maybeSingle();
 
-		const { data: myRun, error: myRunError } = await supabase
-			.from("arena")
-			.select("*")
-			.eq("player_id", user.id)
-			.maybeSingle();
+			if (myRunError || !myRun) {
+				console.trace(myRunError || "No run found");
+				throw myRunError || new Error("No run found");
+			}
 
-		if (myRunError || !myRun) {
-			console.trace(myRunError || "No run found");
-			throw myRunError || new Error("No run found");
+			const { data: opponentBoard, error: opponentBoardError } = await supabase
+				.from("board")
+				.select("*")
+				.eq("round", myRun.round)
+				.neq("player_id", user.id);
+
+			if (opponentBoardError || !opponentBoard || opponentBoard.length === 0) {
+				console.trace(opponentBoardError || "No opponent found");
+				throw opponentBoardError || new Error("No opponent found");
+			}
+
+			// randomize opponent board
+			const finalOpponentBoard = opponentBoard[Math.floor(Math.random() * opponentBoard.length)];
+
+			const game = new Game({ skipConstructor: true });
+			game.setBoard(0, myRun.board);
+			game.setBoard(1, finalOpponentBoard.board);
+			const { totalSteps, eventHistory, firstStep, effectHistory, winner } = game.startGame();
+
+			const { data: boardData, error: insertError } = await supabase
+				.from("board")
+				.insert([
+					{
+						player_id: user.id,
+						round: myRun.round,
+						wins: myRun.wins,
+						losses: myRun.losses,
+						board: myRun.board,
+					},
+				])
+				.select("*")
+				.single();
+
+			if (insertError || !boardData) {
+				console.trace(insertError || "Board insert error");
+				throw insertError || new Error("Board insert error");
+			}
+
+			const { data: gameHistoryData, error: insertGamesHistoryError } = await supabase
+				.from("games_history")
+				.insert([
+					{
+						player_id: user.id,
+						opponent_id: finalOpponentBoard.player_id,
+						board_id: boardData.id,
+						opponent_board_id: finalOpponentBoard.id,
+						winner_id: winner === 0 ? user.id : finalOpponentBoard.player_id,
+					},
+				])
+				.select("id")
+				.single();
+
+			if (insertGamesHistoryError) {
+				console.trace(insertGamesHistoryError);
+				throw insertGamesHistoryError;
+			}
+
+			const { error: updateError } = await supabase
+				.from("arena")
+				.update({
+					round: myRun?.round + 1,
+					gold: myRun?.gold + 15,
+					xp: myRun?.xp + 3,
+					updated_at: new Date().toISOString(),
+					shop: generateShop(myRun?.round + 1),
+					wins: winner === 0 ? myRun?.wins + 1 : myRun?.wins,
+					losses: winner === 1 ? myRun?.losses + 1 : myRun?.losses,
+				})
+				.eq("player_id", user.id);
+
+			if (updateError) {
+				console.trace(updateError);
+				throw updateError;
+			}
+
+			return {
+				gameId: gameHistoryData.id,
+				game: { totalSteps, eventHistory, firstStep, effectHistory },
+			};
+		} catch (e) {
+			console.trace(e);
+			throw e;
 		}
-
-		const { data: opponentBoard, error: opponentBoardError } = await supabase
-			.from("board")
-			.select("*")
-			.eq("round", myRun.round)
-			.neq("player_id", user.id);
-
-		if (opponentBoardError || !opponentBoard || opponentBoard.length === 0) {
-			console.trace(opponentBoardError || "No opponent found");
-			throw opponentBoardError || new Error("No opponent found");
-		}
-
-		// randomize opponent board
-		const finalOpponentBoard = opponentBoard[Math.floor(Math.random() * opponentBoard.length)];
-
-		const game = new Game({ skipConstructor: true });
-		game.setBoard(0, myRun.board);
-		game.setBoard(1, finalOpponentBoard.board);
-		const { totalSteps, eventHistory, firstStep, effectHistory, winner } = game.startGame();
-
-		const { data: boardData, error: insertError } = await supabase
-			.from("board")
-			.insert([
-				{
-					player_id: user.id,
-					round: myRun.round,
-					wins: myRun.wins,
-					losses: myRun.losses,
-					board: myRun.board,
-				},
-			])
-			.select("*")
-			.single();
-
-		console.log({ boardData });
-
-		if (insertError || !boardData) {
-			console.trace(insertError || "Board insert error");
-			throw insertError || new Error("Board insert error");
-		}
-
-		const { data: gameHistoryData, error: insertGamesHistoryError } = await supabase
-			.from("games_history")
-			.insert([
-				{
-					player_id: user.id,
-					opponent_id: finalOpponentBoard.player_id,
-					board_id: boardData.id,
-					opponent_board_id: finalOpponentBoard.id,
-					winner_id: winner === 0 ? user.id : finalOpponentBoard.player_id,
-				},
-			])
-			.select("id")
-			.single();
-
-		if (insertGamesHistoryError) {
-			console.trace(insertGamesHistoryError);
-			throw insertGamesHistoryError;
-		}
-
-		const { error: updateError } = await supabase
-			.from("arena")
-			.update({
-				round: myRun?.round + 1,
-				gold: myRun?.gold + 15,
-				xp: myRun?.xp + 3,
-				updated_at: new Date().toISOString(),
-				shop: generateShop(myRun?.round + 1),
-				wins: winner === 0 ? myRun?.wins + 1 : myRun?.wins,
-				losses: winner === 1 ? myRun?.losses + 1 : myRun?.losses,
-			})
-			.eq("player_id", user.id);
-
-		if (updateError) {
-			console.trace(updateError);
-			throw updateError;
-		}
-
-		return {
-			gameId: gameHistoryData.id,
-			game: { totalSteps, eventHistory, firstStep, effectHistory },
-		};
 	}),
 	viewBattle: authProcedure
 		.input(

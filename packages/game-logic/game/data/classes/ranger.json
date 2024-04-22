@@ -20,7 +20,7 @@
           "type": "GRANT_PERK",
           "payload": {
             "name": "Ranged Proficiency",
-            "tier": 1
+            "tier": 2
           }
         }
       ],

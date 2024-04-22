@@ -10,7 +10,13 @@
 	"tiers": [
 		{
 			"name": "FAST",
-			"values": [5, 10, 15, 20, 30]
+			"values": [
+				5,
+				10,
+				15,
+				20,
+				30
+			]
 		}
 	],
 	"effects": [
@@ -23,8 +29,15 @@
 					"type": "EQUIPMENT",
 					"payload": {
 						"target": "SELF",
-						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
-						"tags": ["PHYSICAL", "RANGED"]
+						"slots": [
+							"TWO_HANDS",
+							"MAIN_HAND",
+							"OFF_HAND"
+						],
+						"tags": [
+							"PHYSICAL",
+							"RANGED"
+						]
 					}
 				}
 			],

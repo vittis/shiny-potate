@@ -21,6 +21,10 @@ describe("Class", () => {
 
 		const nodeId = unit.classManager.class.talentTreesInstance[0].talents[0].id;
 
-		expect(unit.perkManager.getPerks().length).toBe(1);
+		unit.classManager.class.obtainTalentNode(nodeId);
+
+		console.log(nodeId);
+
+		expect(unit.perkManager.getPerks().length).toBe(2);
 	});
 });

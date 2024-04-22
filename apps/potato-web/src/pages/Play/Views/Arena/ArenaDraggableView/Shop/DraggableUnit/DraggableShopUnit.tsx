@@ -24,6 +24,7 @@ function DraggableShopUnit({ shopUnit }: DraggableShopUnitInterface) {
 		<div className="flex flex-col items-center font-mono">
 			<div className="flex gap-1 text-yellow-300">{price}</div>
 			<DraggableUnitInfo
+				unitId={shopUnit.id}
 				allowRemoveEquip={false}
 				useDraggableData={draggableData}
 				unitInfo={shopUnit.unit}

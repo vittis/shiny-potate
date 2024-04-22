@@ -251,7 +251,7 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0(eslint@8.56.0)
       eslint-plugin-react-refresh:
-        specifier: ^0.3.4
+        specifier: ^0.3.5
         version: 0.3.5(eslint@8.56.0)
       postcss:
         specifier: ^8.4.32

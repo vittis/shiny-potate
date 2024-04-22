@@ -18,7 +18,7 @@ import { EquipmentMarkdownContent } from "@/components/MarkdownContent/Equipment
 import { useSandboxQueries } from "@/services/features/Sandbox/useSandboxQueries";
 import { MarkdownContent } from "@/components/MarkdownContent/MarkdownContent";
 import { Separator } from "@/components/ui/separator";
-import { getUnitData } from "game-logic";
+import { getUnitData, oldGetUnitData } from "game-logic";
 import { useBoardUnitsStore } from "@/services/features/Sandbox/useBoardUnitsStore";
 import { DraggableBoardUnit } from "./DraggableBoardUnit";
 import { trpc } from "@/services/api/trpc";
@@ -263,7 +263,14 @@ export function BoardSetupView() {
 									{unit ? (
 										<DroppableTile id={id}>
 											<MarkdownTooltip
-												content={<UnitInstanceContent unit={getUnitData(unit, 0, id) as any} />}
+												content={
+													<UnitInstanceContent
+														unitId={unit.id}
+														talentTrees={[]}
+														utilityNodes={[]}
+														unit={oldGetUnitData(unit, 0, id) as any}
+													/>
+												}
 											>
 												<DraggableBoardUnit
 													id={unit.id}
@@ -304,7 +311,14 @@ export function BoardSetupView() {
 									{unit ? (
 										<DroppableTile id={id}>
 											<MarkdownTooltip
-												content={<UnitInstanceContent unit={getUnitData(unit, 0, id) as any} />}
+												content={
+													<UnitInstanceContent
+														unitId={unit.id}
+														talentTrees={[]}
+														utilityNodes={[]}
+														unit={oldGetUnitData(unit, 0, id) as any}
+													/>
+												}
 											>
 												<DraggableBoardUnit
 													id={unit.id}

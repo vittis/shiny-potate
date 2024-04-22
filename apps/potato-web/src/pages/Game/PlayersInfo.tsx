@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { viewBattle } from "./GameView";
 import { useSearchParams } from "react-router-dom";
-import { capitalizeFirstLetter } from "@/utils/string";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { viewBattle } from "@/services/features/Arena/useArenaQueries";
 
 const PlayersInfo = () => {
 	const [searchParams] = useSearchParams();

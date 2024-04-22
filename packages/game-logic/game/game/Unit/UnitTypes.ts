@@ -1,7 +1,6 @@
 import { ShopEquipInstance } from "../../shop/ShopEquip";
 import { POSITION } from "../BoardManager";
-import { TalentTreeInstance } from "../Class/ClassTypes";
-import { EquippedItemInstance } from "../Equipment/EquipmentManager";
+import { ClassNodeInstance, TalentTreeInstance } from "../Class/ClassTypes";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 
 export interface EquippedShopEquip {
@@ -11,8 +10,11 @@ export interface EquippedShopEquip {
 
 export interface UnitInfo {
 	className: string;
-	talentTree: TalentTreeInstance[];
+	talentTrees: TalentTreeInstance[];
+	utilityNodes: ClassNodeInstance[];
 	shopEquipment: EquippedShopEquip[];
+	level: number;
+	xp: number;
 }
 
 export interface BoardUnitInstance extends ShopUnitInstance {

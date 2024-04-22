@@ -18,7 +18,13 @@ function DraggableStorageUnit({ shopUnit }: DraggableStorageUnitInterface) {
 		disabled,
 	});
 
-	return <DraggableUnitInfo useDraggableData={draggableData} unitInfo={shopUnit.unit} />;
+	return (
+		<DraggableUnitInfo
+			unitId={shopUnit.id}
+			useDraggableData={draggableData}
+			unitInfo={shopUnit.unit}
+		/>
+	);
 }
 
 export { DraggableStorageUnit };

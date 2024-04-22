@@ -55,11 +55,25 @@ export class Class {
 	}
 
 	getClassBaseAbilities() {
-		return this.data.base.reduce((acc, node) => {
+		const baseAbilities = this.data.base.reduce((acc, node) => {
 			const abilitiesOfNode = getAbilitiesInstancesFromMods(node.mods);
 
 			return [...acc, ...abilitiesOfNode];
 		}, [] as Ability[]);
+
+		const talentsAbilities = this.talentTreesInstance.reduce((acc, tree) => {
+			return [
+				...acc,
+				...tree.talents.reduce((acc, talent) => {
+					if (talent.obtained) {
+						return [...acc, ...getAbilitiesInstancesFromMods(talent.mods)];
+					}
+					return acc;
+				}, [] as Ability[]),
+			];
+		}, [] as Ability[]);
+
+		return [...baseAbilities, ...talentsAbilities];
 	}
 
 	getPerks() {
@@ -67,7 +81,7 @@ export class Class {
 			return [...acc, ...filterAndInstantiatePerksFromMods(node.mods)];
 		}, [] as Perk[]);
 
-		const talentPerks = this.talentTreesInstance.reduce((acc, tree) => {
+		const talentsPerks = this.talentTreesInstance.reduce((acc, tree) => {
 			return [
 				...acc,
 				...tree.talents.reduce((acc, talent) => {
@@ -79,7 +93,7 @@ export class Class {
 			];
 		}, [] as Perk[]);
 
-		return [...basePerks, ...talentPerks];
+		return [...basePerks, ...talentsPerks];
 	}
 
 	obtainTalentNode(talentId: string) {
@@ -99,10 +113,18 @@ export class Class {
 		});
 	}
 
+	// this is used to set the talent trees received from the client. Not sure if this is the best way to do it but its quick and works for now
+	setTalentTrees(talentTrees: TalentTreeInstance[]) {
+		this.talentTreesInstance = talentTrees;
+	}
+	setUtilityNodes(utilityNodes: ClassNodeInstance[]) {
+		this.utilityNodes = utilityNodes;
+	}
+
 	serialize() {
 		return {
 			data: this.data,
-			talentTree: this.talentTreesInstance,
+			talentTrees: this.talentTreesInstance,
 			utilityNodes: this.utilityNodes,
 		};
 	}
