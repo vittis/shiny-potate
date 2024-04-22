@@ -45,7 +45,6 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 		const possibleSlots = equip.equip.slots;
 		if (currentEquips.length > 0) {
 			const notAvailableSlot: string[] = currentEquips.map(equipment => equipment.slot);
-			console.log(notAvailableSlot);
 			if (
 				possibleSlots.includes("TWO_HANDS") &&
 				notAvailableSlot.includes("MAIN_HAND" || "OFF_HAND" || "TWO_HANDS")
@@ -97,7 +96,6 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 		const unit = event.active.data.current?.unit as ShopUnitInstance | BoardUnitInstance | null;
 		const shopEquip = event.active.data.current?.shopEquip as ShopEquipInstance | null;
 
-		console.log(unit);
 		if (event.over?.id === "storage") {
 			const storageUnits = storage?.units || [];
 			const storageEquips = storage?.equips || [];
@@ -130,55 +128,52 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 				const isFromStorage = !!storage?.equips.find(
 					storageEquip => storageEquip.id === shopEquip.id,
 				);
-				const newBoard = board.map(space => {
-					if (space.position === overPosition) {
-						const boardUnit = space.unit;
-						if (boardUnit) {
-							const desiredSlot = getDesiredSlot(shopEquip, boardUnit.unit.shopEquipment);
-							if (!desiredSlot && !isFromBoard) {
-								return space;
-							}
-							if (!desiredSlot && isFromBoard) {
-								if (isFromStorage) {
-									const storageEquips = storage?.equips.filter(
-										storageEquip => storageEquip.id !== shopEquip.id,
-									);
-
-									console.log(storageEquips);
-
-									setStorage({
-										units: storage?.units || [],
-										equips: storageEquips || [],
-									});
+				setBoard(prevBoard =>
+					prevBoard.map(space => {
+						if (space.position === overPosition) {
+							const boardUnit = space.unit;
+							if (boardUnit) {
+								const desiredSlot = getDesiredSlot(shopEquip, boardUnit.unit.shopEquipment);
+								if (!desiredSlot && !isFromBoard) {
+									return space;
 								}
-								return space;
-							}
-							return {
-								...space,
-								unit: {
-									...boardUnit,
+								if (!desiredSlot && isFromBoard) {
+									if (isFromStorage) {
+										const storageEquips = storage?.equips.filter(
+											storageEquip => storageEquip.id !== shopEquip.id,
+										);
+
+										setStorage({
+											units: storage?.units || [],
+											equips: storageEquips || [],
+										});
+									}
+									return space;
+								}
+								return {
+									...space,
 									unit: {
-										...boardUnit.unit,
-										shopEquipment: [
-											...boardUnit.unit.shopEquipment,
-											// todo dont hardcode TRINKET. do a equip() logic
-											{ slot: desiredSlot as any, shopEquip },
-										],
+										...boardUnit,
+										unit: {
+											...boardUnit.unit,
+											shopEquipment: [
+												...boardUnit.unit.shopEquipment,
+												// todo dont hardcode TRINKET. do a equip() logic
+												{ slot: desiredSlot as any, shopEquip },
+											],
+										},
 									},
 								};
 							}
 						}
-					}
-					return space;
-				});
-				setBoard(newBoard);
+						return space;
+					}),
+				);
 				// dropped shop equip from storage to board unit
 				if (isFromStorage) {
 					const storageEquips = storage?.equips.filter(
 						storageEquip => storageEquip.id !== shopEquip.id,
 					);
-
-					console.log(storageEquips);
 
 					setStorage({
 						units: storage?.units || [],
@@ -273,8 +268,6 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 			});
 		}
 	}
-
-	console.log(board);
 
 	return (
 		<DndContext sensors={sensors} onDragEnd={handleDragEnd}>

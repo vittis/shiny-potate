@@ -112,6 +112,7 @@ export function generateRandomUnitWithEquipment(tier: number): UnitInfo {
 	const unit = new Unit(0, 0);
 	unit.setClass(new Class(Classes[randomClassKey as keyof typeof Classes]));
 	const generatedItem = generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON).serialize();
+	const serializedClass = unit.classManager.class.serialize();
 	console.log(generatedItem.equip.slots);
 	return {
 		className: randomClassKey as keyof typeof Classes,
