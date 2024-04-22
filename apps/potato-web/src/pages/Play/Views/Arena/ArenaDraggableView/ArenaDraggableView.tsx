@@ -133,7 +133,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 						if (space.position === overPosition) {
 							const boardUnit = space.unit;
 							if (boardUnit) {
-								const desiredSlot = getDesiredSlot(shopEquip, boardUnit.unit.shopEquipment);
+								const desiredSlot = getDesiredSlot(shopEquip, boardUnit.unit.shopEquipment); // todo: fix types
 								if (!desiredSlot && !isFromBoard) {
 									return space;
 								}
