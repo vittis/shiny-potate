@@ -1,18 +1,17 @@
-import { Unit } from "game-logic";
+import { ClassNodeInstance, TalentTreeInstance, Unit, UnitInfo } from "game-logic";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
-import { ChevronUp, NetworkIcon, Plus, PlusSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TalentTreePopover } from "./TalentTreePopover";
 import { LevelUnitControls } from "./LevelUnitControls";
 
 interface MarkdownContentProps {
-	unit: Unit;
+	unitId: string;
+	unit: Unit; // unit here is weird. Needs to serialize unit properly
+	unitInfo: UnitInfo;
 }
 
-const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
+const UnitInstanceContent = ({ unit, unitId, unitInfo }: MarkdownContentProps) => {
 	const className = unit.classManager.class.data.name;
 
 	const allAbilities = unit.abilities;
@@ -24,14 +23,15 @@ const UnitInstanceContent = ({ unit }: MarkdownContentProps) => {
 			<div className="flex items-center justify-between gap-6">
 				<div className="text-left text-4xl">
 					{className}
-					<span className={cn("ml-1 font-mono text-xs font-semibold text-neutral-100")}>T{1}</span>
+					<span className={cn("ml-1 font-mono text-xs font-semibold text-neutral-100")}>T?</span>
 				</div>
 
-				<LevelUnitControls />
+				<LevelUnitControls unitId={unitId} unitInfo={unitInfo} />
 
 				<TalentTreePopover
-					utiliyNodes={unit.classManager.class.utilityNodes}
-					talentTrees={unit.classManager.class.talentTreesInstance}
+					unitId={unitId}
+					utiliyNodes={unitInfo.utilityNodes}
+					talentTrees={unitInfo.talentTrees}
 				/>
 			</div>
 

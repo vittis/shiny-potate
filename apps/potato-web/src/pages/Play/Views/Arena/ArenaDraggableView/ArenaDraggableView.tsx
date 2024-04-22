@@ -76,30 +76,31 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 				const isFromStorage = !!storage?.equips.find(
 					storageEquip => storageEquip.id === shopEquip.id,
 				);
-				const newBoard = board.map(space => {
-					if (space.position === overPosition) {
-						const boardUnit = space.unit;
-						if (boardUnit) {
-							return {
-								...space,
-								unit: {
-									...boardUnit,
+				setBoard(prevBoard =>
+					prevBoard.map(space => {
+						if (space.position === overPosition) {
+							const boardUnit = space.unit;
+							if (boardUnit) {
+								return {
+									...space,
 									unit: {
-										...boardUnit.unit,
-										shopEquipment: [
-											...boardUnit.unit.shopEquipment,
-											// todo dont hardcode TRINKET. do a equip() logic
-											{ slot: "TRINKET" as any, shopEquip },
-										],
+										...boardUnit,
+										unit: {
+											...boardUnit.unit,
+											shopEquipment: [
+												...boardUnit.unit.shopEquipment,
+												// todo dont hardcode TRINKET. do a equip() logic
+												{ slot: "TRINKET" as any, shopEquip },
+											],
+										},
 									},
-								},
-							};
+								};
+							}
 						}
-					}
 
-					return space;
-				});
-				setBoard(newBoard);
+						return space;
+					}),
+				);
 				// dropped shop equip from storage to board unit
 				if (isFromStorage) {
 					const storageEquips = storage?.equips.filter(
@@ -145,50 +146,51 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 					}
 				}
 
-				const newBoard = board.map(space => {
-					// add unit to new position
-					if (space.position === overPosition) {
-						return {
-							...space,
-							unit: { ...unit, position: space.position },
-						};
-					}
-					// remove unit from previous position if dropped outside of board
-					if (!unitOver && isAlreadyOnBoard && space.unit?.id === unit.id) {
-						return {
-							...space,
-							unit: null,
-						};
-					}
-					// swap units if dropped on another unit from BOARD
-					if (unitOver && isAlreadyOnBoard && space.position === (unit as any)?.position) {
-						return {
-							...space,
-							unit: { ...unitOver, position: space.position },
-						};
-					}
-
-					return space;
-				});
-				setBoard(newBoard);
+				setBoard(prevBoard =>
+					prevBoard.map(space => {
+						// add unit to new position
+						if (space.position === overPosition) {
+							return {
+								...space,
+								unit: { ...unit, position: space.position },
+							};
+						}
+						// remove unit from previous position if dropped outside of board
+						if (!unitOver && isAlreadyOnBoard && space.unit?.id === unit.id) {
+							return {
+								...space,
+								unit: null,
+							};
+						}
+						// swap units if dropped on another unit from BOARD
+						if (unitOver && isAlreadyOnBoard && space.position === (unit as any)?.position) {
+							return {
+								...space,
+								unit: { ...unitOver, position: space.position },
+							};
+						}
+						return space;
+					}),
+				);
+				// handleDragEnd ends here
 				return;
 			}
 		}
 		// dragged outside of board
 		const isFromBoard = unit && !!board.find(space => space.unit?.id === unit?.id);
 		if (isFromBoard) {
-			const newBoard = board.map(space => {
-				if (space.unit?.id === unit?.id) {
-					return {
-						...space,
-						unit: null,
-					};
-				}
+			setBoard(prevBoard =>
+				prevBoard.map(space => {
+					if (space.unit?.id === unit?.id) {
+						return {
+							...space,
+							unit: null,
+						};
+					}
 
-				return space;
-			});
-
-			setBoard(newBoard);
+					return space;
+				}),
+			);
 
 			// add to storage
 			setStorage({

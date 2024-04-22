@@ -14,7 +14,13 @@
 	"tiers": [
 		{
 			"name": "ATTACK_POWER",
-			"values": [2, 4, 6, 8, 10]
+			"values": [
+				4,
+				8,
+				12,
+				16,
+				20
+			]
 		}
 	],
 	"effects": [

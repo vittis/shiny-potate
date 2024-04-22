@@ -34,6 +34,7 @@ export interface EquipmentData {
 	effects: PossibleTriggerEffect[];
 }
 
+// this represents an actual instance of the equipment, generally sent/received to/from client
 export interface EquipmentInstance extends EquipmentData {
 	id: string;
 	tier: number;

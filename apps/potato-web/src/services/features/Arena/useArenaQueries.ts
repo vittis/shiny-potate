@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { trpc } from "@/services/api/trpc";
+import { trpc, vanillaTrpc } from "@/services/api/trpc";
 import { useSupabaseUserStore } from "../User/useSupabaseUserStore";
+
+export function viewBattle(gameId: string) {
+	return vanillaTrpc.arena.viewBattle.query({ gameId });
+}
 
 const useArenaQueries = () => {
 	const { username } = useSupabaseUserStore();

@@ -170,9 +170,6 @@ export class Unit {
 
 		const grantedPerks = unitClass.getPerks();
 		this.perkManager.addPerksFromSource(grantedPerks, unitClass.data.name);
-		grantedPerks.forEach(perk => {
-			this.triggerManager.addTriggerEffectsFromSource(perk.getTriggerEffects(), perk.id);
-		});
 	}
 
 	step(stepNumber: number) {

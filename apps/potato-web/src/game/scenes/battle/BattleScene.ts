@@ -7,8 +7,8 @@ import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { EVENT_TYPE, PossibleEvent, StepEffects } from "game-logic";
-import { viewBattle } from "@/pages/Game/GameView";
 import { loopStepEvents } from "./BattleSceneUtils";
+import { viewBattle } from "@/services/features/Arena/useArenaQueries";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 

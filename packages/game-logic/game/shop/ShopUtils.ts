@@ -42,47 +42,50 @@ export function generateRandomItems({ quantityPerItem = 3 }, type: EQUIPMENT_TYP
 }
 
 // todo to receive EquippedItem with slot
-export function getUnitData(
-	boardUnit: { id: string; name: string; equipment?: EquipmentInstance[] },
-	owner: number,
-	position: string,
-): Unit {
-	const unit = new Unit(owner, parseInt(position));
-	unit.setClass(new Class(Classes[boardUnit.name as keyof typeof Classes]));
+export function getUnitData(unitInfo: UnitInfo): Unit {
+	const gameUnit = new Unit(0, 0);
 
-	if (boardUnit?.equipment && boardUnit?.equipment?.length > 0) {
-		boardUnit.equipment.forEach(equipmentData => {
-			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
-				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
-					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
-				} else {
-					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
-				}
-			} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
-				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
+	const unitClass = new Class(Classes[unitInfo.className as keyof typeof Classes]);
+	unitClass.setTalentTrees(unitInfo.talentTrees); // Not sure if this is the best way to do it but its quick and works for now
+	unitClass.setUtilityNodes(unitInfo.utilityNodes);
+	gameUnit.setClass(unitClass);
+
+	// todo uncomment when not hardcoding SLOT in arena
+	/* unit.shopEquipment.forEach(equipment => {
+				gameUnit.equip(new Equipment(equipment.shopEquip.equip), equipment.slot);
+			}); */
+
+	unitInfo.shopEquipment.forEach(equipment => {
+		const equipmentData = equipment.shopEquip.equip;
+		if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
+			if (gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
+				gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
 			} else {
-				if (!unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
-					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+				gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
+			}
+		} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
+			gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
+		} else {
+			if (!gameUnit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
+				gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+			} else {
+				if (
+					gameUnit.equipmentManager.canEquipOnSlot(
+						new Equipment(equipmentData),
+						EQUIPMENT_SLOT.OFF_HAND,
+					)
+				) {
+					gameUnit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
 				} else {
-					if (
-						unit.equipmentManager.canEquipOnSlot(
-							new Equipment(equipmentData),
-							EQUIPMENT_SLOT.OFF_HAND,
-						)
-					) {
-						unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
-					} else {
-						console.error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
-						throw new Error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
-					}
+					throw Error(`setTeams: Can't equip ${equipmentData.name} on offhand`);
 				}
 			}
-		});
-	}
+		}
+	});
 
-	const serializedUnit = unit.serialize();
+	// const serializedUnit = gameUnit.serialize();
 
-	return unit;
+	return gameUnit;
 }
 
 export function generateRandomItem(tier: number, type: EQUIPMENT_TYPE) {
@@ -109,15 +112,20 @@ export function generateRandomUnitWithEquipment(tier: number): UnitInfo {
 	const unit = new Unit(0, 0);
 	unit.setClass(new Class(Classes[randomClassKey as keyof typeof Classes]));
 
+	const serializedClass = unit.classManager.class.serialize();
+
 	return {
 		className: randomClassKey as keyof typeof Classes,
-		talentTree: unit.classManager.class.serialize().talentTree,
+		talentTrees: serializedClass.talentTrees,
+		utilityNodes: serializedClass.utilityNodes,
 		shopEquipment: [
 			{
 				slot: EQUIPMENT_SLOT.MAIN_HAND,
 				shopEquip: generateRandomItem(tier, EQUIPMENT_TYPE.WEAPON).serialize(),
 			},
 		],
+		level: 1,
+		xp: 0,
 	};
 }
 
@@ -183,4 +191,47 @@ export function generateShop(round: number) {
 	}
 
 	return shop;
+}
+
+export function oldGetUnitData(
+	boardUnit: { id: string; name: string; equipment?: EquipmentInstance[] },
+	owner: number,
+	position: string,
+): Unit {
+	const unit = new Unit(owner, parseInt(position));
+	unit.setClass(new Class(Classes[boardUnit.name as keyof typeof Classes]));
+
+	if (boardUnit?.equipment && boardUnit?.equipment?.length > 0) {
+		boardUnit.equipment.forEach(equipmentData => {
+			if (equipmentData.slots.includes(EQUIPMENT_SLOT.TRINKET)) {
+				if (unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.TRINKET)) {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET_2);
+				} else {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TRINKET);
+				}
+			} else if (equipmentData.slots.includes(EQUIPMENT_SLOT.TWO_HANDS)) {
+				unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.TWO_HANDS);
+			} else {
+				if (!unit.equipmentManager.isSlotOccupied(EQUIPMENT_SLOT.MAIN_HAND)) {
+					unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.MAIN_HAND);
+				} else {
+					if (
+						unit.equipmentManager.canEquipOnSlot(
+							new Equipment(equipmentData),
+							EQUIPMENT_SLOT.OFF_HAND,
+						)
+					) {
+						unit.equip(new Equipment(equipmentData), EQUIPMENT_SLOT.OFF_HAND);
+					} else {
+						console.error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
+						throw new Error(`getUnitData: Can't equip ${equipmentData.name} on offhand`);
+					}
+				}
+			}
+		});
+	}
+
+	const serializedUnit = unit.serialize();
+
+	return unit;
 }

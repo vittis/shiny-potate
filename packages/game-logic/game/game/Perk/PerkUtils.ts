@@ -21,12 +21,13 @@ function filterPerkMods(mods: PossibleMods): Mod<MOD_TYPE.GRANT_PERK>[] {
 	return filterModsByType(mods, MOD_TYPE.GRANT_PERK);
 }
 
-export function getPerksInstancesFromMods(mods: PossibleMods) {
+export function filterAndInstantiatePerksFromMods(mods: PossibleMods) {
 	const perkMods = filterPerkMods(mods);
 
 	return perkMods.map(mod => {
 		const PerkData = getPerkData(mod.payload.name);
-		const tier = mod.tier === "implicit" ? undefined : mod.tier;
+		const tier = mod.tier === "implicit" ? undefined : mod.tier || mod.payload.tier; // todo mod.tier or mod.payload.tier?
+		console.log(tier);
 		return new Perk(PerkData, tier);
 	});
 }

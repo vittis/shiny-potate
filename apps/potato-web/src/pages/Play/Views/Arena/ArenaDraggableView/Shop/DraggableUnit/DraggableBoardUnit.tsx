@@ -19,7 +19,13 @@ const DraggableBoardUnit = ({ boardUnit }: DraggableShopUnitInterface) => {
 		disabled,
 	});
 
-	return <DraggableUnitInfo useDraggableData={draggableData} unit={boardUnit.unit} />;
+	return (
+		<DraggableUnitInfo
+			unitId={boardUnit.id}
+			useDraggableData={draggableData}
+			unitInfo={boardUnit.unit}
+		/>
+	);
 };
 
 export { DraggableBoardUnit };

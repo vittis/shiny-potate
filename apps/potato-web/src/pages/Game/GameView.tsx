@@ -6,13 +6,11 @@ import { useEffect } from "react";
 import { GameSpeedControls } from "./GameSpeedControls";
 import { CopyEventHistoryWidget } from "./CopyEventHistoryWidget";
 import { useQuery } from "@tanstack/react-query";
-import { vanillaTrpc } from "@/services/api/trpc";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { PlayersInfo } from "./PlayersInfo";
-
-export function viewBattle(gameId: string) {
-	return vanillaTrpc.arena.viewBattle.query({ gameId });
-}
+import { Button } from "@/components/ui/button";
+import { viewBattle } from "@/services/features/Arena/useArenaQueries";
+import { ChevronLeft } from "lucide-react";
 
 const GameView = () => {
 	const gameInstance = useGameState(state => state.gameInstance);
@@ -49,6 +47,9 @@ const GameView = () => {
 		};
 	}, []);
 
+	const navigate = useNavigate();
+	const location = useLocation();
+
 	return (
 		<>
 			<App />
@@ -58,6 +59,17 @@ const GameView = () => {
 			<CopyEventHistoryWidget gameData={data} />
 
 			<PlayersInfo />
+
+			<div className="absolute left-4 top-20">
+				<Button
+					disabled={location.key === "default"}
+					onClick={() => navigate(-1)}
+					variant="outline"
+					size="icon"
+				>
+					<ChevronLeft size={30} />
+				</Button>
+			</div>
 		</>
 	);
 };

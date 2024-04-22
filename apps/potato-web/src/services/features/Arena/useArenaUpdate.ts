@@ -7,8 +7,9 @@ import { useMutationState } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import { trpc } from "@/services/api/trpc";
 
-export function setBoard(newBoard: Board) {
-	queryClient.setQueryData(["arena", "my"], (oldData: any) => {
+export function setBoard(argFn: (prevBoard: Board) => Board) {
+	queryClient.setQueryData(["arena", "my"], (oldData: { board: Board }) => {
+		const newBoard = argFn(oldData.board);
 		return {
 			...oldData,
 			board: newBoard,
@@ -18,6 +19,7 @@ export function setBoard(newBoard: Board) {
 	});
 }
 
+// todo do argFn for storage too
 export function setStorage(newStorage: Storage) {
 	queryClient.setQueryData(["arena", "my"], (oldData: any) => {
 		return {
@@ -53,7 +55,7 @@ const useArenaUpdate = () => {
 			if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
 			updateTimeoutRef.current = setTimeout(() => {
 				triggerUpdate();
-			}, 3000);
+			}, 2500);
 		}
 
 		if (isUpdating) {
