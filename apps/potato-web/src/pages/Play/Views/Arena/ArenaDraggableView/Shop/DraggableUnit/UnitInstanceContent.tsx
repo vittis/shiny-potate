@@ -26,13 +26,17 @@ const UnitInstanceContent = ({ unit, unitId, unitInfo }: MarkdownContentProps) =
 					<span className={cn("ml-1 font-mono text-xs font-semibold text-neutral-100")}>T?</span>
 				</div>
 
-				<LevelUnitControls unitId={unitId} unitInfo={unitInfo} />
+				{unitInfo && (
+					<>
+						<LevelUnitControls unitId={unitId} unitInfo={unitInfo} />
 
-				<TalentTreePopover
-					unitId={unitId}
-					utiliyNodes={unitInfo.utilityNodes}
-					talentTrees={unitInfo.talentTrees}
-				/>
+						<TalentTreePopover
+							unitId={unitId}
+							utiliyNodes={unitInfo.utilityNodes}
+							talentTrees={unitInfo.talentTrees}
+						/>
+					</>
+				)}
 			</div>
 
 			<Separator className="my-4" />
@@ -65,11 +69,6 @@ const UnitInstanceContent = ({ unit, unitId, unitInfo }: MarkdownContentProps) =
 										<Badge variant="secondary" className="capitalize">
 											{/* @ts-ignore */}
 											Dmg: {damageEffect.payload?.value}
-										</Badge>
-									)}
-									{ability.data.baseDamage && (
-										<Badge variant="secondary" className="capitalize">
-											Dmg: {ability.data.baseDamage}
 										</Badge>
 									)}
 								</div>

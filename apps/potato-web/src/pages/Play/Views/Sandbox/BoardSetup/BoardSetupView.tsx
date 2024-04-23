@@ -266,8 +266,8 @@ export function BoardSetupView() {
 												content={
 													<UnitInstanceContent
 														unitId={unit.id}
-														talentTrees={[]}
-														utilityNodes={[]}
+														// @ts-ignore
+														unitInfo={undefined}
 														unit={oldGetUnitData(unit, 0, id) as any}
 													/>
 												}
@@ -314,8 +314,8 @@ export function BoardSetupView() {
 												content={
 													<UnitInstanceContent
 														unitId={unit.id}
-														talentTrees={[]}
-														utilityNodes={[]}
+														// @ts-ignore
+														unitInfo={undefined}
 														unit={oldGetUnitData(unit, 0, id) as any}
 													/>
 												}
