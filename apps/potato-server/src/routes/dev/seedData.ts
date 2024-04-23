@@ -145,102 +145,205 @@ export const ROUND_1_BOARD = [
 
 export const ROUND_2_BOARD = [
 	{
+		unit: null,
+		position: "2",
+	},
+	{
 		unit: {
-			id: "Qa5DCvTI",
+			id: "sBck7BqV",
 			unit: {
-				className: "Warlock",
+				xp: 0,
+				level: 1,
+				className: "Paladin",
+				talentTrees: [
+					{
+						name: "Warden",
+						talents: [
+							{
+								id: "lEY-AUQa",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Iron Heart",
+											tier: 1,
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain 1 Iron Heart",
+							},
+							{
+								id: "5v0P6hgr",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Agile Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 5 FAST and 5 FOCUS to self",
+							},
+							{
+								id: "Y7Oh6Zib",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Break Will",
+											tier: 1,
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Break Will spell",
+							},
+							{
+								id: "0I7eEJIy",
+								req: 2,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Vitality Boost",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain 2 Vitality Boost",
+							},
+						],
+					},
+					{
+						name: "Bastion",
+						talents: [
+							{
+								id: "-Z3-X0un",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Bastion Bond",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Bastion Bond spell",
+							},
+							{
+								id: "BPX2Po32",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Sturdy Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 10 STURDY to front ally",
+							},
+							{
+								id: "sJ8M4cZy",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Power Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description:
+									"Blessed Beacon also gives 5 ATTACK POWER and 5 SPELL POTENCY to back ally",
+							},
+							{
+								id: "TonHa01z",
+								req: 3,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Divine Intervention",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain the Divine Intervention spell",
+							},
+						],
+					},
+				],
+				utilityNodes: [
+					{
+						id: "jNgLoFvC",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Fallen Guardian",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Fallen Guardian",
+					},
+					{
+						id: "cRx50B3M",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Vengeful Legacy",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Vengeful Legacy",
+					},
+				],
 				shopEquipment: [
 					{
 						slot: "MAIN_HAND",
 						shopEquip: {
-							id: "k79voU89",
+							id: "Z8NHVK2_",
 							equip: {
-								id: "k79voU89",
+								id: "Z8NHVK2_",
 								mods: [
 									{
 										tier: "implicit",
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 6,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "ECstuFqy",
-							equip: {
-								id: "ECstuFqy",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Ki Focus",
+											name: "Bastion Bond",
 											type: "SPELL",
 										},
 									},
 									{
 										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 0,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 2,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YGBwzoMK",
-							equip: {
-								id: "YGBwzoMK",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Focused Mind",
-											tier: 1,
-										},
-									},
-									{
-										tier: 1,
 										type: "GRANT_PERK",
 										payload: {
 											name: "Desperate Will",
@@ -248,95 +351,8 @@ export const ROUND_2_BOARD = [
 										},
 									},
 								],
-								name: "Brains in a Jar",
-								tags: ["TRINKET", "MAGICAL"],
-								tier: 1,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YP-SWBbm",
-							equip: {
-								id: "YP-SWBbm",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Dagger",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND", "OFF_HAND"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-				],
-			},
-			price: 11,
-			position: "2",
-		},
-		position: "2",
-	},
-	{
-		unit: {
-			id: "gh1P393r",
-			unit: {
-				className: "Rogue",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "OkFNdmwO",
-							equip: {
-								id: "OkFNdmwO",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
+								name: "Wand",
+								tags: ["WEAPON", "MAGICAL", "RANGED"],
 								tier: 0,
 								slots: ["MAIN_HAND"],
 								effects: [],
@@ -344,9 +360,42 @@ export const ROUND_2_BOARD = [
 							price: 2,
 						},
 					},
+					{
+						slot: "OFF_HAND",
+						shopEquip: {
+							id: "KyB6ss9p",
+							equip: {
+								id: "KyB6ss9p",
+								mods: [
+									{
+										tier: "implicit",
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Stab",
+											type: "ATTACK",
+										},
+									},
+									{
+										tier: "implicit",
+										type: "GRANT_PERK",
+										payload: {
+											name: "Venomous Strikes",
+											tier: 1,
+										},
+									},
+								],
+								name: "Venomous Dagger",
+								tags: ["WEAPON", "PHYSICAL"],
+								tier: 0,
+								slots: ["MAIN_HAND", "OFF_HAND"],
+								effects: [],
+							},
+							price: 2,
+						},
+					},
 				],
 			},
-			price: 6,
+			price: 14,
 			position: "1",
 		},
 		position: "1",
@@ -371,574 +420,257 @@ export const ROUND_2_BOARD = [
 
 export const ROUND_3_BOARD = [
 	{
-		unit: {
-			id: "Qa5DCvTI",
-			unit: {
-				className: "Warlock",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "k79voU89",
-							equip: {
-								id: "k79voU89",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 6,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "ECstuFqy",
-							equip: {
-								id: "ECstuFqy",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Ki Focus",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 0,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 2,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YGBwzoMK",
-							equip: {
-								id: "YGBwzoMK",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Focused Mind",
-											tier: 1,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_PERK",
-										payload: {
-											name: "Desperate Will",
-											tier: 1,
-										},
-									},
-								],
-								name: "Brains in a Jar",
-								tags: ["TRINKET", "MAGICAL"],
-								tier: 1,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YP-SWBbm",
-							equip: {
-								id: "YP-SWBbm",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Dagger",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND", "OFF_HAND"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-				],
-			},
-			price: 11,
-			position: "2",
-		},
-		position: "2",
-	},
-	{
 		unit: null,
-		position: "1",
-	},
-	{
-		unit: {
-			id: "gh1P393r",
-			unit: {
-				className: "Rogue",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "OkFNdmwO",
-							equip: {
-								id: "OkFNdmwO",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 0,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 2,
-						},
-					},
-				],
-			},
-			price: 6,
-			position: "0",
-		},
-		position: "0",
-	},
-	{
-		unit: null,
-		position: "5",
-	},
-	{
-		unit: null,
-		position: "4",
-	},
-	{
-		unit: {
-			id: "cFzMdjAQ",
-			unit: {
-				className: "Ranger",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "p5YngUnf",
-							equip: {
-								id: "p5YngUnf",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Slash",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Berserk",
-											tier: 1,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Sword",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND", "OFF_HAND"],
-								effects: [],
-							},
-							price: 6,
-						},
-					},
-				],
-			},
-			price: 8,
-			position: "3",
-		},
-		position: "3",
-	},
-];
-
-export const ROUND_4_BOARD = [
-	{
-		unit: {
-			id: "Qa5DCvTI",
-			unit: {
-				className: "Warlock",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "k79voU89",
-							equip: {
-								id: "k79voU89",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 6,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "ECstuFqy",
-							equip: {
-								id: "ECstuFqy",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Ki Focus",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 0,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 2,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YGBwzoMK",
-							equip: {
-								id: "YGBwzoMK",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Focused Mind",
-											tier: 1,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_PERK",
-										payload: {
-											name: "Desperate Will",
-											tier: 1,
-										},
-									},
-								],
-								name: "Brains in a Jar",
-								tags: ["TRINKET", "MAGICAL"],
-								tier: 1,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YP-SWBbm",
-							equip: {
-								id: "YP-SWBbm",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Dagger",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND", "OFF_HAND"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-				],
-			},
-			price: 11,
-			position: "2",
-		},
 		position: "2",
 	},
 	{
 		unit: {
-			id: "gh1P393r",
+			id: "sBck7BqV",
 			unit: {
-				className: "Rogue",
-				shopEquipment: [
+				xp: 0,
+				level: 1,
+				className: "Paladin",
+				talentTrees: [
 					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "OkFNdmwO",
-							equip: {
-								id: "OkFNdmwO",
+						name: "Warden",
+						talents: [
+							{
+								id: "lEY-AUQa",
+								req: 0,
 								mods: [
 									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
+										type: "GRANT_PERK",
 										payload: {
-											name: "Stab",
-											type: "ATTACK",
+											name: "Iron Heart",
+											tier: 1,
 										},
 									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain 1 Iron Heart",
+							},
+							{
+								id: "5v0P6hgr",
+								req: 0,
+								mods: [
 									{
-										tier: "implicit",
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Agile Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 5 FAST and 5 FOCUS to self",
+							},
+							{
+								id: "Y7Oh6Zib",
+								req: 0,
+								mods: [
+									{
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Reinforce Allies",
+											name: "Break Will",
+											tier: 1,
 											type: "SPELL",
 										},
 									},
 								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 0,
-								slots: ["MAIN_HAND"],
-								effects: [],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Break Will spell",
 							},
-							price: 2,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "t_Cp5U3z",
-							equip: {
-								id: "t_Cp5U3z",
+							{
+								id: "0I7eEJIy",
+								req: 2,
 								mods: [
 									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Ranged Proficiency",
-											tier: 1,
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 10,
-										},
-									},
-									{
-										tier: 2,
 										type: "GRANT_PERK",
 										payload: {
 											name: "Vitality Boost",
-											tier: 2,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "SPELL_COOLDOWN",
-											value: 5,
 										},
 									},
 								],
-								name: "Scout's Eye",
-								tags: ["TRINKET", "RANGED", "PHYSICAL"],
 								tier: 2,
-								slots: ["TRINKET"],
-								effects: [],
+								obtained: false,
+								description: "Gain 2 Vitality Boost",
 							},
-							price: 9,
-						},
+						],
 					},
 					{
-						slot: "TRINKET",
+						name: "Bastion",
+						talents: [
+							{
+								id: "-Z3-X0un",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Bastion Bond",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Bastion Bond spell",
+							},
+							{
+								id: "BPX2Po32",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Sturdy Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 10 STURDY to front ally",
+							},
+							{
+								id: "sJ8M4cZy",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Power Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description:
+									"Blessed Beacon also gives 5 ATTACK POWER and 5 SPELL POTENCY to back ally",
+							},
+							{
+								id: "TonHa01z",
+								req: 3,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Divine Intervention",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain the Divine Intervention spell",
+							},
+						],
+					},
+				],
+				utilityNodes: [
+					{
+						id: "jNgLoFvC",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Fallen Guardian",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Fallen Guardian",
+					},
+					{
+						id: "cRx50B3M",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Vengeful Legacy",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Vengeful Legacy",
+					},
+				],
+				shopEquipment: [
+					{
+						slot: "MAIN_HAND",
 						shopEquip: {
-							id: "48p9tJII",
+							id: "Z8NHVK2_",
 							equip: {
-								id: "48p9tJII",
+								id: "Z8NHVK2_",
 								mods: [
 									{
 										tier: "implicit",
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Ki Focus",
+											name: "Bastion Bond",
 											type: "SPELL",
 										},
 									},
 									{
 										tier: "implicit",
-										type: "GRANT_BASE_STAT",
+										type: "GRANT_PERK",
 										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "SPELL_DAMAGE",
-											value: 5,
+											name: "Desperate Will",
+											tier: 1,
 										},
 									},
 								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 1,
-								slots: ["TRINKET"],
+								name: "Wand",
+								tags: ["WEAPON", "MAGICAL", "RANGED"],
+								tier: 0,
+								slots: ["MAIN_HAND"],
 								effects: [],
 							},
-							price: 4,
+							price: 2,
+						},
+					},
+					{
+						slot: "OFF_HAND",
+						shopEquip: {
+							id: "KyB6ss9p",
+							equip: {
+								id: "KyB6ss9p",
+								mods: [
+									{
+										tier: "implicit",
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Stab",
+											type: "ATTACK",
+										},
+									},
+									{
+										tier: "implicit",
+										type: "GRANT_PERK",
+										payload: {
+											name: "Venomous Strikes",
+											tier: 1,
+										},
+									},
+								],
+								name: "Venomous Dagger",
+								tags: ["WEAPON", "PHYSICAL"],
+								tier: 0,
+								slots: ["MAIN_HAND", "OFF_HAND"],
+								effects: [],
+							},
+							price: 2,
 						},
 					},
 				],
 			},
-			price: 6,
+			price: 14,
 			position: "1",
 		},
 		position: "1",
@@ -952,23 +684,244 @@ export const ROUND_4_BOARD = [
 		position: "5",
 	},
 	{
+		unit: null,
+		position: "4",
+	},
+	{
+		unit: null,
+		position: "3",
+	},
+];
+
+export const ROUND_4_BOARD = [
+	{
+		unit: null,
+		position: "2",
+	},
+	{
 		unit: {
-			id: "cFzMdjAQ",
+			id: "sBck7BqV",
 			unit: {
-				className: "Ranger",
+				xp: 0,
+				level: 1,
+				className: "Paladin",
+				talentTrees: [
+					{
+						name: "Warden",
+						talents: [
+							{
+								id: "lEY-AUQa",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Iron Heart",
+											tier: 1,
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain 1 Iron Heart",
+							},
+							{
+								id: "5v0P6hgr",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Agile Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 5 FAST and 5 FOCUS to self",
+							},
+							{
+								id: "Y7Oh6Zib",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Break Will",
+											tier: 1,
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Break Will spell",
+							},
+							{
+								id: "0I7eEJIy",
+								req: 2,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Vitality Boost",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain 2 Vitality Boost",
+							},
+						],
+					},
+					{
+						name: "Bastion",
+						talents: [
+							{
+								id: "-Z3-X0un",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Bastion Bond",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Bastion Bond spell",
+							},
+							{
+								id: "BPX2Po32",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Sturdy Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 10 STURDY to front ally",
+							},
+							{
+								id: "sJ8M4cZy",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Power Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description:
+									"Blessed Beacon also gives 5 ATTACK POWER and 5 SPELL POTENCY to back ally",
+							},
+							{
+								id: "TonHa01z",
+								req: 3,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Divine Intervention",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain the Divine Intervention spell",
+							},
+						],
+					},
+				],
+				utilityNodes: [
+					{
+						id: "jNgLoFvC",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Fallen Guardian",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Fallen Guardian",
+					},
+					{
+						id: "cRx50B3M",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Vengeful Legacy",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Vengeful Legacy",
+					},
+				],
 				shopEquipment: [
 					{
 						slot: "MAIN_HAND",
 						shopEquip: {
-							id: "p5YngUnf",
+							id: "Z8NHVK2_",
 							equip: {
-								id: "p5YngUnf",
+								id: "Z8NHVK2_",
 								mods: [
 									{
 										tier: "implicit",
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Slash",
+											name: "Bastion Bond",
+											type: "SPELL",
+										},
+									},
+									{
+										tier: "implicit",
+										type: "GRANT_PERK",
+										payload: {
+											name: "Desperate Will",
+											tier: 1,
+										},
+									},
+								],
+								name: "Wand",
+								tags: ["WEAPON", "MAGICAL", "RANGED"],
+								tier: 0,
+								slots: ["MAIN_HAND"],
+								effects: [],
+							},
+							price: 2,
+						},
+					},
+					{
+						slot: "OFF_HAND",
+						shopEquip: {
+							id: "KyB6ss9p",
+							equip: {
+								id: "KyB6ss9p",
+								mods: [
+									{
+										tier: "implicit",
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Stab",
 											type: "ATTACK",
 										},
 									},
@@ -976,33 +929,37 @@ export const ROUND_4_BOARD = [
 										tier: "implicit",
 										type: "GRANT_PERK",
 										payload: {
-											name: "Berserk",
+											name: "Venomous Strikes",
 											tier: 1,
 										},
 									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
 								],
-								name: "Sword",
+								name: "Venomous Dagger",
 								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
+								tier: 0,
 								slots: ["MAIN_HAND", "OFF_HAND"],
 								effects: [],
 							},
-							price: 6,
+							price: 2,
 						},
 					},
 				],
 			},
-			price: 8,
-			position: "4",
+			price: 14,
+			position: "1",
 		},
+		position: "1",
+	},
+	{
+		unit: null,
+		position: "0",
+	},
+	{
+		unit: null,
+		position: "5",
+	},
+	{
+		unit: null,
 		position: "4",
 	},
 	{
@@ -1013,102 +970,205 @@ export const ROUND_4_BOARD = [
 
 export const ROUND_5_BOARD = [
 	{
+		unit: null,
+		position: "2",
+	},
+	{
 		unit: {
-			id: "Qa5DCvTI",
+			id: "sBck7BqV",
 			unit: {
-				className: "Warlock",
+				xp: 0,
+				level: 1,
+				className: "Paladin",
+				talentTrees: [
+					{
+						name: "Warden",
+						talents: [
+							{
+								id: "lEY-AUQa",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Iron Heart",
+											tier: 1,
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain 1 Iron Heart",
+							},
+							{
+								id: "5v0P6hgr",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Agile Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 5 FAST and 5 FOCUS to self",
+							},
+							{
+								id: "Y7Oh6Zib",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Break Will",
+											tier: 1,
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Break Will spell",
+							},
+							{
+								id: "0I7eEJIy",
+								req: 2,
+								mods: [
+									{
+										type: "GRANT_PERK",
+										payload: {
+											name: "Vitality Boost",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain 2 Vitality Boost",
+							},
+						],
+					},
+					{
+						name: "Bastion",
+						talents: [
+							{
+								id: "-Z3-X0un",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Bastion Bond",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Gain the Bastion Bond spell",
+							},
+							{
+								id: "BPX2Po32",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Sturdy Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description: "Blessed Beacon also gives 10 STURDY to front ally",
+							},
+							{
+								id: "sJ8M4cZy",
+								req: 0,
+								mods: [
+									{
+										type: "GRANT_ABILITY_MODIFIER",
+										payload: {
+											name: "Blessed Beacon",
+											modifier: "Power Beacon",
+										},
+									},
+								],
+								tier: 1,
+								obtained: false,
+								description:
+									"Blessed Beacon also gives 5 ATTACK POWER and 5 SPELL POTENCY to back ally",
+							},
+							{
+								id: "TonHa01z",
+								req: 3,
+								mods: [
+									{
+										type: "GRANT_ABILITY",
+										payload: {
+											name: "Divine Intervention",
+											type: "SPELL",
+										},
+									},
+								],
+								tier: 2,
+								obtained: false,
+								description: "Gain the Divine Intervention spell",
+							},
+						],
+					},
+				],
+				utilityNodes: [
+					{
+						id: "jNgLoFvC",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Fallen Guardian",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Fallen Guardian",
+					},
+					{
+						id: "cRx50B3M",
+						mods: [
+							{
+								type: "GRANT_PERK",
+								payload: {
+									name: "Vengeful Legacy",
+									tier: 1,
+								},
+							},
+						],
+						obtained: false,
+						description: "Gain 1 Vengeful Legacy",
+					},
+				],
 				shopEquipment: [
 					{
 						slot: "MAIN_HAND",
 						shopEquip: {
-							id: "k79voU89",
+							id: "Z8NHVK2_",
 							equip: {
-								id: "k79voU89",
+								id: "Z8NHVK2_",
 								mods: [
 									{
 										tier: "implicit",
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 6,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "ECstuFqy",
-							equip: {
-								id: "ECstuFqy",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Ki Focus",
+											name: "Bastion Bond",
 											type: "SPELL",
 										},
 									},
 									{
 										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 0,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 2,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YGBwzoMK",
-							equip: {
-								id: "YGBwzoMK",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Focused Mind",
-											tier: 1,
-										},
-									},
-									{
-										tier: 1,
 										type: "GRANT_PERK",
 										payload: {
 											name: "Desperate Will",
@@ -1116,95 +1176,8 @@ export const ROUND_5_BOARD = [
 										},
 									},
 								],
-								name: "Brains in a Jar",
-								tags: ["TRINKET", "MAGICAL"],
-								tier: 1,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "YP-SWBbm",
-							equip: {
-								id: "YP-SWBbm",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Dagger",
-								tags: ["WEAPON", "PHYSICAL"],
-								tier: 1,
-								slots: ["MAIN_HAND", "OFF_HAND"],
-								effects: [],
-							},
-							price: 5,
-						},
-					},
-				],
-			},
-			price: 11,
-			position: "2",
-		},
-		position: "2",
-	},
-	{
-		unit: {
-			id: "gh1P393r",
-			unit: {
-				className: "Rogue",
-				shopEquipment: [
-					{
-						slot: "MAIN_HAND",
-						shopEquip: {
-							id: "OkFNdmwO",
-							equip: {
-								id: "OkFNdmwO",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Stab",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Reinforce Allies",
-											type: "SPELL",
-										},
-									},
-								],
-								name: "Axe",
-								tags: ["WEAPON", "PHYSICAL"],
+								name: "Wand",
+								tags: ["WEAPON", "MAGICAL", "RANGED"],
 								tier: 0,
 								slots: ["MAIN_HAND"],
 								effects: [],
@@ -1213,98 +1186,41 @@ export const ROUND_5_BOARD = [
 						},
 					},
 					{
-						slot: "TRINKET",
+						slot: "OFF_HAND",
 						shopEquip: {
-							id: "t_Cp5U3z",
+							id: "KyB6ss9p",
 							equip: {
-								id: "t_Cp5U3z",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_PERK",
-										payload: {
-											name: "Ranged Proficiency",
-											tier: 1,
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_COOLDOWN",
-											value: 10,
-										},
-									},
-									{
-										tier: 2,
-										type: "GRANT_PERK",
-										payload: {
-											name: "Vitality Boost",
-											tier: 2,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "SPELL_COOLDOWN",
-											value: 5,
-										},
-									},
-								],
-								name: "Scout's Eye",
-								tags: ["TRINKET", "RANGED", "PHYSICAL"],
-								tier: 2,
-								slots: ["TRINKET"],
-								effects: [],
-							},
-							price: 9,
-						},
-					},
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "48p9tJII",
-							equip: {
-								id: "48p9tJII",
+								id: "KyB6ss9p",
 								mods: [
 									{
 										tier: "implicit",
 										type: "GRANT_ABILITY",
 										payload: {
-											name: "Ki Focus",
-											type: "SPELL",
+											name: "Stab",
+											type: "ATTACK",
 										},
 									},
 									{
 										tier: "implicit",
-										type: "GRANT_BASE_STAT",
+										type: "GRANT_PERK",
 										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 5,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "SPELL_DAMAGE",
-											value: 5,
+											name: "Venomous Strikes",
+											tier: 1,
 										},
 									},
 								],
-								name: "Kame's Lost Sash",
-								tags: ["TRINKET"],
-								tier: 1,
-								slots: ["TRINKET"],
+								name: "Venomous Dagger",
+								tags: ["WEAPON", "PHYSICAL"],
+								tier: 0,
+								slots: ["MAIN_HAND", "OFF_HAND"],
 								effects: [],
 							},
-							price: 4,
+							price: 2,
 						},
 					},
 				],
 			},
-			price: 6,
+			price: 14,
 			position: "1",
 		},
 		position: "1",
@@ -1314,65 +1230,7 @@ export const ROUND_5_BOARD = [
 		position: "0",
 	},
 	{
-		unit: {
-			id: "cFzMdjAQ",
-			unit: {
-				className: "Ranger",
-				shopEquipment: [
-					{
-						slot: "TRINKET",
-						shopEquip: {
-							id: "0EpbMFAL",
-							equip: {
-								id: "0EpbMFAL",
-								mods: [
-									{
-										tier: "implicit",
-										type: "GRANT_ABILITY",
-										payload: {
-											name: "Disarming Shot",
-											type: "ATTACK",
-										},
-									},
-									{
-										tier: "implicit",
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 10,
-										},
-									},
-									{
-										tier: 2,
-										type: "GRANT_BASE_STAT",
-										payload: {
-											stat: "ATTACK_DAMAGE",
-											value: 10,
-										},
-									},
-									{
-										tier: 1,
-										type: "GRANT_PERK",
-										payload: {
-											name: "Vitality Boost",
-											tier: 1,
-										},
-									},
-								],
-								name: "Shortbow",
-								tags: ["WEAPON", "RANGED", "PHYSICAL"],
-								tier: 2,
-								slots: ["MAIN_HAND"],
-								effects: [],
-							},
-							price: 8,
-						},
-					},
-				],
-			},
-			price: 8,
-			position: "5",
-		},
+		unit: null,
 		position: "5",
 	},
 	{

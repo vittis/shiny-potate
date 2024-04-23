@@ -108,10 +108,17 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		}
 		if (effect.type === INSTANT_EFFECT_TYPE.STATUS_EFFECT) {
 			effect.payload.forEach(statusEffect => {
-				this.statusEffectsManager.addStatusEffect({
-					name: statusEffect.name,
-					quantity: statusEffect.quantity,
-				});
+				if (statusEffect.quantity <= 0) {
+					this.statusEffectsManager.removeStatusEffect({
+						name: statusEffect.name,
+						quantity: statusEffect.quantity * -1,
+					});
+				} else {
+					this.statusEffectsManager.addStatusEffect({
+						name: statusEffect.name,
+						quantity: statusEffect.quantity,
+					});
+				}
 			});
 		}
 		if (effect.type === INSTANT_EFFECT_TYPE.DISABLE) {
@@ -150,8 +157,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		if (event.type === "TICK_EFFECT") {
 			const { payload } = event;
 			if (payload.type === "POISON") {
-				this.barsManager.onReceiveDamage(payload.payload.value);
-
 				this.add(
 					addFadingText(this.scene, 0, -50, {
 						text: `-${payload.payload.value}`,
@@ -162,8 +167,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 				);
 			}
 			if (payload.type === "REGEN") {
-				this.barsManager.onReceiveHeal(payload.payload.value);
-
 				this.add(
 					addFadingText(this.scene, 0, -50, {
 						text: `+${payload.payload.value}`,
@@ -174,11 +177,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 				);
 			}
 
-			this.statusEffectsManager.removeStatusEffect({
-				name: payload.type,
-				quantity: payload.payload.decrement,
-			});
-
+			if (onImpact) onImpact();
 			if (onEnd) onEnd();
 		}
 
