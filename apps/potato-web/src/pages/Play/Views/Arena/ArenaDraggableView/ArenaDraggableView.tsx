@@ -12,6 +12,7 @@ import { DroppableStorage } from "./Storage/DroppableStorage";
 import { useArenaQueries } from "@/services/features/Arena/useArenaQueries";
 import { setBoard, setStorage } from "@/services/features/Arena/useArenaUpdate";
 import { BoardContainer } from "./Board/BoardContainer";
+import { toast } from "react-toastify";
 
 interface ArenaDraggableViewProps {
 	shop?: Shop;
@@ -33,6 +34,57 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 	});
 
 	const sensors = useSensors(mouseSensor, touchSensor);
+
+	let checkSubset = (parentArray, subsetArray) => {
+		return subsetArray.every(el => {
+			return parentArray.includes(el);
+		});
+	};
+
+	function getDesiredSlot(equip: ShopEquipInstance, currentEquips: ShopEquipInstance[]) {
+		const possibleSlots = equip.equip.slots;
+		if (currentEquips.length > 0) {
+			const notAvailableSlot: string[] = currentEquips.map(equipment => equipment.slot);
+			if (
+				possibleSlots.includes("TWO_HANDS") &&
+				notAvailableSlot.includes("MAIN_HAND" || "OFF_HAND" || "TWO_HANDS")
+			) {
+				toast.error(`Can't equip ${equip.equip.name}, not available slots.`);
+				return;
+			}
+			if (
+				possibleSlots.includes("MAIN_HAND" || "OFF_HAND") &&
+				notAvailableSlot.includes("TWO_HANDS")
+			) {
+				toast.error(`Can't equip ${equip.equip.name}, not available slots.`);
+				return;
+			}
+			if (
+				possibleSlots.includes("TRINKET") &&
+				notAvailableSlot.includes("TRINKET" && "TRINKET_2")
+			) {
+				toast.error(`Can't equip ${equip.equip.name}, not available slots.`);
+				return;
+			}
+			if (
+				possibleSlots.includes("TRINKET") &&
+				!notAvailableSlot.includes("TRINKET_2") &&
+				notAvailableSlot.includes("TRINKET")
+			) {
+				return "TRINKET_2";
+			}
+
+			if (checkSubset(notAvailableSlot, possibleSlots)) {
+				toast.error(`Can't equip ${equip.equip.name}, not available slots.`);
+				return;
+			} else {
+				const availableSlot = possibleSlots.filter(element => !element.includes(notAvailableSlot));
+				return availableSlot[0];
+			}
+		}
+
+		return possibleSlots[0];
+	}
 
 	function handleDragEnd(event: DragEndEvent) {
 		if (!board || !storage) {
@@ -81,6 +133,23 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 						if (space.position === overPosition) {
 							const boardUnit = space.unit;
 							if (boardUnit) {
+								const desiredSlot = getDesiredSlot(shopEquip, boardUnit.unit.shopEquipment); // todo: fix types
+								if (!desiredSlot && !isFromBoard) {
+									return space;
+								}
+								if (!desiredSlot && isFromBoard) {
+									if (isFromStorage) {
+										const storageEquips = storage?.equips.filter(
+											storageEquip => storageEquip.id !== shopEquip.id,
+										);
+
+										setStorage({
+											units: storage?.units || [],
+											equips: storageEquips || [],
+										});
+									}
+									return space;
+								}
 								return {
 									...space,
 									unit: {
@@ -90,14 +159,13 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 											shopEquipment: [
 												...boardUnit.unit.shopEquipment,
 												// todo dont hardcode TRINKET. do a equip() logic
-												{ slot: "TRINKET" as any, shopEquip },
+												{ slot: desiredSlot as any, shopEquip },
 											],
 										},
 									},
 								};
 							}
 						}
-
 						return space;
 					}),
 				);
@@ -106,6 +174,7 @@ function ArenaDraggableView({ shop }: ArenaDraggableViewProps) {
 					const storageEquips = storage?.equips.filter(
 						storageEquip => storageEquip.id !== shopEquip.id,
 					);
+
 					setStorage({
 						units: storage?.units || [],
 						equips: storageEquips || [],

@@ -7,10 +7,17 @@ interface MarkdownWrapperProps {
 	content?: string;
 	tier?: number;
 	tags?: string[];
+	slots?: string[];
 	onOpenSubTooltip?: () => void;
 }
 
-const MarkdownWrapper = ({ content, tier, tags, onOpenSubTooltip }: MarkdownWrapperProps) => {
+const MarkdownWrapper = ({
+	content,
+	tier,
+	tags,
+	slots,
+	onOpenSubTooltip,
+}: MarkdownWrapperProps) => {
 	if (!content) {
 		return <Loader2 className="mx-auto my-20 w-80 animate-spin" />;
 	}
