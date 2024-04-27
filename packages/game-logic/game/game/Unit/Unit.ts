@@ -135,13 +135,11 @@ export class Unit {
 
 		this.abilityManager.applyCooldownModifierFromStats(this.stats);
 
-		this.triggerManager.addTriggerEffectsFromSource(equip.getTriggerEffects(), equip.id);
-
 		const grantedPerks = equip.getGrantedPerks();
+
 		this.perkManager.addPerksFromSource(grantedPerks, equip.id);
-		grantedPerks.forEach(perk => {
-			this.triggerManager.addTriggerEffectsFromSource(perk.getTriggerEffects(), perk.id);
-		});
+
+		this.triggerManager.updateTriggerEffects(this);
 	}
 
 	unequip(slot: EQUIPMENT_SLOT) {
@@ -154,6 +152,7 @@ export class Unit {
 		});
 
 		this.abilityManager.applyCooldownModifierFromStats(this.stats);
+		this.triggerManager.updateTriggerEffects(this);
 
 		// Put items on storage
 	}
@@ -170,6 +169,8 @@ export class Unit {
 
 		const grantedPerks = unitClass.getPerks();
 		this.perkManager.addPerksFromSource(grantedPerks, unitClass.data.name);
+
+		this.triggerManager.updateTriggerEffects(this);
 	}
 
 	step(stepNumber: number) {

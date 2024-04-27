@@ -9,7 +9,6 @@ export const EquipmentDataSchema = z.object({
 	tags: z.array(z.nativeEnum(EQUIPMENT_TAG)),
 	slots: z.array(z.nativeEnum(EQUIPMENT_SLOT)),
 	mods: PossibleModsSchema,
-	effects: TriggerEffectsSchema,
 }) satisfies z.ZodType<EquipmentData>;
 
 export const EquipmentStatsDataArraySchema = z.array(

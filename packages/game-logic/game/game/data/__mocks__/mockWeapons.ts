@@ -21,7 +21,6 @@ export const MockWeapons = {
         },
       }, */
 		],
-		effects: [],
 	} as EquipmentData,
 	ShortSpear: {
 		name: "Short Spear",
@@ -53,7 +52,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	Sword: {
 		name: "Sword",
@@ -93,7 +91,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	Axe: {
 		name: "Axe",
@@ -107,45 +104,6 @@ export const MockWeapons = {
 					type: "ATTACK",
 				},
 				tier: "implicit",
-			},
-		],
-		effects: [
-			{
-				type: "STATUS_EFFECT",
-				trigger: "ON_HIT",
-				target: "HIT_TARGET",
-				conditions: [],
-				payload: [
-					{
-						name: "VULNERABLE",
-						quantity: 20,
-					},
-				],
-			},
-			{
-				type: "STATUS_EFFECT",
-				trigger: "BATTLE_START",
-				target: "SELF",
-				conditions: [],
-				payload: [
-					{
-						name: "VULNERABLE",
-						quantity: 10,
-					},
-					{
-						name: "ATTACK_POWER",
-						quantity: 10,
-					},
-				],
-			},
-			{
-				type: "DAMAGE",
-				trigger: "BATTLE_START",
-				target: "SELF",
-				conditions: [],
-				payload: {
-					value: 50,
-				},
 			},
 		],
 	} as EquipmentData,
@@ -187,7 +145,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	Longbow: {
 		name: "Longbow",
@@ -219,7 +176,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	Dagger: {
 		name: "Dagger",
@@ -251,7 +207,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	VenomousDagger: {
 		name: "Venomous Dagger",
@@ -275,7 +230,6 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 	Staff: {
 		name: "Staff",
@@ -299,6 +253,5 @@ export const MockWeapons = {
 				tier: "implicit",
 			},
 		],
-		effects: [],
 	} as EquipmentData,
 };

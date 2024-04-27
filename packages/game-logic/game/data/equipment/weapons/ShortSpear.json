@@ -1,13 +1,7 @@
 {
 	"name": "Short Spear",
-	"tags": [
-		"WEAPON",
-		"PHYSICAL",
-		"MAGICAL"
-	],
-	"slots": [
-		"MAIN_HAND"
-	],
+	"tags": ["WEAPON", "PHYSICAL", "MAGICAL"],
+	"slots": ["MAIN_HAND"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
@@ -33,6 +27,5 @@
 			},
 			"tier": "implicit"
 		}
-	],
-	"effects": []
+	]
 }

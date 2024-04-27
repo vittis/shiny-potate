@@ -1,12 +1,7 @@
 {
 	"name": "Axe",
-	"tags": [
-		"WEAPON",
-		"PHYSICAL"
-	],
-	"slots": [
-		"MAIN_HAND"
-	],
+	"tags": ["WEAPON", "PHYSICAL"],
+	"slots": ["MAIN_HAND"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
@@ -24,6 +19,5 @@
 			},
 			"tier": "implicit"
 		}
-	],
-	"effects": []
+	]
 }

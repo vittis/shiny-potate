@@ -31,7 +31,6 @@ export interface EquipmentData {
 	tags: EQUIPMENT_TAG[];
 	slots: EQUIPMENT_SLOT[];
 	mods: PossibleMods;
-	effects: PossibleTriggerEffect[];
 }
 
 // this represents an actual instance of the equipment, generally sent/received to/from client

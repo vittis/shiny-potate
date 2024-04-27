@@ -22,16 +22,17 @@ export class TriggerManager {
 
 	constructor() {}
 
-	addTriggerEffectsFromSource(effects: PossibleTriggerEffect[], sourceId: string) {
-		effects.forEach(effect => {
-			this.triggerEffects.push({ effect, sourceId });
-		});
-	}
+	updateTriggerEffects(unit: Unit) {
+		const perkEffects: ActiveTriggerEffect[] = unit.perks
+			.map(perk =>
+				perk.getTriggerEffects().map(effect => ({
+					effect,
+					sourceId: perk.id,
+				})),
+			)
+			.flat();
 
-	removeTriggerEffectsFromSource(sourceId: string) {
-		this.triggerEffects = this.triggerEffects.filter(
-			triggerEffect => triggerEffect.sourceId !== sourceId,
-		);
+		this.triggerEffects = [...perkEffects];
 	}
 
 	getAllEffectsForTrigger(trigger: TRIGGER) {
