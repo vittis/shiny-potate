@@ -790,5 +790,31 @@ describe("Ability", () => {
 
 			expect(ability.type).toBe(ABILITY_CATEGORY.ATTACK);
 		});
+
+		it("should add and remove COOLDOWN modifier (Constant Gambit => Opening Gambit with cooldown)", () => {
+			const ability = new Ability(Abilities.OpeningGambit);
+
+			expect(ability.cooldown).toBe(0);
+
+			ability.addModifier("Constant Gambit");
+
+			expect(ability.cooldown).toBe(60); // TODO: change to json specific value
+
+			ability.removeModifier("Constant Gambit");
+
+			expect(ability.cooldown).toBe(0);
+		});
+
+		it("should throw error when trying to add or remove a modifier that doesn't exist", () => {
+			const ability = new Ability(Abilities.ReinforceAllies);
+
+			expect(() => ability.addModifier("Reinforce Paul")).toThrowError(
+				"addModifier: modifier Reinforce Paul for ability Reinforce Allies not found",
+			);
+
+			expect(() => ability.removeModifier("Reinforce Paul")).toThrowError(
+				"removeModifier: modifier Reinforce Paul for ability Reinforce Allies not found",
+			);
+		});
 	});
 });

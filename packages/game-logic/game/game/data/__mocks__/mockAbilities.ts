@@ -621,4 +621,47 @@ export const MockAbilities = {
 			},
 		],
 	},
+	OpeningGambit: {
+		name: "Opening Gambit",
+		type: "ATTACK",
+		tags: [],
+		target: "FURTHEST",
+		cooldown: 0,
+		effects: [
+			{
+				type: "DAMAGE",
+				trigger: "ON_HIT",
+				target: "FURTHEST",
+				conditions: [],
+				payload: {
+					value: 50,
+				},
+			},
+			{
+				type: "DISABLE",
+				trigger: "ON_HIT",
+				target: "FURTHEST",
+				conditions: [],
+				payload: [
+					{
+						name: "STUN",
+						duration: 5,
+					},
+				],
+			},
+		],
+		abilityModifiers: [
+			{
+				name: "Constant Gambit",
+				modifiers: [
+					{
+						type: "COOLDOWN",
+						payload: {
+							value: 60,
+						},
+					},
+				],
+			},
+		],
+	},
 };

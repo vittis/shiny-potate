@@ -31,9 +31,9 @@ export class Ability {
 	type: ABILITY_CATEGORY;
 	progress = 0;
 	cooldown = 0;
+	triggers: TRIGGER[] = [];
 	effects: PossibleTriggerEffect[] = [];
 	modifiers: AbilityModifierWithEffects[] = [];
-	triggers: TRIGGER[] = [];
 
 	constructor(data?: AbilityData) {
 		if (!data) {
@@ -46,13 +46,14 @@ export class Ability {
 		this.data = data;
 		this.id = nanoid(8);
 		this.cooldown = data.cooldown;
+		this.triggers = data.triggers || [];
 		this.effects = data.effects;
 		this.target = data.target;
 		this.type = data.type;
 	}
 
 	step() {
-		this.progress += 1;
+		if (this.cooldown !== 0) this.progress += 1;
 	}
 
 	modifyCooldown(modifier: number) {
@@ -63,7 +64,7 @@ export class Ability {
 	}
 
 	canActivate() {
-		return this.progress >= this.cooldown;
+		return this.cooldown !== 0 && this.progress >= this.cooldown;
 	}
 
 	use(unit: Unit, useMultistrike: boolean = false): UseAbilityEvent {
@@ -247,6 +248,14 @@ export class Ability {
 			if (categoryModifiers.length > 0) {
 				this.type = categoryModifiers[0].payload.name;
 			}
+
+			const cooldownModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.COOLDOWN,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.COOLDOWN>[];
+
+			if (cooldownModifiers.length > 0) {
+				this.cooldown = cooldownModifiers[0].payload.value;
+			}
 		}
 	}
 
@@ -291,6 +300,14 @@ export class Ability {
 
 			if (categoryModifiers.length > 0) {
 				this.type = this.data.type;
+			}
+
+			const cooldownModifiers = modifier.modifiers.filter(
+				mod => mod.type === ABILITY_MOD_TYPES.COOLDOWN,
+			) as AbilityModifierMod<ABILITY_MOD_TYPES.COOLDOWN>[];
+
+			if (cooldownModifiers.length > 0) {
+				this.cooldown = this.data.cooldown;
 			}
 		}
 	}
