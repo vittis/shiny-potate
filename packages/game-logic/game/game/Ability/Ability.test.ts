@@ -19,7 +19,6 @@ import { runGame } from "../Game";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
-import { StatusEffectPayload } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import { Abilities, Classes, Weapons } from "../data";
 import { Ability } from "./Ability";

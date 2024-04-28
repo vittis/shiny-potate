@@ -55,8 +55,11 @@ export class Ability {
 		this.progress += 1;
 	}
 
-	modifyCooldown(value: number) {
-		this.cooldown = Math.round(this.data.cooldown - this.data.cooldown * (value / 100));
+	modifyCooldown(modifier: number) {
+		const progressRatio = this.progress / this.cooldown;
+
+		this.cooldown = Math.round(this.data.cooldown / (1 + modifier / 100));
+		this.progress = Math.round(progressRatio * this.cooldown);
 	}
 
 	canActivate() {

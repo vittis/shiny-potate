@@ -299,9 +299,7 @@ describe("StatusEffect", () => {
 			bm.addToBoard(unit);
 
 			expect(unit.stats.attackCooldownModifier).toBe(15);
-			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(Abilities.Stab.cooldown - Abilities.Stab.cooldown * (15 / 100)),
-			);
+			expect(unit.abilities[0].cooldown).toBe(Math.round(Abilities.Stab.cooldown / (1 + 15 / 100)));
 
 			const fastQuantity = 10;
 
@@ -320,7 +318,7 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(Abilities.Stab.cooldown - Abilities.Stab.cooldown * ((15 + fastQuantity) / 100)),
+				Math.round(Abilities.Stab.cooldown / (1 + (15 + fastQuantity) / 100)),
 			);
 
 			unit.applyEffect(fastEffect);
@@ -328,9 +326,7 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(
-					Abilities.Stab.cooldown - Abilities.Stab.cooldown * ((15 + fastQuantity * 3) / 100),
-				),
+				Math.round(Abilities.Stab.cooldown / (1 + (15 + fastQuantity * 3) / 100)),
 			);
 		});
 
@@ -361,9 +357,7 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(focusQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(
-					Abilities.Fireball.cooldown - Abilities.Fireball.cooldown * (focusQuantity / 100),
-				),
+				Math.round(Abilities.Fireball.cooldown / (1 + focusQuantity / 100)),
 			);
 
 			unit.applyEffect(focusEffect);
@@ -371,9 +365,7 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(focusQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(
-					Abilities.Fireball.cooldown - Abilities.Fireball.cooldown * ((focusQuantity * 3) / 100),
-				),
+				Math.round(Abilities.Fireball.cooldown / (1 + (focusQuantity * 3) / 100)),
 			);
 		});
 
@@ -388,9 +380,7 @@ describe("StatusEffect", () => {
 			expect(unit.stats.spellCooldownModifier).toBe(0);
 			expect(unit.stats.attackCooldownModifier).toBe(15);
 			expect(unit.abilities[0].cooldown).toBe(Math.round(Abilities.BastionBond.cooldown));
-			expect(unit.abilities[1].cooldown).toBe(
-				Math.round(Abilities.Stab.cooldown - Abilities.Stab.cooldown * (15 / 100)),
-			);
+			expect(unit.abilities[1].cooldown).toBe(Math.round(Abilities.Stab.cooldown / (1 + 15 / 100)));
 
 			const slowQuantity = 10;
 
@@ -409,15 +399,11 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(
-					Abilities.BastionBond.cooldown + Abilities.BastionBond.cooldown * (slowQuantity / 100),
-				),
+				Math.round(Abilities.BastionBond.cooldown / (1 - slowQuantity / 100)),
 			);
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity);
 			expect(unit.abilities[1].cooldown).toBe(
-				Math.round(
-					Abilities.Stab.cooldown + Abilities.Stab.cooldown * (((15 - slowQuantity) * -1) / 100),
-				),
+				Math.round(Abilities.Stab.cooldown / (1 + (15 - slowQuantity) / 100)),
 			);
 
 			unit.applyEffect(slowEffect);
@@ -425,17 +411,11 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(
-					Abilities.BastionBond.cooldown +
-						Abilities.BastionBond.cooldown * ((slowQuantity * 3) / 100),
-				),
+				Math.round(Abilities.BastionBond.cooldown / (1 - (slowQuantity * 3) / 100)),
 			);
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity * 3);
 			expect(unit.abilities[1].cooldown).toBe(
-				Math.round(
-					Abilities.Stab.cooldown +
-						Abilities.Stab.cooldown * (((15 - slowQuantity * 3) * -1) / 100),
-				),
+				Math.round(Abilities.Stab.cooldown / (1 + (15 - slowQuantity * 3) / 100)),
 			);
 		});
 
@@ -493,72 +473,136 @@ describe("StatusEffect", () => {
 			);
 		});
 
-		describe("TAUNT", () => {
-			it("STANDARD target should focus unit with TAUNT even if it's furthest", () => {
-				const bm = new BoardManager();
-				const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
-				const unitCloser = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
-				const unitFurther = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
+		it("should correctly update cooldown progress when attackCooldownModifier is affected by FAST and SLOW", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 
-				bm.addToBoard(unit);
-				bm.addToBoard(unitCloser);
-				bm.addToBoard(unitFurther);
+			unit.equip(new Equipment(Weapons.Dagger), EQUIPMENT_SLOT.MAIN_HAND);
+			bm.addToBoard(unit);
 
-				const ability = new Ability(Abilities.Stab);
-				const eventBeforeTaunt = ability.use(unit);
+			expect(unit.stats.attackCooldownModifier).toBe(15);
+			expect(unit.abilities[0].cooldown).toBe(Math.round(Abilities.Stab.cooldown / (1 + 15 / 100)));
+			expect(unit.abilities[0].progress).toBe(0);
 
-				expect(eventBeforeTaunt.payload.targetsId).toContain(unitCloser.id);
-				expect(eventBeforeTaunt.payload.targetsId).not.toContain(unitFurther.id);
+			const stepQuantity = 20;
 
-				unitFurther.statusEffectManager.applyStatusEffect({
-					name: STATUS_EFFECT.TAUNT,
-					quantity: 1,
-				});
+			for (let i = 0; i < stepQuantity; i++) unit.step(i);
 
-				const eventAfterTaunt = ability.use(unit);
+			expect(unit.abilities[0].progress).toBe(stepQuantity);
 
-				expect(eventAfterTaunt.payload.targetsId).not.toContain(unitCloser.id);
-				expect(eventAfterTaunt.payload.targetsId).toContain(unitFurther.id);
-			});
+			const fastQuantity = 60;
+			const slowQuantity = 25;
 
-			it("when hit main target with TAUNT should lose taunt stack", () => {
-				const bm = new BoardManager();
-				const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
-				const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
-
-				bm.addToBoard(unit);
-				bm.addToBoard(unit2);
-
-				unit2.statusEffectManager.applyStatusEffect({
-					name: STATUS_EFFECT.TAUNT,
-					quantity: 1,
-				});
-
-				expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeTruthy();
-
-				const ability = new Ability(Abilities.Stab);
-				const event = ability.use(unit);
-
-				expect(event.payload.subEvents.length).toBe(2);
-				expect(event.payload.subEvents[0].payload.type).toBe(INSTANT_EFFECT_TYPE.DAMAGE);
-				expect(event.payload.subEvents[1]).toEqual({
-					type: "INSTANT_EFFECT",
-					payload: {
-						type: "STATUS_EFFECT",
-						targetId: unit2.id,
-						payload: [
-							{
-								name: "TAUNT",
-								quantity: -1,
-							},
-						],
+			const fastEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "FAST",
+						quantity: fastQuantity,
 					},
-				});
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
+			const slowEffect = {
+				type: "STATUS_EFFECT",
+				targetId: unit.id,
+				payload: [
+					{
+						name: "SLOW",
+						quantity: slowQuantity,
+					},
+				],
+			} as Effect<INSTANT_EFFECT_TYPE.STATUS_EFFECT>;
 
-				executeStepEffects(bm, getStepEffects([event]));
+			let progressRatio = unit.abilities[0].progress / unit.abilities[0].cooldown;
+			let expectedCooldown = Math.round(Abilities.Stab.cooldown / (1 + (15 + fastQuantity) / 100));
+			let expectedProgress = Math.round(progressRatio * expectedCooldown);
 
-				expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeFalsy();
+			unit.applyEffect(fastEffect);
+
+			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity);
+			expect(unit.abilities[0].cooldown).toBe(expectedCooldown);
+			expect(unit.abilities[0].progress).toBe(expectedProgress);
+
+			progressRatio = unit.abilities[0].progress / unit.abilities[0].cooldown;
+			expectedCooldown = Math.round(
+				Abilities.Stab.cooldown / (1 + (15 + fastQuantity - slowQuantity) / 100),
+			);
+			expectedProgress = Math.round(progressRatio * expectedCooldown);
+
+			unit.applyEffect(slowEffect);
+
+			expect(unit.stats.attackCooldownModifier).toBe(15 + fastQuantity - slowQuantity);
+			expect(unit.abilities[0].cooldown).toBe(expectedCooldown);
+			expect(unit.abilities[0].progress).toBe(expectedProgress);
+		});
+	});
+
+	describe("TAUNT", () => {
+		it("STANDARD target should focus unit with TAUNT even if it's furthest", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unitCloser = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
+			const unitFurther = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
+
+			bm.addToBoard(unit);
+			bm.addToBoard(unitCloser);
+			bm.addToBoard(unitFurther);
+
+			const ability = new Ability(Abilities.Stab);
+			const eventBeforeTaunt = ability.use(unit);
+
+			expect(eventBeforeTaunt.payload.targetsId).toContain(unitCloser.id);
+			expect(eventBeforeTaunt.payload.targetsId).not.toContain(unitFurther.id);
+
+			unitFurther.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.TAUNT,
+				quantity: 1,
 			});
+
+			const eventAfterTaunt = ability.use(unit);
+
+			expect(eventAfterTaunt.payload.targetsId).not.toContain(unitCloser.id);
+			expect(eventAfterTaunt.payload.targetsId).toContain(unitFurther.id);
+		});
+
+		it("when hit main target with TAUNT should lose taunt stack", () => {
+			const bm = new BoardManager();
+			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_BACK, bm);
+
+			bm.addToBoard(unit);
+			bm.addToBoard(unit2);
+
+			unit2.statusEffectManager.applyStatusEffect({
+				name: STATUS_EFFECT.TAUNT,
+				quantity: 1,
+			});
+
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeTruthy();
+
+			const ability = new Ability(Abilities.Stab);
+			const event = ability.use(unit);
+
+			expect(event.payload.subEvents.length).toBe(2);
+			expect(event.payload.subEvents[0].payload.type).toBe(INSTANT_EFFECT_TYPE.DAMAGE);
+			expect(event.payload.subEvents[1]).toEqual({
+				type: "INSTANT_EFFECT",
+				payload: {
+					type: "STATUS_EFFECT",
+					targetId: unit2.id,
+					payload: [
+						{
+							name: "TAUNT",
+							quantity: -1,
+						},
+					],
+				},
+			});
+
+			executeStepEffects(bm, getStepEffects([event]));
+
+			expect(unit2.statusEffectManager.hasStatusEffect(STATUS_EFFECT.TAUNT)).toBeFalsy();
 		});
 	});
 });
