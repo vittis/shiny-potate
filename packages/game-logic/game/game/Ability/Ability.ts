@@ -22,7 +22,11 @@ import { getAllTargetUnits } from "../Target/TargetUtils";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { canUseEffect } from "../Trigger/ConditionUtils";
-import { getEffectsFromModifiers, isUniqueAbilityModifier } from "./AbilityUtils";
+import {
+	calculateCooldown,
+	getEffectsFromModifiers,
+	isUniqueAbilityModifier,
+} from "./AbilityUtils";
 
 export class Ability {
 	id: string;
@@ -30,6 +34,7 @@ export class Ability {
 	target: TARGET_TYPE;
 	type: ABILITY_CATEGORY;
 	progress = 0;
+	baseCooldown = 0;
 	cooldown = 0;
 	triggers: TRIGGER[] = [];
 	effects: PossibleTriggerEffect[] = [];
@@ -45,6 +50,7 @@ export class Ability {
 		/* const parsedData = AbilityDataSchema.parse(data); */
 		this.data = data;
 		this.id = nanoid(8);
+		this.baseCooldown = data.cooldown;
 		this.cooldown = data.cooldown;
 		this.triggers = data.triggers || [];
 		this.effects = data.effects;
@@ -59,7 +65,7 @@ export class Ability {
 	modifyCooldown(modifier: number) {
 		const progressRatio = this.progress / this.cooldown;
 
-		this.cooldown = Math.round(this.data.cooldown / (1 + modifier / 100));
+		this.cooldown = calculateCooldown(this.baseCooldown, modifier);
 		this.progress = Math.round(progressRatio * this.cooldown);
 	}
 
@@ -254,6 +260,7 @@ export class Ability {
 			) as AbilityModifierMod<ABILITY_MOD_TYPES.COOLDOWN>[];
 
 			if (cooldownModifiers.length > 0) {
+				this.baseCooldown = cooldownModifiers[0].payload.value;
 				this.cooldown = cooldownModifiers[0].payload.value;
 			}
 		}
@@ -307,6 +314,7 @@ export class Ability {
 			) as AbilityModifierMod<ABILITY_MOD_TYPES.COOLDOWN>[];
 
 			if (cooldownModifiers.length > 0) {
+				this.baseCooldown = this.data.cooldown;
 				this.cooldown = this.data.cooldown;
 			}
 		}

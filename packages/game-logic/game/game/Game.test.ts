@@ -1,8 +1,7 @@
-import { Game } from "../../dist";
 import { BoardManager, OWNER, POSITION } from "./BoardManager";
 import { Equipment } from "./Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "./Equipment/EquipmentTypes";
-import { UnitsDTO, runGame } from "./Game";
+import { Game, UnitsDTO, runGame } from "./Game";
 import { Unit } from "./Unit/Unit";
 import { Weapons } from "./data";
 
@@ -30,11 +29,11 @@ describe("Run Game", () => {
 	});
 
 	describe("EVENTS", () => {
-		it("generate BATTLE_START events (From AXE)", () => {
+		it("generate BATTLE_START events (From WAND)", () => {
 			const bm = new BoardManager();
 
 			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
-			unit1.equip(new Equipment(Weapons.Axe), EQUIPMENT_SLOT.MAIN_HAND);
+			unit1.equip(new Equipment(Weapons.Wand), EQUIPMENT_SLOT.MAIN_HAND);
 			bm.addToBoard(unit1);
 
 			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);

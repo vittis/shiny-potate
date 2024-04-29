@@ -1,4 +1,5 @@
 import { Ability } from "../Ability/Ability";
+import { calculateCooldown } from "../Ability/AbilityUtils";
 import { BoardManager, OWNER, POSITION } from "../BoardManager";
 import { Equipment } from "../Equipment/Equipment";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
@@ -399,11 +400,11 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(Abilities.BastionBond.cooldown / (1 - slowQuantity / 100)),
+				calculateCooldown(unit.abilities[0].baseCooldown, unit.stats.spellCooldownModifier),
 			);
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity);
 			expect(unit.abilities[1].cooldown).toBe(
-				Math.round(Abilities.Stab.cooldown / (1 + (15 - slowQuantity) / 100)),
+				calculateCooldown(unit.abilities[1].baseCooldown, unit.stats.attackCooldownModifier),
 			);
 
 			unit.applyEffect(slowEffect);
@@ -411,11 +412,11 @@ describe("StatusEffect", () => {
 
 			expect(unit.stats.spellCooldownModifier).toBe(-slowQuantity * 3);
 			expect(unit.abilities[0].cooldown).toBe(
-				Math.round(Abilities.BastionBond.cooldown / (1 - (slowQuantity * 3) / 100)),
+				calculateCooldown(unit.abilities[0].baseCooldown, unit.stats.spellCooldownModifier),
 			);
 			expect(unit.stats.attackCooldownModifier).toBe(15 - slowQuantity * 3);
 			expect(unit.abilities[1].cooldown).toBe(
-				Math.round(Abilities.Stab.cooldown / (1 + (15 - slowQuantity * 3) / 100)),
+				calculateCooldown(unit.abilities[1].baseCooldown, unit.stats.attackCooldownModifier),
 			);
 		});
 

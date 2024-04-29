@@ -10,12 +10,7 @@ import { EVENT_TYPE, SubEvent, TriggerEffectEvent } from "../Event/EventTypes";
 import { getSpecificPerkEffect } from "../Perk/PerkUtils";
 import { Unit } from "../Unit/Unit";
 import { canUseEffect } from "./ConditionUtils";
-import {
-	ActiveTriggerEffect,
-	PossibleTriggerEffect,
-	TRIGGER,
-	TRIGGER_EFFECT_TYPE,
-} from "./TriggerTypes";
+import { ActiveTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "./TriggerTypes";
 
 export class TriggerManager {
 	triggerEffects: ActiveTriggerEffect[] = [];
