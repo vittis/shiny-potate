@@ -317,4 +317,38 @@ export const MockPerks = {
 			},
 		],
 	} as PerkData,
+	IronHeart: {
+		name: "Iron Heart",
+		type: "TIER_SCALE",
+		tags: [
+			{
+				name: "WEAPON",
+				weight: 1,
+			},
+			{
+				name: "PHYSICAL",
+				weight: 3,
+			},
+		],
+		tiers: [
+			{
+				name: "STURDY",
+				values: [2, 4, 6, 8, 10],
+			},
+		],
+		effects: [
+			{
+				type: "STATUS_EFFECT",
+				trigger: "ON_HIT",
+				target: "SELF",
+				conditions: [],
+				payload: [
+					{
+						name: "STURDY",
+						quantity: "DYNAMIC",
+					},
+				],
+			},
+		],
+	},
 };

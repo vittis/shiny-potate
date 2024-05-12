@@ -37,16 +37,9 @@ const EquipmentMarkdownContent = ({
 			<MarkdownWrapper
 				content={equipToMarkdown(equip)}
 				tier={equip?.tier}
-				tags={equip?.tags}
+				tags={[...equip?.tags, ...equip?.slots]}
 				onOpenSubTooltip={onOpenSubTooltip}
 			/>
-
-			<Separator />
-
-			{equip?.slots &&
-				equip?.slots?.map(slot => {
-					return <div key={slot}> {slot}</div>;
-				})}
 		</>
 	);
 };
