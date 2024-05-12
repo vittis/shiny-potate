@@ -37,7 +37,7 @@ const EquipmentMarkdownContent = ({
 			<MarkdownWrapper
 				content={equipToMarkdown(equip)}
 				tier={equip?.tier}
-				tags={[...equip?.tags, ...equip?.slots]}
+				tags={[...equip?.tags, ...equip?.slots.map(slot => `Slot: ${slot}`)]}
 				onOpenSubTooltip={onOpenSubTooltip}
 			/>
 		</>
