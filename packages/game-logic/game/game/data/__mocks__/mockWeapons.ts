@@ -206,6 +206,14 @@ export const MockWeapons = {
 				},
 				tier: "implicit",
 			},
+			{
+				type: "GRANT_PERK",
+				payload: {
+					name: "Iron Heart",
+					tier: 1,
+				},
+				tier: "implicit",
+			},
 		],
 	} as EquipmentData,
 	VenomousDagger: {
