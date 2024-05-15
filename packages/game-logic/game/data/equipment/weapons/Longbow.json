@@ -1,13 +1,7 @@
 {
 	"name": "Longbow",
-	"tags": [
-		"WEAPON",
-		"PHYSICAL",
-		"RANGED"
-	],
-	"slots": [
-		"TWO_HANDS"
-	],
+	"tags": ["WEAPON", "PHYSICAL", "RANGED"],
+	"slots": ["TWO_HANDS"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
@@ -25,6 +19,5 @@
 			},
 			"tier": "implicit"
 		}
-	],
-	"effects": []
+	]
 }

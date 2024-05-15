@@ -19,11 +19,11 @@ import { runGame } from "../Game";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
-import { StatusEffectPayload } from "../Trigger/TriggerTypes";
 import { Unit } from "../Unit/Unit";
 import { Abilities, Classes, Weapons } from "../data";
 import { Ability } from "./Ability";
 import { ABILITY_CATEGORY } from "./AbilityTypes";
+import { calculateCooldown } from "./AbilityUtils";
 
 function setupBoard() {
 	const bm = new BoardManager();
@@ -790,6 +790,66 @@ describe("Ability", () => {
 			ability.removeModifier("Quick Spell");
 
 			expect(ability.type).toBe(ABILITY_CATEGORY.ATTACK);
+		});
+
+		it("should add and remove COOLDOWN modifier (Constant Gambit => Opening Gambit with cooldown)", () => {
+			const ability = new Ability(Abilities.OpeningGambit);
+
+			expect(ability.cooldown).toBe(0);
+
+			ability.addModifier("Constant Gambit");
+
+			expect(ability.cooldown).toBe(60); // TODO: change to json specific value
+
+			ability.removeModifier("Constant Gambit");
+
+			expect(ability.cooldown).toBe(0);
+		});
+
+		it("should throw error when trying to add or remove a modifier that doesn't exist", () => {
+			const ability = new Ability(Abilities.ReinforceAllies);
+
+			expect(() => ability.addModifier("Reinforce Paul")).toThrowError(
+				"addModifier: modifier Reinforce Paul for ability Reinforce Allies not found",
+			);
+
+			expect(() => ability.removeModifier("Reinforce Paul")).toThrowError(
+				"removeModifier: modifier Reinforce Paul for ability Reinforce Allies not found",
+			);
+		});
+	});
+
+	describe("Ability Utils", () => {
+		it("calculateCooldown", () => {
+			const cooldown = 100;
+
+			expect(calculateCooldown(cooldown, 400)).toBe(20);
+			expect(calculateCooldown(cooldown, 200)).toBe(33);
+			expect(calculateCooldown(cooldown, 100)).toBe(50);
+			expect(calculateCooldown(cooldown, 90)).toBe(53);
+			expect(calculateCooldown(cooldown, 80)).toBe(56);
+			expect(calculateCooldown(cooldown, 70)).toBe(59);
+			expect(calculateCooldown(cooldown, 60)).toBe(63);
+			expect(calculateCooldown(cooldown, 50)).toBe(67);
+			expect(calculateCooldown(cooldown, 40)).toBe(71);
+			expect(calculateCooldown(cooldown, 30)).toBe(77);
+			expect(calculateCooldown(cooldown, 20)).toBe(83);
+			expect(calculateCooldown(cooldown, 10)).toBe(91);
+			expect(calculateCooldown(cooldown, 1)).toBe(99);
+			expect(calculateCooldown(cooldown, 0)).toBe(100);
+			expect(calculateCooldown(cooldown, -1)).toBe(101);
+			expect(calculateCooldown(cooldown, -10)).toBe(110);
+			expect(calculateCooldown(cooldown, -20)).toBe(120);
+			expect(calculateCooldown(cooldown, -30)).toBe(130);
+			expect(calculateCooldown(cooldown, -40)).toBe(140);
+			expect(calculateCooldown(cooldown, -50)).toBe(150);
+			expect(calculateCooldown(cooldown, -60)).toBe(160);
+			expect(calculateCooldown(cooldown, -70)).toBe(170);
+			expect(calculateCooldown(cooldown, -80)).toBe(180);
+			expect(calculateCooldown(cooldown, -90)).toBe(190);
+			expect(calculateCooldown(cooldown, -100)).toBe(200);
+			expect(calculateCooldown(cooldown, -200)).toBe(300);
+			expect(calculateCooldown(cooldown, -400)).toBe(500);
 		});
 	});
 });

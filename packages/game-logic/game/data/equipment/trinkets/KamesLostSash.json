@@ -1,11 +1,7 @@
 {
 	"name": "Kame's Lost Sash",
-	"tags": [
-		"TRINKET"
-	],
-	"slots": [
-		"TRINKET"
-	],
+	"tags": ["TRINKET"],
+	"slots": ["TRINKET"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
@@ -23,6 +19,5 @@
 			},
 			"tier": "implicit"
 		}
-	],
-	"effects": []
+	]
 }

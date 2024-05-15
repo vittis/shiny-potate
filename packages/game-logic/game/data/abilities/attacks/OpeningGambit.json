@@ -3,7 +3,7 @@
 	"type": "ATTACK",
 	"tags": [],
 	"target": "FURTHEST",
-	"cooldown": 100,
+	"cooldown": 0,
 	"effects": [
 		{
 			"type": "DAMAGE",
@@ -32,9 +32,9 @@
 			"name": "Constant Gambit",
 			"modifiers": [
 				{
-					"type": "TRIGGER",
+					"type": "COOLDOWN",
 					"payload": {
-						"name": "BATTLE_START"
+						"value": 60
 					}
 				}
 			]

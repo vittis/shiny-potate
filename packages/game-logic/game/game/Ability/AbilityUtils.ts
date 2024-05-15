@@ -79,3 +79,15 @@ export function getEffectsFromModifiers(
 
 	return effects;
 }
+
+export function calculateCooldown(cooldown: number, cooldownModifier: number): number {
+	if (cooldown <= 0) return 0;
+
+	const sign = cooldownModifier < 0 ? -1 : 1;
+
+	if (sign === 1) {
+		return Math.round(cooldown / (1 + Math.abs(cooldownModifier) / 100));
+	} else {
+		return Math.round(cooldown + (cooldown * Math.abs(cooldownModifier)) / 100);
+	}
+}

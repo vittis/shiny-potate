@@ -3,6 +3,8 @@ import { PerkDataSchema } from "./PerkSchema";
 import { PERK_TYPE, PerkData } from "./PerkTypes";
 import { PossibleTriggerEffect, TRIGGER_EFFECT_TYPE } from "../Trigger/TriggerTypes";
 
+const MAX_PERK_TIER = 5;
+
 export class Perk {
 	id: string;
 	data: PerkData;
@@ -17,7 +19,7 @@ export class Perk {
 		}
 		const parsedData = PerkDataSchema.parse(data);
 		if (tier) {
-			this.tier = tier;
+			this.tier = Math.min(tier, MAX_PERK_TIER);
 		}
 		this.data = parsedData;
 		this.id = nanoid(8);
@@ -80,5 +82,9 @@ export class Perk {
 				};
 			}
 		}) as PossibleTriggerEffect[];
+	}
+
+	updateTier(tier: number) {
+		this.tier = Math.min(tier, MAX_PERK_TIER);
 	}
 }

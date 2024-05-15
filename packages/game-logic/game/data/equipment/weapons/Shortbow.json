@@ -1,13 +1,7 @@
 {
 	"name": "Shortbow",
-	"tags": [
-		"WEAPON",
-		"RANGED",
-		"PHYSICAL"
-	],
-	"slots": [
-		"MAIN_HAND"
-	],
+	"tags": ["WEAPON", "RANGED", "PHYSICAL"],
+	"slots": ["MAIN_HAND"],
 	"mods": [
 		{
 			"type": "GRANT_ABILITY",
@@ -25,6 +19,5 @@
 			},
 			"tier": "implicit"
 		}
-	],
-	"effects": []
+	]
 }

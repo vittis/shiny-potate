@@ -36,9 +36,7 @@ export class AbilityManager {
 
 	applyCooldownModifierFromStats(stats: UnitStats) {
 		this.activeAbilities.forEach(({ ability }) => {
-			const isAttack = ability.data.type === ABILITY_CATEGORY.ATTACK;
-
-			if (isAttack) {
+			if (ability.isAttack()) {
 				ability.modifyCooldown(stats.attackCooldownModifier);
 			} else {
 				ability.modifyCooldown(stats.spellCooldownModifier);

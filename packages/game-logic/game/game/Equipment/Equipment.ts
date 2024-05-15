@@ -61,10 +61,6 @@ export class Equipment {
 		return filterAndInstantiatePerksFromMods(this.getMods());
 	}
 
-	getTriggerEffects() {
-		return this.data.effects;
-	}
-
 	serialize(): EquipmentInstance {
 		return {
 			...this.data,

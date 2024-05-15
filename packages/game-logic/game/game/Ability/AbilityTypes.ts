@@ -21,6 +21,7 @@ export enum ABILITY_MOD_TYPES {
 	TRIGGER = "TRIGGER",
 	CATEGORY = "CATEGORY",
 	TARGET = "TARGET",
+	COOLDOWN = "COOLDOWN",
 	DAMAGE = "DAMAGE",
 	HEAL = "HEAL",
 	SHIELD = "SHIELD",
@@ -35,6 +36,7 @@ export interface AbilityData {
 	tags: ABILITY_TAG[];
 	target: TARGET_TYPE;
 	cooldown: number;
+	triggers?: TRIGGER[];
 	effects: PossibleTriggerEffect[];
 	abilityModifiers?: AbilityModifier[];
 }
@@ -55,7 +57,8 @@ export type AbilityModifierPossibleMods =
 	| AbilityModifierPossibleEffectMods
 	| AbilityModifierMod<ABILITY_MOD_TYPES.TRIGGER>
 	| AbilityModifierMod<ABILITY_MOD_TYPES.CATEGORY>
-	| AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>;
+	| AbilityModifierMod<ABILITY_MOD_TYPES.TARGET>
+	| AbilityModifierMod<ABILITY_MOD_TYPES.COOLDOWN>;
 
 export type AbilityModifierPossibleEffectMods =
 	| AbilityModifierMod<ABILITY_MOD_TYPES.DAMAGE>
@@ -73,6 +76,7 @@ export type AbilityModifierPayloadMap = {
 	[ABILITY_MOD_TYPES.TRIGGER]: AbilityModifierTriggerPayload;
 	[ABILITY_MOD_TYPES.CATEGORY]: AbilityModifierCategoryPayload;
 	[ABILITY_MOD_TYPES.TARGET]: AbilityModifierTargetPayload;
+	[ABILITY_MOD_TYPES.COOLDOWN]: AbilityModifierCooldownPayload;
 	[ABILITY_MOD_TYPES.DAMAGE]: AbilityModifierDamagePayload;
 	[ABILITY_MOD_TYPES.HEAL]: AbilityModifierHealPayload;
 	[ABILITY_MOD_TYPES.SHIELD]: AbilityModifierShieldPayload;
@@ -85,8 +89,16 @@ export interface AbilityModifierTriggerPayload {
 	remove?: boolean;
 }
 
+export interface AbilityModifierCategoryPayload {
+	name: ABILITY_CATEGORY;
+}
+
 export interface AbilityModifierTargetPayload {
 	name: TARGET_TYPE;
+}
+
+export interface AbilityModifierCooldownPayload {
+	value: number;
 }
 
 export interface AbilityModifierStatusEffectPayload {
@@ -119,10 +131,6 @@ export interface AbilityModifierShieldPayload {
 	target: TARGET_TYPE;
 	value: number;
 	remove?: boolean;
-}
-
-export interface AbilityModifierCategoryPayload {
-	name: ABILITY_CATEGORY;
 }
 
 export type AbilityModifierWithEffects = AbilityModifier & {
