@@ -140,7 +140,7 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 		});
 
 		if (name === "STUN") {
-			this.battleUnit.abilitiesManager.pauseSkillCooldown();
+			this.battleUnit.abilitiesManager.pauseAbilityCooldown();
 		}
 	}
 
@@ -157,7 +157,7 @@ export class BattleUnitDisables extends Phaser.GameObjects.Container {
 		this.disables = this.disables.filter(disable => disable.name !== name);
 
 		if (disableToRemove.name === "STUN") {
-			this.battleUnit.abilitiesManager.resumeSkillCooldown();
+			this.battleUnit.abilitiesManager.resumeAbilityCooldown();
 		}
 	}
 

@@ -30,7 +30,6 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 	public dataUnit: any;
 
 	public isSelected = false;
-	public spBarTween!: Phaser.Tweens.Tween;
 
 	public abilitiesManager: BattleUnitAbilities;
 	public statusEffectsManager: BattleUnitStatusEffects;
@@ -38,7 +37,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 	public barsManager: BattleUnitBars;
 
 	public isDead = false;
-	public startingX;
+	public startingX: number;
 	public startingY: number;
 	public currentAnimation!: Phaser.Tweens.TweenChain | Phaser.Tweens.Tween;
 
@@ -83,7 +82,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		this.abilitiesManager = new BattleUnitAbilities(this, scene, dataUnit);
 		this.add(this.abilitiesManager);
 
-		this.statusEffectsManager = new BattleUnitStatusEffects(scene, dataUnit);
+		this.statusEffectsManager = new BattleUnitStatusEffects(this, scene, dataUnit);
 		this.add(this.statusEffectsManager);
 
 		this.disablesManager = new BattleUnitDisables(this, scene, dataUnit);
@@ -331,7 +330,8 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 			};
 
 			const onFinishAnimation = () => {
-				abilityUsed?.overlay?.setAlpha(0.7);
+				this.abilitiesManager.createAbilityOverlayTween(abilityUsed);
+
 				if (onEnd) onEnd();
 			};
 
@@ -452,7 +452,7 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 	}
 
 	public onStart() {
-		this.abilitiesManager.createAbilityOverlayTween();
+		this.abilitiesManager.startAbilityOverlayTweens();
 	}
 
 	public resumeAnimations() {

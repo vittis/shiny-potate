@@ -278,12 +278,13 @@ export class Battle extends Phaser.Scene {
 			unit.pauseAnimations();
 		});
 	}
+
 	resumeTimeEvents() {
 		this.isPlayingEventAnimation = false;
 		this.units.forEach(unit => {
 			unit.disablesManager.resumeDisableDuration();
 			if (!unit.disablesManager.isStunned()) {
-				unit.abilitiesManager.resumeSkillCooldown();
+				unit.abilitiesManager.resumeAbilityCooldown();
 			}
 		});
 		this.timeEventsHistory.forEach(event => {
@@ -292,13 +293,22 @@ export class Battle extends Phaser.Scene {
 	}
 	pauseTimeEvents() {
 		this.units.forEach(unit => {
-			unit.abilitiesManager.pauseSkillCooldown();
+			unit.abilitiesManager.pauseAbilityCooldown();
 			unit.disablesManager.pauseDisableDuration();
 		});
 		this.timeEventsHistory.forEach(event => {
 			event.paused = true;
 		});
 	}
+
+	/* gameOver() {
+		this.isGamePaused = true;
+
+		this.isPlayingEventAnimation = false;
+
+		this.pauseUnitsAnimations();
+		this.pauseTimeEvents();
+	} */
 
 	startFromBeggining() {
 		Battle.timeStarted = this.time.now;

@@ -1,5 +1,6 @@
 import { EVENT_TYPE } from "game-logic";
 import { Ability, highlightAbility, restoreAbilities } from "./battleUnit/BattleUnitAbilities";
+import { BattleUnit } from "./battleUnit/BattleUnit";
 
 export function loopStepEvents({
 	scene,
@@ -12,7 +13,7 @@ export function loopStepEvents({
 	let animationsEnded = 0;
 
 	loopEvents.forEach(event => {
-		const unit = scene.units.find(u => u.id === event.actorId);
+		const unit: BattleUnit = scene.units.find(u => u.id === event.actorId);
 		if (unit) {
 			let targets;
 

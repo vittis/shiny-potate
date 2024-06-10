@@ -1,3 +1,6 @@
+import { STATUS_EFFECT } from "game-logic";
+import { BattleUnit } from "./BattleUnit";
+
 interface StatusEffect {
 	name: string; // TODO maybe use enum?
 	quantity: number;
@@ -8,11 +11,14 @@ interface StatusEffect {
 
 export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 	public statusEffects: StatusEffect[] = [];
+
+	public battleUnit: BattleUnit;
 	public dataUnit: any;
 
-	constructor(scene: Phaser.Scene, dataUnit: any) {
+	constructor(battleUnit: BattleUnit, scene: Phaser.Scene, dataUnit: any) {
 		super(scene);
 
+		this.battleUnit = battleUnit;
 		this.dataUnit = dataUnit;
 	}
 
@@ -24,6 +30,9 @@ export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 		if (statusEffectAlreadyExists) {
 			statusEffectAlreadyExists.quantity += quantity;
 			statusEffectAlreadyExists.text.setText(`${statusEffectAlreadyExists.quantity}`);
+
+			this.checkAbilityCooldowns(name);
+
 			return;
 		}
 
@@ -71,6 +80,8 @@ export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 		});
 
 		this.repositionStatusEffect();
+
+		this.checkAbilityCooldowns(name);
 	}
 
 	removeStatusEffect({ name, quantity }: any) {
@@ -153,5 +164,28 @@ export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 
 		// If neither element is in the custom order, use default order
 		return 0;
+	}
+
+	getCooldownModifier(type: "ATTACK" | "SPELL") {
+		const buff: number =
+			this.statusEffects.find(
+				statusEffect =>
+					statusEffect.name === (type === "ATTACK" ? STATUS_EFFECT.FAST : STATUS_EFFECT.FOCUS),
+			)?.quantity || 0;
+		const debuff: number =
+			this.statusEffects.find(statusEffect => statusEffect.name === STATUS_EFFECT.SLOW)?.quantity ||
+			0;
+
+		return buff - debuff;
+	}
+
+	checkAbilityCooldowns(name: STATUS_EFFECT) {
+		if (
+			name === STATUS_EFFECT.FAST ||
+			name === STATUS_EFFECT.FOCUS ||
+			name === STATUS_EFFECT.SLOW
+		) {
+			this.battleUnit.abilitiesManager.updateAbilityCooldowns();
+		}
 	}
 }
