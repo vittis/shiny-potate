@@ -135,8 +135,15 @@ function hasGameEnded(bm: BoardManager) {
 	);
 }
 
-function getWinner(bm: BoardManager) {
+function getWinner(bm: BoardManager, currentStep: number): OWNER | "DRAW" | "TIME_LIMIT" {
+	if (reachTimeLimit(currentStep)) {
+		return "TIME_LIMIT";
+	}
+
 	if (bm.getAllUnitsOfOwner(OWNER.TEAM_ONE).every(unit => unit.isDead)) {
+		if (bm.getAllUnitsOfOwner(OWNER.TEAM_TWO).every(unit => unit.isDead)) {
+			return "DRAW";
+		}
 		return OWNER.TEAM_TWO;
 	} else {
 		return OWNER.TEAM_ONE;
@@ -315,7 +322,7 @@ export function runGame(bm: BoardManager) {
 		eventHistory,
 		firstStep,
 		effectHistory,
-		winner: getWinner(bm),
+		winner: getWinner(bm, currentStep),
 	};
 }
 

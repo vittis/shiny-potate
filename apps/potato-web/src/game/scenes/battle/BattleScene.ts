@@ -6,7 +6,7 @@ import { preloadBattle, setupBattle, setupVFXAnimations } from "./BattleSetup";
 import { useSetupState } from "@/services/state/useSetupState";
 import { api } from "@/services/api/http";
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
-import { EVENT_TYPE, PossibleEvent, StepEffects } from "game-logic";
+import { EVENT_TYPE, OWNER, PossibleEvent, StepEffects } from "game-logic";
 import { loopStepEvents } from "./BattleSceneUtils";
 import { viewBattle } from "@/services/features/Arena/useArenaQueries";
 
@@ -60,11 +60,14 @@ export class Battle extends Phaser.Scene {
 	units: BattleUnit[] = [];
 	eventHistory: PossibleEvent[] = [];
 	effectHistory: StepEffects[] = [];
+	winner: OWNER | "DRAW" | "TIME_LIMIT" = "DRAW";
 	timeEventsHistory: Phaser.Time.TimerEvent[] = [];
 	static timeStarted: number;
 
 	isGamePaused = true;
 	isPlayingEventAnimation = false;
+	isPausedWhenPlayingEventAnimation = false;
+	shouldStartFromBeginning = true;
 
 	constructor() {
 		super("BattleScene");
@@ -103,6 +106,7 @@ export class Battle extends Phaser.Scene {
 					this.totalSteps = data.totalSteps;
 					this.eventHistory = data.eventHistory;
 					this.effectHistory = data.effectHistory;
+					this.winner = data.winner;
 					this.initializeUnits(this.firstStep);
 				});
 		} else {
@@ -117,6 +121,7 @@ export class Battle extends Phaser.Scene {
 					this.totalSteps = data.game.totalSteps;
 					this.eventHistory = data.game.eventHistory;
 					this.effectHistory = data.game.effectHistory;
+					this.winner = data.game.winner;
 					this.initializeUnits(this.firstStep);
 				});
 		}
@@ -149,12 +154,15 @@ export class Battle extends Phaser.Scene {
 						this.firstStep = game.firstStep;
 						this.totalSteps = game.totalSteps;
 						this.eventHistory = game.eventHistory;
+						this.effectHistory = game.effectHistory;
+						this.winner = game.winner;
 						this.initializeUnits(this.firstStep);
 					}
 				}
 			},
 		);
 
+		// not being used rn
 		useGameState.subscribe(
 			state => state.selectedEntity,
 			selectedEntity => {
@@ -168,6 +176,7 @@ export class Battle extends Phaser.Scene {
 			},
 		);
 
+		// not being used?
 		useSetupState.subscribe(
 			state => state.shouldStartGame,
 			shouldStartGame => {
@@ -179,6 +188,8 @@ export class Battle extends Phaser.Scene {
 					this.firstStep = data.firstStep;
 					this.totalSteps = data.totalSteps;
 					this.eventHistory = data.eventHistory;
+					this.effectHistory = data.effectHistory;
+					this.winner = data.winner;
 					this.initializeUnits(this.firstStep);
 				}
 			},
@@ -187,29 +198,48 @@ export class Battle extends Phaser.Scene {
 		useGameState.subscribe(
 			state => state.isGamePaused,
 			isGamePaused => {
-				console.log("ON CLICK START", isGamePaused);
 				this.isGamePaused = isGamePaused;
 
-				if (isGamePaused) {
-					if (this.isPlayingEventAnimation) {
-						this.pauseUnitsAnimations();
-					} else {
-						this.pauseTimeEvents();
-					}
-					return;
-				}
+				if (this.shouldStartFromBeginning) {
+					console.log("START");
 
-				if (this.shouldStartFromBeginning()) {
 					this.initializeUnits(this.firstStep);
 					this.startFromBeggining();
 					return;
 				}
 
-				if (this.isPlayingEventAnimation) {
-					this.resumeUnitsAnimations();
-					return;
+				if (isGamePaused) {
+					console.log("PAUSE");
+
+					if (this.isPlayingEventAnimation) {
+						this.pauseUnitsAnimations();
+					} else {
+						this.pauseTimeEvents();
+					}
+				} else {
+					console.log("RESUME");
+
+					if (this.isPlayingEventAnimation) {
+						this.resumeUnitsAnimations();
+					} else {
+						this.resumeTimeEvents();
+					}
 				}
-				this.resumeTimeEvents();
+			},
+		);
+
+		useGameState.subscribe(
+			state => state.shouldRestartGame,
+			shouldRestartGame => {
+				if (shouldRestartGame) {
+					console.log("RESTART");
+
+					this.initializeUnits(this.firstStep);
+					this.isGamePaused = true;
+					this.isPlayingEventAnimation = false;
+					this.isPausedWhenPlayingEventAnimation = false;
+					this.shouldStartFromBeginning = true;
+				}
 			},
 		);
 	}
@@ -245,14 +275,10 @@ export class Battle extends Phaser.Scene {
 		};
 
 		playSubStepEvents(0); // Start the recursive process
-	}
 
-	shouldStartFromBeginning() {
-		const lastTimeEventIndex = this.timeEventsHistory.length - 1;
-		return (
-			this.timeEventsHistory.length === 0 ||
-			this.timeEventsHistory[lastTimeEventIndex].getRemaining() <= 0
-		);
+		if (step === this.totalSteps) {
+			this.gameOver();
+		}
 	}
 
 	initializeUnits(firstFrame: any) {
@@ -269,19 +295,19 @@ export class Battle extends Phaser.Scene {
 	}
 
 	resumeUnitsAnimations() {
-		this.units.forEach(unit => {
+		this.getAliveUnits().forEach(unit => {
 			unit.resumeAnimations();
 		});
 	}
 	pauseUnitsAnimations() {
-		this.units.forEach(unit => {
+		this.getAliveUnits().forEach(unit => {
 			unit.pauseAnimations();
 		});
 	}
 
 	resumeTimeEvents() {
 		this.isPlayingEventAnimation = false;
-		this.units.forEach(unit => {
+		this.getAliveUnits().forEach(unit => {
 			unit.disablesManager.resumeDisableDuration();
 			if (!unit.disablesManager.isStunned()) {
 				unit.abilitiesManager.resumeAbilityCooldown();
@@ -292,7 +318,7 @@ export class Battle extends Phaser.Scene {
 		});
 	}
 	pauseTimeEvents() {
-		this.units.forEach(unit => {
+		this.getAliveUnits().forEach(unit => {
 			unit.abilitiesManager.pauseAbilityCooldown();
 			unit.disablesManager.pauseDisableDuration();
 		});
@@ -301,14 +327,18 @@ export class Battle extends Phaser.Scene {
 		});
 	}
 
-	/* gameOver() {
-		this.isGamePaused = true;
+	gameOver() {
+		/* this.isGamePaused = true;
 
 		this.isPlayingEventAnimation = false;
 
 		this.pauseUnitsAnimations();
-		this.pauseTimeEvents();
-	} */
+		this.pauseTimeEvents(); */
+
+		useGameState.getState().setIsGameOver(true);
+
+		console.log("GAME OVER: ", this.winner);
+	}
 
 	startFromBeggining() {
 		Battle.timeStarted = this.time.now;
@@ -319,6 +349,11 @@ export class Battle extends Phaser.Scene {
 			// todo initialize abilities?
 			unit.onStart();
 		});
+
+		this.timeEventsHistory.forEach(event => {
+			event.destroy();
+		});
+		this.timeEventsHistory = [];
 
 		stepsThatHaveEvents.forEach(step => {
 			const delay = step * useGameControlsStore.getState().stepTime;
@@ -335,6 +370,8 @@ export class Battle extends Phaser.Scene {
 		});
 		console.log(stepsThatHaveEvents);
 		console.log(this.timeEventsHistory);
+
+		this.shouldStartFromBeginning = false;
 	}
 
 	update(/* time: number, delta: number */): void {
@@ -343,5 +380,9 @@ export class Battle extends Phaser.Scene {
 			`isGamePaused: ${this.isGamePaused}`,
 			`isPlayingEventAnimation: ${this.isPlayingEventAnimation}`,
 		]); */
+	}
+
+	getAliveUnits(): BattleUnit[] {
+		return this.units.filter(unit => !unit.isDead);
 	}
 }

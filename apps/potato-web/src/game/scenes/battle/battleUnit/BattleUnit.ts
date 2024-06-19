@@ -461,7 +461,13 @@ export class BattleUnit extends Phaser.GameObjects.Container {
 		}
 	}
 	public pauseAnimations() {
-		if (this.currentAnimation?.isPlaying()) {
+		if (
+			this.currentAnimation &&
+			(this.currentAnimation instanceof Phaser.Tweens.Tween ||
+				(this.currentAnimation instanceof Phaser.Tweens.TweenChain &&
+					this.currentAnimation?.currentTween)) &&
+			!this.currentAnimation.paused
+		) {
 			this.currentAnimation.pause();
 		}
 	}

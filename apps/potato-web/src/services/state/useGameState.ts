@@ -5,10 +5,15 @@ interface GameState {
 	gameInstance: Phaser.Game | null;
 	isGameHidden: boolean;
 	isGamePaused: boolean;
+	hasGameStarted: boolean;
 	selectedEntity: any;
+	isGameOver: boolean;
+	shouldRestartGame: boolean;
 	setSelectedEntity: (entity: any) => void;
-	setIsGamePaused: (isGameRunning: boolean) => void;
+	setIsGameOver: (isGameOver: boolean) => void;
+	setIsGamePaused: (isGamePaused: boolean) => void;
 	setGameInstance: (gameInstance: Phaser.Game | null) => void;
+	restartGame: () => void;
 	hideGame: () => void;
 	showGame: () => void;
 }
@@ -18,10 +23,22 @@ const useGameState = create<GameState>()(
 		selectedEntity: null,
 		isGameHidden: false,
 		isGamePaused: true,
-		setIsGamePaused: (isGamePaused: boolean) => set({ isGamePaused }),
+		isGameOver: false,
+		hasGameStarted: false,
+		shouldRestartGame: false,
+		setIsGameOver: (isGameOver: boolean) => set({ isGameOver }),
+		setIsGamePaused: (isGamePaused: boolean) =>
+			set({ isGamePaused, hasGameStarted: true, shouldRestartGame: false }),
 		setSelectedEntity: (entity: any) => set({ selectedEntity: entity }),
 		gameInstance: null,
 		setGameInstance: (gameInstance: Phaser.Game | null) => set({ gameInstance }),
+		restartGame: () =>
+			set({
+				shouldRestartGame: true,
+				hasGameStarted: false,
+				isGamePaused: true,
+				isGameOver: false,
+			}),
 		hideGame: () =>
 			set(({ gameInstance, isGameHidden }) => {
 				if (gameInstance) {

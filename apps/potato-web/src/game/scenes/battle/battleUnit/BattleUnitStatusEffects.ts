@@ -166,7 +166,7 @@ export class BattleUnitStatusEffects extends Phaser.GameObjects.Container {
 		return 0;
 	}
 
-	getCooldownModifier(type: "ATTACK" | "SPELL") {
+	getCooldownModifier(type: "ATTACK" | "SPELL"): number {
 		const buff: number =
 			this.statusEffects.find(
 				statusEffect =>

@@ -4,6 +4,8 @@ example:
 export * from './shop/ShopUtils';
 */
 
+export { OWNER } from "./game/BoardManager";
+
 export { generateItemsFromTier, generateRandomItems, generateShop } from "./shop/ShopUtils";
 export { EQUIPMENT_TYPE } from "./game/Equipment/EquipmentTypes";
 export { getUnitData, oldGetUnitData } from "./shop/ShopUtils"; // todo refactor
