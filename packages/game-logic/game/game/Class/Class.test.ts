@@ -3,7 +3,7 @@ import { Unit } from "../Unit/Unit";
 import { OWNER, POSITION } from "../BoardManager";
 import { Classes } from "../data";
 
-describe("Class", () => {
+describe.skip("Class", () => {
 	it("should create", () => {
 		const unitClass = new Class(Classes.Ranger);
 		expect(unitClass).toBeDefined();

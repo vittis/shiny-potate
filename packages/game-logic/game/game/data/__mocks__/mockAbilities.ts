@@ -35,7 +35,7 @@ export const MockAbilities = {
 			},
 		],
 	},
-	DisarmingShot: {
+	/* DisarmingShot: {
 		name: "Disarming Shot",
 		type: "ATTACK",
 		tags: ["WEAPON_ABILITY"],
@@ -64,7 +64,7 @@ export const MockAbilities = {
 				],
 			},
 		],
-	},
+	}, */
 	EmpoweringStrike: {
 		name: "Empowering Strike",
 		type: "ATTACK",

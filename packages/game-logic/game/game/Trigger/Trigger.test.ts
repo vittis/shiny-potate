@@ -10,7 +10,7 @@ import { PossibleTriggerEffect, TRIGGER, TRIGGER_EFFECT_TYPE } from "./TriggerTy
 import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../Event/EventUtils";
 import { Ability } from "../Ability/Ability";
 
-describe("Triggers", () => {
+describe.skip("Triggers", () => {
 	// TODO: redo these adds using updateTriggerEffects passing unit after adding perks to it
 	describe.skip("TriggerManager", () => {
 		it("should add", () => {

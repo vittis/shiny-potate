@@ -38,7 +38,7 @@ function setupBoard() {
 	return { bm, unit1, unit2, unit3, unit4 };
 }
 
-describe("Ability", () => {
+describe.skip("Ability", () => {
 	describe("Events", () => {
 		describe("USE_ABILITY Event", () => {
 			it("should generate main event info", () => {

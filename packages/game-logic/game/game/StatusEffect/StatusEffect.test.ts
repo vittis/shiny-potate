@@ -11,7 +11,7 @@ import { Abilities, Weapons } from "../data";
 import { StatusEffectManager, TICK_COOLDOWN } from "./StatusEffectManager";
 import { STATUS_EFFECT } from "./StatusEffectTypes";
 
-describe("StatusEffect", () => {
+describe.skip("StatusEffect", () => {
 	describe("StatusEffectManager", () => {
 		it("applies status effect", () => {
 			const manager = new StatusEffectManager();

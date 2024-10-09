@@ -1,4 +1,4 @@
 // runs before each test
-import { vi } from "vitest";
+/* import { vi } from "vitest";
 
-vi.mock("./game/game/data");
+vi.mock("./game/game/data"); */

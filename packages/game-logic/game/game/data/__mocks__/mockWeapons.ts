@@ -3,7 +3,7 @@ import { EquipmentData } from "../../Equipment/EquipmentTypes";
 export const MockWeapons = {
 	Shortbow: {
 		name: "Shortbow",
-		tags: ["WEAPON", "RANGED", "PHYSICAL"],
+		tags: ["WEAPON", "qqRANGED", "PHYSICAL"],
 		slots: ["MAIN_HAND"],
 		mods: [
 			{

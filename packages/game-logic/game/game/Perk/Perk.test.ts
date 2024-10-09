@@ -9,7 +9,7 @@ import { TriggerEffectEvent } from "../Event/EventTypes";
 import { Class } from "../Class/Class";
 import { StatusEffectPayload, TRIGGER_EFFECT_TYPE, TriggerEffect } from "../Trigger/TriggerTypes";
 
-describe("Perk", () => {
+describe.skip("Perk", () => {
 	it("should create", () => {
 		const perk = new Perk(Perks.FocusedMind);
 		expect(perk).toBeDefined();

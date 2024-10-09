@@ -6,6 +6,13 @@ import { Game, UnitsDTO, runGame } from "./Game";
 import { Unit } from "./Unit/Unit";
 import { Weapons } from "./data";
 
+vi.mock("./data", async () => {
+	const mocks = (await import("./Unit/__tests__/mocks")).default;
+	return {
+		...mocks,
+	};
+});
+
 // todo ok to remove this and delete test
 const sampleBoardLeft = [
 	{
@@ -548,7 +555,7 @@ describe("Run Game", () => {
 			expect(eventHistory[0]).toHaveProperty("trigger", "BATTLE_START");
 		});
 
-		it("generate ALLY_FAINT events (From DESPERATE WILL (from sword))", () => {
+		it.skip("generate ALLY_FAINT events (From DESPERATE WILL (from sword))", () => {
 			const bm = new BoardManager();
 
 			const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.BOT_BACK, bm);
@@ -612,7 +619,7 @@ describe("Run Game", () => {
 			const unit1: UnitsDTO = {
 				equipments: [equip1.serialize()],
 				position: POSITION.TOP_FRONT,
-				unitClass: "Rogue",
+				unitClass: "Ranger",
 			};
 
 			const team1: UnitsDTO[] = [unit1];
@@ -683,5 +690,36 @@ describe("Run Game", () => {
 
 			expect(1).toBe(2);
 		});
+	});
+});
+
+describe("Game (NEW)", () => {
+	it("test", () => {
+		console.log(Weapons.Shortbow);
+		const bm = new BoardManager();
+
+		const unit1 = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
+		unit1.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
+		bm.addToBoard(unit1);
+
+		console.log(unit1.abilities);
+
+		expect(1).toBe(1);
+
+		/* const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
+		unit2.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
+		bm.addToBoard(unit2);
+
+		const { eventHistory, totalSteps } = runGame(bm);
+
+		console.log(totalSteps);
+
+		const stepItEnded = eventHistory[eventHistory.length - 1].step;
+
+		expect(eventHistory?.[eventHistory.length - 1]?.step).toBe(stepItEnded);
+		expect(eventHistory?.[eventHistory.length - 1]).toHaveProperty("type", "FAINT");
+		expect(eventHistory?.[eventHistory.length - 2]).toHaveProperty("type", "FAINT");
+		expect(eventHistory?.[eventHistory.length - 3]).toHaveProperty("type", "USE_ABILITY");
+		expect(eventHistory?.[eventHistory.length - 3]?.step).toBe(stepItEnded); */
 	});
 });

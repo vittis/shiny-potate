@@ -18,7 +18,7 @@ export class Class {
 			const parsedData = ClassDataSchema.parse(data);
 			this.data = parsedData;
 		} catch (e: any) {
-			throw Error(`Class: ${data.name} data is invalid. ${e?.message}`);
+			throw Error(`Class: ${data?.name} data is invalid. ${e?.message}`);
 		}
 
 		this.utilityNodes = data.utility.map(node => {

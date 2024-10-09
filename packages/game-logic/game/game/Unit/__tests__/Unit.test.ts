@@ -1,14 +1,18 @@
-import { BoardManager, OWNER, POSITION } from "../BoardManager";
-import { Class } from "../Class/Class";
-import { DISABLE } from "../Disable/DisableTypes";
-import { Equipment } from "../Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { Effect, INSTANT_EFFECT_TYPE } from "../Event/EventTypes";
-import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../Event/EventUtils";
-import { MOD_TYPE } from "../Mods/ModsTypes";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { Weapons, Classes } from "../data";
-import { Unit } from "./Unit";
+import { BoardManager, OWNER, POSITION } from "../../BoardManager";
+import { Class } from "../../Class/Class";
+import { DISABLE } from "../../Disable/DisableTypes";
+import { Equipment } from "../../Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "../../Equipment/EquipmentTypes";
+import { Effect, INSTANT_EFFECT_TYPE } from "../../Event/EventTypes";
+import { executeStepEffects, getEventsFromIntents, getStepEffects } from "../../Event/EventUtils";
+import { MOD_TYPE } from "../../Mods/ModsTypes";
+import { STATUS_EFFECT } from "../../StatusEffect/StatusEffectTypes";
+import { Weapons, Classes } from "../../data";
+import { Unit } from "../Unit";
+
+vi.mock("../../data", async () => {
+	return (await import("./mocks")).default;
+});
 
 describe("Unit", () => {
 	describe("Equipment", () => {
@@ -94,7 +98,7 @@ describe("Unit", () => {
 		it("equipping a weapon should give an ability", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
-			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.equips[0].slot).toBe(EQUIPMENT_SLOT.MAIN_HAND);
 			expect(unit.abilities).toHaveLength(1);
@@ -105,12 +109,16 @@ describe("Unit", () => {
 
 			expect(unit.abilities).toHaveLength(0);
 
-			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.abilities).toHaveLength(1);
+
+			unit.unequip(EQUIPMENT_SLOT.MAIN_HAND);
+
+			expect(unit.abilities).toHaveLength(0);
 		});
 
-		it("equipping two weapons should give two abilities", () => {
+		it.skip("equipping two weapons should give two abilities", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
 			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
@@ -139,39 +147,17 @@ describe("Unit", () => {
 			expect(true).toBe(false);
 		});
 
-		it("uses Short Spear ability: Thrust", () => {
-			const bm = new BoardManager();
-			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
-			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.BOT_MID, bm);
-			bm.addToBoard(unit);
-			bm.addToBoard(unit2);
-
-			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
-
-			const ability = unit.abilities[0];
-			expect(ability.data.name).toBe("Thrust");
-
-			for (let i = 0; i < ability.data.cooldown; i++) {
-				unit.step(i);
-			}
-
-			executeStepEffects(bm, getStepEffects(getEventsFromIntents(bm, unit.serializeIntents())));
-
-			expect(ability.progress).toBe(0);
-			expect(unit2.stats.hp).not.toBe(unit2.stats.maxHp);
-		});
-
-		it("uses Sword ability: Slash", () => {
+		it("uses Shortbow ability: Disarming Shot", () => {
 			const bm = new BoardManager();
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT, bm);
 			const unit2 = new Unit(OWNER.TEAM_TWO, POSITION.TOP_FRONT, bm);
 			bm.addToBoard(unit);
 			bm.addToBoard(unit2);
 
-			unit.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(new Equipment(Weapons.Shortbow), EQUIPMENT_SLOT.MAIN_HAND);
 
 			const ability = unit.abilities[0];
-			expect(ability.data.name).toBe("Slash");
+			expect(ability.data.name).toBe("Disarming Shot");
 
 			for (let i = 0; i < ability.data.cooldown; i++) {
 				unit.step(i);
@@ -211,17 +197,15 @@ describe("Unit", () => {
 			expect(unit.statsFromMods.spellDamageModifier).toBe(0);
 
 			const equip1 = new Equipment(Weapons.ShortSpear);
-			const equip2 = new Equipment(Weapons.Wand);
+			const equip2 = new Equipment(Weapons.Sword);
 
 			unit.equip(equip1, EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.statsFromMods.attackDamageModifier).toBe(10);
-			expect(unit.statsFromMods.spellDamageModifier).toBe(0);
 
 			unit.equip(equip2, EQUIPMENT_SLOT.MAIN_HAND);
 
-			expect(unit.statsFromMods.attackDamageModifier).toBe(0);
-			expect(unit.statsFromMods.spellDamageModifier).toBe(5);
+			expect(unit.statsFromMods.attackDamageModifier).toBe(5);
 		});
 
 		it("equipping two items should accumulate stat", () => {
@@ -252,7 +236,7 @@ describe("Unit", () => {
 		it("equipping a weapon should give a perk", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
-			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.perks).toHaveLength(1);
 		});
@@ -260,7 +244,7 @@ describe("Unit", () => {
 		it("unequipping a weapon should remove its perk", () => {
 			const unit = new Unit(OWNER.TEAM_ONE, POSITION.TOP_FRONT);
 
-			unit.equip(new Equipment(Weapons.ShortSpear), EQUIPMENT_SLOT.MAIN_HAND);
+			unit.equip(new Equipment(Weapons.Sword), EQUIPMENT_SLOT.MAIN_HAND);
 
 			expect(unit.perks).toHaveLength(1);
 

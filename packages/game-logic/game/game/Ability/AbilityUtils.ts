@@ -18,11 +18,16 @@ function filterAbilityMods(mods: PossibleMods): Mod<MOD_TYPE.GRANT_ABILITY>[] {
 export function getAbilitiesInstancesFromMods(mods: PossibleMods) {
 	const abilityMods = filterAbilityMods(mods);
 
+	/* if (process.env.NODE_ENV === "test" || process.env.VITEST_WORKER_ID !== undefined) {
+		return [];
+	} */
+
 	return abilityMods.map(mod => {
 		const name = mod.payload.name;
 		const nameWithoutSpaces = name.replace(/\s/g, "");
 
 		if (!Abilities[nameWithoutSpaces]) {
+			console.log(`Could not find ability ${name}. This is expected if running from test`);
 			throw Error(
 				`Could not find ability ${name}. If running from a test make sure that it is mocked.`,
 			);

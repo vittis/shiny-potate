@@ -1,5 +1,6 @@
 import { Ability } from "../Ability/Ability";
 import { Unit } from "../Unit/Unit";
+import { vi } from "vitest";
 
 export function useAbility(unit: Unit, ability?: Ability) {
 	let finalAbility = ability || unit.abilities[0];
