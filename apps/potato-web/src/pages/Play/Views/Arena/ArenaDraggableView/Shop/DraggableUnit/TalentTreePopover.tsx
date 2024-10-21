@@ -89,7 +89,7 @@ const TalentTreePopover = ({ talentTrees, utiliyNodes, unitId }: TalentTreePopov
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent asChild>
-				<div>
+				<div className="w-auto">
 					<div className="relative flex w-full gap-10 px-4">
 						{talentTrees.map(tree => (
 							<div key={tree.name} className="flex flex-col items-center gap-2 text-center">
