@@ -1,5 +1,6 @@
 import { useGameControlsStore } from "@/services/features/Game/useGameControlsStore";
 import { BattleUnit } from "./BattleUnit";
+import { calculateCooldown } from "game-logic";
 
 const ABILITY_ICON_SIZE = 28;
 
@@ -13,6 +14,9 @@ export interface Ability {
 	border: Phaser.GameObjects.Image;
 	shineFX: Phaser.FX.Shine | undefined;
 	hasUsed: boolean;
+	baseCooldown: number;
+	cooldown: number;
+	type: "ATTACK" | "SPELL";
 }
 
 export class BattleUnitAbilities extends Phaser.GameObjects.Container {
@@ -20,6 +24,8 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 
 	public battleUnit: BattleUnit;
 	public dataUnit: any;
+
+	public isPaused = false;
 
 	constructor(battleUnit: BattleUnit, scene: Phaser.Scene, dataUnit: any) {
 		super(scene);
@@ -76,6 +82,9 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 				container: abilityContainer,
 				border: iconBorder,
 				shineFX,
+				baseCooldown: ability.baseCooldown,
+				cooldown: ability.baseCooldown,
+				type: ability.type == "ATTACK" ? "ATTACK" : "SPELL",
 			};
 		});
 
@@ -108,22 +117,30 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 		});
 	}
 
-	createAbilityOverlayTween() {
-		this.abilities.forEach((ability, index: number) => {
-			ability.overlay.setAlpha(0.7);
-
-			ability.tween = this.scene.tweens.add({
-				targets: ability.overlay,
-				scaleY: { from: 1, to: 0 },
-				duration:
-					useGameControlsStore.getState().stepTime * this.dataUnit.abilities[index].cooldown,
-				ease: "Linear",
-				repeat: -1,
-			});
+	startAbilityOverlayTweens() {
+		this.abilities.forEach(ability => {
+			this.calculateAbilityCooldown(ability);
+			this.createAbilityOverlayTween(ability);
 		});
 	}
 
-	resumeSkillCooldown() {
+	createAbilityOverlayTween(ability: Ability, progress?: number, duration?: number) {
+		ability.overlay.setAlpha(0.7);
+
+		this.calculateAbilityCooldown(ability);
+
+		ability.tween = this.scene.tweens.add({
+			targets: ability.overlay,
+			scaleY: { from: progress ? 1 - progress : 1, to: 0 },
+			duration: duration || useGameControlsStore.getState().stepTime * ability.cooldown,
+			ease: "Linear",
+			paused: this.isPaused,
+		});
+	}
+
+	resumeAbilityCooldown() {
+		this.isPaused = false;
+
 		this.abilities.forEach(ability => {
 			if (ability.tween && ability.tween.isPaused()) {
 				ability.tween.resume();
@@ -131,10 +148,41 @@ export class BattleUnitAbilities extends Phaser.GameObjects.Container {
 		});
 	}
 
-	pauseSkillCooldown() {
+	pauseAbilityCooldown() {
+		this.isPaused = true;
+
 		this.abilities.forEach(ability => {
 			if (ability.tween && ability.tween.isPlaying()) {
 				ability.tween.pause();
+			}
+		});
+	}
+
+	calculateAbilityCooldown(ability: Ability) {
+		const baseCooldownModifier =
+			ability.type == "ATTACK"
+				? this.dataUnit.stats.attackCooldownModifier
+				: this.dataUnit.stats.spellCooldownModifier;
+		const statusEffectCooldownModifier = this.battleUnit.statusEffectsManager.getCooldownModifier(
+			ability.type,
+		);
+
+		const cooldownModifier = baseCooldownModifier + statusEffectCooldownModifier;
+
+		ability.cooldown = calculateCooldown(ability.baseCooldown, cooldownModifier);
+	}
+
+	updateAbilityCooldowns() {
+		this.abilities.forEach(ability => {
+			const currentCd = ability.cooldown;
+			this.calculateAbilityCooldown(ability);
+
+			if (ability.cooldown != currentCd) {
+				const currentProgress = ability.tween.progress;
+				const newDuration =
+					useGameControlsStore.getState().stepTime * ability.cooldown * (1 - currentProgress);
+
+				this.createAbilityOverlayTween(ability, currentProgress, newDuration);
 			}
 		});
 	}

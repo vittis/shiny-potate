@@ -80,8 +80,9 @@ export function createAttackAnimation({
 		delay: 200 * animationSpeed,
 		targets: unit,
 		onComplete: () => {
-			unit.scene.time.delayedCall(150 * animationSpeed, onFinishAnimation);
+			onFinishAnimation();
 		},
+		completeDelay: 150 * animationSpeed,
 		tweens: [
 			{
 				delay: 20 * animationSpeed,
@@ -149,9 +150,9 @@ export function createTriggerEffectAnimation({
 		delay: 200 * animationSpeed,
 		targets: unit,
 		onComplete: () => {
-			unit.scene.time.delayedCall(150 * animationSpeed, onFinishAnimation);
-			targetGlowFx?.destroy();
+			onFinishAnimation();
 		},
+		completeDelay: 150 * animationSpeed,
 		tweens: [
 			// pulinho
 			{
@@ -209,6 +210,9 @@ export function createTriggerEffectAnimation({
 						);
 					});
 				},
+				onComplete: () => {
+					targetGlowFx?.destroy();
+				},
 			},
 		],
 	});
@@ -231,8 +235,9 @@ export function createHealingWordAnimation({
 		delay: 50 * animationSpeed,
 		targets: unit,
 		onComplete: () => {
-			unit.scene.time.delayedCall(150 * animationSpeed, onFinishAnimation);
+			onFinishAnimation();
 		},
+		completeDelay: 150 * animationSpeed,
 		tweens: [
 			// pulinho
 			{
@@ -278,8 +283,9 @@ export function createPowershotAnimation({
 		delay: 45 * animationSpeed,
 		targets: unit,
 		onComplete: () => {
-			unit.scene.time.delayedCall(150 * animationSpeed, onFinishAnimation);
+			onFinishAnimation();
 		},
+		completeDelay: 150 * animationSpeed,
 		tweens: [
 			// pulinho
 			{
@@ -448,8 +454,9 @@ export function createHeadCrushAnimation({
 		delay: 45 * animationSpeed,
 		targets: unit,
 		onComplete: () => {
-			unit.scene.time.delayedCall(150, onFinishAnimation);
+			onFinishAnimation();
 		},
+		completeDelay: 150 * animationSpeed,
 		tweens: [
 			// pulinho
 			{

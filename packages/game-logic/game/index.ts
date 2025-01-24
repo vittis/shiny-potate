@@ -1,9 +1,10 @@
-import { EquippedItemInstance } from "./game/Equipment/EquipmentManager";
 // todo group exports
 /* 
 example:
 export * from './shop/ShopUtils';
 */
+
+export { OWNER } from "./game/BoardManager";
 
 export { generateItemsFromTier, generateRandomItems, generateShop } from "./shop/ShopUtils";
 export { EQUIPMENT_TYPE } from "./game/Equipment/EquipmentTypes";
@@ -32,3 +33,5 @@ export type {
 	ClassNodeInstance,
 	TalentNodeInstance,
 } from "./game/Class/ClassTypes";
+export { calculateCooldown } from "./game/Ability/AbilityUtils";
+export { STATUS_EFFECT } from "./game/StatusEffect/StatusEffectTypes";

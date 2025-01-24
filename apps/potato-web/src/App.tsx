@@ -2,31 +2,48 @@ import { useMemo } from "react";
 import { useGameState } from "./services/state/useGameState";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBattleSetup, fetchVanillaBattleSetup } from "./game/scenes/battle/BattleScene";
-import { Flag, Swords } from "lucide-react";
+import { Pause, Play, RotateCcw, Swords } from "lucide-react";
 import { CrazyButton } from "./pages/Play/Views/Arena/ArenaActionButtons";
 
 const isVanillaBattleSetup = import.meta.env.VITE_VANILLA_BATTLE_SETUP;
 
 function App() {
-	const { selectedEntity, isGamePaused, setSelectedEntity, setIsGamePaused } = useGameState();
+	const { isGamePaused, setIsGamePaused, isGameOver, restartGame, hasGameStarted } = useGameState();
 
 	return (
 		<>
-			<div className="fixed top-24 flex w-full justify-center">
-				<CrazyButton
-					onClick={() => {
-						setIsGamePaused(!isGamePaused);
-					}}
-				>
-					<span className="align-center flex justify-center">
-						{!isGamePaused ? "Stop" : "Start"}{" "}
-						{isGamePaused ? (
-							<Swords width={16} className="ml-2" fill="white" />
-						) : (
-							<Flag width={16} className="ml-2" fill="white" />
-						)}
-					</span>
-				</CrazyButton>
+			<div className="fixed top-24 flex w-full justify-center gap-8">
+				{!isGameOver && (
+					<CrazyButton
+						onClick={() => {
+							setIsGamePaused(!isGamePaused);
+						}}
+					>
+						<span className="align-center flex justify-center">
+							{!hasGameStarted ? "Start" : isGamePaused ? "Resume" : "Pause"}{" "}
+							{!hasGameStarted ? (
+								<Swords width={16} className="ml-2" fill="white" />
+							) : isGamePaused ? (
+								<Play width={16} className="ml-2" fill="white" />
+							) : (
+								<Pause width={16} className="ml-2" fill="white" />
+							)}
+						</span>
+					</CrazyButton>
+				)}
+
+				{(isGameOver || (hasGameStarted && isGamePaused)) && (
+					<CrazyButton
+						onClick={() => {
+							restartGame();
+						}}
+					>
+						<span className="align-center flex justify-center">
+							{"Restart "}
+							<RotateCcw width={16} className="ml-2" />
+						</span>
+					</CrazyButton>
+				)}
 			</div>
 
 			{/* <div className="fixed bottom-10 flex w-full justify-center">
