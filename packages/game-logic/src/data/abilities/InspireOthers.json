@@ -1,73 +1,51 @@
 {
-  "name": "Inspire Others",
-  "tags": [
-    "SUPPORT"
-  ],
-  "minimumTier": 1,
-  "cooldown": [
-    100,
-    100,
-    100,
-    100,
-    100
-  ],
-  "effects": [
-    {
-      "type": "STATUS_EFFECT",
-      "targets": [
-        {
-          "target": "SIDES",
-          "filters": []
-        }
-      ],
-      "conditions": [],
-      "payload": [
-        {
-          "name": "HASTE",
-          "values": [
-            {
-              "ref": "BASE",
-              "values": [
-                1,
-                2,
-                3,
-                4,
-                5
-              ]
-            },
-            {
-              "ref": "EXTRA",
-              "values": [
-                1,
-                2,
-                3,
-                4,
-                5
-              ]
-            }
-          ],
-          "quantity": [
-            {
-              "ref": "BASE"
-            },
-            {
-              "ref": "EXTRA",
-              "scaling": "PER_TARGET",
-              "filters": [
-                {
-                  "type": "UNIT",
-                  "payload": {
-                    "tags": [
-                      "PEASANT"
-                    ],
-                    "target": "ADJACENT_ALLIES"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"name": "Inspire Others",
+	"tags": ["SUPPORT"],
+	"minimumTier": 1,
+	"cooldown": [100, 100, 100, 100, 100],
+	"effects": [
+		{
+			"type": "STATUS_EFFECT",
+			"targets": [
+				{
+					"target": "SIDES",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"name": "HASTE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4, 5]
+						},
+						{
+							"ref": "EXTRA",
+							"values": [1, 2, 3, 4, 5]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						},
+						{
+							"ref": "EXTRA",
+							"scaling": "PER_TARGET",
+							"filters": [
+								{
+									"type": "UNIT",
+									"payload": {
+										"tags": ["PEASANT"],
+										"target": "ADJACENT_ALLIES"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
 }
