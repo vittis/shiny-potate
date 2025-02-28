@@ -1,0 +1,62 @@
+{
+  "name": "Farm Boy",
+  "initialTier": 1,
+  "hp": [
+    100,
+    150,
+    220,
+    300,
+    400
+  ],
+  "tags": [
+    "PEASANT"
+  ],
+  "implicits": [
+    {
+      "type": "STATUS_EFFECT",
+      "trigger": "BATTLE_START",
+      "targets": [
+        {
+          "target": "SELF",
+          "filters": []
+        }
+      ],
+      "conditions": [],
+      "payload": [
+        {
+          "name": "REGEN",
+          "values": [
+            {
+              "ref": "BASE",
+              "values": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "quantity": [
+            {
+              "ref": "BASE",
+              "scaling": "PER_TARGET",
+              "filters": [
+                {
+                  "type": "UNIT",
+                  "payload": {
+                    "tags": [
+                      "PEASANT"
+                    ],
+                    "target": "ADJACENT_ALLIES"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "defaultEquipment": []
+}
