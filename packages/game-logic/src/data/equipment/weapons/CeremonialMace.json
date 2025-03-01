@@ -1,56 +1,44 @@
 {
-  "name": "Ceremonial Mace",
-  "tags": [
-    "EQUIPMENT",
-    "WEAPON",
-    "MACE"
-  ],
-  "slots": [
-    "MAIN_HAND"
-  ],
-  "implicits": [
-    {
-      "type": "STAT_MODIFIER",
-      "conditions": [],
-      "targets": [
-        {
-          "target": "SELF",
-          "filters": []
-        }
-      ],
-      "payload": [
-        {
-          "stat": "COOLDOWN_REDUCTION",
-          "values": [
-            {
-              "ref": "BASE",
-              "values": [
-                1,
-                2,
-                3,
-                4,
-                5
-              ]
-            }
-          ],
-          "quantity": [
-            {
-              "ref": "BASE",
-              "filters": [
-                {
-                  "type": "ABILITY",
-                  "payload": {
-                    "tags": [
-                      "SUPPORT"
-                    ],
-                    "target": "SELF"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"name": "Ceremonial Mace",
+	"tags": ["EQUIPMENT", "WEAPON", "MACE"],
+	"slots": ["MAIN_HAND"],
+	"minimumTier": 1,
+	"ability": "Ceremonial Mace Ability",
+	"implicits": [
+		{
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "COOLDOWN_MULTIPLIER",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [-10, -20, -30, -40, -50]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": [
+								{
+									"type": "ABILITY",
+									"payload": {
+										"tags": ["SUPPORT"],
+										"target": "SELF"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
 }

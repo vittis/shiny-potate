@@ -16,6 +16,8 @@ export enum SCALING {
 }
 
 export enum FILTER_TYPE {
+	ABILITY = "ABILITY",
+	EQUIPMENT = "EQUIPMENT",
 	UNIT = "UNIT",
 }
 

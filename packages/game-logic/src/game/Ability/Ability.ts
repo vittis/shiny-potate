@@ -1,12 +1,14 @@
 import { nanoid } from "nanoid";
 import { AbilityData, Cooldown, PossibleInstantEffect } from "./AbilityTypes";
 import { Tier } from "../Tier/TierTypes";
+import { TAG } from "../Tag/TagTypes";
 
 export class Ability {
 	id: string;
 	data: AbilityData;
 
 	tier: Tier;
+	tags: TAG[];
 
 	currentCooldown: number; // cooldown current calculated with effects that change the value
 	cooldown: number; // cooldown fixed based on tier
@@ -36,10 +38,10 @@ export class Ability {
     } */
 
 	// values from data, sepa nem precisa
-	minimumTier: number;
+	minimumTier: Tier;
 	cooldownPerTier: Cooldown;
 
-	constructor(data?: AbilityData) {
+	constructor(data?: AbilityData, tier: Tier = 1) {
 		if (!data) {
 			throw Error(
 				"Ability is undefined. If running from test make sure it's defined in mock files",
@@ -48,8 +50,9 @@ export class Ability {
 
 		this.data = data;
 		this.id = nanoid(8);
+		this.tags = data.tags;
 		this.minimumTier = data.minimumTier;
-		this.tier = data.minimumTier; // TODO: replace with correct tier instead of json minimum tier
+		this.tier = tier;
 		this.cooldownPerTier = data.cooldown;
 		this.cooldown = this.cooldownPerTier[this.tier - 1] || 0;
 		this.currentCooldown = this.cooldown;

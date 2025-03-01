@@ -1,0 +1,56 @@
+{
+	"name": "Ceremonial Mace Ability",
+	"tags": ["ATTACK", "SUPPORT"],
+	"minimumTier": 1,
+	"cooldown": [60, 60, 60, 60, 60],
+	"effects": [
+		{
+			"type": "DAMAGE",
+			"targets": [
+				{
+					"target": "STANDARD",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": {
+				"values": [
+					{
+						"ref": "BASE",
+						"values": [20, 30, 40, 50, 60]
+					}
+				],
+				"quantity": [
+					{
+						"ref": "BASE"
+					}
+				]
+			}
+		},
+		{
+			"type": "INCREASE_EFFECT",
+			"targets": [
+				{
+					"target": "RIGHT_ALLY",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": {
+				"name": "DAMAGE",
+				"type": "FLAT",
+				"values": [
+					{
+						"ref": "BASE",
+						"values": [2, 4, 6, 8, 10]
+					}
+				],
+				"quantity": [
+					{
+						"ref": "BASE"
+					}
+				]
+			}
+		}
+	]
+}
