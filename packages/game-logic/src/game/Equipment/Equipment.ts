@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { Tier } from "../Tier/TierTypes";
+import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { EQUIPMENT_SLOT, EquipmentData } from "./EquipmentTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Ability } from "../Ability/Ability";
@@ -22,9 +22,6 @@ export class Equipment {
 	explicits: PossibleMod[];
 	mods: PossibleMod[];
 
-	// values from data, sepa nem precisa
-	minimumTier: Tier;
-
 	constructor(data: EquipmentData, tier: Tier = 1) {
 		if (!data) {
 			throw Error(
@@ -32,10 +29,9 @@ export class Equipment {
 			);
 		}
 
-		this.data = data;
 		this.id = nanoid(8);
+		this.data = data;
 		this.tags = data.tags;
-		this.minimumTier = data.minimumTier;
 		this.tier = tier;
 		this.slots = data.slots;
 		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado?
@@ -51,5 +47,19 @@ export class Equipment {
 
 	getEffectMods(): Mod<MOD.EFFECT>[] {
 		return filterModsByType(this.mods, MOD.EFFECT);
+	}
+
+	canUpgradeTier() {
+		return this.tier < MAX_TIER;
+	}
+
+	upgradeTier() {
+		if (this.canUpgradeTier()) {
+			this.tier += 1;
+
+			const newTierImplicits = this.data.implicits.filter(mod => mod.minimumTier === this.tier);
+			this.implicits = [...this.implicits, ...newTierImplicits];
+			this.mods = [...this.mods, ...newTierImplicits];
+		}
 	}
 }

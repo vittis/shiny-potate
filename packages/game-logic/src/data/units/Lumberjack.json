@@ -1,71 +1,59 @@
 {
-  "name": "Lumberjack",
-  "initialTier": 1,
-  "hp": [
-    150,
-    200,
-    280,
-    350,
-    500
-  ],
-  "tags": [
-    "PEASANT"
-  ],
-  "implicits": [
-    {
-      "minimumTier": 1,
-      "type": "STAT_MODIFIER",
-      "conditions": [
-        {
-          "type": "EQUIPMENT",
-          "payload": {
-            "target": "SELF",
-            "slots": [
-              "TWO_HANDS",
-              "MAIN_HAND",
-              "OFF_HAND"
-            ],
-            "tags": [
-              "AXE"
-            ]
-          }
-        }
-      ],
-      "targets": [
-        {
-          "target": "SELF",
-          "filters": []
-        }
-      ],
-      "payload": [
-        {
-          "stat": "DAMAGE",
-          "values": [
-            {
-              "ref": "BASE",
-              "values": [
-                20,
-                40,
-                70,
-                100,
-                150
-              ]
-            }
-          ],
-          "quantity": [
-            {
-              "ref": "BASE"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "minimumTier": 2,
-      "type": "GAIN_ABILITY",
-      "conditions": [],
-      "name": "Round Swing"
-    }
-  ],
-  "defaultEquipment": []
+	"name": "Lumberjack",
+	"tags": ["PEASANT"],
+	"minimumTier": 1,
+	"hp": [150, 200, 280, 350, 500],
+	"implicits": [
+		{
+			"type": "STAT",
+			"minimumTier": 1,
+			"conditions": [
+				{
+					"type": "EQUIPMENT",
+					"payload": {
+						"target": "SELF",
+						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
+						"tags": ["AXE"]
+					}
+				}
+			],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": [
+				{
+					"stat": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [20, 40, 70, 100, 150]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		},
+		{
+			"minimumTier": 2,
+			"type": "GAIN_ABILITY",
+			"conditions": [],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": {
+				"name": "Round Swing"
+			}
+		}
+	],
+	"defaultEquipment": []
 }

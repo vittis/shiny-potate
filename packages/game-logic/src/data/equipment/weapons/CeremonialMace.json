@@ -6,6 +6,7 @@
 	"ability": "Ceremonial Mace Ability",
 	"implicits": [
 		{
+			"minimumTier": 1,
 			"type": "STAT",
 			"targets": [
 				{

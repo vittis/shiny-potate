@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { AbilityData, Cooldown, PossibleInstantEffect } from "./AbilityTypes";
-import { Tier } from "../Tier/TierTypes";
+import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
 
 export class Ability {
@@ -37,24 +37,18 @@ export class Ability {
         }
     } */
 
-	// values from data, sepa nem precisa
-	minimumTier: Tier;
-	cooldownPerTier: Cooldown;
-
 	constructor(data?: AbilityData, tier: Tier = 1) {
 		if (!data) {
 			throw Error(
-				"Ability is undefined. If running from test make sure it's defined in mock files",
+				"Ability: Ability is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
 
-		this.data = data;
 		this.id = nanoid(8);
+		this.data = data;
 		this.tags = data.tags;
-		this.minimumTier = data.minimumTier;
 		this.tier = tier;
-		this.cooldownPerTier = data.cooldown;
-		this.cooldown = this.cooldownPerTier[this.tier - 1] || 0;
+		this.cooldown = data.cooldown[this.tier - 1] || 0;
 		this.currentCooldown = this.cooldown;
 		this.progress = 0;
 		this.effects = data.effects;
@@ -77,7 +71,7 @@ export class Ability {
 	use() {
 		// TODO: implement
 		// when ability hits: trigger ON HIT effects
-		// at the end: trigger ON USE effects
+		// trigger ON USE effects once - at beginning or end?
 	}
 
 	getInstantEffectModifiers() {
@@ -86,5 +80,18 @@ export class Ability {
 
 	createAbilityIntent() {
 		// TODO: implement this when doing intent / event stuff
+	}
+
+	canUpgradeTier() {
+		return this.tier < MAX_TIER;
+	}
+
+	upgradeTier() {
+		if (this.canUpgradeTier()) {
+			this.tier += 1;
+
+			this.cooldown = this.data.cooldown[this.tier - 1] || 0;
+			this.currentCooldown = this.cooldown; // todo: create function to calculate new current cooldown
+		}
 	}
 }

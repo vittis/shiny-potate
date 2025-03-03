@@ -1,20 +1,23 @@
 import { InstantEffectPayloadQuantity, InstantEffectPayloadValue } from "../Ability/AbilityTypes";
 import { PossibleCondition } from "../Condition/ConditionTypes";
 import { STAT } from "../Stat/StatTypes";
+import { Tier } from "../Tier/TierTypes";
 
 export enum MOD {
 	STAT = "STAT",
 	EFFECT = "EFFECT", // sera se chama de ability ou trigger? TRIGGER + EFFECT + TARGET
-	// maybe call GRANT_STAT/EFFECT or STAT/EFFECT_MODIFIER ?
+	ABILITY = "ABILITY", // grant ability to unit
+	// maybe call GRANT_STAT/EFFECT/ABILITY or STAT/EFFECT_MODIFIER ?
 }
 
 export type ModPayloadValue = InstantEffectPayloadValue;
 export type ModPayloadQuantity = InstantEffectPayloadQuantity;
 
-export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT>;
+export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT> | Mod<MOD.ABILITY>;
 
 export type Mod<T extends MOD> = {
 	type: T;
+	minimumTier: Tier; // tier to gain the mod
 	targets: any[]; // TODO: create TARGET type
 	conditions: PossibleCondition[];
 	payload: ModPayloadMap[T];
@@ -23,10 +26,15 @@ export type Mod<T extends MOD> = {
 export type ModPayloadMap = {
 	[MOD.STAT]: ModStatPayload;
 	[MOD.EFFECT]: ModEffectPayload[];
+	[MOD.ABILITY]: ModAbilityPayload[];
 };
 
 export type ModEffectPayload = {
 	// todo: implement this
+};
+
+export type ModAbilityPayload = {
+	name: string; // name of the ability
 };
 
 export type ModStatPayload = {
