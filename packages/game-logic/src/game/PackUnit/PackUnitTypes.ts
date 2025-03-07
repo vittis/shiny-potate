@@ -3,7 +3,7 @@ import { Hp } from "../Stat/StatTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Tier } from "../Tier/TierTypes";
 
-export type UnitData = {
+export type PackUnitData = {
 	name: string;
 	tags: TAG[];
 	minimumTier: Tier;

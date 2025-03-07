@@ -14,9 +14,12 @@ export type ModifierType = "FLAT" | "PERCENTAGE";
 
 export type EffectModifierType =
 	| "COOLDOWN"
+	| "HP"
 	| "DAMAGE"
 	| "HEAL"
+	| "GAIN_HEAL"
 	| "SHIELD"
+	| "GAIN_SHIELD"
 	| keyof typeof STATUS_EFFECT;
 
 export type EffectModifier = {

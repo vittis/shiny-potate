@@ -1,14 +1,14 @@
 import { nanoid } from "nanoid";
-import { UnitData } from "./UnitTypes";
 import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
 import { filterModsByType } from "../Mod/ModsUtils";
 import { Hp } from "../Stat/StatTypes";
+import { PackUnitData } from "./PackUnitTypes";
 
-export class Unit {
+export class PackUnit {
 	id: string;
-	data: UnitData;
+	data: PackUnitData;
 
 	tier: Tier;
 	tags: TAG[];
@@ -19,10 +19,10 @@ export class Unit {
 	explicits: PossibleMod[];
 	mods: PossibleMod[];
 
-	constructor(data?: UnitData, tier: Tier = 1) {
+	constructor(data?: PackUnitData, tier: Tier = 1) {
 		if (!data) {
 			throw Error(
-				"Unit: Unit is undefined. If running from test make sure it's defined in mock files",
+				"PackUnit: PackUnit is undefined. If running from test make sure it's defined in mock files",
 			);
 		}
 
