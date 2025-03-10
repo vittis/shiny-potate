@@ -20,6 +20,7 @@ import {
 } from "./Event/EventTypes";
 import { TRIGGER } from "./Trigger/TriggerTypes";
 import { Board } from "../shop/ArenaTypes";
+import { BattleUnit } from "../../src/game/BattleUnit/BattleUnit";
 
 export interface UnitsDTO {
 	equipments: EquipmentInstance[];

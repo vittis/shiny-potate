@@ -1,9 +1,21 @@
 import { PackUnit } from "../PackUnit/PackUnit";
 
 export class BattleUnit {
-	packUnit: PackUnit;
+	/* packUnit: PackUnit; */
 
-	constructor(packUnit: PackUnit) {
-		this.packUnit = packUnit;
+	column: number = -1;
+	row: number = -1;
+
+	constructor(/* packUnit: PackUnit */) {
+		/* this.packUnit = packUnit; */
+	}
+
+	setPosition(column: number, row: number) {
+		this.column = column;
+		this.row = row;
+	}
+
+	toString() {
+		return `X`;
 	}
 }

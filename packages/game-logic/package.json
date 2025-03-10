@@ -6,6 +6,8 @@
 		".": "./game/index.ts"
 	},
 	"scripts": {
+		"build": "tsup src/game/main.ts --format cjs,esm --dts",
+		"dev": "tsup src/game/main.ts --format cjs,esm --dts --watch",
 		"test": "vitest run",
 		"test:watch": "console-ninja vitest watch"
 	},
