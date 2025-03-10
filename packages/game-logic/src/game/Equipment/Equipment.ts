@@ -34,7 +34,7 @@ export class Equipment {
 		this.tags = data.tags;
 		this.tier = tier;
 		this.slots = data.slots;
-		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado?
+		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado ou passa opcional?
 		this.ability = undefined; // data.ability ? new Ability(data.ability, tier) : undefined; TODO: implement this
 		this.implicits = data.implicits;
 		this.explicits = []; // sera que alguns itens podem já vir com mods extras?

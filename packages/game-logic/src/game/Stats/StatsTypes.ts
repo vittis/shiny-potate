@@ -10,9 +10,16 @@ export enum STAT {
 
 export type Hp = TieredValues;
 
+export type UnitStats = {
+	hp: number;
+	maxHp: number;
+	shield: number;
+	statEffects: StatEffects;
+};
+
 export type ModifierType = "FLAT" | "PERCENTAGE";
 
-export type EffectModifierType =
+export type StatEffectModifierType =
 	| "COOLDOWN"
 	| "HP"
 	| "DAMAGE"
@@ -22,9 +29,11 @@ export type EffectModifierType =
 	| "GAIN_SHIELD"
 	| keyof typeof STATUS_EFFECT;
 
-export type EffectModifier = {
-	effect: EffectModifierType;
+export type StatEffectModifier = {
+	effect: StatEffectModifierType;
 	modifierType: ModifierType;
 	value: number;
 	requiredTags: TAG[];
 };
+
+export type StatEffects = Record<StatEffectModifierType, Record<ModifierType, number>>;

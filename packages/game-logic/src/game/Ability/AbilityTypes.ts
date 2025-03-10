@@ -1,6 +1,7 @@
 import { Condition, PossibleCondition } from "../Condition/ConditionTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 import { Tier, TieredValues } from "../Tier/TierTypes";
 
 export enum INSTANT_EFFECT {
@@ -41,7 +42,7 @@ export type PossibleInstantEffect =
 
 export type InstantEffect<T extends INSTANT_EFFECT> = {
 	type: T;
-	targets: any[]; // TODO: create TARGET type
+	targets: TARGET_TYPE[];
 	conditions: PossibleCondition[];
 	payload: InstantEffectPayloadMap[T];
 };
@@ -95,5 +96,5 @@ export type Filter = {
 
 export type FilterPayload = {
 	tags: TAG[];
-	target: string; // TODO: replace with TARGET enum
+	target: TARGET_TYPE;
 };

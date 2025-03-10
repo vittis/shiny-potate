@@ -1,4 +1,6 @@
+import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { TAG } from "../Tag/TagTypes";
+import { TARGET_TYPE } from "../Target/TargetTypes";
 
 export enum CONDITION {
 	EQUIPMENT = "EQUIPMENT",
@@ -21,8 +23,8 @@ export type ConditionPositionPayload = {
 	// TODO: think about how to implement this
 };
 export type ConditionEquipmentPayload = {
-	target: string; // TODO: replace with TARGET enum
-	slots: string[]; // TODO: replace with EQUIPMENT_SLOT enum
+	target: TARGET_TYPE;
+	slots: EQUIPMENT_SLOT[];
 	tags: TAG[];
 	amount?: number;
 };

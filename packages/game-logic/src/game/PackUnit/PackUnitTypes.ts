@@ -1,5 +1,5 @@
 import { PossibleMod } from "../Mod/ModTypes";
-import { Hp } from "../Stat/StatTypes";
+import { Hp } from "../Stats/StatsTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Tier } from "../Tier/TierTypes";
 

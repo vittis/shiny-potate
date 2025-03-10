@@ -3,7 +3,7 @@ import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
 import { filterModsByType } from "../Mod/ModsUtils";
-import { Hp } from "../Stat/StatTypes";
+import { Hp } from "../Stats/StatsTypes";
 import { PackUnitData } from "./PackUnitTypes";
 
 export class PackUnit {
