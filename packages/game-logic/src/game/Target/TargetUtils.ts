@@ -43,19 +43,107 @@ function getSelfTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 }
 
 function getAdjacentAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	const grid = bm.team1Board.grid;
-	const { row, column } = originator;
+	const grid =
+		bm.team1Board.grid.some(row =>
+			row.some(space => space.unit?.id === originator.id)
+		)
+			? bm.team1Board.grid
+			: bm.team2Board.grid; const { row, column } = originator;
+
 	const adjacentPositions: Position[] = [
 		{ row: row - 1, column },
-		{ row: row + 1, column },
+		{ row: row - 1, column: column - 1 },
 		{ row, column: column - 1 },
+		{ row: row + 1, column },
+		{ row: row + 1, column: column + 1 },
 		{ row, column: column + 1 },
 	];
 
 	const targets: BattleUnit[] = [];
+
 	for (const pos of adjacentPositions) {
-		const space: Space = grid[pos.row][pos.column];
-		if (space.unit) {
+		if (
+			pos.row >= 0 && pos.row < grid.length &&
+			pos.column >= 0 && pos.column < grid[0].length
+		) {
+			const space = grid[pos.row][pos.column];
+			if (space?.unit) {
+				targets.push(space.unit);
+			}
+		}
+	}
+
+	return targets;
+}
+
+
+export function getFrontAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	const grid =
+		bm.team1Board.grid.some(row =>
+			row.some(space => space.unit?.id === originator.id)
+		)
+			? bm.team1Board.grid
+			: bm.team2Board.grid;
+	const { row, column } = originator;
+
+	const frontRow = row - 1;
+	const targets: BattleUnit[] = [];
+
+	if (frontRow < 0) return targets;
+
+	const isOddRow = row % 2 === 1;
+
+	const frontPositions: Position[] = isOddRow
+		? [
+			{ row: frontRow, column: column - 1 },
+			{ row: frontRow, column },
+		]
+		: [
+			{ row: frontRow, column },
+			{ row: frontRow, column: column + 1 }
+		];
+
+	for (const pos of frontPositions) {
+		if (
+			pos.row >= 0 && pos.row < grid.length &&
+			pos.column >= 0 && pos.column < grid[0].length
+		) {
+			const space = grid[pos.row][pos.column];
+			if (space?.unit) {
+				targets.push(space.unit);
+			}
+		}
+	}
+
+	return targets;
+}
+
+function getFrontRightTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	const grid =
+		bm.team1Board.grid.some(row =>
+			row.some(space => space.unit?.id === originator.id)
+		)
+			? bm.team1Board.grid
+			: bm.team2Board.grid;
+
+	const { row, column } = originator;
+	const targets: BattleUnit[] = [];
+
+	const frontRow = row - 1;
+	if (frontRow < 0) return targets;
+
+	const isOddRow = row % 2 === 1;
+
+	const targetPos: Position = isOddRow
+		? { row: frontRow, column }
+		: { row: frontRow, column: column + 1 };
+
+	if (
+		targetPos.row >= 0 && targetPos.row < grid.length &&
+		targetPos.column >= 0 && targetPos.column < grid[0].length
+	) {
+		const space = grid[targetPos.row][targetPos.column];
+		if (space?.unit) {
 			targets.push(space.unit);
 		}
 	}
@@ -63,19 +151,40 @@ function getAdjacentAlliesTarget(bm: BoardManager, originator: BattleUnit): Batt
 	return targets;
 }
 
-export function getFrontAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	console.log(bm.team1Board);
-
-	return [];
-}
-
-function getFrontRightTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	return [];
-}
 
 function getFrontLeftTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	return [];
+	const grid =
+		bm.team1Board.grid.some(row =>
+			row.some(space => space.unit?.id === originator.id)
+		)
+			? bm.team1Board.grid
+			: bm.team2Board.grid;
+
+	const { row, column } = originator;
+	const targets: BattleUnit[] = [];
+
+	const frontRow = row - 1;
+	if (frontRow < 0) return targets;
+
+	const isOddRow = row % 2 === 1;
+
+	const targetPos: Position = isOddRow
+		? { row: frontRow, column: column - 1 }
+		: { row: frontRow, column };
+
+	if (
+		targetPos.row >= 0 && targetPos.row < grid.length &&
+		targetPos.column >= 0 && targetPos.column < grid[0].length
+	) {
+		const space = grid[targetPos.row][targetPos.column];
+		if (space?.unit) {
+			targets.push(space.unit);
+		}
+	}
+
+	return targets;
 }
+
 
 function getBackAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 	return [];

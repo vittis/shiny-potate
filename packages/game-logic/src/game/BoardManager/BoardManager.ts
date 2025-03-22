@@ -46,21 +46,22 @@ export class BoardManager {
 	}
 
 	createEmptyGrid(): Space[][] {
-		let grid: Space[][] = new Array(this.rows)
-			.fill(null)
-			.map(() => new Array(this.columns).fill(null));
+		let grid: Space[][] = [];
 
-		for (let i = 0; i < this.rows; i++) {
-			for (let j = 0; j < this.columns; j++) {
-				grid[i][j] = {
-					pos: { column: j, row: i },
+		for (let row = 0; row < this.rows; row++) {
+			let currentRow: Space[] = [];
+			for (let col = 0; col < this.columns; col++) {
+				currentRow.push({
+					pos: { column: col, row: row },
 					unit: null,
-				};
+				});
 			}
+			grid.push(currentRow);
 		}
 
 		return grid;
 	}
+
 
 	addToBoard(unit: BattleUnit, owner: OWNER) {
 		const column = unit.column;
@@ -78,7 +79,7 @@ export class BoardManager {
 		}
 	}
 
-	getAt(column: number, row: number, owner: OWNER): BattleUnit {
+	getAt(row: number, column: number, owner: OWNER): BattleUnit {
 		let targetBoard: PlayerBoard = owner === OWNER.TEAM_ONE ? this.team1Board : this.team2Board;
 
 		if (!targetBoard?.grid?.[row]?.[column]?.unit) {
@@ -111,9 +112,12 @@ export class BoardManager {
 		for (let i = 0; i < this.team1Board.grid.length; i++) {
 			for (let j = 0; j < this.team1Board.grid[i].length; j++) {
 				const space = this.team1Board.grid[i][j];
+				if (!space || !space.unit) continue;
+
 				if (space.unit) {
-					process.stdout.write(`${space.unit} `);
-				} else {
+					process.stdout.write(`(${space.pos.column}, ${space.pos.row}): ${space.unit.id} `);
+				}
+				else {
 					process.stdout.write(`(${space.pos.column}, ${space.pos.row}) `);
 				}
 			}

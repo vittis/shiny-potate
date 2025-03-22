@@ -25,7 +25,7 @@ export class BattleUnit {
 		this.abilities = battleUnitInfo.abilities; */
 	}
 
-	setPosition(column: number, row: number) {
+	setPosition(row: number, column: number) {
 		this.column = column;
 		this.row = row;
 	}
