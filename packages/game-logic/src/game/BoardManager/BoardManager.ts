@@ -71,12 +71,21 @@ export class BoardManager {
 		}
 
 		let targetBoard: PlayerBoard = owner === OWNER.TEAM_ONE ? this.team1Board : this.team2Board;
-
 		if (targetBoard.grid[row][column].unit === null) {
 			targetBoard.grid[row][column].unit = unit;
 		} else {
 			console.log("Space already occupied");
 		}
+	}
+
+	getAt(column: number, row: number, owner: OWNER): BattleUnit {
+		let targetBoard: PlayerBoard = owner === OWNER.TEAM_ONE ? this.team1Board : this.team2Board;
+
+		if (!targetBoard?.grid?.[row]?.[column]?.unit) {
+			throw Error(`No unit found at ${column}, ${row}`);
+		}
+
+		return targetBoard.grid[row][column].unit;
 	}
 
 	/* getUnit(owner: OWNER, position: POSITION): Unit {}

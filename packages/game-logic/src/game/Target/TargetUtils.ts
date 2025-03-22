@@ -2,11 +2,17 @@ import { BattleUnit } from "../BattleUnit/BattleUnit";
 import { BoardManager, Position, Space } from "../BoardManager/BoardManager";
 import { TARGET_TYPE } from "./TargetTypes";
 
-export const TargetFunctionMap = {
+export const TargetFunctionMap: {
+	[key in TARGET_TYPE]: (bm: BoardManager, originator: BattleUnit) => BattleUnit[];
+} = {
 	SELF: getSelfTarget,
 	ADJACENT_ALLIES: getAdjacentAlliesTarget,
-	BACK_ALLY: getBackAllyTarget,
-	FRONT_ALLY: getFrontAllyTarget,
+	FRONT_ALLIES: getFrontAlliesTarget,
+	FRONT_RIGHT: getFrontRightTarget,
+	FRONT_LEFT: getFrontLeftTarget,
+	BACK_ALLIES: getBackAlliesTarget,
+	BACK_RIGHT: getBackRightTarget,
+	BACK_LEFT: getBackLeftTarget,
 	LEFT_ALLY: getLeftAllyTarget,
 	RANDOM_ALLY: getRandomAllyTarget,
 	RIGHT_ALLY: getRightAllyTarget,
@@ -37,17 +43,49 @@ function getSelfTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 }
 
 function getAdjacentAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	// Implement logic for getting adjacent allies
+	const grid = bm.team1Board.grid;
+	const { row, column } = originator;
+	const adjacentPositions: Position[] = [
+		{ row: row - 1, column },
+		{ row: row + 1, column },
+		{ row, column: column - 1 },
+		{ row, column: column + 1 },
+	];
+
+	const targets: BattleUnit[] = [];
+	for (const pos of adjacentPositions) {
+		const space: Space = grid[pos.row][pos.column];
+		if (space.unit) {
+			targets.push(space.unit);
+		}
+	}
+
+	return targets;
+}
+
+export function getFrontAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	console.log(bm.team1Board);
+
 	return [];
 }
 
-function getBackAllyTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	// Implement logic for getting back ally
+function getFrontRightTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 	return [];
 }
 
-function getFrontAllyTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
-	// Implement logic for getting front ally
+function getFrontLeftTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	return [];
+}
+
+function getBackAlliesTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	return [];
+}
+
+function getBackRightTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
+	return [];
+}
+
+function getBackLeftTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 	return [];
 }
 
