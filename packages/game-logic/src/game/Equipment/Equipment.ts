@@ -36,7 +36,7 @@ export class Equipment {
 		this.slots = data.slots;
 		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado ou passa opcional?
 		this.ability = undefined; // data.ability ? new Ability(data.ability, tier) : undefined; TODO: implement this
-		this.implicits = data.implicits;
+		this.implicits = []; // convertModTemplateToMod data.implicits
 		this.explicits = []; // sera que alguns itens podem já vir com mods extras?
 		this.mods = [...this.implicits, ...this.explicits];
 	}
@@ -58,8 +58,9 @@ export class Equipment {
 			this.tier += 1;
 
 			const newTierImplicits = this.data.implicits.filter(mod => mod.minimumTier === this.tier);
+			/* convertModTemplateToMod to do this
 			this.implicits = [...this.implicits, ...newTierImplicits];
-			this.mods = [...this.mods, ...newTierImplicits];
+			this.mods = [...this.mods, ...newTierImplicits]; */
 		}
 	}
 }

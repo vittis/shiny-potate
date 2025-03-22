@@ -1,4 +1,4 @@
-import { PossibleMod } from "../Mod/ModTypes";
+import { PossibleModTemplate } from "../Mod/ModTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Tier } from "../Tier/TierTypes";
 
@@ -15,5 +15,5 @@ export type EquipmentData = {
 	slots: EQUIPMENT_SLOT[];
 	minimumTier: Tier;
 	ability?: string; // name of the ability
-	implicits: PossibleMod[];
+	implicits: PossibleModTemplate[];
 };

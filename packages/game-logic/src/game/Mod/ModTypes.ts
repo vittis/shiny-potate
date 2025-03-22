@@ -1,6 +1,6 @@
 import { InstantEffectPayloadQuantity, InstantEffectPayloadValue } from "../Ability/AbilityTypes";
 import { PossibleCondition } from "../Condition/ConditionTypes";
-import { STAT } from "../Stats/StatsTypes";
+import { ModifierCategory, ModifierType, StatModifier } from "../Stats/StatsTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { Tier } from "../Tier/TierTypes";
 
@@ -11,14 +11,12 @@ export enum MOD {
 	// maybe call GRANT_STAT/EFFECT/ABILITY or STAT/EFFECT_MODIFIER ?
 }
 
-export type ModPayloadValue = InstantEffectPayloadValue;
-export type ModPayloadQuantity = InstantEffectPayloadQuantity;
-
 export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT> | Mod<MOD.ABILITY>;
+
+// Final Mod
 
 export type Mod<T extends MOD> = {
 	type: T;
-	minimumTier: Tier; // tier to gain the mod
 	targets: TARGET_TYPE[];
 	conditions: PossibleCondition[];
 	payload: ModPayloadMap[T];
@@ -39,7 +37,47 @@ export type ModAbilityPayload = {
 };
 
 export type ModStatPayload = {
-	stat: STAT;
-	values: ModPayloadValue[];
-	quantity: ModPayloadQuantity[];
+	stat: ModifierType;
+	category: ModifierCategory;
+	value: number;
+};
+
+// Mod Template
+
+export type ModPayloadTemplateValue = InstantEffectPayloadValue;
+export type ModPayloadTemplateQuantity = InstantEffectPayloadQuantity;
+
+export type PossibleModTemplate =
+	| ModTemplate<MOD.STAT>
+	| ModTemplate<MOD.EFFECT>
+	| ModTemplate<MOD.ABILITY>;
+
+export type ModTemplate<T extends MOD> = {
+	type: T;
+	minimumTier: Tier; // tier to gain the mod
+	targets: TARGET_TYPE[];
+	conditions: PossibleCondition[];
+	payload: ModTemplatePayloadMap[T];
+};
+
+export type ModTemplatePayloadMap = {
+	[MOD.STAT]: ModStatPayloadTemplate;
+	[MOD.EFFECT]: ModEffectPayloadTemplate[];
+	[MOD.ABILITY]: ModAbilityPayloadTemplate[];
+};
+
+export type ModEffectPayloadTemplate = {
+	// todo: implement this
+};
+
+export type ModAbilityPayloadTemplate = {
+	name: string; // name of the ability
+};
+
+// this mod add fixed modifiers
+export type ModStatPayloadTemplate = {
+	stat: ModifierType;
+	category: ModifierCategory;
+	values: ModPayloadTemplateValue[]; // Tiered values
+	quantity: ModPayloadTemplateQuantity[];
 };

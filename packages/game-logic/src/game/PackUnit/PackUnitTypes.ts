@@ -1,4 +1,4 @@
-import { PossibleMod } from "../Mod/ModTypes";
+import { PossibleModTemplate } from "../Mod/ModTypes";
 import { Hp } from "../Stats/StatsTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Tier } from "../Tier/TierTypes";
@@ -8,6 +8,6 @@ export type PackUnitData = {
 	tags: TAG[];
 	minimumTier: Tier;
 	hp: Hp;
-	implicits: PossibleMod[];
+	implicits: PossibleModTemplate[];
 	defaultEquipment: string[]; // todo: implement this
 };
