@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { OWNER } from "../BoardManager/BoardManager";
 /* import { OWNER } from "../BoardManager/BoardManager";
 import { PackUnit } from "../PackUnit/PackUnit";
 import { BattleUnitInfo } from "./BattleUnitTypes";
@@ -7,10 +8,10 @@ import { Ability } from "../Ability/Ability"; */
 
 export class BattleUnit {
 	id: string;
-	/* owner: OWNER; */
+	owner!: OWNER;
 
-	column: number = -1;
-	row: number = -1;
+	column!: number;
+	row!: number;
 
 	/* packUnit: PackUnit;
 	equipment: EquippedItem[];
@@ -30,7 +31,11 @@ export class BattleUnit {
 		this.row = row;
 	}
 
+	setOwner(owner: OWNER) {
+		this.owner = owner;
+	}
+
 	toString() {
-		return `X`;
+		return `${this.row}, ${this.column}`;
 	}
 }

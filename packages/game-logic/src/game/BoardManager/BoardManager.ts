@@ -62,7 +62,6 @@ export class BoardManager {
 		return grid;
 	}
 
-
 	addToBoard(unit: BattleUnit, owner: OWNER) {
 		const column = unit.column;
 		const row = unit.row;
@@ -89,15 +88,35 @@ export class BoardManager {
 		return targetBoard.grid[row][column].unit;
 	}
 
-	/* getUnit(owner: OWNER, position: POSITION): Unit {}
+	getAllUnits(): BattleUnit[] {
+		const units: BattleUnit[] = [];
+		const boards = [this.team1Board.grid, this.team2Board.grid];
+		for (const grid of boards) {
+			for (const row of grid) {
+				for (const space of row) {
+					if (space.unit) {
+						units.push(space.unit);
+					}
+				}
+			}
+		}
+		return units;
+	}
 
-	getAllUnits(): Unit[] {}
+	getAllUnitsOfOwner(owner: OWNER): BattleUnit[] {
+		const units: BattleUnit[] = [];
+		const grid = owner === OWNER.TEAM_ONE ? this.team1Board.grid : this.team2Board.grid;
+		for (const row of grid) {
+			for (const space of row) {
+				if (space.unit) {
+					units.push(space.unit);
+				}
+			}
+		}
+		return units;
+	}
 
-	getAllUnitsOfOwner(owner: OWNER): Unit[] {}
-
-	getUnitByPosition(owner: OWNER, position: POSITION): Unit[] {}
-
-	getUnitById(id: string): Unit {
+	/* getUnitById(id: string): BattleUnit {
 		const unit = this.getAllUnits().find(unit => unit.id === id);
 		if (!unit) {
 			throw Error(`Tried to getUnitById ${id} that doesnt exist`);
@@ -116,8 +135,7 @@ export class BoardManager {
 
 				if (space.unit) {
 					process.stdout.write(`(${space.pos.column}, ${space.pos.row}): ${space.unit.id} `);
-				}
-				else {
+				} else {
 					process.stdout.write(`(${space.pos.column}, ${space.pos.row}) `);
 				}
 			}
