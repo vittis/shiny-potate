@@ -3,7 +3,6 @@ import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
 import { filterModsByType } from "../Mod/ModsUtils";
-import { Hp } from "../Stats/StatsTypes";
 import { PackUnitData } from "./PackUnitTypes";
 
 export class PackUnit {
@@ -31,7 +30,7 @@ export class PackUnit {
 		this.tags = data.tags;
 		this.tier = tier;
 		this.hp = data.hp[tier - 1] || 0;
-		this.implicits = data.implicits.filter(mod => mod.minimumTier <= tier);
+		this.implicits = []; // TODO convertModTemplateToMod data.implicits.filter(mod => mod.minimumTier <= tier);
 		this.explicits = [];
 		this.mods = [...this.implicits, ...this.explicits];
 	}
@@ -59,8 +58,9 @@ export class PackUnit {
 			this.hp = this.data.hp[this.tier - 1] || 0;
 
 			const newTierImplicits = this.data.implicits.filter(mod => mod.minimumTier === this.tier);
+			/* TODO convertModTemplateToMod to do this
 			this.implicits = [...this.implicits, ...newTierImplicits];
-			this.mods = [...this.mods, ...newTierImplicits];
+			this.mods = [...this.mods, ...newTierImplicits]; */
 		}
 	}
 }
