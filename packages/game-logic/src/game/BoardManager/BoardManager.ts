@@ -71,7 +71,7 @@ export class BoardManager {
 		}
 
 		let targetBoard: PlayerBoard = owner === OWNER.TEAM_ONE ? this.team1Board : this.team2Board;
-		if (targetBoard.grid[row][column].unit === null) {
+		if (targetBoard.grid?.[row]?.[column]?.unit === null) {
 			targetBoard.grid[row][column].unit = unit;
 		} else {
 			console.log("Space already occupied");
@@ -126,6 +126,8 @@ export class BoardManager {
 
 	printBattlefield() {
 		console.log(this.team1Board.grid);
+		console.log("------------------------");
+
 		console.log(this.team2Board.grid);
 
 		for (let i = 0; i < this.team1Board.grid.length; i++) {

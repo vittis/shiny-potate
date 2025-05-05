@@ -7,7 +7,7 @@ export type PackUnitData = {
 	name: string;
 	tags: TAG[];
 	minimumTier: Tier;
-	hp: Hp;
+	hp: number[];
 	implicits: PossibleModTemplate[];
 	defaultEquipment: string[]; // todo: implement this
 };

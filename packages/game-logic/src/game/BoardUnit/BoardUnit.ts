@@ -34,7 +34,7 @@ export class BoardUnit {
 		this.packUnit = packUnit;
 		this.equipmentManager = new EquipmentManager();
 		this.abilityManager = new AbilityManager();
-		this.statsManager = new StatsManager();
+		this.statsManager = new StatsManager(packUnit);
 	}
 
 	equip() {

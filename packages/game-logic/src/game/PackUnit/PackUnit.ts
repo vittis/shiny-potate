@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
-import { filterModsByType } from "../Mod/ModsUtils";
+import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
 import { PackUnitData } from "./PackUnitTypes";
 
 export class PackUnit {
@@ -30,12 +30,15 @@ export class PackUnit {
 		this.tags = data.tags;
 		this.tier = tier;
 		this.hp = data.hp[tier - 1] || 0;
-		this.implicits = []; // TODO convertModTemplateToMod data.implicits.filter(mod => mod.minimumTier <= tier);
+		this.implicits = data.implicits
+			.filter(mod => mod.minimumTier <= tier)
+			.map(mod => convertModTemplateToMod(mod, this.id, tier)) as PossibleMod[];
 		this.explicits = [];
 		this.mods = [...this.implicits, ...this.explicits];
 	}
 
 	getStatMods(): Mod<MOD.STAT>[] {
+		console.log(this.mods);
 		return filterModsByType(this.mods, MOD.STAT);
 	}
 

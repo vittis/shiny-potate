@@ -27,19 +27,20 @@ export function convertModTemplateToMod<T extends MOD>(
 	tier: number,
 ): Mod<T> {
 	let modPayload: ModPayloadMap[T];
-	if (modTemplate.payload instanceof Array) {
-		// Handles EFFECT and ABILITY cases
-		// TODO: create if for each case
-		modPayload = modTemplate.payload.map(effect => ({ ...effect })) as ModPayloadMap[T];
-	} else {
-		// Handles STAT case
-		// TODO: adapt function to handle any string as ref
+
+	if (modTemplate.type === MOD.STAT) {
 		// create another function to calculate value based on all values and quantity with different rules
 		modPayload = {
 			stat: modTemplate.payload.stat,
 			category: modTemplate.payload.category,
 			value: extractTieredValue(modTemplate.payload.values, "BASE", tier),
 		} as ModPayloadMap[T];
+
+		console.log("modPayload", modPayload);
+	} else if (modTemplate.type === MOD.EFFECT) {
+		modPayload = modTemplate.payload.map(effect => ({ ...effect })) as ModPayloadMap[T];
+	} else {
+		modPayload = modTemplate.payload.map(effect => ({ ...effect })) as ModPayloadMap[T];
 	}
 
 	return {

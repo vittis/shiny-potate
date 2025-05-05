@@ -1,3 +1,5 @@
+import { Filter } from "../Ability/AbilityTypes";
+
 export enum TARGET_TYPE {
 	SELF = "SELF",
 
@@ -25,3 +27,5 @@ export enum TARGET_TYPE {
 	SIDES = "SIDES",
 	STANDARD = "STANDARD",
 }
+
+export type TargetWithFilters = { target: TARGET_TYPE; filters: Filter[] }[];

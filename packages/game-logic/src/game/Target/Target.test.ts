@@ -54,7 +54,7 @@ describe("Target", () => {
 		let bm: BoardManager;
 
 		beforeAll(() => {
-			bm = new BoardManager(3, 3);
+			bm = new BoardManager(2, 3);
 			bm.addToBoard(unit00, OWNER.TEAM_ONE);
 			bm.addToBoard(unit01, OWNER.TEAM_ONE);
 			bm.addToBoard(unit10, OWNER.TEAM_ONE);

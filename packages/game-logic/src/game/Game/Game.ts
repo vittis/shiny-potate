@@ -13,7 +13,7 @@ export class Game {
 		this.boardManager.addToBoard(unit1, OWNER.TEAM_ONE);
 
 		const unit2 = new BattleUnit();
-		unit2.setPosition(2, 1);
+		unit2.setPosition(0, 1);
 		this.boardManager.addToBoard(unit2, OWNER.TEAM_TWO);
 
 		this.boardManager.printBattlefield();

@@ -1,59 +1,51 @@
 {
 	"name": "Lumberjack",
-	"tags": ["PEASANT"],
+	"tags": [
+		"PEASANT"
+	],
 	"minimumTier": 1,
-	"hp": [150, 200, 280, 350, 500],
+	"hp": [
+		150,
+		200,
+		280,
+		350,
+		500
+	],
 	"implicits": [
 		{
-			"type": "STAT",
 			"minimumTier": 1,
-			"conditions": [
-				{
-					"type": "EQUIPMENT",
-					"payload": {
-						"target": "SELF",
-						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
-						"tags": ["AXE"]
-					}
-				}
-			],
+			"type": "STAT",
 			"targets": [
 				{
 					"target": "SELF",
 					"filters": []
 				}
 			],
+			"conditions": [],
 			"payload": [
 				{
-					"stat": "DAMAGE",
+					"stat": "HP_MODIFIER",
+					"category": "FLAT",
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [20, 40, 70, 100, 150]
+							"values": [
+								10,
+								20,
+								30,
+								40,
+								50
+							]
 						}
 					],
 					"quantity": [
 						{
-							"ref": "BASE"
+							"ref": "BASE",
+							"filters": []
 						}
 					]
 				}
 			]
-		},
-		{
-			"minimumTier": 2,
-			"type": "GAIN_ABILITY",
-			"conditions": [],
-			"targets": [
-				{
-					"target": "SELF",
-					"filters": []
-				}
-			],
-			"payload": {
-				"name": "Round Swing"
-			}
 		}
-	],
-	"defaultEquipment": []
+	]
 }

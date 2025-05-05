@@ -30,6 +30,16 @@ export type ModifierType =
 	| "DAMAGE_MODIFIER"
 	| "HEAL_MODIFIER"
 	| "SHIELD_MODIFIER"
-	| `${keyof typeof STATUS_EFFECT}_MODIFIER`;
+	| "STATUS_EFFECT_MODIFIER"; // create another variable to specify the status effect
 
-export type StatModifier = Record<ModifierType, Record<ModifierType, number>>;
+export type StatModifier = Record<ModifierType, Record<ModifierCategory, number>>;
+
+/* const arrayFormat = [
+	{
+		type: "HP_MODIFIER",
+		category: "FLAT",
+		value: 50,
+		tags: [],
+		originId: "",
+	},
+] */

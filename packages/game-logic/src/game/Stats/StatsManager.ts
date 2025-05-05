@@ -1,4 +1,5 @@
 import { MOD, Mod } from "../Mod/ModTypes";
+import { PackUnit } from "../PackUnit/PackUnit";
 import { StatModifier, UnitStats } from "./StatsTypes";
 
 export class StatsManager {
@@ -8,8 +9,16 @@ export class StatsManager {
 	activeStatMods: Mod<MOD.STAT>[];
 	//private statsFromStatusEffects!: StatsFromStatusEffects;
 
-	constructor() {
-		this.stats = this.setInitialUnitStats();
+	constructor(packUnit: PackUnit) {
+		this.stats = {
+			hp: packUnit.hp,
+			maxHp: packUnit.hp,
+			shield: 0,
+		};
+
+		const statsImplicits = packUnit.getStatMods();
+		console.log(statsImplicits);
+
 		this.fixedModifiers = [];
 		this.temporaryModifiers = [];
 		this.activeStatMods = [];
@@ -37,7 +46,7 @@ export class StatsManager {
 	} */
 
 	addStatMod(mod: Mod<MOD.STAT>) {
-		this.activeStatMods.push(mod);
+		//this.activeStatMods.push(mod);
 		// TODO add mod to fixed modifiers
 	}
 
@@ -45,13 +54,5 @@ export class StatsManager {
 		/* const updatedStatMods = this.activeStatMods.filter((mod) => mod.originId !== originId);
 		this.activeStatMods = updatedStatMods; */
 		// TODO update fixed modifiers
-	}
-
-	setInitialUnitStats() {
-		return {
-			hp: 0,
-			maxHp: 0,
-			shield: 0,
-		};
 	}
 }

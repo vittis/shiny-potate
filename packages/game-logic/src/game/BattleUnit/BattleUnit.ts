@@ -36,6 +36,6 @@ export class BattleUnit {
 	}
 
 	toString() {
-		return `${this.row}, ${this.column}`;
+		return `${this.row},${this.column}_${this.id}`;
 	}
 }
