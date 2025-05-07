@@ -28,4 +28,4 @@ export enum TARGET_TYPE {
 	STANDARD = "STANDARD",
 }
 
-export type TargetWithFilters = { target: TARGET_TYPE; filters: Filter[] }[];
+export type TargetWithFilters = { target: TARGET_TYPE; filters: Filter[] };

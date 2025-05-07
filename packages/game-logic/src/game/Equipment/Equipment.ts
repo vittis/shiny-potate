@@ -4,7 +4,7 @@ import { EQUIPMENT_SLOT, EquipmentData } from "./EquipmentTypes";
 import { TAG } from "../Tag/TagTypes";
 import { Ability } from "../Ability/Ability";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
-import { filterModsByType } from "../Mod/ModsUtils";
+import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
 
 export class Equipment {
 	id: string;
@@ -36,7 +36,9 @@ export class Equipment {
 		this.slots = data.slots;
 		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado ou passa opcional?
 		this.ability = undefined; // data.ability ? new Ability(data.ability, tier) : undefined; TODO: implement this
-		this.implicits = []; // convertModTemplateToMod data.implicits
+		this.implicits = data.implicits
+			.filter(mod => mod.minimumTier <= tier)
+			.map(mod => convertModTemplateToMod(mod, tier, this.id));
 		this.explicits = []; // sera que alguns itens podem já vir com mods extras?
 		this.mods = [...this.implicits, ...this.explicits];
 	}
@@ -57,10 +59,12 @@ export class Equipment {
 		if (this.canUpgradeTier()) {
 			this.tier += 1;
 
-			const newTierImplicits = this.data.implicits.filter(mod => mod.minimumTier === this.tier);
-			/* convertModTemplateToMod to do this
-			this.implicits = [...this.implicits, ...newTierImplicits];
-			this.mods = [...this.mods, ...newTierImplicits]; */
+			// if (this.ability) this.ability.upgradeTier(); // TODO: implement this
+
+			this.implicits = this.data.implicits
+				.filter(mod => mod.minimumTier <= this.tier)
+				.map(mod => convertModTemplateToMod(mod, this.tier, this.id));
+			this.mods = [...this.implicits, ...this.explicits];
 		}
 	}
 }

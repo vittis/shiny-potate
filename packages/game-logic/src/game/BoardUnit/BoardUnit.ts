@@ -3,6 +3,8 @@ import { PackUnit } from "../PackUnit/PackUnit";
 import { EquipmentManager } from "../Equipment/EquipmentManager";
 import { AbilityManager } from "../Ability/AbilityManager";
 import { StatsManager } from "../Stats/StatsManager";
+import { Equipment } from "../Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 
 export class BoardUnit {
 	id: string;
@@ -26,7 +28,7 @@ export class BoardUnit {
 	}
 
 	get statModifiers() {
-		return this.statsManager.fixedModifiers;
+		return this.statsManager.activeStatModifiers;
 	}
 
 	constructor(packUnit: PackUnit) {
@@ -37,7 +39,28 @@ export class BoardUnit {
 		this.statsManager = new StatsManager(packUnit);
 	}
 
-	equip() {
-		// TODO: equip
+	equip(equipment: Equipment, slot: EQUIPMENT_SLOT) {
+		this.equipmentManager.equip(equipment, slot);
+
+		if (this.equipment.find(e => e.equipment.id == equipment.id)) {
+			this.statsManager.addStatMods(equipment.getStatMods());
+		}
+	}
+
+	upgradePackUnitTier() {
+		this.packUnit.upgradeTier();
+		this.statsManager.setBaseStats(this.packUnit);
+		this.statsManager.removeStatModsFromOrigin(this.packUnit.id);
+		this.statsManager.addStatMods(this.packUnit.getStatMods());
+	}
+
+	upgradeEquipmentTier(equipId: string) {
+		const equip = this.equipmentManager.getEquipmentById(equipId);
+
+		if (equip) {
+			equip.equipment.upgradeTier();
+			this.statsManager.removeStatModsFromOrigin(equipId);
+			this.statsManager.addStatMods(equip.equipment.getStatMods());
+		}
 	}
 }

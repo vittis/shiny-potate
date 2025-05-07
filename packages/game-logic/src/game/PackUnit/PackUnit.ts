@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
-import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
+import { MOD, Mod, PossibleMod, PossibleModTemplate } from "../Mod/ModTypes";
 import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
 import { PackUnitData } from "./PackUnitTypes";
 
@@ -32,13 +32,12 @@ export class PackUnit {
 		this.hp = data.hp[tier - 1] || 0;
 		this.implicits = data.implicits
 			.filter(mod => mod.minimumTier <= tier)
-			.map(mod => convertModTemplateToMod(mod, this.id, tier)) as PossibleMod[];
+			.map(mod => convertModTemplateToMod(mod, tier, this.id));
 		this.explicits = [];
 		this.mods = [...this.implicits, ...this.explicits];
 	}
 
 	getStatMods(): Mod<MOD.STAT>[] {
-		console.log(this.mods);
 		return filterModsByType(this.mods, MOD.STAT);
 	}
 
@@ -46,8 +45,8 @@ export class PackUnit {
 		return filterModsByType(this.mods, MOD.EFFECT);
 	}
 
-	getAbilities(): Mod<MOD.ABILITY>[] {
-		return filterModsByType(this.mods, MOD.ABILITY);
+	getAbilities(): Mod<MOD.GAIN_ABILITY>[] {
+		return filterModsByType(this.mods, MOD.GAIN_ABILITY);
 	}
 
 	canUpgradeTier() {
@@ -57,13 +56,11 @@ export class PackUnit {
 	upgradeTier() {
 		if (this.canUpgradeTier()) {
 			this.tier += 1;
-
 			this.hp = this.data.hp[this.tier - 1] || 0;
-
-			const newTierImplicits = this.data.implicits.filter(mod => mod.minimumTier === this.tier);
-			/* TODO convertModTemplateToMod to do this
-			this.implicits = [...this.implicits, ...newTierImplicits];
-			this.mods = [...this.mods, ...newTierImplicits]; */
+			this.implicits = this.data.implicits
+				.filter(mod => mod.minimumTier <= this.tier)
+				.map(mod => convertModTemplateToMod(mod, this.tier, this.id));
+			this.mods = [...this.implicits, ...this.explicits];
 		}
 	}
 }

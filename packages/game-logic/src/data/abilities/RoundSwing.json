@@ -1,64 +1,44 @@
 {
-  "name": "Round Swing",
-  "tags": [
-    "ATTACK"
-  ],
-  "minimumTier": 2,
-  "cooldown": [
-    70,
-    60,
-    50,
-    40,
-    30
-  ],
-  "effects": [
-    {
-      "type": "DAMAGE",
-      "targets": [
-        {
-          "target": "STANDARD",
-          "filters": []
-        },
-        {
-          "target": "SIDES",
-          "filters": []
-        }
-      ],
-      "conditions": [
-        {
-          "type": "EQUIPMENT",
-          "payload": {
-            "target": "SELF",
-            "slots": [
-              "TWO_HANDS",
-              "MAIN_HAND",
-              "OFF_HAND"
-            ],
-            "tags": [
-              "AXE"
-            ]
-          }
-        }
-      ],
-      "payload": {
-        "values": [
-          {
-            "ref": "BASE",
-            "values": [
-              20,
-              30,
-              40,
-              50,
-              60
-            ]
-          }
-        ],
-        "quantity": [
-          {
-            "ref": "BASE"
-          }
-        ]
-      }
-    }
-  ]
+	"name": "Round Swing",
+	"tags": ["ATTACK"],
+	"minimumTier": 2,
+	"cooldown": [70, 60, 50, 40],
+	"effects": [
+		{
+			"type": "DAMAGE",
+			"targets": [
+				{
+					"target": "STANDARD",
+					"filters": []
+				},
+				{
+					"target": "SIDES",
+					"filters": []
+				}
+			],
+			"conditions": [
+				{
+					"type": "EQUIPMENT",
+					"payload": {
+						"target": "SELF",
+						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
+						"tags": ["AXE"]
+					}
+				}
+			],
+			"payload": {
+				"values": [
+					{
+						"ref": "BASE",
+						"values": [20, 30, 40, 50]
+					}
+				],
+				"quantity": [
+					{
+						"ref": "BASE"
+					}
+				]
+			}
+		}
+	]
 }

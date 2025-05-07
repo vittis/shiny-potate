@@ -9,5 +9,5 @@ export type PackUnitData = {
 	minimumTier: Tier;
 	hp: number[];
 	implicits: PossibleModTemplate[];
-	defaultEquipment: string[]; // todo: implement this
+	defaultEquipment?: string[]; // todo: implement this | idk if its here or mechanic during the game
 };

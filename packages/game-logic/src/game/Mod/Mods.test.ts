@@ -5,9 +5,9 @@ import { convertModTemplateToMod } from "./ModsUtils";
 import { MOD, ModTemplate } from "./ModTypes";
 
 describe("Mods", () => {
-	describe("utils functions", () => {
+	describe.skip("utils functions", () => {
 		// TODO: finish test
-		it("convertModTemplateToMod", () => {
+		/* it("convertModTemplateToMod", () => {
 			const id = "1";
 			const tier = 3;
 			const statModTemplate: ModTemplate<MOD.STAT> = {
@@ -43,8 +43,7 @@ describe("Mods", () => {
 			};
 
 			expect(convertModTemplateToMod(statModTemplate, id, tier)).toBe(1);
-		});
-
+		}); */
 		/* it("should equip correctly", () => {
 			const equipManager = new EquipmentManager();
 

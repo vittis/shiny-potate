@@ -6,50 +6,61 @@ import {
 } from "../Ability/AbilityTypes";
 import { PossibleCondition } from "../Condition/ConditionTypes";
 import { ModifierCategory, ModifierType, StatModifier } from "../Stats/StatsTypes";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE, TargetWithFilters } from "../Target/TargetTypes";
 import { Tier } from "../Tier/TierTypes";
 
 export enum MOD {
 	STAT = "STAT",
-	EFFECT = "EFFECT", // sera se chama de ability ou trigger? TRIGGER + EFFECT + TARGET
-	ABILITY = "GAIN_ABILITY", // grant ability to unit
-	// maybe call GRANT_STAT/EFFECT/ABILITY or STAT/EFFECT_MODIFIER ?
+	EFFECT = "EFFECT",
+	GAIN_ABILITY = "GAIN_ABILITY",
 }
 
-export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT> | Mod<MOD.ABILITY>;
+export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT> | Mod<MOD.GAIN_ABILITY>;
 
-// Final Mod
+// Final Mod - Mod as is after being received by pack unit, equipment or ability
+// with the tier, the minimumTier is removed and the payload is changed to remove values and quantity, replacing it with a single value
 
 export type Mod<T extends MOD> = {
 	type: T;
-	targets: TargetWithFilters;
+	targets: TargetWithFilters[];
 	conditions: PossibleCondition[];
 	payload: ModPayloadMap[T];
+	originId: string;
+	id: string;
 };
 
 export type ModPayloadMap = {
 	[MOD.STAT]: ModStatPayload[];
 	[MOD.EFFECT]: ModEffectPayload[];
-	[MOD.ABILITY]: ModAbilityPayload[];
+	[MOD.GAIN_ABILITY]: ModGainAbilityPayload[];
 };
 
 export type ModEffectPayload = {
 	// todo: implement this
 };
 
-export type ModAbilityPayload = {
+export type ModGainAbilityPayload = {
 	name: string; // name of the ability
 };
 
-export type ModStatPayload = {
-	stat: ModifierType;
+export type ModStatPayloadBase = {
 	category: ModifierCategory;
 	value: number;
-	tag: TAG[];
+	tags: TAG[];
 };
 
-// Mod Template
+export type ModStatPayload =
+	| (ModStatPayloadBase & {
+			stat: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+	  })
+	| (ModStatPayloadBase & {
+			stat: "STATUS_EFFECT_MODIFIER";
+			statusEffect: STATUS_EFFECT;
+	  });
+
+// Mod Template - Mod as is on json
 
 export type ModPayloadTemplateValue = InstantEffectPayloadValue;
 export type ModPayloadTemplateQuantity = InstantEffectPayloadQuantity;
@@ -57,12 +68,12 @@ export type ModPayloadTemplateQuantity = InstantEffectPayloadQuantity;
 export type PossibleModTemplate =
 	| ModTemplate<MOD.STAT>
 	| ModTemplate<MOD.EFFECT>
-	| ModTemplate<MOD.ABILITY>;
+	| ModTemplate<MOD.GAIN_ABILITY>;
 
 export type ModTemplate<T extends MOD> = {
 	type: T;
 	minimumTier: Tier; // tier to gain the mod
-	targets: TargetWithFilters;
+	targets: TargetWithFilters[];
 	conditions: PossibleCondition[];
 	payload: ModTemplatePayloadMap[T];
 };
@@ -70,22 +81,29 @@ export type ModTemplate<T extends MOD> = {
 export type ModTemplatePayloadMap = {
 	[MOD.STAT]: ModStatPayloadTemplate[];
 	[MOD.EFFECT]: ModEffectPayloadTemplate[];
-	[MOD.ABILITY]: ModAbilityPayloadTemplate[];
+	[MOD.GAIN_ABILITY]: ModGainAbilityPayloadTemplate[];
 };
 
 export type ModEffectPayloadTemplate = {
 	// todo: implement this
 };
 
-export type ModAbilityPayloadTemplate = {
+export type ModGainAbilityPayloadTemplate = {
 	name: string; // name of the ability
 };
 
-// this mod add fixed modifiers
-export type ModStatPayloadTemplate = {
-	stat: ModifierType;
+export type ModStatPayloadTemplateBase = {
 	category: ModifierCategory;
 	values: ModPayloadTemplateValue[]; // Tiered values
 	quantity: ModPayloadTemplateQuantity[];
-	tag: TAG[];
+	tags: TAG[];
 };
+
+export type ModStatPayloadTemplate =
+	| (ModStatPayloadTemplateBase & {
+			stat: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+	  })
+	| (ModStatPayloadTemplateBase & {
+			stat: "STATUS_EFFECT_MODIFIER";
+			statusEffect: STATUS_EFFECT;
+	  });

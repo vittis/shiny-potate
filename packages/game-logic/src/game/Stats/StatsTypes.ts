@@ -29,17 +29,22 @@ export type ModifierType =
 	| "COOLDOWN_MODIFIER"
 	| "DAMAGE_MODIFIER"
 	| "HEAL_MODIFIER"
-	| "SHIELD_MODIFIER"
+	| "APPLY_SHIELD_MODIFIER"
 	| "STATUS_EFFECT_MODIFIER"; // create another variable to specify the status effect
 
-export type StatModifier = Record<ModifierType, Record<ModifierCategory, number>>;
+export type StatModifierBase = {
+	category: ModifierCategory;
+	value: number;
+	tags: TAG[];
+	originId: string;
+	modId: string;
+};
 
-/* const arrayFormat = [
-	{
-		type: "HP_MODIFIER",
-		category: "FLAT",
-		value: 50,
-		tags: [],
-		originId: "",
-	},
-] */
+export type StatModifier =
+	| (StatModifierBase & {
+			type: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+	  })
+	| (StatModifierBase & {
+			type: "STATUS_EFFECT_MODIFIER";
+			statusEffect: STATUS_EFFECT;
+	  });

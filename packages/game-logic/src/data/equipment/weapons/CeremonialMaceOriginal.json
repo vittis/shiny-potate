@@ -17,18 +17,26 @@
 			"conditions": [],
 			"payload": [
 				{
-					"stat": "SHIELD_MODIFIER",
-					"category": "FLAT",
+					"stat": "COOLDOWN_MODIFIER",
+					"category": "PERCENTAGE",
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [25, 60, 100, 150]
+							"values": [-10, -20, -30, -40]
 						}
 					],
 					"quantity": [
 						{
 							"ref": "BASE",
-							"filters": []
+							"filters": [
+								{
+									"type": "ABILITY",
+									"payload": {
+										"tags": ["SUPPORT"],
+										"target": "SELF"
+									}
+								}
+							]
 						}
 					],
 					"tags": []

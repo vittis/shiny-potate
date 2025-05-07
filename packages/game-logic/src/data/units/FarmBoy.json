@@ -2,7 +2,7 @@
 	"name": "Farm Boy",
 	"tags": ["PEASANT"],
 	"minimumTier": 1,
-	"hp": [100, 150, 220, 300, 400],
+	"hp": [100, 150, 220, 300],
 	"implicits": [
 		{
 			"type": "STATUS_EFFECT",
@@ -20,7 +20,7 @@
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [1, 2, 3, 4, 5]
+							"values": [1, 2, 3, 4]
 						}
 					],
 					"quantity": [

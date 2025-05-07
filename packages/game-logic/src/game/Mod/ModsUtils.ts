@@ -1,46 +1,63 @@
+import { nanoid } from "nanoid";
 import { InstantEffectPayloadValue } from "../Ability/AbilityTypes";
 import {
 	Mod,
 	MOD,
+	ModEffectPayload,
+	ModEffectPayloadTemplate,
+	ModGainAbilityPayload,
+	ModGainAbilityPayloadTemplate,
 	ModPayloadMap,
+	ModStatPayload,
+	ModStatPayloadTemplate,
 	ModTemplate,
 	ModTemplatePayloadMap,
 	PossibleMod,
+	PossibleModTemplate,
 } from "./ModTypes";
 
 export function filterModsByType<T extends MOD>(mods: PossibleMod[], type: MOD) {
 	return mods.filter(mod => mod.type === type) as Mod<T>[];
 }
 
-/* export function convertModTemplateToMod<T extends MOD>(
-	modTemplate: ModTemplate<T>,
-	originId: string,
+export function convertModTemplateToMod(
+	modTemplate: PossibleModTemplate,
 	tier: number,
-): Mod<T> {
-	// TODO: implement this
-}
- */
-
-export function convertModTemplateToMod<T extends MOD>(
-	modTemplate: ModTemplate<T>,
 	originId: string,
-	tier: number,
-): Mod<T> {
-	let modPayload: ModPayloadMap[T];
+): PossibleMod {
+	let modPayload: ModPayloadMap[MOD];
 
-	if (modTemplate.type === MOD.STAT) {
-		// create another function to calculate value based on all values and quantity with different rules
-		modPayload = {
-			stat: modTemplate.payload.stat,
-			category: modTemplate.payload.category,
-			value: extractTieredValue(modTemplate.payload.values, "BASE", tier),
-		} as ModPayloadMap[T];
+	switch (modTemplate.type) {
+		case MOD.STAT: {
+			const statPayload = modTemplate.payload as ModStatPayloadTemplate[];
+			modPayload = statPayload.map(payload => ({
+				stat: payload.stat,
+				category: payload.category,
+				tags: payload.tags || [],
+				...(payload.stat === "STATUS_EFFECT_MODIFIER" && {
+					statusEffect: payload.statusEffect,
+				}),
+				value: extractTieredValue(payload.values, "BASE", tier), // TODO: implement this for any string instead of only BASE
+			})) as ModPayloadMap[MOD.STAT];
+			break;
+		}
 
-		console.log("modPayload", modPayload);
-	} else if (modTemplate.type === MOD.EFFECT) {
-		modPayload = modTemplate.payload.map(effect => ({ ...effect })) as ModPayloadMap[T];
-	} else {
-		modPayload = modTemplate.payload.map(effect => ({ ...effect })) as ModPayloadMap[T];
+		case MOD.EFFECT: {
+			// TODO: implement this
+			const effectPayload = modTemplate.payload as ModEffectPayloadTemplate[];
+			modPayload = effectPayload.map(payload => ({
+				...payload,
+			})) as ModPayloadMap[MOD.EFFECT];
+			break;
+		}
+
+		case MOD.GAIN_ABILITY: {
+			const gainAbilityPayload = modTemplate.payload as ModGainAbilityPayloadTemplate[];
+			modPayload = gainAbilityPayload.map(payload => ({
+				name: payload.name,
+			})) as ModPayloadMap[MOD.GAIN_ABILITY];
+			break;
+		}
 	}
 
 	return {
@@ -48,7 +65,9 @@ export function convertModTemplateToMod<T extends MOD>(
 		targets: modTemplate.targets,
 		conditions: modTemplate.conditions,
 		payload: modPayload,
-	};
+		originId,
+		id: nanoid(8),
+	} as PossibleMod;
 }
 
 function extractTieredValue(

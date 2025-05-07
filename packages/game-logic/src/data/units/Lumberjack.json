@@ -1,16 +1,8 @@
 {
 	"name": "Lumberjack",
-	"tags": [
-		"PEASANT"
-	],
+	"tags": ["PEASANT"],
 	"minimumTier": 1,
-	"hp": [
-		150,
-		200,
-		280,
-		350,
-		500
-	],
+	"hp": [150, 200, 280, 350],
 	"implicits": [
 		{
 			"minimumTier": 1,
@@ -29,13 +21,7 @@
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [
-								10,
-								20,
-								30,
-								40,
-								50
-							]
+							"values": [10, 20, 30, 40]
 						}
 					],
 					"quantity": [
@@ -43,7 +29,68 @@
 							"ref": "BASE",
 							"filters": []
 						}
-					]
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 2,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "PERCENTAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": ["-", 20, 30, 40]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 3,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "MULTIPLICATIVE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": ["-", "-", 1.5, 2]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
 				}
 			]
 		}

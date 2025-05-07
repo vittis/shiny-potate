@@ -1,50 +1,73 @@
+import data from "../../data";
+import { BoardUnit } from "../BoardUnit/BoardUnit";
+import { PackUnit } from "../PackUnit/PackUnit";
 import { Equipment } from "./Equipment";
 import { EquipmentManager } from "./EquipmentManager";
 import { EQUIPMENT_SLOT } from "./EquipmentTypes";
 
 describe("Equipment", () => {
-	describe("equip", () => {
-		/* TODO: mock weapon json to do tests
-        
-        it("should equip correctly", () => {
-			const equipManager = new EquipmentManager();
-
-			const equipment = new Equipment(Weapons.Shortbow);
+	describe("Equip", () => {
+		it("should equip correctly", () => {
+			const unit = new BoardUnit(new PackUnit(data.Units.Lumberjack, 1));
+			const equipment = new Equipment(data.Weapons.CeremonialMace, 1);
 			const slot = EQUIPMENT_SLOT.MAIN_HAND;
 
-			equipManager.equip(equipment, slot);
+			unit.equip(equipment, slot);
 
-			expect(equipManager.equipments[0]).toStrictEqual({ slot, equipment });
+			expect(unit.equipment[0].slot).toStrictEqual(slot);
+			expect(unit.equipment[0].equipment.id).toStrictEqual(equipment.id);
 		});
-
 		it("should not be able to equip on invalid slot", () => {
-			const equipManager = new EquipmentManager();
-
-			const equip = new Equipment(Weapons.Shortbow);
+			const unit = new BoardUnit(new PackUnit(data.Units.Lumberjack, 1));
+			const equipment = new Equipment(data.Weapons.CeremonialMace, 1);
 			const slot = EQUIPMENT_SLOT.TRINKET;
 
-			expect(equipManager.canEquipOnSlot(equip, slot)).toBeFalsy();
+			expect(unit.equipmentManager.canEquipOnSlot(equipment, slot)).toBeFalsy();
 
-			expect(() => equipManager.equip(equip, slot)).toThrowError(
-				"EquipmentManager: CANT EQUIP ON THIS SLOT MAN: " + slot + " " + equip.data.name,
+			expect(() => unit.equip(equipment, slot)).toThrowError(
+				"EquipmentManager: equip - CANT EQUIP ON THIS SLOT MAN: " +
+					slot +
+					" " +
+					equipment.data.name,
 			);
 		});
-
 		it("should not be able to equip on already equipped slot", () => {
-			const equipManager = new EquipmentManager();
-
-			const equip1 = new Equipment(Weapons.Shortbow);
-			const equip2 = new Equipment(Weapons.Sword);
+			const unit = new BoardUnit(new PackUnit(data.Units.Lumberjack, 1));
+			const equip1 = new Equipment(data.Weapons.CeremonialMace, 1);
+			const equip2 = new Equipment(data.Weapons.CeremonialMace, 1);
 			const slot = EQUIPMENT_SLOT.MAIN_HAND;
 
-			expect(equipManager.canEquipOnSlot(equip1, slot)).toBeTruthy();
-			expect(equipManager.canEquipOnSlot(equip2, slot)).toBeTruthy();
+			expect(unit.equipmentManager.canEquipOnSlot(equip1, slot)).toBeTruthy();
+			expect(unit.equipmentManager.canEquipOnSlot(equip2, slot)).toBeTruthy();
 
-			equipManager.equip(equip1, slot);
+			unit.equipmentManager.equip(equip1, slot);
 
-			expect(() => equipManager.equip(equip2, slot)).toThrowError(
-				"EquipmentManager: ALREADY EQUIPPED THIS SLOT MAN: " + slot + " " + equip2.data.name,
+			expect(() => unit.equipmentManager.equip(equip2, slot)).toThrowError(
+				"EquipmentManager: equip - ALREADY EQUIPPED THIS SLOT MAN: " +
+					slot +
+					" " +
+					equip2.data.name,
 			);
-		}); */
+		});
+	});
+	describe("Upgrade tier", () => {
+		it("should change unit shield with stat mod as equip tier is upgraded", () => {
+			/* 
+				Equipment Shield Stat Mod Flat - [25, 60, 100, 150]
+			*/
+
+			const unit = new BoardUnit(new PackUnit(data.Units.Lumberjack, 1));
+			const equipment = new Equipment(data.Weapons.CeremonialMace, 1);
+
+			expect(unit.stats.shield).toBe(0);
+			unit.equip(equipment, EQUIPMENT_SLOT.MAIN_HAND);
+			expect(unit.stats.shield).toBe(25);
+			unit.upgradeEquipmentTier(equipment.id);
+			expect(unit.stats.shield).toBe(60);
+			unit.upgradeEquipmentTier(equipment.id);
+			expect(unit.stats.shield).toBe(100);
+			unit.upgradeEquipmentTier(equipment.id);
+			expect(unit.stats.shield).toBe(150);
+		});
 	});
 });

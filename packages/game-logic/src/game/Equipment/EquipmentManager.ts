@@ -55,4 +55,8 @@ export class EquipmentManager {
 	canEquipOnSlot(equipment: Equipment, slot: EQUIPMENT_SLOT): boolean {
 		return equipment.slots.includes(slot);
 	}
+
+	getEquipmentById(id: string): EquippedItem | undefined {
+		return this.equipments.find(e => e.equipment.id == id);
+	}
 }

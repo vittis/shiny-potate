@@ -2,7 +2,7 @@
 	"name": "Inspire Others",
 	"tags": ["SUPPORT"],
 	"minimumTier": 1,
-	"cooldown": [100, 100, 100, 100, 100],
+	"cooldown": [100, 100, 100, 100],
 	"effects": [
 		{
 			"type": "STATUS_EFFECT",
@@ -19,11 +19,11 @@
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [1, 2, 3, 4, 5]
+							"values": [1, 2, 3, 4]
 						},
 						{
 							"ref": "EXTRA",
-							"values": [1, 2, 3, 4, 5]
+							"values": [1, 2, 3, 4]
 						}
 					],
 					"quantity": [
