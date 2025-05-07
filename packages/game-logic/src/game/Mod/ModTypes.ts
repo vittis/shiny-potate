@@ -5,7 +5,7 @@ import {
 	InstantEffectPayloadValue,
 } from "../Ability/AbilityTypes";
 import { PossibleCondition } from "../Condition/ConditionTypes";
-import { ModifierCategory, ModifierType, StatModifier } from "../Stats/StatsTypes";
+import { StatModifierCategory, StatModifierType } from "../Stats/StatsTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE, TargetWithFilters } from "../Target/TargetTypes";
@@ -46,14 +46,14 @@ export type ModGainAbilityPayload = {
 };
 
 export type ModStatPayloadBase = {
-	category: ModifierCategory;
+	category: StatModifierCategory;
 	value: number;
 	tags: TAG[];
 };
 
 export type ModStatPayload =
 	| (ModStatPayloadBase & {
-			stat: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+			stat: Exclude<StatModifierType, "STATUS_EFFECT_MODIFIER">;
 	  })
 	| (ModStatPayloadBase & {
 			stat: "STATUS_EFFECT_MODIFIER";
@@ -93,7 +93,7 @@ export type ModGainAbilityPayloadTemplate = {
 };
 
 export type ModStatPayloadTemplateBase = {
-	category: ModifierCategory;
+	category: StatModifierCategory;
 	values: ModPayloadTemplateValue[]; // Tiered values
 	quantity: ModPayloadTemplateQuantity[];
 	tags: TAG[];
@@ -101,7 +101,7 @@ export type ModStatPayloadTemplateBase = {
 
 export type ModStatPayloadTemplate =
 	| (ModStatPayloadTemplateBase & {
-			stat: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+			stat: Exclude<StatModifierType, "STATUS_EFFECT_MODIFIER">;
 	  })
 	| (ModStatPayloadTemplateBase & {
 			stat: "STATUS_EFFECT_MODIFIER";

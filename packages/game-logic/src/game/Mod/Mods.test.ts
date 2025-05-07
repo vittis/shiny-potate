@@ -2,87 +2,159 @@ import { FILTER_TYPE } from "../Ability/AbilityTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { convertModTemplateToMod } from "./ModsUtils";
-import { MOD, ModTemplate } from "./ModTypes";
+import { MOD, ModPayloadTemplateValue, ModTemplate } from "./ModTypes";
 
 describe("Mods", () => {
-	describe.skip("utils functions", () => {
-		// TODO: finish test
-		/* it("convertModTemplateToMod", () => {
-			const id = "1";
+	describe("Utils functions", () => {
+		it("convertModTemplateToMod - Stat mod", () => {
+			const id = "id-test";
 			const tier = 3;
 			const statModTemplate: ModTemplate<MOD.STAT> = {
 				minimumTier: 1,
 				type: MOD.STAT,
-				// TODO: replace with correct target
-				targets: [TARGET_TYPE.SELF],
+				targets: [
+					{
+						target: TARGET_TYPE.SELF,
+						filters: [],
+					},
+				],
 				conditions: [],
-				payload: {
-					stat: "COOLDOWN_MODIFIER",
-					category: "PERCENTAGE",
-					values: [
-						{
-							ref: "BASE",
-							values: [-10, -20, -30, -40, -50],
-						},
-					],
-					quantity: [
-						{
-							ref: "BASE",
-							filters: [
-								{
-									type: FILTER_TYPE.ABILITY,
-									payload: {
-										tags: [TAG.SUPPORT],
-										target: TARGET_TYPE.SELF,
+				payload: [
+					{
+						stat: "COOLDOWN_MODIFIER",
+						category: "PERCENTAGE",
+						values: [
+							{
+								ref: "BASE",
+								values: [-10, -20, -30, -40],
+							},
+						],
+						quantity: [
+							{
+								ref: "BASE",
+								filters: [
+									{
+										type: FILTER_TYPE.ABILITY,
+										payload: {
+											tags: [TAG.SUPPORT],
+											target: TARGET_TYPE.SELF,
+										},
 									},
-								},
-							],
-						},
-					],
-				},
+								],
+							},
+						],
+						tags: [],
+					},
+				],
 			};
 
-			expect(convertModTemplateToMod(statModTemplate, id, tier)).toBe(1);
-		}); */
-		/* it("should equip correctly", () => {
-			const equipManager = new EquipmentManager();
+			const expectedStatModPayload = [
+				{
+					stat: "COOLDOWN_MODIFIER",
+					category: "PERCENTAGE",
+					value: -30,
+					tags: [],
+				},
+			];
 
-			const equipment = new Equipment(Weapons.Shortbow);
-			const slot = EQUIPMENT_SLOT.MAIN_HAND;
+			const convertedMod = convertModTemplateToMod(statModTemplate, tier, id);
 
-			equipManager.equip(equipment, slot);
-
-			expect(equipManager.equipments[0]).toStrictEqual({ slot, equipment });
+			expect(convertedMod.payload).toStrictEqual(expectedStatModPayload);
+			expect(convertedMod.type).toStrictEqual(MOD.STAT);
+			expect(convertedMod.targets).toStrictEqual(statModTemplate.targets);
+			expect(convertedMod.conditions).toStrictEqual(statModTemplate.conditions);
+			expect(convertedMod.originId).toStrictEqual(id);
+			expect(convertedMod.id).toBeDefined();
 		});
+		it("convertModTemplateToMod - Gain ability mod", () => {
+			const id = "id-test";
+			const tier = 2;
+			const gainAbilityModTemplate: ModTemplate<MOD.GAIN_ABILITY> = {
+				minimumTier: 2,
+				type: MOD.GAIN_ABILITY,
+				conditions: [],
+				targets: [
+					{
+						target: TARGET_TYPE.SELF,
+						filters: [],
+					},
+				],
+				payload: [
+					{
+						name: "Ability name",
+					},
+				],
+			};
 
-		it("should not be able to equip on invalid slot", () => {
-			const equipManager = new EquipmentManager();
+			const expectedGainAbilityModPayload = [
+				{
+					name: "Ability name",
+				},
+			];
 
-			const equip = new Equipment(Weapons.Shortbow);
-			const slot = EQUIPMENT_SLOT.TRINKET;
+			const convertedMod = convertModTemplateToMod(gainAbilityModTemplate, tier, id);
 
-			expect(equipManager.canEquipOnSlot(equip, slot)).toBeFalsy();
-
-			expect(() => equipManager.equip(equip, slot)).toThrowError(
-				"EquipmentManager: CANT EQUIP ON THIS SLOT MAN: " + slot + " " + equip.data.name,
-			);
+			expect(convertedMod.payload).toStrictEqual(expectedGainAbilityModPayload);
+			expect(convertedMod.type).toStrictEqual(MOD.GAIN_ABILITY);
+			expect(convertedMod.targets).toStrictEqual(gainAbilityModTemplate.targets);
+			expect(convertedMod.conditions).toStrictEqual(gainAbilityModTemplate.conditions);
+			expect(convertedMod.originId).toStrictEqual(id);
+			expect(convertedMod.id).toBeDefined();
 		});
+		it("convertModTemplateToMod - using different refs", () => {
+			const id = "id-test";
+			const tier = 1;
+			const statModTemplate: ModTemplate<MOD.STAT> = {
+				minimumTier: 1,
+				type: MOD.STAT,
+				targets: [
+					{
+						target: TARGET_TYPE.SELF,
+						filters: [],
+					},
+				],
+				conditions: [],
+				payload: [
+					{
+						stat: "HP_MODIFIER",
+						category: "FLAT",
+						values: [
+							{
+								ref: "REF 1",
+								values: [10, 20, 30, 40],
+							},
+							{
+								ref: "REF 2",
+								values: [20, 30, 40, 50],
+							},
+						],
+						quantity: [
+							{
+								ref: "REF 1",
+								filters: [],
+							},
+							{
+								ref: "REF 2",
+								filters: [],
+							},
+						],
+						tags: [],
+					},
+				],
+			};
 
-		it("should not be able to equip on already equipped slot", () => {
-			const equipManager = new EquipmentManager();
+			const expectedStatModPayload = [
+				{
+					stat: "HP_MODIFIER",
+					category: "FLAT",
+					value: 30,
+					tags: [],
+				},
+			];
 
-			const equip1 = new Equipment(Weapons.Shortbow);
-			const equip2 = new Equipment(Weapons.Sword);
-			const slot = EQUIPMENT_SLOT.MAIN_HAND;
+			const convertedMod = convertModTemplateToMod(statModTemplate, tier, id);
 
-			expect(equipManager.canEquipOnSlot(equip1, slot)).toBeTruthy();
-			expect(equipManager.canEquipOnSlot(equip2, slot)).toBeTruthy();
-
-			equipManager.equip(equip1, slot);
-
-			expect(() => equipManager.equip(equip2, slot)).toThrowError(
-				"EquipmentManager: ALREADY EQUIPPED THIS SLOT MAN: " + slot + " " + equip2.data.name,
-			);
-		}); */
+			expect(convertedMod.payload).toStrictEqual(expectedStatModPayload);
+		});
 	});
 });

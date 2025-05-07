@@ -37,7 +37,7 @@ export function convertModTemplateToMod(
 				...(payload.stat === "STATUS_EFFECT_MODIFIER" && {
 					statusEffect: payload.statusEffect,
 				}),
-				value: extractTieredValue(payload.values, "BASE", tier), // TODO: implement this for any string instead of only BASE
+				value: extractTieredValue(payload.values, tier),
 			})) as ModPayloadMap[MOD.STAT];
 			break;
 		}
@@ -70,11 +70,13 @@ export function convertModTemplateToMod(
 	} as PossibleMod;
 }
 
-function extractTieredValue(
-	valuesArray: InstantEffectPayloadValue[],
-	ref: string,
-	tier: number,
-): number {
-	const valueEntry = valuesArray.find(entry => entry.ref === ref);
-	return valueEntry?.values[tier - 1] ?? 0;
+// TODO: take quantity rules and filter into account
+function extractTieredValue(values: InstantEffectPayloadValue[], tier: number): number {
+	let totalValue = 0;
+	values.map(value => {
+		const tieredValue = value.values[tier - 1] ?? 0;
+		totalValue += tieredValue;
+	});
+
+	return totalValue;
 }

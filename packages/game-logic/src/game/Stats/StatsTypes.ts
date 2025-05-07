@@ -11,15 +11,15 @@ export type UnitStats = {
 };
 
 export type UnitModifiers = {
-	modifier: ModifierType;
-	category: ModifierCategory;
+	modifier: StatModifierType;
+	category: StatModifierCategory;
 	value: number;
 	requiredTags: TAG[];
 };
 
-export type ModifierCategory = "FLAT" | "PERCENTAGE" | "MULTIPLICATIVE";
+export type StatModifierCategory = "FLAT" | "PERCENTAGE" | "MULTIPLICATIVE";
 
-export type ModifierType =
+export type StatModifierType =
 	// affect unit
 	| "HP_MODIFIER"
 	| "SHIELD_MODIFIER"
@@ -30,10 +30,10 @@ export type ModifierType =
 	| "DAMAGE_MODIFIER"
 	| "HEAL_MODIFIER"
 	| "APPLY_SHIELD_MODIFIER"
-	| "STATUS_EFFECT_MODIFIER"; // create another variable to specify the status effect
+	| "STATUS_EFFECT_MODIFIER";
 
 export type StatModifierBase = {
-	category: ModifierCategory;
+	category: StatModifierCategory;
 	value: number;
 	tags: TAG[];
 	originId: string;
@@ -42,7 +42,7 @@ export type StatModifierBase = {
 
 export type StatModifier =
 	| (StatModifierBase & {
-			type: Exclude<ModifierType, "STATUS_EFFECT_MODIFIER">;
+			type: Exclude<StatModifierType, "STATUS_EFFECT_MODIFIER">;
 	  })
 	| (StatModifierBase & {
 			type: "STATUS_EFFECT_MODIFIER";
