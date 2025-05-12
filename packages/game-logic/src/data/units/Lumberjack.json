@@ -16,6 +16,36 @@
 			"conditions": [],
 			"payload": [
 				{
+					"stat": "DAMAGE_MODIFIER",
+					"category": "PERCENTAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [20, 40, 70, 120]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": ["AXE"]
+				}
+			]
+		},
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
 					"stat": "HP_MODIFIER",
 					"category": "FLAT",
 					"values": [
@@ -51,7 +81,7 @@
 					"values": [
 						{
 							"ref": "BASE",
-							"values": ["-", 20, 30, 40]
+							"values": [null, 20, 30, 40]
 						}
 					],
 					"quantity": [
@@ -81,7 +111,7 @@
 					"values": [
 						{
 							"ref": "BASE",
-							"values": ["-", "-", 1.5, 2]
+							"values": [null, null, 1.5, 2]
 						}
 					],
 					"quantity": [
@@ -91,6 +121,22 @@
 						}
 					],
 					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 4,
+			"type": "GAIN_ABILITY",
+			"conditions": [],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": [
+				{
+					"name": "Round Swing"
 				}
 			]
 		}

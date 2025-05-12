@@ -10,9 +10,11 @@ describe("Stats", () => {
 			expect(unit.statsManager.baseStats.maxHp).toBe(150);
 			expect(unit.stats.maxHp).toBe(160);
 
-			expect(unit.statModifiers[0].type).toBe("HP_MODIFIER");
-			expect(unit.statModifiers[0].category).toBe("FLAT");
-			expect(unit.statModifiers[0].value).toBe(10);
+			const hpStatModifier = unit.statModifiers.find(s => s.type === "HP_MODIFIER");
+
+			expect(hpStatModifier).toBeDefined();
+			expect(hpStatModifier?.category).toBe("FLAT");
+			expect(hpStatModifier?.value).toBe(10);
 		});
 	});
 	describe("Test cases", () => {

@@ -1,0 +1,34 @@
+{
+	"name": "Throw Knife",
+	"tags": ["ATTACK"],
+	"minimumTier": 1,
+	"cooldown": [50, 50, 50, 50],
+	"effects": [
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "RANDOM_ENEMY",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"effect": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [20, 20, 20, 70]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		}
+	]
+}

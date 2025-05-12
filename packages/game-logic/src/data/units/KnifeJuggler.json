@@ -1,0 +1,54 @@
+{
+	"name": "Knife Juggler",
+	"tags": ["PEASANT"],
+	"minimumTier": 1,
+	"hp": [150, 200, 280, 350],
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "GAIN_ABILITY",
+			"conditions": [],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": [
+				{
+					"name": "Throw Knife"
+				}
+			]
+		},
+		{
+			"minimumTier": 4,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [10, 20, 30, 40]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		}
+	]
+}

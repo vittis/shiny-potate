@@ -1,6 +1,8 @@
-import { MOD, Mod } from "../Mod/ModTypes";
+import { INSTANT_EFFECT, MOD, Mod } from "../Mod/ModTypes";
 import { PackUnit } from "../PackUnit/PackUnit";
-import { ModifierType, StatModifier, UnitStats } from "./StatsTypes";
+import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { TAG } from "../Tag/TagTypes";
+import { StatModifier, StatModifierType, UnitStats } from "./StatsTypes";
 import { convertStatModToStatModifier } from "./StatsUtils";
 
 export class StatsManager {
@@ -8,6 +10,7 @@ export class StatsManager {
 	stats: UnitStats;
 	statMods: Mod<MOD.STAT>[];
 	activeStatModifiers: StatModifier[];
+	unitTags: TAG[];
 	//private statsFromStatusEffects!: StatsFromStatusEffects;
 
 	constructor(packUnit: PackUnit) {
@@ -17,6 +20,7 @@ export class StatsManager {
 			shield: 0,
 		};
 		this.stats = this.baseStats;
+		this.unitTags = packUnit.tags;
 
 		this.statMods = packUnit.getStatMods();
 		this.activeStatModifiers = [];
@@ -47,8 +51,8 @@ export class StatsManager {
 		this.activateStatMods();
 	}
 
-	removeStatModsFromOrigin(originId: string) {
-		const updatedActiveStatMods = this.statMods.filter(mod => mod.originId !== originId);
+	removeStatModsFromOrigin(sourceId: string) {
+		const updatedActiveStatMods = this.statMods.filter(mod => mod.sourceId !== sourceId);
 		this.statMods = updatedActiveStatMods;
 		this.activateStatMods();
 	}
@@ -74,8 +78,16 @@ export class StatsManager {
 	}
 
 	updateStats() {
-		const updatedHp = this.getValueWithStatModifiers(this.baseStats.maxHp, "HP_MODIFIER");
-		const updatedShield = this.getValueWithStatModifiers(this.baseStats.shield, "SHIELD_MODIFIER");
+		const updatedHp = this.getValueWithStatModifiers(
+			this.baseStats.maxHp,
+			this.unitTags,
+			"HP_MODIFIER",
+		);
+		const updatedShield = this.getValueWithStatModifiers(
+			this.baseStats.shield,
+			this.unitTags,
+			"SHIELD_MODIFIER",
+		);
 
 		this.stats = {
 			hp: updatedHp,
@@ -84,12 +96,29 @@ export class StatsManager {
 		};
 	}
 
-	getValueWithStatModifiers(value: number, type: ModifierType): number {
-		const typeModifiers = this.activeStatModifiers.filter(mod => mod.type === type);
+	getValueWithStatModifiers(
+		value: number,
+		tags: TAG[],
+		type: StatModifierType,
+		statusEffect?: STATUS_EFFECT,
+	): number {
+		const typeModifiers = this.activeStatModifiers.filter(
+			mod =>
+				mod.type === type &&
+				(mod.type !== "STATUS_EFFECT_MODIFIER" || mod.statusEffect === statusEffect),
+		);
 
-		const flatModifiers = typeModifiers.filter(mod => mod.category === "FLAT");
-		const percentageModifiers = typeModifiers.filter(mod => mod.category === "PERCENTAGE");
-		const multiplicativeModifiers = typeModifiers.filter(mod => mod.category === "MULTIPLICATIVE");
+		const typeModifiersFilteredByTags = typeModifiers.filter(
+			mod => mod.tags.length == 0 || mod.tags.some(tag => tags.includes(tag)),
+		);
+
+		const flatModifiers = typeModifiersFilteredByTags.filter(mod => mod.category === "FLAT");
+		const percentageModifiers = typeModifiersFilteredByTags.filter(
+			mod => mod.category === "PERCENTAGE",
+		);
+		const multiplicativeModifiers = typeModifiersFilteredByTags.filter(
+			mod => mod.category === "MULTIPLICATIVE",
+		);
 
 		const updateWithFlatModifiers = flatModifiers.reduce((acc, mod) => acc + mod.value, value);
 		const updateWithPercentageModifiers = percentageModifiers.reduce(

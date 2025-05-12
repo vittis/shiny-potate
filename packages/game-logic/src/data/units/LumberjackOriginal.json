@@ -25,7 +25,7 @@
 			],
 			"payload": [
 				{
-					"stat": "DAMAGE",
+					"stat": "DAMAGE_MODIFIER",
 					"values": [
 						{
 							"ref": "BASE",
@@ -36,7 +36,8 @@
 						{
 							"ref": "BASE"
 						}
-					]
+					],
+					"tags": []
 				}
 			]
 		},

@@ -4,6 +4,8 @@ import { TAG } from "../Tag/TagTypes";
 import { MOD, Mod, PossibleMod, PossibleModTemplate } from "../Mod/ModTypes";
 import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
 import { PackUnitData } from "./PackUnitTypes";
+import { Ability } from "../Ability/Ability";
+import { findMatchingAbility } from "../Ability/AbilityUtils";
 
 export class PackUnit {
 	id: string;
@@ -31,7 +33,7 @@ export class PackUnit {
 		this.tier = tier;
 		this.hp = data.hp[tier - 1] || 0;
 		this.implicits = data.implicits
-			.filter(mod => mod.minimumTier <= tier)
+			.filter(mod => !mod.minimumTier || mod.minimumTier <= tier)
 			.map(mod => convertModTemplateToMod(mod, tier, this.id));
 		this.explicits = [];
 		this.mods = [...this.implicits, ...this.explicits];
@@ -45,8 +47,16 @@ export class PackUnit {
 		return filterModsByType(this.mods, MOD.EFFECT);
 	}
 
-	getAbilities(): Mod<MOD.GAIN_ABILITY>[] {
-		return filterModsByType(this.mods, MOD.GAIN_ABILITY);
+	getAbilities(): Ability[] {
+		const gainAbilityMods = filterModsByType(
+			this.mods,
+			MOD.GAIN_ABILITY,
+		) as Mod<MOD.GAIN_ABILITY>[];
+		const abilityNames = gainAbilityMods.flatMap(mod => mod.payload.map(p => p.name));
+		const abilities = abilityNames.map(name => {
+			return new Ability(findMatchingAbility(name), this.tier, this);
+		});
+		return abilities;
 	}
 
 	canUpgradeTier() {
@@ -58,7 +68,7 @@ export class PackUnit {
 			this.tier += 1;
 			this.hp = this.data.hp[this.tier - 1] || 0;
 			this.implicits = this.data.implicits
-				.filter(mod => mod.minimumTier <= this.tier)
+				.filter(mod => !mod.minimumTier || mod.minimumTier <= this.tier)
 				.map(mod => convertModTemplateToMod(mod, this.tier, this.id));
 			this.mods = [...this.implicits, ...this.explicits];
 		}

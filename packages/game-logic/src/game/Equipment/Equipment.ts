@@ -5,6 +5,7 @@ import { TAG } from "../Tag/TagTypes";
 import { Ability } from "../Ability/Ability";
 import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
 import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
+import { findMatchingAbility } from "../Ability/AbilityUtils";
 
 export class Equipment {
 	id: string;
@@ -35,9 +36,11 @@ export class Equipment {
 		this.tier = tier;
 		this.slots = data.slots;
 		this.equippedSlot = undefined; // sepa sempre inicializa sem estar equipado ou passa opcional?
-		this.ability = undefined; // data.ability ? new Ability(data.ability, tier) : undefined; TODO: implement this
+		this.ability = data.ability
+			? new Ability(findMatchingAbility(data.ability), tier, this)
+			: undefined;
 		this.implicits = data.implicits
-			.filter(mod => mod.minimumTier <= tier)
+			.filter(mod => !mod.minimumTier || mod.minimumTier <= tier)
 			.map(mod => convertModTemplateToMod(mod, tier, this.id));
 		this.explicits = []; // sera que alguns itens podem já vir com mods extras?
 		this.mods = [...this.implicits, ...this.explicits];
@@ -51,6 +54,18 @@ export class Equipment {
 		return filterModsByType(this.mods, MOD.EFFECT);
 	}
 
+	getAbilities(): Ability[] {
+		const gainAbilityMods = filterModsByType(
+			this.mods,
+			MOD.GAIN_ABILITY,
+		) as Mod<MOD.GAIN_ABILITY>[];
+		const abilityNames = gainAbilityMods.flatMap(mod => mod.payload.map(p => p.name));
+		const abilities = abilityNames.map(name => {
+			return new Ability(findMatchingAbility(name), this.tier, this);
+		});
+		return abilities;
+	}
+
 	canUpgradeTier() {
 		return this.tier < MAX_TIER;
 	}
@@ -59,10 +74,10 @@ export class Equipment {
 		if (this.canUpgradeTier()) {
 			this.tier += 1;
 
-			// if (this.ability) this.ability.upgradeTier(); // TODO: implement this
+			if (this.ability) this.ability.upgradeTier();
 
 			this.implicits = this.data.implicits
-				.filter(mod => mod.minimumTier <= this.tier)
+				.filter(mod => !mod.minimumTier || mod.minimumTier <= this.tier)
 				.map(mod => convertModTemplateToMod(mod, this.tier, this.id));
 			this.mods = [...this.implicits, ...this.explicits];
 		}

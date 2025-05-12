@@ -1,8 +1,7 @@
-import { FILTER_TYPE } from "../Ability/AbilityTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE } from "../Target/TargetTypes";
 import { convertModTemplateToMod } from "./ModsUtils";
-import { MOD, ModPayloadTemplateValue, ModTemplate } from "./ModTypes";
+import { FILTER_TYPE, INSTANT_EFFECT, MOD, ModPayloadTemplateValue, ModTemplate } from "./ModTypes";
 
 describe("Mods", () => {
 	describe("Utils functions", () => {
@@ -63,7 +62,7 @@ describe("Mods", () => {
 			expect(convertedMod.type).toStrictEqual(MOD.STAT);
 			expect(convertedMod.targets).toStrictEqual(statModTemplate.targets);
 			expect(convertedMod.conditions).toStrictEqual(statModTemplate.conditions);
-			expect(convertedMod.originId).toStrictEqual(id);
+			expect(convertedMod.sourceId).toStrictEqual(id);
 			expect(convertedMod.id).toBeDefined();
 		});
 		it("convertModTemplateToMod - Gain ability mod", () => {
@@ -98,7 +97,53 @@ describe("Mods", () => {
 			expect(convertedMod.type).toStrictEqual(MOD.GAIN_ABILITY);
 			expect(convertedMod.targets).toStrictEqual(gainAbilityModTemplate.targets);
 			expect(convertedMod.conditions).toStrictEqual(gainAbilityModTemplate.conditions);
-			expect(convertedMod.originId).toStrictEqual(id);
+			expect(convertedMod.sourceId).toStrictEqual(id);
+			expect(convertedMod.id).toBeDefined();
+		});
+		it("convertModTemplateToMod - Effect mod", () => {
+			const id = "id-test";
+			const tier = 3;
+			const effectModTemplate: ModTemplate<MOD.EFFECT> = {
+				type: MOD.EFFECT,
+				targets: [
+					{
+						target: TARGET_TYPE.STANDARD,
+						filters: [],
+					},
+				],
+				conditions: [],
+				payload: [
+					{
+						effect: INSTANT_EFFECT.DAMAGE,
+						values: [
+							{
+								ref: "BASE",
+								values: [20, 30, 40, 50],
+							},
+						],
+						quantity: [
+							{
+								ref: "BASE",
+							},
+						],
+					},
+				],
+			};
+
+			const expectedEffectModPayload = [
+				{
+					effect: INSTANT_EFFECT.DAMAGE,
+					value: 40,
+				},
+			];
+
+			const convertedMod = convertModTemplateToMod(effectModTemplate, tier, id);
+
+			expect(convertedMod.payload).toStrictEqual(expectedEffectModPayload);
+			expect(convertedMod.type).toStrictEqual(MOD.EFFECT);
+			expect(convertedMod.targets).toStrictEqual(effectModTemplate.targets);
+			expect(convertedMod.conditions).toStrictEqual(effectModTemplate.conditions);
+			expect(convertedMod.sourceId).toStrictEqual(id);
 			expect(convertedMod.id).toBeDefined();
 		});
 		it("convertModTemplateToMod - using different refs", () => {

@@ -1,43 +1,33 @@
 import { nanoid } from "nanoid";
-import { AbilityData, Cooldown, PossibleInstantEffect } from "./AbilityTypes";
+import { AbilityData } from "./AbilityTypes";
 import { MAX_TIER, Tier } from "../Tier/TierTypes";
 import { TAG } from "../Tag/TagTypes";
+import { MOD, ModTemplate, PossibleAbilityMod, TriggerWithFilters } from "../Mod/ModTypes";
+import { convertModTemplateToMod } from "../Mod/ModsUtils";
+import { PackUnit } from "../PackUnit/PackUnit";
+import { Equipment } from "../Equipment/Equipment";
 
 export class Ability {
 	id: string;
+	name: string;
 	data: AbilityData;
 
 	tier: Tier;
 	tags: TAG[];
 
-	currentCooldown: number; // cooldown current calculated with effects that change the value
+	currentCooldown: number; // cooldown calculated with stats and status effects that change the value
 	cooldown: number; // cooldown fixed based on tier
 	progress: number;
 
-	currentEffects: PossibleInstantEffect[]; // effects current calculated with instantEffectModifiers that change the value
-	effects: PossibleInstantEffect[]; // effects fixed based on tier
+	currentEffects: PossibleAbilityMod[]; // effects calculated with stats and status effects that change the values
+	effects: PossibleAbilityMod[]; // effects fixed based on tier
 
-	triggers: string[]; // TODO: create TRIGGER enum
+	triggers: TriggerWithFilters[];
 
-	/* 
-    TODO: create this type based on IncreaseEffect stuff
-    instantEffectModifiers: {
-        damage: number;
-        heal: number;
-        shield: number;
-        statusEffect: {
-            haste: number;
-            multistrike: number;
-            poison: number;
-            regen: number;
-            slow: number;
-            stun: number;
-            taunt: number;
-            thorns: number;
-        }
-    } */
+	sourceId: string | null; // id of the source that created this ability, can be PackUnit or Equipment
+	isLinkedToSource: boolean; // only when source is Equipment, if true means this ability is the equipment's ability
 
-	constructor(data?: AbilityData, tier: Tier = 1) {
+	constructor(data: AbilityData, tier: Tier = 1, source: PackUnit | Equipment | null = null) {
 		if (!data) {
 			throw Error(
 				"Ability: Ability is undefined. If running from test make sure it's defined in mock files",
@@ -45,15 +35,20 @@ export class Ability {
 		}
 
 		this.id = nanoid(8);
+		this.name = data.name;
 		this.data = data;
-		this.tags = data.tags;
+		this.tags = [...data.tags, ...(source ? source.tags : [])];
 		this.tier = tier;
 		this.cooldown = data.cooldown[this.tier - 1] || 0;
 		this.currentCooldown = this.cooldown;
 		this.progress = 0;
-		this.effects = data.effects;
+		this.effects = data.effects
+			.filter(mod => !mod.minimumTier || mod.minimumTier <= tier)
+			.map(mod => convertModTemplateToMod(mod, tier, this.id)) as PossibleAbilityMod[];
 		this.currentEffects = this.effects;
-		this.triggers = []; // sepa adicionar triggers no AbilityData se for ter abilities que já começam com algum trigger
+		this.triggers = data.triggers || [];
+		this.sourceId = source ? source.id : null;
+		this.isLinkedToSource = source instanceof Equipment && source.data?.ability == this.name;
 	}
 
 	step() {
@@ -92,6 +87,11 @@ export class Ability {
 
 			this.cooldown = this.data.cooldown[this.tier - 1] || 0;
 			this.currentCooldown = this.cooldown; // todo: create function to calculate new current cooldown
+
+			this.effects = this.data.effects
+				.filter(mod => !mod.minimumTier || mod.minimumTier <= this.tier)
+				.map(mod => convertModTemplateToMod(mod, this.tier, this.id)) as PossibleAbilityMod[];
+			this.currentEffects = this.effects; // todo: create function to calculate new current effects
 		}
 	}
 }

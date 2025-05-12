@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
-import { InstantEffectPayloadValue } from "../Ability/AbilityTypes";
 import {
+	INSTANT_EFFECT,
 	Mod,
 	MOD,
 	ModEffectPayload,
@@ -8,23 +8,27 @@ import {
 	ModGainAbilityPayload,
 	ModGainAbilityPayloadTemplate,
 	ModPayloadMap,
+	ModPayloadValue,
 	ModStatPayload,
 	ModStatPayloadTemplate,
 	ModTemplate,
 	ModTemplatePayloadMap,
+	PossibleAbilityMod,
+	PossibleAbilityModTemplate,
 	PossibleMod,
 	PossibleModTemplate,
 } from "./ModTypes";
+import { StatModifierType } from "../Stats/StatsTypes";
 
 export function filterModsByType<T extends MOD>(mods: PossibleMod[], type: MOD) {
 	return mods.filter(mod => mod.type === type) as Mod<T>[];
 }
 
 export function convertModTemplateToMod(
-	modTemplate: PossibleModTemplate,
+	modTemplate: PossibleModTemplate | PossibleAbilityModTemplate,
 	tier: number,
-	originId: string,
-): PossibleMod {
+	sourceId: string,
+): PossibleMod | PossibleAbilityMod {
 	let modPayload: ModPayloadMap[MOD];
 
 	switch (modTemplate.type) {
@@ -33,20 +37,23 @@ export function convertModTemplateToMod(
 			modPayload = statPayload.map(payload => ({
 				stat: payload.stat,
 				category: payload.category,
-				tags: payload.tags || [],
 				...(payload.stat === "STATUS_EFFECT_MODIFIER" && {
 					statusEffect: payload.statusEffect,
 				}),
+				tags: payload.tags || [],
 				value: extractTieredValue(payload.values, tier),
 			})) as ModPayloadMap[MOD.STAT];
 			break;
 		}
 
 		case MOD.EFFECT: {
-			// TODO: implement this
 			const effectPayload = modTemplate.payload as ModEffectPayloadTemplate[];
 			modPayload = effectPayload.map(payload => ({
-				...payload,
+				effect: payload.effect,
+				...(payload.effect === "STATUS_EFFECT" && {
+					statusEffect: payload.statusEffect,
+				}),
+				value: extractTieredValue(payload.values, tier),
 			})) as ModPayloadMap[MOD.EFFECT];
 			break;
 		}
@@ -64,14 +71,15 @@ export function convertModTemplateToMod(
 		type: modTemplate.type,
 		targets: modTemplate.targets,
 		conditions: modTemplate.conditions,
+		triggers: modTemplate.triggers || [],
 		payload: modPayload,
-		originId,
+		sourceId,
 		id: nanoid(8),
 	} as PossibleMod;
 }
 
 // TODO: take quantity rules and filter into account
-function extractTieredValue(values: InstantEffectPayloadValue[], tier: number): number {
+function extractTieredValue(values: ModPayloadValue[], tier: number): number {
 	let totalValue = 0;
 	values.map(value => {
 		const tieredValue = value.values[tier - 1] ?? 0;
@@ -79,4 +87,23 @@ function extractTieredValue(values: InstantEffectPayloadValue[], tier: number): 
 	});
 
 	return totalValue;
+}
+
+export function convertInstantEffectToStatModifierType(
+	instantEffect: INSTANT_EFFECT,
+): StatModifierType {
+	switch (instantEffect) {
+		case INSTANT_EFFECT.DAMAGE:
+			return "DAMAGE_MODIFIER";
+		case INSTANT_EFFECT.HEAL:
+			return "HEAL_MODIFIER";
+		case INSTANT_EFFECT.APPLY_SHIELD:
+			return "APPLY_SHIELD_MODIFIER";
+		case INSTANT_EFFECT.STATUS_EFFECT:
+			return "STATUS_EFFECT_MODIFIER";
+		default:
+			throw new Error(
+				`convertInstantEffectToStatModifierType - Unknown instant effect: ${instantEffect}`,
+			);
+	}
 }

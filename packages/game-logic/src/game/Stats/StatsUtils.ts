@@ -11,7 +11,7 @@ export function convertStatModToStatModifier(mod: Mod<MOD.STAT>): StatModifier[]
 			...(payload.stat === "STATUS_EFFECT_MODIFIER" && {
 				statusEffect: payload.statusEffect,
 			}),
-			originId: mod.originId,
+			sourceId: mod.sourceId,
 			modId: mod.id,
 		};
 	}) as StatModifier[];

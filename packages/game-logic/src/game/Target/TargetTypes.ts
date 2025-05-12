@@ -1,4 +1,4 @@
-import { Filter } from "../Ability/AbilityTypes";
+import { Filter } from "../Mod/ModTypes";
 
 export enum TARGET_TYPE {
 	SELF = "SELF",

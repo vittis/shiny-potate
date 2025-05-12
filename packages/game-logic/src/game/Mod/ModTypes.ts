@@ -1,15 +1,9 @@
-import {
-	Filter,
-	FILTER_TYPE,
-	InstantEffectPayloadQuantity,
-	InstantEffectPayloadValue,
-} from "../Ability/AbilityTypes";
 import { PossibleCondition } from "../Condition/ConditionTypes";
 import { StatModifierCategory, StatModifierType } from "../Stats/StatsTypes";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE, TargetWithFilters } from "../Target/TargetTypes";
-import { Tier } from "../Tier/TierTypes";
+import { Tier, TieredValues } from "../Tier/TierTypes";
 
 export enum MOD {
 	STAT = "STAT",
@@ -17,6 +11,33 @@ export enum MOD {
 	GAIN_ABILITY = "GAIN_ABILITY",
 }
 
+export enum SCALING {
+	FIXED = "FIXED", // fixed value, if true apply once
+	PER_TARGET = "PER_TARGET", // value is sum of each target that fulfills the filter condition
+}
+
+export enum FILTER_TYPE {
+	ABILITY = "ABILITY", // sera q vai ter filter de ability?
+	EQUIPMENT = "EQUIPMENT",
+	UNIT = "UNIT",
+}
+
+export enum INSTANT_EFFECT {
+	DAMAGE = "DAMAGE",
+	HEAL = "HEAL",
+	APPLY_SHIELD = "APPLY_SHIELD",
+	STATUS_EFFECT = "STATUS_EFFECT",
+}
+
+export enum TRIGGER {
+	ON_BATTLE_START = "ON_BATTLE_START",
+	ON_FAINT = "ON_FAINT",
+}
+
+export type Cooldown = TieredValues;
+export type EffectValue = TieredValues;
+
+export type PossibleAbilityMod = Mod<MOD.STAT> | Mod<MOD.EFFECT>;
 export type PossibleMod = Mod<MOD.STAT> | Mod<MOD.EFFECT> | Mod<MOD.GAIN_ABILITY>;
 
 // Final Mod - Mod as is after being received by pack unit, equipment or ability
@@ -26,8 +47,9 @@ export type Mod<T extends MOD> = {
 	type: T;
 	targets: TargetWithFilters[];
 	conditions: PossibleCondition[];
+	triggers: TriggerWithFilters[];
 	payload: ModPayloadMap[T];
-	originId: string;
+	sourceId: string;
 	id: string;
 };
 
@@ -37,9 +59,18 @@ export type ModPayloadMap = {
 	[MOD.GAIN_ABILITY]: ModGainAbilityPayload[];
 };
 
-export type ModEffectPayload = {
-	// todo: implement this
+export type ModEffectPayloadBase = {
+	value: number;
 };
+
+export type ModEffectPayload =
+	| (ModEffectPayloadBase & {
+			effect: Exclude<INSTANT_EFFECT, "STATUS_EFFECT">;
+	  })
+	| (ModEffectPayloadBase & {
+			effect: "STATUS_EFFECT";
+			statusEffect: STATUS_EFFECT;
+	  });
 
 export type ModGainAbilityPayload = {
 	name: string; // name of the ability
@@ -62,9 +93,10 @@ export type ModStatPayload =
 
 // Mod Template - Mod as is on json
 
-export type ModPayloadTemplateValue = InstantEffectPayloadValue;
-export type ModPayloadTemplateQuantity = InstantEffectPayloadQuantity;
+export type ModPayloadTemplateValue = ModPayloadValue;
+export type ModPayloadTemplateQuantity = ModPayloadQuantity;
 
+export type PossibleAbilityModTemplate = ModTemplate<MOD.STAT> | ModTemplate<MOD.EFFECT>;
 export type PossibleModTemplate =
 	| ModTemplate<MOD.STAT>
 	| ModTemplate<MOD.EFFECT>
@@ -72,9 +104,10 @@ export type PossibleModTemplate =
 
 export type ModTemplate<T extends MOD> = {
 	type: T;
-	minimumTier: Tier; // tier to gain the mod
+	minimumTier?: Tier; // tier to gain the mod, if empty is by default 1
 	targets: TargetWithFilters[];
 	conditions: PossibleCondition[];
+	triggers?: TriggerWithFilters[]; // only used for effect or stat mods that aren't part of an ability
 	payload: ModTemplatePayloadMap[T];
 };
 
@@ -84,9 +117,19 @@ export type ModTemplatePayloadMap = {
 	[MOD.GAIN_ABILITY]: ModGainAbilityPayloadTemplate[];
 };
 
-export type ModEffectPayloadTemplate = {
-	// todo: implement this
+export type ModEffectPayloadTemplateBase = {
+	values: ModPayloadTemplateValue[]; // Tiered values
+	quantity: ModPayloadTemplateQuantity[];
 };
+
+export type ModEffectPayloadTemplate =
+	| (ModEffectPayloadTemplateBase & {
+			effect: Exclude<INSTANT_EFFECT, "STATUS_EFFECT">;
+	  })
+	| (ModEffectPayloadTemplateBase & {
+			effect: "STATUS_EFFECT";
+			statusEffect: STATUS_EFFECT;
+	  });
 
 export type ModGainAbilityPayloadTemplate = {
 	name: string; // name of the ability
@@ -107,3 +150,29 @@ export type ModStatPayloadTemplate =
 			stat: "STATUS_EFFECT_MODIFIER";
 			statusEffect: STATUS_EFFECT;
 	  });
+
+export type ModPayloadValue = {
+	ref: string; // sera que padroniza com ENUM ou deixa string livre?
+	values: EffectValue;
+};
+
+export type ModPayloadQuantity = {
+	ref: string;
+	scaling?: SCALING;
+	filters?: Filter[];
+};
+
+export type Filter = {
+	type: FILTER_TYPE;
+	payload: FilterPayload;
+};
+
+export type FilterPayload = {
+	tags: TAG[];
+	target: TARGET_TYPE;
+};
+
+export type TriggerWithFilters = {
+	trigger: TRIGGER;
+	filters: Filter[];
+};

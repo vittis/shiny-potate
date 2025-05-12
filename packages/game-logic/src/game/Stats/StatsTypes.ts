@@ -36,7 +36,7 @@ export type StatModifierBase = {
 	category: StatModifierCategory;
 	value: number;
 	tags: TAG[];
-	originId: string;
+	sourceId: string;
 	modId: string;
 };
 

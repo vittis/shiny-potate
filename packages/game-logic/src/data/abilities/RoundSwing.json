@@ -2,10 +2,10 @@
 	"name": "Round Swing",
 	"tags": ["ATTACK"],
 	"minimumTier": 2,
-	"cooldown": [70, 60, 50, 40],
+	"cooldown": [null, 60, 50, 40],
 	"effects": [
 		{
-			"type": "DAMAGE",
+			"type": "EFFECT",
 			"targets": [
 				{
 					"target": "STANDARD",
@@ -26,19 +26,22 @@
 					}
 				}
 			],
-			"payload": {
-				"values": [
-					{
-						"ref": "BASE",
-						"values": [20, 30, 40, 50]
-					}
-				],
-				"quantity": [
-					{
-						"ref": "BASE"
-					}
-				]
-			}
+			"payload": [
+				{
+					"effect": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [null, 30, 40, 50]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
 		}
 	]
 }

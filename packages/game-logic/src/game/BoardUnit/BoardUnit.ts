@@ -35,23 +35,42 @@ export class BoardUnit {
 		this.id = nanoid(8);
 		this.packUnit = packUnit;
 		this.equipmentManager = new EquipmentManager();
-		this.abilityManager = new AbilityManager();
+		this.abilityManager = new AbilityManager(packUnit);
 		this.statsManager = new StatsManager(packUnit);
+
+		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
 	}
 
 	equip(equipment: Equipment, slot: EQUIPMENT_SLOT) {
 		this.equipmentManager.equip(equipment, slot);
 
-		if (this.equipment.find(e => e.equipment.id == equipment.id)) {
+		const equippedItem = this.equipmentManager.getEquipmentById(equipment.id);
+
+		if (equippedItem) {
 			this.statsManager.addStatMods(equipment.getStatMods());
+
+			const equipmentAbility = equippedItem.equipment.ability;
+			if (equipmentAbility) {
+				this.abilityManager.addAbilities([equipmentAbility]);
+			}
+
+			this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
 		}
 	}
 
 	upgradePackUnitTier() {
 		this.packUnit.upgradeTier();
+
 		this.statsManager.setBaseStats(this.packUnit);
 		this.statsManager.removeStatModsFromOrigin(this.packUnit.id);
 		this.statsManager.addStatMods(this.packUnit.getStatMods());
+
+		this.abilityManager.upgradeAbilitiesFromSource(this.packUnit.id);
+		this.abilityManager.addAbilities(
+			this.packUnit.getAbilities().filter(a => !this.abilityManager.isAbilityActive(a.name)),
+		);
+
+		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
 	}
 
 	upgradeEquipmentTier(equipId: string) {
@@ -59,8 +78,15 @@ export class BoardUnit {
 
 		if (equip) {
 			equip.equipment.upgradeTier();
+
 			this.statsManager.removeStatModsFromOrigin(equipId);
 			this.statsManager.addStatMods(equip.equipment.getStatMods());
+
+			this.abilityManager.addAbilities(
+				equip.equipment.getAbilities().filter(a => !this.abilityManager.isAbilityActive(a.name)),
+			);
+
+			this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
 		}
 	}
 }

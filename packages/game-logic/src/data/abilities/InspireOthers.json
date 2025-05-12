@@ -5,7 +5,7 @@
 	"cooldown": [100, 100, 100, 100],
 	"effects": [
 		{
-			"type": "STATUS_EFFECT",
+			"type": "EFFECT",
 			"targets": [
 				{
 					"target": "SIDES",
@@ -15,7 +15,8 @@
 			"conditions": [],
 			"payload": [
 				{
-					"name": "HASTE",
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "HASTE",
 					"values": [
 						{
 							"ref": "BASE",

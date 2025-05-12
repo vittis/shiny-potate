@@ -1,25 +1,26 @@
 {
-	"name": "Ceremonial Mace Ability",
-	"tags": ["ATTACK", "SUPPORT"],
+	"name": "Twist of Fate",
+	"tags": ["SUPPORT", "SPELL"],
 	"minimumTier": 1,
-	"cooldown": [60, 60, 60, 60],
+	"cooldown": [50, 50, 50, 50],
 	"effects": [
 		{
 			"type": "EFFECT",
 			"targets": [
 				{
-					"target": "STANDARD",
+					"target": "RANDOM_ENEMY",
 					"filters": []
 				}
 			],
 			"conditions": [],
 			"payload": [
 				{
-					"effect": "DAMAGE",
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "SLOW",
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [20, 30, 40, 50]
+							"values": [1, 2, 3, 4]
 						}
 					],
 					"quantity": [
@@ -31,30 +32,29 @@
 			]
 		},
 		{
-			"type": "STAT",
+			"type": "EFFECT",
 			"targets": [
 				{
-					"target": "RIGHT_ALLY",
+					"target": "RANDOM_ALLY",
 					"filters": []
 				}
 			],
 			"conditions": [],
 			"payload": [
 				{
-					"stat": "DAMAGE_MODIFIER",
-					"category": "FLAT",
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "HASTE",
 					"values": [
 						{
 							"ref": "BASE",
-							"values": [2, 4, 6, 8]
+							"values": [1, 2, 3, 4]
 						}
 					],
 					"quantity": [
 						{
 							"ref": "BASE"
 						}
-					],
-					"tags": []
+					]
 				}
 			]
 		}

@@ -8,6 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo test --log-prefix=none",
     "test:watch": "turbo test:watch --log-prefix=none",
+    "test:all": "turbo test:verbose",
     "start": "turbo start"
   },
   "devDependencies": {

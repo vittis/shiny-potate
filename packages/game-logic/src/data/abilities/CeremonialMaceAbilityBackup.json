@@ -5,7 +5,7 @@
 	"cooldown": [60, 60, 60, 60],
 	"effects": [
 		{
-			"type": "EFFECT",
+			"type": "DAMAGE",
 			"targets": [
 				{
 					"target": "STANDARD",
@@ -15,7 +15,6 @@
 			"conditions": [],
 			"payload": [
 				{
-					"effect": "DAMAGE",
 					"values": [
 						{
 							"ref": "BASE",
@@ -31,7 +30,7 @@
 			]
 		},
 		{
-			"type": "STAT",
+			"type": "INCREASE_EFFECT",
 			"targets": [
 				{
 					"target": "RIGHT_ALLY",
@@ -41,8 +40,8 @@
 			"conditions": [],
 			"payload": [
 				{
-					"stat": "DAMAGE_MODIFIER",
-					"category": "FLAT",
+					"name": "DAMAGE",
+					"type": "FLAT",
 					"values": [
 						{
 							"ref": "BASE",
@@ -53,8 +52,7 @@
 						{
 							"ref": "BASE"
 						}
-					],
-					"tags": []
+					]
 				}
 			]
 		}
