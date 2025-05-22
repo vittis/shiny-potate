@@ -4,6 +4,7 @@ import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
 import { TARGET_TYPE, TargetWithFilters } from "../Target/TargetTypes";
 import { Tier, TieredValues } from "../Tier/TierTypes";
+import { TriggerWithFilters } from "../Trigger/TriggerTypes";
 
 export enum MOD {
 	STAT = "STAT",
@@ -27,11 +28,6 @@ export enum INSTANT_EFFECT {
 	HEAL = "HEAL",
 	APPLY_SHIELD = "APPLY_SHIELD",
 	STATUS_EFFECT = "STATUS_EFFECT",
-}
-
-export enum TRIGGER {
-	ON_BATTLE_START = "ON_BATTLE_START",
-	ON_FAINT = "ON_FAINT",
 }
 
 export type Cooldown = TieredValues;
@@ -170,9 +166,4 @@ export type Filter = {
 export type FilterPayload = {
 	tags: TAG[];
 	target: TARGET_TYPE;
-};
-
-export type TriggerWithFilters = {
-	trigger: TRIGGER;
-	filters: Filter[];
 };

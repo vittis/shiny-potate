@@ -1,24 +1,19 @@
 import { nanoid } from "nanoid";
+import { StatModifierType } from "../Stats/StatsTypes";
 import {
 	INSTANT_EFFECT,
 	Mod,
 	MOD,
-	ModEffectPayload,
 	ModEffectPayloadTemplate,
-	ModGainAbilityPayload,
 	ModGainAbilityPayloadTemplate,
 	ModPayloadMap,
 	ModPayloadValue,
-	ModStatPayload,
 	ModStatPayloadTemplate,
-	ModTemplate,
-	ModTemplatePayloadMap,
 	PossibleAbilityMod,
 	PossibleAbilityModTemplate,
 	PossibleMod,
 	PossibleModTemplate,
 } from "./ModTypes";
-import { StatModifierType } from "../Stats/StatsTypes";
 
 export function filterModsByType<T extends MOD>(mods: PossibleMod[], type: MOD) {
 	return mods.filter(mod => mod.type === type) as Mod<T>[];
@@ -102,8 +97,8 @@ export function convertInstantEffectToStatModifierType(
 		case INSTANT_EFFECT.STATUS_EFFECT:
 			return "STATUS_EFFECT_MODIFIER";
 		default:
-			throw new Error(
-				`convertInstantEffectToStatModifierType - Unknown instant effect: ${instantEffect}`,
+			throw Error(
+				`ModsUtils: convertInstantEffectToStatModifierType - Unknown instant effect: ${instantEffect}`,
 			);
 	}
 }

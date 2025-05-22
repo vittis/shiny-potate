@@ -1,4 +1,4 @@
-import { INSTANT_EFFECT, MOD, Mod } from "../Mod/ModTypes";
+import { MOD, Mod } from "../Mod/ModTypes";
 import { PackUnit } from "../PackUnit/PackUnit";
 import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
 import { TAG } from "../Tag/TagTypes";
@@ -47,7 +47,8 @@ export class StatsManager {
 	}
 
 	addStatMods(statMods: Mod<MOD.STAT>[]) {
-		this.statMods.push(...statMods);
+		const validStatMods = statMods.filter(mod => !mod.triggers.length);
+		this.statMods.push(...validStatMods);
 		this.activateStatMods();
 	}
 

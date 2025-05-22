@@ -1,5 +1,7 @@
 import data from "../../data";
 import { BoardUnit } from "../BoardUnit/BoardUnit";
+import { Equipment } from "../Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
 import { PackUnit } from "../PackUnit/PackUnit";
 
 describe("Stats", () => {
@@ -15,6 +17,22 @@ describe("Stats", () => {
 			expect(hpStatModifier).toBeDefined();
 			expect(hpStatModifier?.category).toBe("FLAT");
 			expect(hpStatModifier?.value).toBe(10);
+		});
+		it("should add only stat mods without triggers", () => {
+			/* 
+				Equip has stat mod with and without trigger and a effect mod with trigger
+				Should only add stat mod without trigger to stat manager
+				Should only add stat mod with trigger to trigger manager
+			*/
+
+			const unit = new BoardUnit(new PackUnit(data.Units.FortuneTeller, 1));
+			const equipment = new Equipment(data.Trinkets.BootsOfHaste, 1);
+
+			unit.equip(equipment, EQUIPMENT_SLOT.TRINKET);
+
+			expect(equipment.mods.length).toBe(3);
+			expect(unit.statModifiers.length).toBe(1);
+			expect(unit.triggerManager.triggerMods.length).toBe(2);
 		});
 	});
 	describe("Test cases", () => {

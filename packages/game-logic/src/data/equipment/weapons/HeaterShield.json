@@ -1,0 +1,39 @@
+{
+	"name": "Heater Shield",
+	"tags": ["EQUIPMENT", "SHIELD"],
+	"slots": ["OFF_HAND"],
+	"minimumTier": 1,
+	"ability": "Heater Shield Ability",
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "SHIELD_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [60, 120, 200, 300]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		}
+	]
+}

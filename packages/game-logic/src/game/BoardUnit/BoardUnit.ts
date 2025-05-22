@@ -1,10 +1,11 @@
 import { nanoid } from "nanoid";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { EquipmentManager } from "../Equipment/EquipmentManager";
 import { AbilityManager } from "../Ability/AbilityManager";
-import { StatsManager } from "../Stats/StatsManager";
 import { Equipment } from "../Equipment/Equipment";
+import { EquipmentManager } from "../Equipment/EquipmentManager";
 import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
+import { PackUnit } from "../PackUnit/PackUnit";
+import { StatsManager } from "../Stats/StatsManager";
+import { TriggerManager } from "../Trigger/TriggerManager";
 
 export class BoardUnit {
 	id: string;
@@ -14,6 +15,7 @@ export class BoardUnit {
 	equipmentManager: EquipmentManager;
 	abilityManager: AbilityManager;
 	statsManager: StatsManager;
+	triggerManager: TriggerManager;
 
 	get equipment() {
 		return this.equipmentManager.equipments;
@@ -37,6 +39,7 @@ export class BoardUnit {
 		this.equipmentManager = new EquipmentManager();
 		this.abilityManager = new AbilityManager(packUnit);
 		this.statsManager = new StatsManager(packUnit);
+		this.triggerManager = new TriggerManager(this, packUnit, this.abilities);
 
 		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
 	}
@@ -48,13 +51,16 @@ export class BoardUnit {
 
 		if (equippedItem) {
 			this.statsManager.addStatMods(equipment.getStatMods());
+			this.triggerManager.addTriggerMods(equippedItem.equipment.mods);
 
 			const equipmentAbility = equippedItem.equipment.ability;
 			if (equipmentAbility) {
 				this.abilityManager.addAbilities([equipmentAbility]);
+				this.triggerManager.addTriggerAbilities([equipmentAbility]);
 			}
 
 			this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
+			this.triggerManager.updateTriggerModsWithStats(this.statsManager);
 		}
 	}
 
@@ -69,24 +75,34 @@ export class BoardUnit {
 		this.abilityManager.addAbilities(
 			this.packUnit.getAbilities().filter(a => !this.abilityManager.isAbilityActive(a.name)),
 		);
-
 		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
+
+		this.triggerManager.removeTriggerModsFromOrigin(this.packUnit.id);
+		this.triggerManager.addTriggerAbilities(this.abilities);
+		this.triggerManager.addTriggerMods(this.packUnit.mods);
+		this.triggerManager.updateTriggerModsWithStats(this.statsManager);
 	}
 
 	upgradeEquipmentTier(equipId: string) {
 		const equip = this.equipmentManager.getEquipmentById(equipId);
 
-		if (equip) {
-			equip.equipment.upgradeTier();
-
-			this.statsManager.removeStatModsFromOrigin(equipId);
-			this.statsManager.addStatMods(equip.equipment.getStatMods());
-
-			this.abilityManager.addAbilities(
-				equip.equipment.getAbilities().filter(a => !this.abilityManager.isAbilityActive(a.name)),
-			);
-
-			this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
+		if (!equip) {
+			throw Error("BoardUnit: upgradeEquipmentTier - Didn't find equipment with id: " + equipId);
 		}
+
+		equip.equipment.upgradeTier();
+
+		this.statsManager.removeStatModsFromOrigin(equipId);
+		this.statsManager.addStatMods(equip.equipment.getStatMods());
+
+		this.abilityManager.addAbilities(
+			equip.equipment.getAbilities().filter(a => !this.abilityManager.isAbilityActive(a.name)),
+		);
+		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
+
+		this.triggerManager.removeTriggerModsFromOrigin(equipId);
+		this.triggerManager.addTriggerAbilities(this.abilities);
+		this.triggerManager.addTriggerMods(equip.equipment.mods);
+		this.triggerManager.updateTriggerModsWithStats(this.statsManager);
 	}
 }

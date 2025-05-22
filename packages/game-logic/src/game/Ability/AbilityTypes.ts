@@ -1,15 +1,7 @@
-import { Condition, PossibleCondition } from "../Condition/ConditionTypes";
-import {
-	Cooldown,
-	MOD,
-	Mod,
-	PossibleAbilityModTemplate,
-	TriggerWithFilters,
-} from "../Mod/ModTypes";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
+import { Cooldown, PossibleAbilityModTemplate } from "../Mod/ModTypes";
 import { TAG } from "../Tag/TagTypes";
-import { TARGET_TYPE } from "../Target/TargetTypes";
-import { Tier, TieredValues } from "../Tier/TierTypes";
+import { Tier } from "../Tier/TierTypes";
+import { TriggerWithFilters } from "../Trigger/TriggerTypes";
 
 export type AbilityData = {
 	name: string;

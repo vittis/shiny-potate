@@ -34,6 +34,70 @@
 					"tags": []
 				}
 			]
+		},
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"triggers": [{ "trigger": "ON_BATTLE_START", "filters": [] }],
+			"payload": [
+				{
+					"stat": "STATUS_EFFECT_MODIFIER",
+					"statusEffect": "HASTE",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 1,
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"triggers": [{ "trigger": "ON_BATTLE_START", "filters": [] }],
+			"payload": [
+				{
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "HASTE",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
 		}
 	]
 }

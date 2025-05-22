@@ -1,11 +1,12 @@
 import { nanoid } from "nanoid";
-import { AbilityData } from "./AbilityTypes";
-import { MAX_TIER, Tier } from "../Tier/TierTypes";
-import { TAG } from "../Tag/TagTypes";
-import { MOD, ModTemplate, PossibleAbilityMod, TriggerWithFilters } from "../Mod/ModTypes";
+import { Equipment } from "../Equipment/Equipment";
+import { PossibleAbilityMod } from "../Mod/ModTypes";
 import { convertModTemplateToMod } from "../Mod/ModsUtils";
 import { PackUnit } from "../PackUnit/PackUnit";
-import { Equipment } from "../Equipment/Equipment";
+import { TAG } from "../Tag/TagTypes";
+import { MAX_TIER, Tier } from "../Tier/TierTypes";
+import { TriggerWithFilters } from "../Trigger/TriggerTypes";
+import { AbilityData } from "./AbilityTypes";
 
 export class Ability {
 	id: string;
@@ -91,7 +92,8 @@ export class Ability {
 			this.effects = this.data.effects
 				.filter(mod => !mod.minimumTier || mod.minimumTier <= this.tier)
 				.map(mod => convertModTemplateToMod(mod, this.tier, this.id)) as PossibleAbilityMod[];
-			this.currentEffects = this.effects; // todo: create function to calculate new current effects
+			this.currentEffects = this.effects;
+			// after upgrading ability tier, always call AbilityManager function updateAbilitiesEffectsWithStats on unit to update currentEffects
 		}
 	}
 }

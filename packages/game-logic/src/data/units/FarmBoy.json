@@ -5,8 +5,8 @@
 	"hp": [100, 150, 220, 300],
 	"implicits": [
 		{
-			"type": "STATUS_EFFECT",
-			"trigger": "BATTLE_START",
+			"minimumTier": 1,
+			"type": "EFFECT",
 			"targets": [
 				{
 					"target": "SELF",
@@ -14,9 +14,11 @@
 				}
 			],
 			"conditions": [],
+			"triggers": [{ "trigger": "ON_BATTLE_START", "filters": [] }],
 			"payload": [
 				{
-					"name": "REGEN",
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "SLOW",
 					"values": [
 						{
 							"ref": "BASE",
@@ -41,6 +43,5 @@
 				}
 			]
 		}
-	],
-	"defaultEquipment": []
+	]
 }
