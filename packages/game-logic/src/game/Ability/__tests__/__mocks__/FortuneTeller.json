@@ -1,0 +1,31 @@
+{
+	"name": "Fortune Teller",
+	"tags": [
+		"PEASANT"
+	],
+	"minimumTier": 1,
+	"hp": [
+		150,
+		200,
+		280,
+		350
+	],
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "GAIN_ABILITY",
+			"conditions": [],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": [
+				{
+					"name": "Twist of Fate"
+				}
+			]
+		}
+	]
+}

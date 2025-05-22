@@ -5,5 +5,8 @@ export default defineConfig({
 		include: ["./src/**/*.test.ts"],
 		globals: true,
 		setupFiles: ["./testSetup.ts"],
+		alias: {
+			"@/data": new URL("./src/data", import.meta.url).pathname,
+		},
 	},
 });

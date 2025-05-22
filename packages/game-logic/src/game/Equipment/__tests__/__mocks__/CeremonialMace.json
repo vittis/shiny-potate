@@ -1,0 +1,39 @@
+{
+	"name": "Ceremonial Mace",
+	"tags": ["EQUIPMENT", "WEAPON", "MACE"],
+	"slots": ["MAIN_HAND"],
+	"minimumTier": 1,
+	"ability": "Ceremonial Mace Ability",
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "SHIELD_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [25, 60, 100, 150]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		}
+	]
+}

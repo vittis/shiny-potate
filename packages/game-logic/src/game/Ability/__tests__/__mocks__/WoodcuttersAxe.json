@@ -1,0 +1,8 @@
+{
+	"name": "Woodcutter's Axe",
+	"tags": ["EQUIPMENT", "WEAPON", "AXE"],
+	"slots": ["MAIN_HAND", "OFF_HAND"],
+	"minimumTier": 1,
+	"ability": "Woodcutter's Axe Ability",
+	"implicits": []
+}

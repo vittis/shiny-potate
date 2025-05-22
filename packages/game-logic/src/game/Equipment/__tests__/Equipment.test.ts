@@ -1,9 +1,10 @@
-import data from "../../data";
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { Equipment } from "./Equipment";
-import { EquipmentManager } from "./EquipmentManager";
-import { EQUIPMENT_SLOT } from "./EquipmentTypes";
+import data from "@/data";
+import { BoardUnit } from "../../BoardUnit/BoardUnit";
+import { PackUnit } from "../../PackUnit/PackUnit";
+import { Equipment } from "../Equipment";
+import { EQUIPMENT_SLOT } from "../EquipmentTypes";
+
+vi.mock("@/data", async () => import("./__mocks__"));
 
 describe("Equipment", () => {
 	describe("Equip", () => {

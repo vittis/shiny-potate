@@ -1,0 +1,144 @@
+{
+	"name": "Lumberjack",
+	"tags": ["PEASANT"],
+	"minimumTier": 1,
+	"hp": [150, 200, 280, 350],
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "DAMAGE_MODIFIER",
+					"category": "PERCENTAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [20, 40, 70, 120]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": ["AXE"]
+				}
+			]
+		},
+		{
+			"minimumTier": 1,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [10, 20, 30, 40]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 2,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "PERCENTAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [null, 20, 30, 40]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 3,
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "HP_MODIFIER",
+					"category": "MULTIPLICATIVE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [null, null, 1.5, 2]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"filters": []
+						}
+					],
+					"tags": []
+				}
+			]
+		},
+		{
+			"minimumTier": 4,
+			"type": "GAIN_ABILITY",
+			"conditions": [],
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"payload": [
+				{
+					"name": "Round Swing"
+				}
+			]
+		}
+	]
+}
