@@ -1,0 +1,80 @@
+{
+	"name": "Ceremonial Mace Ability",
+	"tags": [
+		"ATTACK",
+		"SUPPORT"
+	],
+	"minimumTier": 1,
+	"cooldown": [
+		60,
+		60,
+		60,
+		60
+	],
+	"effects": [
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "STANDARD",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"effect": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [
+								20,
+								30,
+								40,
+								50
+							]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "RIGHT_ALLY",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "DAMAGE_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [
+								2,
+								4,
+								6,
+								8
+							]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					],
+					"tags": []
+				}
+			]
+		}
+	]
+}

@@ -10,7 +10,10 @@
 		"skipLibCheck": true,
 		"noEmit": true,
 		"strict": true,
-		"types": ["node", "vitest/globals"]
+		"types": ["node", "vitest/globals"],
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"exclude": ["node_modules", "dist"]
 }

@@ -1,8 +1,10 @@
-import data from "../../data";
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { Equipment } from "../Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
+import data from "@/data";
+import { BoardUnit } from "../../BoardUnit/BoardUnit";
+import { Equipment } from "../../Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "../../Equipment/EquipmentTypes";
+import { PackUnit } from "../../PackUnit/PackUnit";
+
+vi.mock("@/data", async () => import("./__mocks__"));
 
 describe("Stats", () => {
 	describe("Add stat mods", () => {

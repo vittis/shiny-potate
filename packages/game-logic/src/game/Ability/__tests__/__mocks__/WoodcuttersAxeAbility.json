@@ -1,0 +1,34 @@
+{
+	"name": "Woodcutter's Axe Ability",
+	"tags": ["ATTACK"],
+	"minimumTier": 1,
+	"cooldown": [80, 80, 80, 80],
+	"effects": [
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "STANDARD",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"effect": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [20, 30, 40, 50]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		}
+	]
+}
