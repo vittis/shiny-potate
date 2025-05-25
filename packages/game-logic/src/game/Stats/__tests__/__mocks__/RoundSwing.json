@@ -1,0 +1,47 @@
+{
+	"name": "Round Swing",
+	"tags": ["ATTACK"],
+	"minimumTier": 2,
+	"cooldown": [null, 60, 50, 40],
+	"effects": [
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "STANDARD",
+					"filters": []
+				},
+				{
+					"target": "SIDES",
+					"filters": []
+				}
+			],
+			"conditions": [
+				{
+					"type": "EQUIPMENT",
+					"payload": {
+						"target": "SELF",
+						"slots": ["TWO_HANDS", "MAIN_HAND", "OFF_HAND"],
+						"tags": ["AXE"]
+					}
+				}
+			],
+			"payload": [
+				{
+					"effect": "DAMAGE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [null, 30, 40, 50]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		}
+	]
+}

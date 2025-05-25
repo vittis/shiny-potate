@@ -1,11 +1,13 @@
-import data from "../../data";
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { Equipment } from "../Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { INSTANT_EFFECT, MOD } from "../Mod/ModTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { Ability } from "./Ability";
+import data from "@/data";
+import { BoardUnit } from "../../BoardUnit/BoardUnit";
+import { Equipment } from "../../Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "../../Equipment/EquipmentTypes";
+import { INSTANT_EFFECT, MOD } from "../../Mod/ModTypes";
+import { PackUnit } from "../../PackUnit/PackUnit";
+import { STATUS_EFFECT } from "../../StatusEffect/StatusEffectTypes";
+import { Ability } from "../Ability";
+
+vi.mock("@/data", async () => import("./__mocks__"));
 
 describe("Ability", () => {
 	describe("Receive ability", () => {

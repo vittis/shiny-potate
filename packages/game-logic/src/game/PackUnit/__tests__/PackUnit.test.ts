@@ -1,6 +1,8 @@
-import data from "../../data";
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { PackUnit } from "./PackUnit";
+import data from "@/data";
+import { BoardUnit } from "../../BoardUnit/BoardUnit";
+import { PackUnit } from "../PackUnit";
+
+vi.mock("@/data", async () => import("./__mocks__"));
 
 describe("PackUnit", () => {
 	describe("Upgrade tier", () => {

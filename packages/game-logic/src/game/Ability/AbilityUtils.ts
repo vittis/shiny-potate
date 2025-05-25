@@ -1,4 +1,4 @@
-import data from "../../data";
+import data from "@/data";
 import { AbilityData } from "./AbilityTypes";
 
 export function findMatchingAbility(abilityName: string): AbilityData {
