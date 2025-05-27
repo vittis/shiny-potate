@@ -1,4 +1,4 @@
-import { Filter } from "../Mod/ModTypes";
+import { Filter } from "@/game/Mod/ModTypes";
 
 export enum TARGET_TYPE {
 	SELF = "SELF",

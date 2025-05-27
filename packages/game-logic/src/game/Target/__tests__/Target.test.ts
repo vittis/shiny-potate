@@ -1,8 +1,10 @@
-import { getTarget } from "./TargetUtils";
-import { TARGET_TYPE } from "./TargetTypes";
-import { BoardManager, OWNER } from "../BoardManager/BoardManager";
-import { BattleUnit } from "../BattleUnit/BattleUnit";
-import { RNG } from "../../utils/math";
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
+import { BoardManager, OWNER } from "@/game/BoardManager/BoardManager";
+import { TARGET_TYPE } from "@/game/Target/TargetTypes";
+import { getTarget } from "@/game/Target/TargetUtils";
+import { RNG } from "@/utils/math";
+
+vi.mock("@/data", async () => import("./__mocks__"));
 
 // -----------------------------------------------------------------
 // TEAM ONE

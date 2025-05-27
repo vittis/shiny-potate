@@ -1,8 +1,8 @@
 import data from "@/data";
-import { BoardUnit } from "../../BoardUnit/BoardUnit";
-import { PackUnit } from "../../PackUnit/PackUnit";
-import { Equipment } from "../Equipment";
-import { EQUIPMENT_SLOT } from "../EquipmentTypes";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
+import { Equipment } from "@/game/Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "@/game/Equipment/EquipmentTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
 
 vi.mock("@/data", async () => import("./__mocks__"));
 

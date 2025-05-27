@@ -1,4 +1,4 @@
-import { BattleUnit } from "../BattleUnit/BattleUnit";
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
 
 export enum OWNER {
 	TEAM_ONE = 0,

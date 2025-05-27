@@ -1,19 +1,23 @@
 {
 	"compilerOptions": {
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"isolatedModules": true,
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
+		"target": "ESNext",
 		"noUnusedLocals": true,
 		"preserveWatchOutput": true,
 		"skipLibCheck": true,
 		"noEmit": true,
 		"strict": true,
 		"types": ["node", "vitest/globals"],
+		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["src/*"]
 		}
 	},
+	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]
 }

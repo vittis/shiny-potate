@@ -1,11 +1,11 @@
+import { Ability } from "@/game/Ability/Ability";
+import { findMatchingAbility } from "@/game/Ability/AbilityUtils";
+import { EQUIPMENT_SLOT, EquipmentData } from "@/game/Equipment/EquipmentTypes";
+import { convertModTemplateToMod, filterModsByType } from "@/game/Mod/ModsUtils";
+import { Mod, MOD, PossibleMod } from "@/game/Mod/ModTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { MAX_TIER, Tier } from "@/game/Tier/TierTypes";
 import { nanoid } from "nanoid";
-import { MAX_TIER, Tier } from "../Tier/TierTypes";
-import { EQUIPMENT_SLOT, EquipmentData } from "./EquipmentTypes";
-import { TAG } from "../Tag/TagTypes";
-import { Ability } from "../Ability/Ability";
-import { MOD, Mod, PossibleMod } from "../Mod/ModTypes";
-import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
-import { findMatchingAbility } from "../Ability/AbilityUtils";
 
 export class Equipment {
 	id: string;

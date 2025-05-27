@@ -1,5 +1,5 @@
-import { BattleUnit } from "../BattleUnit/BattleUnit";
-import { BoardManager, OWNER } from "../BoardManager/BoardManager";
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
+import { BoardManager, OWNER } from "@/game/BoardManager/BoardManager";
 
 export class Game {
 	boardManager: BoardManager;

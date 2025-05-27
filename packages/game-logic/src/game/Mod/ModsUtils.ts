@@ -1,9 +1,7 @@
-import { nanoid } from "nanoid";
-import { StatModifierType } from "../Stats/StatsTypes";
 import {
 	INSTANT_EFFECT,
-	Mod,
 	MOD,
+	Mod,
 	ModEffectPayloadTemplate,
 	ModGainAbilityPayloadTemplate,
 	ModPayloadMap,
@@ -13,7 +11,9 @@ import {
 	PossibleAbilityModTemplate,
 	PossibleMod,
 	PossibleModTemplate,
-} from "./ModTypes";
+} from "@/game/Mod/ModTypes";
+import { StatModifierType } from "@/game/Stats/StatsTypes";
+import { nanoid } from "nanoid";
 
 export function filterModsByType<T extends MOD>(mods: PossibleMod[], type: MOD) {
 	return mods.filter(mod => mod.type === type) as Mod<T>[];

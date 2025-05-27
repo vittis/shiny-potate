@@ -1,6 +1,6 @@
-import { PossibleModTemplate } from "../Mod/ModTypes";
-import { TAG } from "../Tag/TagTypes";
-import { Tier } from "../Tier/TierTypes";
+import { PossibleModTemplate } from "@/game/Mod/ModTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { Tier } from "@/game/Tier/TierTypes";
 
 export enum EQUIPMENT_SLOT {
 	MAIN_HAND = "MAIN_HAND",

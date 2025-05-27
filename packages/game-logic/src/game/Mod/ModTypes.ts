@@ -1,10 +1,10 @@
-import { PossibleCondition } from "../Condition/ConditionTypes";
-import { StatModifierCategory, StatModifierType } from "../Stats/StatsTypes";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { TAG } from "../Tag/TagTypes";
-import { TARGET_TYPE, TargetWithFilters } from "../Target/TargetTypes";
-import { Tier, TieredValues } from "../Tier/TierTypes";
-import { TriggerWithFilters } from "../Trigger/TriggerTypes";
+import { PossibleCondition } from "@/game/Condition/ConditionTypes";
+import { StatModifierCategory, StatModifierType } from "@/game/Stats/StatsTypes";
+import { STATUS_EFFECT } from "@/game/StatusEffect/StatusEffectTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { TARGET_TYPE, TargetWithFilters } from "@/game/Target/TargetTypes";
+import { Tier, TieredValues } from "@/game/Tier/TierTypes";
+import { TriggerWithFilters } from "@/game/Trigger/TriggerTypes";
 
 export enum MOD {
 	STAT = "STAT",

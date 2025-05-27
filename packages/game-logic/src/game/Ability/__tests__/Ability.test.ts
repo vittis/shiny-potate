@@ -1,11 +1,11 @@
 import data from "@/data";
-import { BoardUnit } from "../../BoardUnit/BoardUnit";
-import { Equipment } from "../../Equipment/Equipment";
-import { EQUIPMENT_SLOT } from "../../Equipment/EquipmentTypes";
-import { INSTANT_EFFECT, MOD } from "../../Mod/ModTypes";
-import { PackUnit } from "../../PackUnit/PackUnit";
-import { STATUS_EFFECT } from "../../StatusEffect/StatusEffectTypes";
-import { Ability } from "../Ability";
+import { Ability } from "@/game/Ability/Ability";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
+import { Equipment } from "@/game/Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "@/game/Equipment/EquipmentTypes";
+import { INSTANT_EFFECT, MOD } from "@/game/Mod/ModTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { STATUS_EFFECT } from "@/game/StatusEffect/StatusEffectTypes";
 
 vi.mock("@/data", async () => import("./__mocks__"));
 

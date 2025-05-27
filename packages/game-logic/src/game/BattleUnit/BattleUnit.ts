@@ -1,10 +1,11 @@
-import { nanoid } from "nanoid";
-import { OWNER } from "../BoardManager/BoardManager";
 /* import { OWNER } from "../BoardManager/BoardManager";
 import { PackUnit } from "../PackUnit/PackUnit";
 import { BattleUnitInfo } from "./BattleUnitTypes";
 import { EquippedItem } from "../Equipment/EquipmentManager";
 import { Ability } from "../Ability/Ability"; */
+
+import { OWNER } from "@/game/BoardManager/BoardManager";
+import { nanoid } from "nanoid";
 
 export class BattleUnit {
 	id: string;

@@ -1,7 +1,7 @@
-import { Cooldown, PossibleAbilityModTemplate } from "../Mod/ModTypes";
-import { TAG } from "../Tag/TagTypes";
-import { Tier } from "../Tier/TierTypes";
-import { TriggerWithFilters } from "../Trigger/TriggerTypes";
+import { Cooldown, PossibleAbilityModTemplate } from "@/game/Mod/ModTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { Tier } from "@/game/Tier/TierTypes";
+import { TriggerWithFilters } from "@/game/Trigger/TriggerTypes";
 
 export type AbilityData = {
 	name: string;

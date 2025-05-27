@@ -1,0 +1,47 @@
+{
+	"name": "Farm Boy",
+	"tags": ["PEASANT"],
+	"minimumTier": 1,
+	"hp": [100, 150, 220, 300],
+	"implicits": [
+		{
+			"minimumTier": 1,
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"triggers": [{ "trigger": "ON_BATTLE_START", "filters": [] }],
+			"payload": [
+				{
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "SLOW",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE",
+							"scaling": "PER_TARGET",
+							"filters": [
+								{
+									"type": "UNIT",
+									"payload": {
+										"tags": ["PEASANT"],
+										"target": "ADJACENT_ALLIES"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

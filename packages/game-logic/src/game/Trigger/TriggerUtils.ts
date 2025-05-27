@@ -1,5 +1,5 @@
-import { Ability } from "../Ability/Ability";
-import { TriggerAbility } from "./TriggerTypes";
+import { Ability } from "@/game/Ability/Ability";
+import { TriggerAbility } from "@/game/Trigger/TriggerTypes";
 
 export function getTriggerAbilityFromAbility(ability: Ability): TriggerAbility {
 	return {

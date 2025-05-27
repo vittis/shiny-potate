@@ -1,6 +1,6 @@
 import data from "@/data";
-import { BoardUnit } from "../../BoardUnit/BoardUnit";
-import { PackUnit } from "../PackUnit";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
 
 vi.mock("@/data", async () => import("./__mocks__"));
 

@@ -1,9 +1,8 @@
-import { convertInstantEffectToStatModifierType } from "../Mod/ModsUtils";
-import { INSTANT_EFFECT, MOD } from "../Mod/ModTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { StatsManager } from "../Stats/StatsManager";
-import { StatModifier } from "../Stats/StatsTypes";
-import { Ability } from "./Ability";
+import { Ability } from "@/game/Ability/Ability";
+import { convertInstantEffectToStatModifierType } from "@/game/Mod/ModsUtils";
+import { INSTANT_EFFECT, MOD } from "@/game/Mod/ModTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { StatsManager } from "@/game/Stats/StatsManager";
 
 export class AbilityManager {
 	private activeAbilities: Ability[] = [];

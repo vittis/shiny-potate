@@ -1,6 +1,6 @@
+import { AbilityData } from "@/game/Ability/AbilityTypes";
 import { EquipmentData } from "@/game/Equipment/EquipmentTypes";
-import { PackUnitData } from "../../../PackUnit/PackUnitTypes";
-import { AbilityData } from "../../AbilityTypes";
+import { PackUnitData } from "@/game/PackUnit/PackUnitTypes";
 import * as BootsOfHaste from "./BootsOfHaste.json";
 import * as CeremonialMace from "./CeremonialMace.json";
 import * as CeremonialMaceAbility from "./CeremonialMaceAbility.json";

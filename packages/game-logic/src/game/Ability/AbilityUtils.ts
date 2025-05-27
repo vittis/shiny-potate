@@ -1,5 +1,5 @@
 import data from "@/data";
-import { AbilityData } from "./AbilityTypes";
+import { AbilityData } from "@/game/Ability/AbilityTypes";
 
 export function findMatchingAbility(abilityName: string): AbilityData {
 	const matchedAbility = Object.values(data.Abilities).find(

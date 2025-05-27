@@ -1,0 +1,62 @@
+{
+	"name": "Twist of Fate",
+	"tags": ["SUPPORT", "SPELL"],
+	"minimumTier": 1,
+	"cooldown": [50, 50, 50, 50],
+	"effects": [
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "RANDOM_ENEMY",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "SLOW",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "EFFECT",
+			"targets": [
+				{
+					"target": "RANDOM_ALLY",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"effect": "STATUS_EFFECT",
+					"statusEffect": "HASTE",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [1, 2, 3, 4]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					]
+				}
+			]
+		}
+	]
+}

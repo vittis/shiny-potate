@@ -1,4 +1,4 @@
-import { Filter } from "../Mod/ModTypes";
+import { Filter } from "@/game/Mod/ModTypes";
 
 export enum TRIGGER_TYPE {
 	ON_BATTLE_START = "ON_BATTLE_START",

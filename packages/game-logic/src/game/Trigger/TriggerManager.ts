@@ -1,12 +1,12 @@
-import { Ability } from "../Ability/Ability";
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { convertInstantEffectToStatModifierType } from "../Mod/ModsUtils";
-import { INSTANT_EFFECT, MOD, Mod, PossibleMod } from "../Mod/ModTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { StatsManager } from "../Stats/StatsManager";
-import { getTagFromSourceId } from "../Tag/TagUtils";
-import { TriggerAbility } from "./TriggerTypes";
-import { getTriggerAbilityFromAbility } from "./TriggerUtils";
+import { Ability } from "@/game/Ability/Ability";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
+import { convertInstantEffectToStatModifierType } from "@/game/Mod/ModsUtils";
+import { INSTANT_EFFECT, Mod, MOD, PossibleMod } from "@/game/Mod/ModTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { StatsManager } from "@/game/Stats/StatsManager";
+import { getTagFromSourceId } from "@/game/Tag/TagUtils";
+import { TriggerAbility } from "@/game/Trigger/TriggerTypes";
+import { getTriggerAbilityFromAbility } from "@/game/Trigger/TriggerUtils";
 
 export class TriggerManager {
 	boardUnit: BoardUnit;

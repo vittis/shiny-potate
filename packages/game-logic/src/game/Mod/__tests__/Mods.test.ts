@@ -1,7 +1,7 @@
-import { TAG } from "../Tag/TagTypes";
-import { TARGET_TYPE } from "../Target/TargetTypes";
-import { convertModTemplateToMod } from "./ModsUtils";
-import { FILTER_TYPE, INSTANT_EFFECT, MOD, ModPayloadTemplateValue, ModTemplate } from "./ModTypes";
+import { convertModTemplateToMod } from "@/game/Mod/ModsUtils";
+import { FILTER_TYPE, INSTANT_EFFECT, MOD, ModTemplate } from "@/game/Mod/ModTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { TARGET_TYPE } from "@/game/Target/TargetTypes";
 
 describe("Mods", () => {
 	describe("Utils functions", () => {

@@ -1,5 +1,5 @@
-import { MOD, Mod } from "../Mod/ModTypes";
-import { StatModifier } from "./StatsTypes";
+import { Mod, MOD } from "@/game/Mod/ModTypes";
+import { StatModifier } from "@/game/Stats/StatsTypes";
 
 export function convertStatModToStatModifier(mod: Mod<MOD.STAT>): StatModifier[] {
 	const statModifiers = mod.payload.map(payload => {

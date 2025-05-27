@@ -1,5 +1,5 @@
-import { Equipment } from "./Equipment";
-import { EQUIPMENT_SLOT } from "./EquipmentTypes";
+import { Equipment } from "@/game/Equipment/Equipment";
+import { EQUIPMENT_SLOT } from "@/game/Equipment/EquipmentTypes";
 
 export type EquippedItem = {
 	slot: EQUIPMENT_SLOT;

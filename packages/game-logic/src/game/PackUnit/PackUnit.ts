@@ -1,11 +1,11 @@
+import { Ability } from "@/game/Ability/Ability";
+import { findMatchingAbility } from "@/game/Ability/AbilityUtils";
+import { convertModTemplateToMod, filterModsByType } from "@/game/Mod/ModsUtils";
+import { Mod, MOD, PossibleMod } from "@/game/Mod/ModTypes";
+import { PackUnitData } from "@/game/PackUnit/PackUnitTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { MAX_TIER, Tier } from "@/game/Tier/TierTypes";
 import { nanoid } from "nanoid";
-import { MAX_TIER, Tier } from "../Tier/TierTypes";
-import { TAG } from "../Tag/TagTypes";
-import { MOD, Mod, PossibleMod, PossibleModTemplate } from "../Mod/ModTypes";
-import { convertModTemplateToMod, filterModsByType } from "../Mod/ModsUtils";
-import { PackUnitData } from "./PackUnitTypes";
-import { Ability } from "../Ability/Ability";
-import { findMatchingAbility } from "../Ability/AbilityUtils";
 
 export class PackUnit {
 	id: string;

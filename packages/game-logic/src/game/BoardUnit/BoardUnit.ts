@@ -1,11 +1,11 @@
+import { AbilityManager } from "@/game/Ability/AbilityManager";
+import { Equipment } from "@/game/Equipment/Equipment";
+import { EquipmentManager } from "@/game/Equipment/EquipmentManager";
+import { EQUIPMENT_SLOT } from "@/game/Equipment/EquipmentTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { StatsManager } from "@/game/Stats/StatsManager";
+import { TriggerManager } from "@/game/Trigger/TriggerManager";
 import { nanoid } from "nanoid";
-import { AbilityManager } from "../Ability/AbilityManager";
-import { Equipment } from "../Equipment/Equipment";
-import { EquipmentManager } from "../Equipment/EquipmentManager";
-import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { StatsManager } from "../Stats/StatsManager";
-import { TriggerManager } from "../Trigger/TriggerManager";
 
 export class BoardUnit {
 	id: string;

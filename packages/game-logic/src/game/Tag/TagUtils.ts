@@ -1,5 +1,5 @@
-import { BoardUnit } from "../BoardUnit/BoardUnit";
-import { TAG } from "./TagTypes";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
+import { TAG } from "@/game/Tag/TagTypes";
 
 export function getTagFromSourceId(boardUnit: BoardUnit, sourceId: string): TAG[] {
 	if (boardUnit.packUnit.id === sourceId) {

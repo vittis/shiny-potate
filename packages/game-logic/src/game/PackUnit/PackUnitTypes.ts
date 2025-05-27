@@ -1,7 +1,6 @@
-import { PossibleModTemplate } from "../Mod/ModTypes";
-import { Hp } from "../Stats/StatsTypes";
-import { TAG } from "../Tag/TagTypes";
-import { Tier, TieredValues } from "../Tier/TierTypes";
+import { PossibleModTemplate } from "@/game/Mod/ModTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { Tier, TieredValues } from "@/game/Tier/TierTypes";
 
 export type PackUnitData = {
 	name: string;

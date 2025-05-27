@@ -1,9 +1,9 @@
-import { MOD, Mod } from "../Mod/ModTypes";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { TAG } from "../Tag/TagTypes";
-import { StatModifier, StatModifierType, UnitStats } from "./StatsTypes";
-import { convertStatModToStatModifier } from "./StatsUtils";
+import { Mod, MOD } from "@/game/Mod/ModTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { StatModifier, StatModifierType, UnitStats } from "@/game/Stats/StatsTypes";
+import { convertStatModToStatModifier } from "@/game/Stats/StatsUtils";
+import { STATUS_EFFECT } from "@/game/StatusEffect/StatusEffectTypes";
+import { TAG } from "@/game/Tag/TagTypes";
 
 export class StatsManager {
 	baseStats: UnitStats;

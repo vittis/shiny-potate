@@ -1,29 +1,28 @@
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
+import { BoardManager } from "@/game/BoardManager/BoardManager";
 import {
-	getSelfTarget,
 	getAdjacentAlliesTarget,
-	getFrontAlliesTarget,
-	getFrontRightTarget,
-	getFrontLeftTarget,
-	getBackAlliesTarget,
-	getBackRightTarget,
-	getBackLeftTarget,
-	getLeftAllyTarget,
-	getRandomAllyTarget,
-	getRightAllyTarget,
-	getSideAlliesTarget,
 	getAdjacentTarget,
+	getBackAlliesTarget,
+	getBackLeftTarget,
+	getBackRightTarget,
 	getConeTarget,
+	getFrontAlliesTarget,
+	getFrontLeftTarget,
+	getFrontRightTarget,
+	getLeftAllyTarget,
 	getLineTarget,
+	getRandomAllyTarget,
 	getRandomEnemyTarget,
+	getRightAllyTarget,
+	getSelfTarget,
+	getSideAlliesTarget,
+	getSideAllyTarget,
 	getSideTarget,
 	getSidesTarget,
 	getStandardTarget,
-	getSideAllyTarget,
-} from "./TargetFunctions";
-import { RNG } from "../../utils/math";
-import { BattleUnit } from "../BattleUnit/BattleUnit";
-import { BoardManager, OWNER, Position, Space } from "../BoardManager/BoardManager";
-import { TARGET_TYPE } from "./TargetTypes";
+} from "@/game/Target/TargetFunctions";
+import { TARGET_TYPE } from "@/game/Target/TargetTypes";
 
 export const TargetFunctionMap: {
 	[key in TARGET_TYPE]: (bm: BoardManager, originator: BattleUnit) => BattleUnit[];

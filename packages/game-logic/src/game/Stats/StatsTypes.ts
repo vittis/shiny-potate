@@ -1,6 +1,6 @@
-import { STATUS_EFFECT } from "../StatusEffect/StatusEffectTypes";
-import { TAG } from "../Tag/TagTypes";
-import { TieredValues } from "../Tier/TierTypes";
+import { STATUS_EFFECT } from "@/game/StatusEffect/StatusEffectTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { TieredValues } from "@/game/Tier/TierTypes";
 
 export type Hp = TieredValues;
 

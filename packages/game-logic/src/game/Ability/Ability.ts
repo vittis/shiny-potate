@@ -1,12 +1,12 @@
+import { AbilityData } from "@/game/Ability/AbilityTypes";
+import { Equipment } from "@/game/Equipment/Equipment";
+import { convertModTemplateToMod } from "@/game/Mod/ModsUtils";
+import { PossibleAbilityMod } from "@/game/Mod/ModTypes";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
+import { TAG } from "@/game/Tag/TagTypes";
+import { MAX_TIER, Tier } from "@/game/Tier/TierTypes";
+import { TriggerWithFilters } from "@/game/Trigger/TriggerTypes";
 import { nanoid } from "nanoid";
-import { Equipment } from "../Equipment/Equipment";
-import { PossibleAbilityMod } from "../Mod/ModTypes";
-import { convertModTemplateToMod } from "../Mod/ModsUtils";
-import { PackUnit } from "../PackUnit/PackUnit";
-import { TAG } from "../Tag/TagTypes";
-import { MAX_TIER, Tier } from "../Tier/TierTypes";
-import { TriggerWithFilters } from "../Trigger/TriggerTypes";
-import { AbilityData } from "./AbilityTypes";
 
 export class Ability {
 	id: string;

@@ -1,7 +1,7 @@
-import { Ability } from "../Ability/Ability";
-import { OWNER } from "../BoardManager/BoardManager";
-import { EquippedItem } from "../Equipment/EquipmentManager";
-import { PackUnit } from "../PackUnit/PackUnit";
+import { Ability } from "@/game/Ability/Ability";
+import { OWNER } from "@/game/BoardManager/BoardManager";
+import { EquippedItem } from "@/game/Equipment/EquipmentManager";
+import { PackUnit } from "@/game/PackUnit/PackUnit";
 
 export type BattleUnitInfo = {
 	owner: OWNER;

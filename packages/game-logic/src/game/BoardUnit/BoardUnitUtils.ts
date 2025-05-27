@@ -1,6 +1,6 @@
-import { BattleUnitInfo } from "../BattleUnit/BattleUnitTypes";
-import { OWNER } from "../BoardManager/BoardManager";
-import { BoardUnit } from "./BoardUnit";
+import { BattleUnitInfo } from "@/game/BattleUnit/BattleUnitTypes";
+import { OWNER } from "@/game/BoardManager/BoardManager";
+import { BoardUnit } from "@/game/BoardUnit/BoardUnit";
 
 export function generateBattleUnitInfo(boardUnit: BoardUnit, owner: OWNER): BattleUnitInfo {
 	return {

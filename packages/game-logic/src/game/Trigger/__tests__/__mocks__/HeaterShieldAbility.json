@@ -1,0 +1,42 @@
+{
+	"name": "Heater Shield Ability",
+	"tags": ["DEFENSE"],
+	"minimumTier": 1,
+	"cooldown": [120, 110, 100, 90],
+	"triggers": [
+		{
+			"trigger": "ON_INJURED",
+			"filters": []
+		}
+	],
+	"effects": [
+		{
+			"type": "STAT",
+			"targets": [
+				{
+					"target": "SELF",
+					"filters": []
+				}
+			],
+			"conditions": [],
+			"payload": [
+				{
+					"stat": "SHIELD_MODIFIER",
+					"category": "FLAT",
+					"values": [
+						{
+							"ref": "BASE",
+							"values": [50, 70, 100, 150]
+						}
+					],
+					"quantity": [
+						{
+							"ref": "BASE"
+						}
+					],
+					"tags": []
+				}
+			]
+		}
+	]
+}

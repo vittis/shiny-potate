@@ -1,6 +1,6 @@
-import { RNG } from "../../utils/math";
-import { BattleUnit } from "../BattleUnit/BattleUnit";
-import { BoardManager, OWNER, Position } from "../BoardManager/BoardManager";
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
+import { BoardManager, OWNER, Position } from "@/game/BoardManager/BoardManager";
+import { RNG } from "@/utils/math";
 
 export function getSelfTarget(_bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 	return [originator];

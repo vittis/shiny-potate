@@ -1,0 +1,1586 @@
+{
+  "firstStep": {
+    "units": [
+      {
+        "id": "HvECU3m6",
+        "owner": 0,
+        "name": "00 Blacksmith",
+        "class": "Blacksmith",
+        "stats": {
+          "maxHp": 210,
+          "hp": 210,
+          "shield": 0,
+          "attackDamageModifier": 5,
+          "attackCooldownModifier": 0,
+          "spellDamageModifier": 0,
+          "spellCooldownModifier": 0,
+          "damageReductionModifier": 10
+        },
+        "abilities": [
+          {
+            "id": "SWV4oPV-",
+            "data": {
+              "default": {
+                "name": "Reinforce Allies",
+                "type": "SPELL",
+                "tags": [],
+                "target": "ADJACENT_ALLIES",
+                "cooldown": 45,
+                "effects": [
+                  {
+                    "type": "SHIELD",
+                    "trigger": "ON_USE",
+                    "target": "ADJACENT_ALLIES",
+                    "conditions": [],
+                    "payload": { "value": 30 }
+                  }
+                ],
+                "abilityModifiers": [
+                  { "name": "Reinforce Self", "unique": true },
+                  {
+                    "name": "Reinforce on Battle Start",
+                    "modifiers": [
+                      {
+                        "type": "TRIGGER",
+                        "payload": { "name": "BATTLE_START" }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce on Faint",
+                    "modifiers": [
+                      { "type": "TRIGGER", "payload": { "name": "SELF_FAINT" } }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Speed",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "FAST",
+                          "target": "ADJACENT_ALLIES",
+                          "value": 5
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Front Offense",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "ATTACK_POWER",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "SPELL_POTENCY",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "FAST",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Front Offense 2",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "MULTISTRIKE",
+                          "target": "FRONT_ALLY",
+                          "value": 1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Shield",
+                    "modifiers": [
+                      {
+                        "type": "SHIELD",
+                        "payload": { "target": "ADJACENT_ALLIES", "value": 15 }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Defense",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "STURDY",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "SHIELD",
+                        "payload": { "target": "FRONT_ALLY", "value": 20 }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Defense 2",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "TAUNT",
+                          "target": "FRONT_ALLY",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "THORN",
+                          "target": "FRONT_ALLY",
+                          "value": 25
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "name": "Reinforce Allies",
+              "type": "SPELL",
+              "tags": [],
+              "target": "ADJACENT_ALLIES",
+              "cooldown": 45,
+              "effects": [
+                {
+                  "type": "SHIELD",
+                  "trigger": "ON_USE",
+                  "target": "ADJACENT_ALLIES",
+                  "conditions": [],
+                  "payload": { "value": 30 }
+                }
+              ],
+              "abilityModifiers": [
+                { "name": "Reinforce Self", "unique": true },
+                {
+                  "name": "Reinforce on Battle Start",
+                  "modifiers": [
+                    { "type": "TRIGGER", "payload": { "name": "BATTLE_START" } }
+                  ]
+                },
+                {
+                  "name": "Reinforce on Faint",
+                  "modifiers": [
+                    { "type": "TRIGGER", "payload": { "name": "SELF_FAINT" } }
+                  ]
+                },
+                {
+                  "name": "Reinforce Speed",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "FAST",
+                        "target": "ADJACENT_ALLIES",
+                        "value": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Front Offense",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "ATTACK_POWER",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "SPELL_POTENCY",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "FAST",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Front Offense 2",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "MULTISTRIKE",
+                        "target": "FRONT_ALLY",
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Shield",
+                  "modifiers": [
+                    {
+                      "type": "SHIELD",
+                      "payload": { "target": "ADJACENT_ALLIES", "value": 15 }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Defense",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "STURDY",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "SHIELD",
+                      "payload": { "target": "FRONT_ALLY", "value": 20 }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Defense 2",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "TAUNT",
+                        "target": "FRONT_ALLY",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "THORN",
+                        "target": "FRONT_ALLY",
+                        "value": 25
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "target": "ADJACENT_ALLIES",
+            "type": "SPELL",
+            "progress": 19,
+            "baseCooldown": 45,
+            "cooldown": 43,
+            "triggers": [],
+            "effects": [
+              {
+                "type": "SHIELD",
+                "trigger": "ON_USE",
+                "target": "ADJACENT_ALLIES",
+                "conditions": [],
+                "payload": { "value": 30 }
+              }
+            ],
+            "modifiers": []
+          },
+          {
+            "id": "lCRxwMdE",
+            "data": {
+              "default": {
+                "name": "Thrust",
+                "type": "ATTACK",
+                "tags": ["WEAPON_ABILITY"],
+                "target": "STANDARD",
+                "cooldown": 40,
+                "effects": [
+                  {
+                    "type": "DAMAGE",
+                    "trigger": "ON_HIT",
+                    "target": "STANDARD",
+                    "conditions": [],
+                    "payload": { "value": 30 }
+                  }
+                ]
+              },
+              "name": "Thrust",
+              "type": "ATTACK",
+              "tags": ["WEAPON_ABILITY"],
+              "target": "STANDARD",
+              "cooldown": 40,
+              "effects": [
+                {
+                  "type": "DAMAGE",
+                  "trigger": "ON_HIT",
+                  "target": "STANDARD",
+                  "conditions": [],
+                  "payload": { "value": 30 }
+                }
+              ]
+            },
+            "target": "STANDARD",
+            "type": "ATTACK",
+            "progress": 0,
+            "baseCooldown": 40,
+            "cooldown": 40,
+            "triggers": [],
+            "effects": [
+              {
+                "type": "DAMAGE",
+                "trigger": "ON_HIT",
+                "target": "STANDARD",
+                "conditions": [],
+                "payload": { "value": 30 }
+              }
+            ],
+            "modifiers": []
+          }
+        ],
+        "equipment": [
+          {
+            "slot": "MAIN_HAND",
+            "equip": {
+              "id": "51ERJ4xL",
+              "data": {
+                "name": "Short Spear",
+                "tags": ["WEAPON", "PHYSICAL", "MAGICAL"],
+                "slots": ["MAIN_HAND"],
+                "mods": [
+                  {
+                    "type": "GRANT_ABILITY",
+                    "payload": { "name": "Thrust", "type": "ATTACK" },
+                    "tier": "implicit"
+                  },
+                  {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Focused Mind", "tier": 1 },
+                    "tier": "implicit"
+                  },
+                  {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "stat": "ATTACK_DAMAGE", "value": 5 },
+                    "tier": "implicit"
+                  }
+                ]
+              },
+              "tier": 0,
+              "rolledMods": [],
+              "applicableMods": [
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Focused Mind" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Vitality Boost" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Desperate Will" }
+                  },
+                  "weight": 3
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Last Words" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Berserk" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Prey The Weak" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Dampening Field" }
+                  },
+                  "weight": 3
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Fallen Guardian" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Iron Heart" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Savage Fury" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Vengeful Legacy" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Venomous Strikes" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Solo Strength" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Open Field Tactics" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "ATTACK_DAMAGE" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "ATTACK_COOLDOWN" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "SPELL_DAMAGE" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "SPELL_COOLDOWN" }
+                  },
+                  "weight": 7
+                }
+              ]
+            }
+          }
+        ],
+        "perks": [
+          {
+            "id": "vWwaTa27",
+            "data": {
+              "name": "Focused Mind",
+              "type": "TIER_SCALE",
+              "tiers": [{ "name": "FOCUS", "values": [5, 10, 15, 20, 30] }],
+              "effects": [
+                {
+                  "type": "STATUS_EFFECT",
+                  "trigger": "BATTLE_START",
+                  "target": "SELF",
+                  "conditions": [],
+                  "payload": [{ "name": "FOCUS", "quantity": "DYNAMIC" }]
+                }
+              ],
+              "tags": [
+                { "name": "WEAPON", "weight": 2 },
+                { "name": "TRINKET", "weight": 2 },
+                { "name": "MAGICAL", "weight": 5 }
+              ]
+            },
+            "tier": 1
+          }
+        ],
+        "position": 0,
+        "statusEffects": []
+      },
+      {
+        "id": "ImPfjjNr",
+        "owner": 1,
+        "name": "10 Blacksmith",
+        "class": "Blacksmith",
+        "stats": {
+          "maxHp": 210,
+          "hp": 210,
+          "shield": 0,
+          "attackDamageModifier": 5,
+          "attackCooldownModifier": 0,
+          "spellDamageModifier": 0,
+          "spellCooldownModifier": 0,
+          "damageReductionModifier": 10
+        },
+        "abilities": [
+          {
+            "id": "24S1Ijfz",
+            "data": {
+              "default": {
+                "name": "Reinforce Allies",
+                "type": "SPELL",
+                "tags": [],
+                "target": "ADJACENT_ALLIES",
+                "cooldown": 45,
+                "effects": [
+                  {
+                    "type": "SHIELD",
+                    "trigger": "ON_USE",
+                    "target": "ADJACENT_ALLIES",
+                    "conditions": [],
+                    "payload": { "value": 30 }
+                  }
+                ],
+                "abilityModifiers": [
+                  { "name": "Reinforce Self", "unique": true },
+                  {
+                    "name": "Reinforce on Battle Start",
+                    "modifiers": [
+                      {
+                        "type": "TRIGGER",
+                        "payload": { "name": "BATTLE_START" }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce on Faint",
+                    "modifiers": [
+                      { "type": "TRIGGER", "payload": { "name": "SELF_FAINT" } }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Speed",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "FAST",
+                          "target": "ADJACENT_ALLIES",
+                          "value": 5
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Front Offense",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "ATTACK_POWER",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "SPELL_POTENCY",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "FAST",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Front Offense 2",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "MULTISTRIKE",
+                          "target": "FRONT_ALLY",
+                          "value": 1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Shield",
+                    "modifiers": [
+                      {
+                        "type": "SHIELD",
+                        "payload": { "target": "ADJACENT_ALLIES", "value": 15 }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Defense",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "STURDY",
+                          "target": "FRONT_ALLY",
+                          "value": 10
+                        }
+                      },
+                      {
+                        "type": "SHIELD",
+                        "payload": { "target": "FRONT_ALLY", "value": 20 }
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Reinforce Defense 2",
+                    "modifiers": [
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "TAUNT",
+                          "target": "FRONT_ALLY",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "type": "STATUS_EFFECT",
+                        "payload": {
+                          "name": "THORN",
+                          "target": "FRONT_ALLY",
+                          "value": 25
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "name": "Reinforce Allies",
+              "type": "SPELL",
+              "tags": [],
+              "target": "ADJACENT_ALLIES",
+              "cooldown": 45,
+              "effects": [
+                {
+                  "type": "SHIELD",
+                  "trigger": "ON_USE",
+                  "target": "ADJACENT_ALLIES",
+                  "conditions": [],
+                  "payload": { "value": 30 }
+                }
+              ],
+              "abilityModifiers": [
+                { "name": "Reinforce Self", "unique": true },
+                {
+                  "name": "Reinforce on Battle Start",
+                  "modifiers": [
+                    { "type": "TRIGGER", "payload": { "name": "BATTLE_START" } }
+                  ]
+                },
+                {
+                  "name": "Reinforce on Faint",
+                  "modifiers": [
+                    { "type": "TRIGGER", "payload": { "name": "SELF_FAINT" } }
+                  ]
+                },
+                {
+                  "name": "Reinforce Speed",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "FAST",
+                        "target": "ADJACENT_ALLIES",
+                        "value": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Front Offense",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "ATTACK_POWER",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "SPELL_POTENCY",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "FAST",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Front Offense 2",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "MULTISTRIKE",
+                        "target": "FRONT_ALLY",
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Shield",
+                  "modifiers": [
+                    {
+                      "type": "SHIELD",
+                      "payload": { "target": "ADJACENT_ALLIES", "value": 15 }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Defense",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "STURDY",
+                        "target": "FRONT_ALLY",
+                        "value": 10
+                      }
+                    },
+                    {
+                      "type": "SHIELD",
+                      "payload": { "target": "FRONT_ALLY", "value": 20 }
+                    }
+                  ]
+                },
+                {
+                  "name": "Reinforce Defense 2",
+                  "modifiers": [
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "TAUNT",
+                        "target": "FRONT_ALLY",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "type": "STATUS_EFFECT",
+                      "payload": {
+                        "name": "THORN",
+                        "target": "FRONT_ALLY",
+                        "value": 25
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "target": "ADJACENT_ALLIES",
+            "type": "SPELL",
+            "progress": 19,
+            "baseCooldown": 45,
+            "cooldown": 43,
+            "triggers": [],
+            "effects": [
+              {
+                "type": "SHIELD",
+                "trigger": "ON_USE",
+                "target": "ADJACENT_ALLIES",
+                "conditions": [],
+                "payload": { "value": 30 }
+              }
+            ],
+            "modifiers": []
+          },
+          {
+            "id": "P4evp90G",
+            "data": {
+              "default": {
+                "name": "Thrust",
+                "type": "ATTACK",
+                "tags": ["WEAPON_ABILITY"],
+                "target": "STANDARD",
+                "cooldown": 40,
+                "effects": [
+                  {
+                    "type": "DAMAGE",
+                    "trigger": "ON_HIT",
+                    "target": "STANDARD",
+                    "conditions": [],
+                    "payload": { "value": 30 }
+                  }
+                ]
+              },
+              "name": "Thrust",
+              "type": "ATTACK",
+              "tags": ["WEAPON_ABILITY"],
+              "target": "STANDARD",
+              "cooldown": 40,
+              "effects": [
+                {
+                  "type": "DAMAGE",
+                  "trigger": "ON_HIT",
+                  "target": "STANDARD",
+                  "conditions": [],
+                  "payload": { "value": 30 }
+                }
+              ]
+            },
+            "target": "STANDARD",
+            "type": "ATTACK",
+            "progress": 0,
+            "baseCooldown": 40,
+            "cooldown": 40,
+            "triggers": [],
+            "effects": [
+              {
+                "type": "DAMAGE",
+                "trigger": "ON_HIT",
+                "target": "STANDARD",
+                "conditions": [],
+                "payload": { "value": 30 }
+              }
+            ],
+            "modifiers": []
+          }
+        ],
+        "equipment": [
+          {
+            "slot": "MAIN_HAND",
+            "equip": {
+              "id": "gJY6jCme",
+              "data": {
+                "name": "Short Spear",
+                "tags": ["WEAPON", "PHYSICAL", "MAGICAL"],
+                "slots": ["MAIN_HAND"],
+                "mods": [
+                  {
+                    "type": "GRANT_ABILITY",
+                    "payload": { "name": "Thrust", "type": "ATTACK" },
+                    "tier": "implicit"
+                  },
+                  {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Focused Mind", "tier": 1 },
+                    "tier": "implicit"
+                  },
+                  {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "stat": "ATTACK_DAMAGE", "value": 5 },
+                    "tier": "implicit"
+                  }
+                ]
+              },
+              "tier": 0,
+              "rolledMods": [],
+              "applicableMods": [
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Focused Mind" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Vitality Boost" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Desperate Will" }
+                  },
+                  "weight": 3
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Last Words" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Berserk" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Prey The Weak" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Dampening Field" }
+                  },
+                  "weight": 3
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Fallen Guardian" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Iron Heart" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Savage Fury" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Vengeful Legacy" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Venomous Strikes" }
+                  },
+                  "weight": 4
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Solo Strength" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_PERK",
+                    "payload": { "name": "Open Field Tactics" }
+                  },
+                  "weight": 1
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "ATTACK_DAMAGE" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "ATTACK_COOLDOWN" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "SPELL_DAMAGE" }
+                  },
+                  "weight": 7
+                },
+                {
+                  "mod": {
+                    "type": "GRANT_BASE_STAT",
+                    "payload": { "name": "SPELL_COOLDOWN" }
+                  },
+                  "weight": 7
+                }
+              ]
+            }
+          }
+        ],
+        "perks": [
+          {
+            "id": "akxPUwXm",
+            "data": {
+              "name": "Focused Mind",
+              "type": "TIER_SCALE",
+              "tiers": [{ "name": "FOCUS", "values": [5, 10, 15, 20, 30] }],
+              "effects": [
+                {
+                  "type": "STATUS_EFFECT",
+                  "trigger": "BATTLE_START",
+                  "target": "SELF",
+                  "conditions": [],
+                  "payload": [{ "name": "FOCUS", "quantity": "DYNAMIC" }]
+                }
+              ],
+              "tags": [
+                { "name": "WEAPON", "weight": 2 },
+                { "name": "TRINKET", "weight": 2 },
+                { "name": "MAGICAL", "weight": 5 }
+              ]
+            },
+            "tier": 1
+          }
+        ],
+        "position": 0,
+        "statusEffects": []
+      }
+    ]
+  },
+  "totalSteps": 320,
+  "eventHistory": [
+    {
+      "actorId": "HvECU3m6",
+      "step": 0,
+      "type": "TRIGGER_EFFECT",
+      "trigger": "BATTLE_START",
+      "subEvents": [
+        {
+          "type": "INSTANT_EFFECT",
+          "payload": {
+            "type": "STATUS_EFFECT",
+            "targetId": "HvECU3m6",
+            "payload": [{ "name": "FOCUS", "quantity": 5 }]
+          },
+          "sourceId": "vWwaTa27"
+        }
+      ]
+    },
+    {
+      "actorId": "ImPfjjNr",
+      "step": 0,
+      "type": "TRIGGER_EFFECT",
+      "trigger": "BATTLE_START",
+      "subEvents": [
+        {
+          "type": "INSTANT_EFFECT",
+          "payload": {
+            "type": "STATUS_EFFECT",
+            "targetId": "ImPfjjNr",
+            "payload": [{ "name": "FOCUS", "quantity": 5 }]
+          },
+          "sourceId": "akxPUwXm"
+        }
+      ]
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 40,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 40,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 80,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 80,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 120,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 120,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 160,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 160,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 200,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 200,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 240,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 240,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 280,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 280,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "HvECU3m6",
+      "step": 320,
+      "payload": {
+        "id": "lCRxwMdE",
+        "name": "Thrust",
+        "targetsId": ["ImPfjjNr"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "ImPfjjNr",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "USE_ABILITY",
+      "actorId": "ImPfjjNr",
+      "step": 320,
+      "payload": {
+        "id": "P4evp90G",
+        "name": "Thrust",
+        "targetsId": ["HvECU3m6"],
+        "subEvents": [
+          {
+            "type": "INSTANT_EFFECT",
+            "payload": {
+              "type": "DAMAGE",
+              "targetId": "HvECU3m6",
+              "payload": { "value": 29 }
+            }
+          }
+        ]
+      }
+    },
+    { "actorId": "HvECU3m6", "type": "FAINT", "step": 320, "subStep": 1 },
+    { "actorId": "ImPfjjNr", "type": "FAINT", "step": 320, "subStep": 1 }
+  ],
+  "effectHistory": [
+    {
+      "step": 0,
+      "units": [
+        {
+          "unitId": "HvECU3m6",
+          "effects": [
+            {
+              "type": "STATUS_EFFECT",
+              "payload": [{ "name": "FOCUS", "quantity": 5 }]
+            }
+          ]
+        },
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [
+            {
+              "type": "STATUS_EFFECT",
+              "payload": [{ "name": "FOCUS", "quantity": 5 }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "step": 40,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 80,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 120,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 160,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 200,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 240,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 280,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ]
+    },
+    {
+      "step": 320,
+      "units": [
+        {
+          "unitId": "ImPfjjNr",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        },
+        {
+          "unitId": "HvECU3m6",
+          "effects": [{ "type": "DAMAGE", "payload": { "value": 29 } }]
+        }
+      ],
+      "subSteps": [
+        { "units": [], "deadUnits": ["HvECU3m6", "ImPfjjNr"], "subStep": 1 }
+      ]
+    }
+  ],
+  "winner": "DRAW"
+}

@@ -1,6 +1,6 @@
-import { EQUIPMENT_SLOT } from "../Equipment/EquipmentTypes";
-import { TAG } from "../Tag/TagTypes";
-import { TARGET_TYPE } from "../Target/TargetTypes";
+import { EQUIPMENT_SLOT } from "@/game/Equipment/EquipmentTypes";
+import { TAG } from "@/game/Tag/TagTypes";
+import { TARGET_TYPE } from "@/game/Target/TargetTypes";
 
 export enum CONDITION {
 	EQUIPMENT = "EQUIPMENT",
