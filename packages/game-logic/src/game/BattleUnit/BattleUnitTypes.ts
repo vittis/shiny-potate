@@ -8,4 +8,8 @@ export type BattleUnitInfo = {
 	packUnit: PackUnit;
 	equipment: EquippedItem[];
 	abilities: Ability[];
+	position: {
+		row: number;
+		column: number;
+	};
 };

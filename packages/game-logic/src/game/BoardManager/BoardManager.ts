@@ -103,6 +103,21 @@ export class BoardManager {
 		return units;
 	}
 
+	getAllAliveUnits(): BattleUnit[] {
+		const units: BattleUnit[] = [];
+		const boards = [this.team1Board.grid, this.team2Board.grid];
+		for (const grid of boards) {
+			for (const row of grid) {
+				for (const space of row) {
+					if (space.unit && !space.unit.isDead) {
+						units.push(space.unit);
+					}
+				}
+			}
+		}
+		return units;
+	}
+
 	getAllUnitsOfOwner(owner: OWNER): BattleUnit[] {
 		const units: BattleUnit[] = [];
 		const grid = owner === OWNER.TEAM_ONE ? this.team1Board.grid : this.team2Board.grid;
@@ -116,13 +131,13 @@ export class BoardManager {
 		return units;
 	}
 
-	/* getUnitById(id: string): BattleUnit {
+	getUnitById(id: string): BattleUnit {
 		const unit = this.getAllUnits().find(unit => unit.id === id);
 		if (!unit) {
 			throw Error(`Tried to getUnitById ${id} that doesnt exist`);
 		}
 		return unit;
-	} */
+	}
 
 	printBattlefield() {
 		console.log(this.team1Board.grid);

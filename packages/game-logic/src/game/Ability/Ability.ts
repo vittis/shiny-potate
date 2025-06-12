@@ -1,5 +1,9 @@
 import { AbilityData } from "@/game/Ability/AbilityTypes";
+import { BattleUnit } from "@/game/BattleUnit/BattleUnit";
+import { BoardManager } from "@/game/BoardManager/BoardManager";
 import { Equipment } from "@/game/Equipment/Equipment";
+import { generateSubEvents } from "@/game/Event/EventFactory";
+import { EVENT_TYPE, UseAbilityEvent, UseAbilityIntent } from "@/game/Event/EventTypes";
 import { convertModTemplateToMod } from "@/game/Mod/ModsUtils";
 import { PossibleAbilityMod } from "@/game/Mod/ModTypes";
 import { PackUnit } from "@/game/PackUnit/PackUnit";
@@ -30,9 +34,7 @@ export class Ability {
 
 	constructor(data: AbilityData, tier: Tier = 1, source: PackUnit | Equipment | null = null) {
 		if (!data) {
-			throw Error(
-				"Ability: Ability is undefined. If running from test make sure it's defined in mock files",
-			);
+			throw Error("Ability: Ability is undefined. If running from test make sure it's defined in mock files");
 		}
 
 		this.id = nanoid(8);
@@ -64,18 +66,37 @@ export class Ability {
 		// TODO: implement
 	}
 
-	use() {
-		// TODO: implement
+	use(unit: BattleUnit, bm: BoardManager): UseAbilityEvent {
 		// when ability hits: trigger ON HIT effects
 		// trigger ON USE effects once - at beginning or end?
+
+		const abilitySubEvents = generateSubEvents(unit, this.currentEffects, bm);
+
+		const useAbilityEvent: UseAbilityEvent = {
+			type: EVENT_TYPE.USE_ABILITY,
+			actorId: unit.id,
+			step: unit.currentStep,
+			payload: {
+				id: this.id,
+				name: this.data.name,
+				subEvents: abilitySubEvents,
+			},
+		};
+
+		this.progress = 0;
+		return useAbilityEvent;
 	}
 
 	getInstantEffectModifiers() {
 		// TODO: implement this, generate new currentEffects based on effects and instantEffectModifiers
 	}
 
-	createAbilityIntent() {
-		// TODO: implement this when doing intent / event stuff
+	createAbilityIntent(unit: BattleUnit): UseAbilityIntent {
+		return {
+			actorId: unit.id,
+			type: EVENT_TYPE.USE_ABILITY,
+			id: this.id,
+		};
 	}
 
 	canUpgradeTier() {

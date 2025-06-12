@@ -8,5 +8,9 @@ export function generateBattleUnitInfo(boardUnit: BoardUnit, owner: OWNER): Batt
 		packUnit: boardUnit.packUnit,
 		equipment: boardUnit.equipment,
 		abilities: boardUnit.abilities,
+		position: {
+			row: boardUnit.row,
+			column: boardUnit.column,
+		},
 	};
 }

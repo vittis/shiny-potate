@@ -10,6 +10,9 @@ import { nanoid } from "nanoid";
 export class BoardUnit {
 	id: string;
 
+	column!: number;
+	row!: number;
+
 	packUnit: PackUnit;
 
 	equipmentManager: EquipmentManager;
@@ -42,6 +45,11 @@ export class BoardUnit {
 		this.triggerManager = new TriggerManager(this, packUnit, this.abilities);
 
 		this.abilityManager.updateAbilitiesEffectsWithStats(this.statsManager);
+	}
+
+	setPosition(row: number, column: number) {
+		this.column = column;
+		this.row = row;
 	}
 
 	equip(equipment: Equipment, slot: EQUIPMENT_SLOT) {

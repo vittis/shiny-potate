@@ -74,16 +74,9 @@ export function getFrontRightTarget(bm: BoardManager, originator: BattleUnit): B
 
 	const isOddRow = originator.row % 2 === 1;
 
-	const targetPos: Position = isOddRow
-		? { row: frontRow, column: originator.column }
-		: { row: frontRow, column: originator.column + 1 };
+	const targetPos: Position = isOddRow ? { row: frontRow, column: originator.column } : { row: frontRow, column: originator.column + 1 };
 
-	if (
-		targetPos.row >= 0 &&
-		targetPos.row < grid.length &&
-		targetPos.column >= 0 &&
-		targetPos.column < grid[0].length
-	) {
+	if (targetPos.row >= 0 && targetPos.row < grid.length && targetPos.column >= 0 && targetPos.column < grid[0].length) {
 		const space = grid[targetPos.row][targetPos.column];
 		if (space?.unit) {
 			targets.push(space.unit);
@@ -103,16 +96,9 @@ export function getFrontLeftTarget(bm: BoardManager, originator: BattleUnit): Ba
 
 	const isOddRow = originator.row % 2 === 1;
 
-	const targetPos: Position = isOddRow
-		? { row: frontRow, column: originator.column - 1 }
-		: { row: frontRow, column: originator.column };
+	const targetPos: Position = isOddRow ? { row: frontRow, column: originator.column - 1 } : { row: frontRow, column: originator.column };
 
-	if (
-		targetPos.row >= 0 &&
-		targetPos.row < grid.length &&
-		targetPos.column >= 0 &&
-		targetPos.column < grid[0].length
-	) {
+	if (targetPos.row >= 0 && targetPos.row < grid.length && targetPos.column >= 0 && targetPos.column < grid[0].length) {
 		const space = grid[targetPos.row][targetPos.column];
 		if (space?.unit) {
 			targets.push(space.unit);
@@ -164,16 +150,9 @@ export function getBackRightTarget(bm: BoardManager, originator: BattleUnit): Ba
 
 	const isOddRow = originator.row % 2 === 1;
 
-	const targetPos: Position = isOddRow
-		? { row: backRow, column: originator.column }
-		: { row: backRow, column: originator.column + 1 };
+	const targetPos: Position = isOddRow ? { row: backRow, column: originator.column } : { row: backRow, column: originator.column + 1 };
 
-	if (
-		targetPos.row >= 0 &&
-		targetPos.row < grid.length &&
-		targetPos.column >= 0 &&
-		targetPos.column < grid[0].length
-	) {
+	if (targetPos.row >= 0 && targetPos.row < grid.length && targetPos.column >= 0 && targetPos.column < grid[0].length) {
 		const space = grid[targetPos.row][targetPos.column];
 		if (space?.unit) {
 			targets.push(space.unit);
@@ -193,16 +172,9 @@ export function getBackLeftTarget(bm: BoardManager, originator: BattleUnit): Bat
 
 	const isOddRow = originator.row % 2 === 1;
 
-	const targetPos: Position = isOddRow
-		? { row: backRow, column: originator.column - 1 }
-		: { row: backRow, column: originator.column };
+	const targetPos: Position = isOddRow ? { row: backRow, column: originator.column - 1 } : { row: backRow, column: originator.column };
 
-	if (
-		targetPos.row >= 0 &&
-		targetPos.row < grid.length &&
-		targetPos.column >= 0 &&
-		targetPos.column < grid[0].length
-	) {
+	if (targetPos.row >= 0 && targetPos.row < grid.length && targetPos.column >= 0 && targetPos.column < grid[0].length) {
 		const space = grid[targetPos.row][targetPos.column];
 		if (space?.unit) {
 			targets.push(space.unit);
@@ -319,6 +291,12 @@ export function getSideAllyTarget(bm: BoardManager, originator: BattleUnit): Bat
 
 export function getStandardTarget(bm: BoardManager, originator: BattleUnit): BattleUnit[] {
 	const grid = originator.owner === OWNER.TEAM_ONE ? bm.team2Board.grid : bm.team1Board.grid;
+
+	// gambiarra boa pra testar
+	const enemyUnits = bm.getAllUnitsOfOwner(originator.owner === OWNER.TEAM_ONE ? OWNER.TEAM_TWO : OWNER.TEAM_ONE);
+	if (enemyUnits.length === 1) {
+		return [enemyUnits[0]];
+	}
 
 	const randomFrontEnemy = grid[0][RNG.between(0, grid[0].length - 1)].unit;
 	if (randomFrontEnemy) {

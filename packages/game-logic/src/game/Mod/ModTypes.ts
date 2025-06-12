@@ -93,10 +93,7 @@ export type ModPayloadTemplateValue = ModPayloadValue;
 export type ModPayloadTemplateQuantity = ModPayloadQuantity;
 
 export type PossibleAbilityModTemplate = ModTemplate<MOD.STAT> | ModTemplate<MOD.EFFECT>;
-export type PossibleModTemplate =
-	| ModTemplate<MOD.STAT>
-	| ModTemplate<MOD.EFFECT>
-	| ModTemplate<MOD.GAIN_ABILITY>;
+export type PossibleModTemplate = ModTemplate<MOD.STAT> | ModTemplate<MOD.EFFECT> | ModTemplate<MOD.GAIN_ABILITY>;
 
 export type ModTemplate<T extends MOD> = {
 	type: T;
